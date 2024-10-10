@@ -1,0 +1,82 @@
+# Ignore the bin and obj folders in .NET projects (for compiled binaries and intermediate files)
+bin/
+obj/
+
+# Ignore user-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Ignore build results
+dist/
+out/
+.build/
+
+# Ignore any logs or debug files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Node.js and React dependencies
+node_modules/
+
+# Yarn lock file (if you’re using npm)
+.pnp/
+.pnp.js
+.pnp.data.json
+
+# Compiled JavaScript/TypeScript output
+*.js
+*.jsx
+*.tsbuildinfo
+
+# Ignore Vite build output
+vite.config.js
+
+# TailwindCSS generated files
+**/tailwind.css
+
+# Ignore public directory files
+public/
+
+# Ignore environment variable files
+.env
+.env.local
+.env.*.local
+
+# OS-specific and IDE-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore files specific to Visual Studio Code and VS
+.vscode/
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
+
+# Ignore NPM/Yarn lock if you use one or the other (choose based on your preference)
+# Only ignore lock files you are not using in your project.
+# package-lock.json
+# yarn.lock
+
+# Coverage files
+coverage/
+
+# Ignore EF Core migration folders (if automatically generated)
+Migrations/
+
+# Ignore compiled TypeScript files
+**/*.js.map
+**/*.d.ts
+
+# Ignore unnecessary MySQL or SQLite database files
+*.db
+*.sqlite
+
+# Ignore backup files and temporary files
+*.bak
+*.swp
+*.swo

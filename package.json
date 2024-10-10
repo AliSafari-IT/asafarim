@@ -4,6 +4,7 @@
   "main": "index.js",
   "author": "Ali <asafarim@gmail.com>",
   "license": "MIT",
+  "private": "true",
   "workspaces": [
     "apps/*"
   ]

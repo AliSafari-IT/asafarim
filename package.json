@@ -1,0 +1,10 @@
+{
+  "name": "asafarim",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Ali <asafarim@gmail.com>",
+  "license": "MIT",
+  "workspaces": [
+    "apps/*"
+  ]
+}

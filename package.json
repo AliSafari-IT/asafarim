@@ -7,5 +7,8 @@
   "private": "true",
   "workspaces": [
     "apps/*"
-  ]
+  ],
+  "scripts": {
+    "dev": "concurrently \"yarn workspace dashboard-client dev\" \"dotnet run --project apps/DashboardApi/DashboardApi.csproj\""
+  }
 }

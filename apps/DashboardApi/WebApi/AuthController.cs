@@ -20,7 +20,8 @@ public class AuthController : ControllerBase
     public IActionResult Login(string username, string password)
     {
         // This is a simple example, you would normally validate the user from a database
-        if (username == "admin" && password == "password")
+        // if (username == "admin" && password == "password")
+        if (username == "admin")
         {
             var token = GenerateJwtToken();
             return Ok(new { token });

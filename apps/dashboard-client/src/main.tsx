@@ -8,7 +8,7 @@ import Contact from './pages/Contact';
 import Dashboard from './pages/Dashboard';
 import LoginPage from './pages/LoginPage';
 import { Navigate } from 'react-router-dom';
-import SitemapPage from './pages/SitemapPage';
+import SitemapPage from './pages/Sitemap/SitemapPage';
 
 const PrivateRoute = ({ children }: { children: JSX.Element }) => {
   const user = localStorage.getItem('user');
@@ -18,8 +18,7 @@ const PrivateRoute = ({ children }: { children: JSX.Element }) => {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <Router>
-      
+    <Router>      
       <div className="">
         <Routes>
           <Route path="/" element={<Home />} />

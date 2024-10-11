@@ -1,21 +1,32 @@
-const Dashboard = () => {
-    return (
-      <div>
-        <h1 className="text-3xl font-bold">Dashboard Page</h1>
-        <p>Welcome to the dashboard!</p>
+import { Link } from "@fluentui/react";
 
-        <p>
-          <a
+const Dashboard = () => {
+  return (
+    <div>
+      <h1 className="text-3xl font-bold">Dashboard Page</h1>
+      <p>Welcome to the dashboard!</p>
+
+      <div className="p-8">
+        <h1 className="text-2xl font-bold mb-4">Sitemap</h1>
+        <ul>
+          <li className="text-lg"><a
             href="/"
             target="_self"
             rel="noopener noreferrer"
           >
             Home
-          </a>
-        </p>
+          </a></li>
+          <li className="text-lg">
+            <Link to="/about">About</Link>
+          </li>
+          <li className="text-lg">
+            <Link href="/manage-sitemap-content" target="_self">Sitemap Page</Link>
+          </li>
+        </ul>
       </div>
-    );
-  };
-  
-  export default Dashboard;
-  
+
+    </div>
+  );
+};
+
+export default Dashboard;

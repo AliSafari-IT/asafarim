@@ -11,7 +11,7 @@ const SitemapPage = () => {
     // Fetch sitemap data from API
     const fetchData = async () => {
       try {
-        const data = await sitemapService.getSitemap();
+        const data = await sitemapService.getSitemap("Admin");
         setSitemapData(data);
         setLoading(false);
       } catch (error) {

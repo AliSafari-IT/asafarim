@@ -1,0 +1,90 @@
+.markdown-container {
+    background-color: #f9f9fb; /* Light background for readability */
+    padding: 2rem; /* Add some padding */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    font-family: 'Roboto', sans-serif; /* Modern, clean font */
+    line-height: 1.7; /* Good readability */
+    color: #333; /* Dark gray text */
+    max-width: 800px; /* Restrict width for better readability */
+    margin: 2rem auto; /* Center and add vertical space */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .markdown-container:hover {
+    transform: translateY(-5px); /* Slight lift on hover for an interactive feel */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+  }
+  
+  .markdown-container h3, .markdown-container h4 {
+    color: #0056b3; /* Standout blue for headers */
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+  }
+  
+  .markdown-container h4 {
+    font-size: 1.25rem; /* Slightly smaller subheadings */
+  }
+  
+  .markdown-container ul {
+    padding-left: 1.5rem;
+    list-style-type: disc;
+    margin: 1rem 0;
+  }
+  
+  .markdown-container ul ul {
+    list-style-type: circle; /* Nested lists with different styles */
+  }
+  
+  .markdown-container li {
+    margin-bottom: 0.75rem; /* Space between list items */
+  }
+  
+  .markdown-container strong {
+    color: #222;
+    font-weight: 600;
+  }
+  
+  .markdown-container p {
+    margin: 1rem 0;
+  }
+  
+  .markdown-container a {
+    color: #0056b3;
+    text-decoration: none;
+    border-bottom: 1px solid #0056b3;
+    transition: color 0.3s ease, border-color 0.3s ease;
+  }
+  
+  .markdown-container a:hover {
+    color: #003d82;
+    border-color: #003d82;
+  }
+  
+  .markdown-container code {
+    background-color: #f0f0f0;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9rem;
+  }
+  
+  .markdown-container blockquote {
+    border-left: 4px solid #0056b3;
+    padding-left: 1rem;
+    color: #555;
+    font-style: italic;
+    margin: 1.5rem 0;
+  }
+  
+  @media (max-width: 768px) {
+    .markdown-container {
+      padding: 1.5rem;
+    }
+  
+    .markdown-container h3, .markdown-container h4 {
+      font-size: 1.25rem;
+    }
+  }
+  

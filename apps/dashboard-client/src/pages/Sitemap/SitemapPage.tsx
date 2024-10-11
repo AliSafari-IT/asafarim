@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IconButton, Dropdown, IDropdownOption } from '@fluentui/react';
-import sitemapService from '../api/sitemapService';
-import '../styles/sitemap-page.css';
+import sitemapService from '../../api/sitemapService';
+import '../../styles/sitemap-page.css';
+import Wrapper from '../../layout/Wrapper/Wrapper';
 
 const SitemapPage = () => {
   const [sitemapData, setSitemapData] = useState<any[]>([]);
@@ -54,29 +55,47 @@ const SitemapPage = () => {
     }
   };
 
+  const headerBlock = (
+    <header className="w-full text-center bg-gray-800 text-white p-4">
+      <h1 className="text-2xl font-bold">ASafariM Sitemap!</h1>
+    </header>
+  );
+
+  if (sitemapData.length === 0) {
+    return (
+      <Wrapper header={headerBlock}>
+        <p>No sitemaps found.</p>
+      </Wrapper>
+    );
+  }
+
+  if (loading) {
+    return <Wrapper header={headerBlock}>
+    <p>Loading...</p>
+  </Wrapper>;
+  }
+
+  // Render the sitemap table
   return (
-    <div className="sitemap-page">
-      <h1>Sitemap</h1>
-      <table className="w-full border-collapse table-auto">
-        <thead>
-          <tr className="border-b">
-            <th>ID</th>
-            <th>Page Name</th>
-            <th>Description</th>
-            <th>Slug</th>
-            <th>Access By Role</th>
-            <th>Actions</th>
+    <Wrapper header={headerBlock}>
+      <table className="w-full border-collapse table-auto mt-4">
+        <thead className="bg-gray-500">
+          <tr className="border-b border-gray-200">
+            <th className="px-4 py-2">Page Name</th>
+            <th className="px-4 py-2">Description</th>
+            <th className="px-4 py-2">Slug</th>
+            <th className="px-4 py-2">Access By Role</th>
+            <th className="px-4 py-2">Actions</th>
           </tr>
         </thead>
         <tbody>
           {sitemapData.map((item) => (
-            <tr key={item.id} className="border-b">
-              <td>{item.id}</td>
-              <td>{item.pageName}</td>
-              <td>{item.description}</td>
-              <td>{item.slug}</td>
-              <td>{item.accessByRole}</td>
-              <td>
+            <tr key={item.id} className="border-b border-gray-200 hover:bg-gray-100">
+              <td className="px-4 py-2">{item.pageName}</td>
+              <td className="px-4 py-2">{item.description}</td>
+              <td className="px-4 py-2">{item.slug}</td>
+              <td className="px-4 py-2">{item.accessByRole}</td>
+              <td className="px-4 py-2">
                 <Dropdown
                   placeholder="Actions"
                   options={dropdownOptions}
@@ -89,15 +108,16 @@ const SitemapPage = () => {
         </tbody>
       </table>
 
-      <div className="mt-4">
+      <div className="mt-4 flex justify-end">
         <IconButton
           iconProps={{ iconName: 'Add' }}
           title="Create"
           ariaLabel="Create"
           onClick={handleCreate}
+          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
         />
       </div>
-    </div>
+    </Wrapper>
   );
 };
 

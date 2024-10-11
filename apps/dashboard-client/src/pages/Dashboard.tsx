@@ -1,9 +1,10 @@
 import { Link } from "@fluentui/react";
+import Wrapper from "../layout/Wrapper/Wrapper";
 
 const Dashboard = () => {
   return (
-    <div>
-      <h1 className="text-3xl font-bold">Dashboard Page</h1>
+    <Wrapper header={<div className="w-full text-center mx-auto m-0 text-gray-200 p-8 bg-gray-700"><h1 className="text-3xl font-bold ">Dashboard Page</h1></div>}>
+      
       <p>Welcome to the dashboard!</p>
 
       <div className="p-8">
@@ -25,7 +26,7 @@ const Dashboard = () => {
         </ul>
       </div>
 
-    </div>
+    </Wrapper>
   );
 };
 

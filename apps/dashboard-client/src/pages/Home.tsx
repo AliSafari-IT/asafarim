@@ -22,6 +22,9 @@ const Home = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  const user = localStorage.getItem('user');
+
+  // Fetch data from API
   useEffect(() => {
     // Retrieve the token from localStorage
     const userData = localStorage.getItem('user');
@@ -65,7 +68,8 @@ const Home = () => {
   return (
     <Wrapper header={<HeaderComponent />} >
       <h1 className="text-3xl font-bold">Home Page</h1>
-      <div className="bg-white text-blue-900 rounded-lg shadow-lg p-8 w-full max-w-xl text-center transform hover:scale-105 transition-transform duration-300 ease-in-out">
+      {error && <p>{error}</p>}
+      {user && <div className="bg-white text-blue-900 rounded-lg shadow-lg p-8 w-full max-w-xl text-center transform hover:scale-105 transition-transform duration-300 ease-in-out">
         <h2 className="text-3xl font-semibold mb-4">Manage Your Dashboard</h2>
         <p className="mb-6 text-lg font-light">
           Dive into the detailed overview of all your panels, add new ones, or
@@ -77,7 +81,7 @@ const Home = () => {
         >
           View Dashboard
         </Link>
-      </div>
+      </div>}
 
       {data.length > 0 ? (
         <ul>

@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard';
 import LoginPage from './pages/LoginPage';
 import { Navigate } from 'react-router-dom';
 import SitemapPage from './pages/Sitemap/SitemapPage';
+import LogoutPage from './pages/LogoutPage';
 
 const PrivateRoute = ({ children }: { children: JSX.Element }) => {
   const user = localStorage.getItem('user');
@@ -30,7 +31,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
 
           <Route path="/login" element={<LoginPage />} />
-
+          <Route path="/logout" element={<PrivateRoute><LogoutPage /></PrivateRoute>} />
         </Routes>
       </div>
   </Router>

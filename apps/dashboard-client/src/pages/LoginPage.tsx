@@ -39,29 +39,35 @@ const LoginPage = () => {
   };
 
   return (
-    <Wrapper>
+    <Wrapper header={<h1 className="text-3xl font-bold mt-16 mb-4">Login</h1>}>
       <form onSubmit={handleLogin} className="flex flex-col items-center justify-center space-y-4">
-        <h1 className="text-3xl font-bold">Login</h1>
+        
 
         {/* Input for username */}
+        <div className="w-full max-w-xs">
+        <label htmlFor="username" className="block mb-2 text-gray-700 font-bold">Username:</label>
         <input
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          placeholder="Username"
+          placeholder="Add your username"
           className="p-2 border rounded-md w-full max-w-xs"
           required
         />
+        </div>
 
         {/* Input for password */}
+        <div className='w-full max-w-xs'>
+        <label htmlFor="password" className='block mb-2 text-gray-700 font-bold'>Password:</label>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
+          placeholder="Add your password"
           className="p-2 border rounded-md w-full max-w-xs"
           required
         />
+        </div>
 
         {/* Display error if any */}
         {error && <p className="text-red-500">{error}</p>}

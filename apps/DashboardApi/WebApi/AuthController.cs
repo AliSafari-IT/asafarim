@@ -7,6 +7,7 @@ using DashboardApi.Core.Domain.Entities; // Assuming this is your User entity na
 using Infrastructure.Data; // Assuming this is where your DbContext is
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
+using DashboardApi.Core.Domain.Models;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -33,14 +34,15 @@ public class AuthController : ControllerBase
             return Unauthorized("Invalid username or password.");
         }
 
-        // Validate the password
         var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, request.Password);
         if (passwordVerificationResult != PasswordVerificationResult.Success)
         {
+            Console.WriteLine(request.Username + " → " + request.Password + " → user.PasswordHash: " + user.PasswordHash + " passwordVerificationResult: "+ passwordVerificationResult.ToString());
             return Unauthorized("Invalid username or password.");
         }
 
-        // Generate a JWT token for the user
+        // Generate token and return success
+
         var token = GenerateJwtToken(user);
         return Ok(new { token });
     }
@@ -48,30 +50,27 @@ public class AuthController : ControllerBase
     private string GenerateJwtToken(User user)
     {
         var jwtSettings = _configuration.GetSection("Jwt");
-        var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSettings["Key"]));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"])); // Retrieve the key from appsettings.json
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
 
         // Add claims based on user's roles
         var claims = new[]
         {
-            new Claim(ClaimTypes.Name, user.Username),
-            new Claim(ClaimTypes.Email, user.Email),
-            // You can add additional claims like roles here
+            new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+            new Claim(JwtRegisteredClaimNames.Email, user.Email),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
 
-        var token = new JwtSecurityToken(
+         var token = new JwtSecurityToken(
             issuer: jwtSettings["Issuer"],
             audience: jwtSettings["Audience"],
             claims: claims,
-            expires: DateTime.Now.AddMinutes(30),
+            expires: DateTime.Now.AddMinutes(double.Parse(jwtSettings["ExpiresInMinutes"])),
             signingCredentials: creds);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }
 
-public class LoginRequest
-{
-    public string Username { get; set; }
-    public string Password { get; set; }
-}
+

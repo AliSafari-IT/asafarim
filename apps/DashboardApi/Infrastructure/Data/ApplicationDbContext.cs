@@ -21,19 +21,15 @@ namespace Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            var hasher = new PasswordHasher<User>();
-
-            // Update the existing admin user with a new password
             modelBuilder.Entity<User>().HasData(new User
             {
-                Id = new Guid("32b57e5c-d6dd-4eee-91e0-21b7d96aad2e"), // Replace with actual admin user Id
-                Username = "admin",
-                Email = "admin@asafarim.com",
-                PasswordHash = hasher.HashPassword(null, "admin+123456"),
+                Id = new Guid("c032f3c0-877a-11ef-b2d0-bc2411fc845a"),
+                Username = "ali",
+                Email = "ali@asm.com",
+                PasswordHash = new PasswordHasher<User>().HashPassword(null, "Ali+123456/"), // Direct instantiation
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
             });
-
 
             // Configure the composite primary key for UserRole
             modelBuilder.Entity<UserRole>()

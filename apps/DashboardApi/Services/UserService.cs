@@ -3,9 +3,9 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using DashboardApi.Core.Domain.Entities;
-using Infrastructure.Data; // Assuming you have your ApplicationDbContext here
+using Infrastructure.Data; // I have my ApplicationDbContext here
 
-namespace DashboardApi.Services  // Adjust namespace as per your project structure
+namespace DashboardApi.Services
 {
     public class UserService
     {

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const Home = () => {
   const [data, setData] = useState<any[]>([]);
@@ -7,21 +7,27 @@ const Home = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const token = "0+a0ZklJy6DVL6osEj73W6P9inMk3+Ocn8KkQoUDR78=";  // Replace with the actual token you received after login
+    const bearer = {
+      token:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWxpIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiYWxpQGFzbS5jb20iLCJleHAiOjE3Mjg2MTM3OTksImlzcyI6ImFzYWZhcmltIiwiYXVkIjoiaHR0cHM6Ly9hc2FmYXJpbS5jb20ifQ.MPn5386ktH8gkoJenjORAy6EoDKDkHj9TCx8xlVUYEo",
+    }; // Replace with the actual token you received after login
+    
 
-    axios.get('http://localhost:5146/api/sitemap?userRole=Admin', {
-      headers: {
-        Authorization: `Bearer ${token}`  // Pass the token in the Authorization header
-      }
-    })
-    .then((response) => {
-      setData(response.data);  // Set data from API
-      setLoading(false);        // Set loading to false once data is fetched
-    })
-    .catch((err) => {
-      setError('Failed to load data');  // Handle error
-      setLoading(false);                // Stop loading if there's an error
-    });
+    axios
+      .get("https://localhost:44337/api/Sitemap?userRole=Admin", {
+        headers: {
+          Authorization: `Bearer ${bearer.token}`, // Pass the token in the Authorization header
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        setData(response.data); // Set data from API
+        setLoading(false); // Set loading to false once data is fetched
+      })
+      .catch((_err) => {
+        setError("Failed to load data"); // Handle error
+        setLoading(false); // Stop loading if there's an error
+      });
   }, []);
 
   if (loading) {

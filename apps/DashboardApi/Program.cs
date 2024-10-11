@@ -1,9 +1,11 @@
 using System.Text;
 using Core.Application.Interfaces.Repositories;
 using Core.Application.Sitemaps.Queries;
+using DashboardApi.Services;
 using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models; // Add this for Swagger
@@ -45,9 +47,15 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+ var hasher = new PasswordHasher<object>();
+        string hashedPassword = hasher.HashPassword(null, "admin+123456");
+        Console.WriteLine(hashedPassword);
+
+
 // Register the Sitemap services and repositories
 builder.Services.AddScoped<ISitemapRepository, SitemapRepository>();
 builder.Services.AddScoped<GetSitemapQuery>();
+builder.Services.AddScoped<UserService>();
 
 // Add Swagger services
 builder.Services.AddEndpointsApiExplorer();

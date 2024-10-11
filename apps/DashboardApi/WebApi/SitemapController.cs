@@ -3,6 +3,7 @@ using Core.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace WebApi.Controllers
 {
@@ -30,6 +31,28 @@ namespace WebApi.Controllers
             }
 
             return Ok(sitemapItems);
+        }
+
+        [Authorize(Roles = "Admin")]  // Ensure the user has Admin role
+        [HttpGet("api/sitemap")]
+        public IActionResult GetSitemap([FromQuery] string userRole)
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+
+            if (identity == null || !identity.IsAuthenticated)
+            {
+                return Unauthorized();  // Log token validation failure
+            }
+
+            if (userRole == null)
+            {
+                return BadRequest();
+
+            }
+
+            return GetSitemap((Role)Enum.Parse(typeof(Role), userRole));
+
+
         }
     }
 }

@@ -3,4 +3,8 @@
 GET {{DashboardApi_HostAddress}}/weatherforecast/
 Accept: application/json
 
+@DashboardApi_HostAddress = http://localhost:5146
+
+GET {{DashboardApi_HostAddress}}/sitemap
+Accept: application/json
 ###

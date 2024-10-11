@@ -26,6 +26,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="/contact" element={<Contact />} />
           
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+          <Route path="/manage-sitemap-content" 
 
 
           <Route path="/login" element={<LoginPage />} />

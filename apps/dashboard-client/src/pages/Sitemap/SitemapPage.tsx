@@ -99,7 +99,7 @@ const SitemapPage = () => {
                 <Dropdown
                   placeholder="Actions"
                   options={dropdownOptions}
-                  onChange={(e, option) => handleDropdownChange(item.id, option!)}
+                  onChange={(_e, option) => handleDropdownChange(item.id, option!)}
                   ariaLabel="Actions Dropdown"
                 />
               </td>

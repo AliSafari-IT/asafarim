@@ -25,27 +25,20 @@ builder.WebHost.ConfigureKestrel(options =>
 // Add services to the container.
 builder.Services.AddControllers();
 
-// Program.cs from .NET 8 Web API sample
-
-//...
-// Registers required services for health checks
-builder.Services.AddHealthChecks()
-    // Add a health check for a SQL Server database
-    .AddCheck(
-        "OrderingDB-check",
-        new SqlConnectionHealthCheck(builder.Configuration["ConnectionString"]),
-        HealthStatus.Unhealthy,
-        new string[] { "orderingdb" });
-
-builder.Services.AddHealthChecksUI()
-    .AddInMemoryStorage();
 // Configure MySQL Database and Health Checks
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
     ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
 
+// Add MySQL Health Check  
 builder.Services.AddHealthChecks()
-    .AddDbContextCheck<ApplicationDbContext>();
+    .AddMySql(builder.Configuration.GetConnectionString("DefaultConnection"), 
+              name: "mysql", 
+              failureStatus: HealthStatus.Unhealthy);
+
+// Add HealthChecks UI with in-memory storage
+builder.Services.AddHealthChecksUI()
+    .AddInMemoryStorage();
 
 // JWT Authentication Configuration
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -97,16 +90,10 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Build application
-// Configure the HTTP request pipeline
+// Build the application
 var app = builder.Build();
 
-// Add this in your Program.cs before the UseHealthChecksUI()
-app.UseStaticFiles(); // This serves static files like CSS and JS
-
-
-// Health check endpoints
-// HealthCheck UI in the pipeline
+// HealthCheck endpoints
 app.UseHealthChecks("/health", new HealthCheckOptions
 {
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse // Provide a formatted UI response
@@ -114,25 +101,6 @@ app.UseHealthChecks("/health", new HealthCheckOptions
 
 // Serve the HealthChecks UI at /health-ui path
 app.UseHealthChecksUI(config => config.UIPath = "/health-ui");
-
-// Program.cs from .NET 8 Web Api sample
-
-app.MapHealthChecks("/hc");
-
-// HealthCheck middleware
-app.UseHealthChecks("/hc", new HealthCheckOptions()
-{
-    Predicate = _ => true,
-    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-});
-
-// Program.cs from WebStatus(Watch Dog) service
-//
-// Registers required services for health checks
-builder.Services.AddHealthChecksUI();
-// build the app, register other middleware
-app.UseHealthChecksUI(config => config.UIPath = "/hc-ui");
-
 
 if (app.Environment.IsDevelopment())
 {

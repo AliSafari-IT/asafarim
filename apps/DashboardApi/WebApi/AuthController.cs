@@ -34,7 +34,7 @@ public class AuthController : ControllerBase
             return Unauthorized("Invalid username or password.");
         }
 
-        var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, request.Password);
+        var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash+'', request.Password);
         if (passwordVerificationResult != PasswordVerificationResult.Success)
         {
             Console.WriteLine(request.Username + " → " + request.Password + " → user.PasswordHash: " + user.PasswordHash + " passwordVerificationResult: "+ passwordVerificationResult.ToString());

@@ -8,9 +8,9 @@ namespace ASafaraiM.Server.CoreLayer.Entities.Panels
 
         public string Title { get; set; }
 
-        public string Content { get; set; }
+        public string Content { get; set; } = string.Empty;
 
-        public string Summary { get; set; }
+        public string Summary { get; set; } = string.Empty;
 
         public DateTime DateCreated { get; private set; }
 

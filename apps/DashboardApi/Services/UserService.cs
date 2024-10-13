@@ -30,6 +30,14 @@ namespace DashboardApi.Services
                 UpdatedAt = DateTime.UtcNow
             };
 
+            var existingUser = _context.Users.FirstOrDefault(u => u.Username == user.Username);
+            if (existingUser != null)
+            {
+                // Request a new username if the current one already exists
+                throw new InvalidOperationException("Username already exists. Please choose a different username.");
+            }
+
+
             // Hash the password
             user.PasswordHash = _passwordHasher.HashPassword(user, "Ali+123456/");
 

@@ -11,10 +11,10 @@ namespace Infrastructure.Data.Repositories
         {
             return new List<Sitemap>
             {
-                new Sitemap { Id = Guid.NewGuid(), PageName = "Home", Description = "Home Page", Slug = "/", AccessByRole = Role.Guest },
-                new Sitemap { Id = Guid.NewGuid(), PageName = "About", Description = "About Us", Slug = "/about", AccessByRole = Role.Guest },
-                new Sitemap { Id = Guid.NewGuid(), PageName = "Contact", Description = "Contact Us", Slug = "/contact", AccessByRole = Role.StandardUser },
-                new Sitemap { Id = Guid.NewGuid(), PageName = "Dashboard", Description = "Admin Dashboard", Slug = "/dashboard", AccessByRole = Role.Admin }
+                new() { Id = Guid.NewGuid(), PageName = "Home", Description = "Home Page", Slug = "/", AccessByRole = Role.Guest },
+                new() { Id = Guid.NewGuid(), PageName = "About", Description = "About Us", Slug = "/about", AccessByRole = Role.Guest },
+                new() { Id = Guid.NewGuid(), PageName = "Contact", Description = "Contact Us", Slug = "/contact", AccessByRole = Role.StandardUser },
+                new() { Id = Guid.NewGuid(), PageName = "Dashboard", Description = "Admin Dashboard", Slug = "/dashboard", AccessByRole = Role.Admin }
             };
         }
     }

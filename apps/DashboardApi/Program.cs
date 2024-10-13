@@ -15,13 +15,17 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var httpPort = Environment.GetEnvironmentVariable("HTTP_PORT") ?? "5000";
+var httpsPort = Environment.GetEnvironmentVariable("HTTPS_PORT") ?? "5001";
+
 builder.WebHost.UseKestrel(options =>
 {
-    options.ListenAnyIP(5000); // Set a new HTTP port
-    options.ListenAnyIP(5001, listenOptions => listenOptions.UseHttps());
-    options.ListenLocalhost(5146); // HTTP port
-    options.ListenLocalhost(44337, listenOptions => listenOptions.UseHttps()); // HTTPS port
+    options.ListenAnyIP(int.Parse(httpPort));
+    options.ListenAnyIP(int.Parse(httpsPort), listenOptions => listenOptions.UseHttps());
+    options.ListenLocalhost(5146); // HTTP
+    options.ListenLocalhost(44337, listenOptions => listenOptions.UseHttps()); // HTTPS
 });
+
 // Add services to the container.
 builder.Services.AddControllers();
 

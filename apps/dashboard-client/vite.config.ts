@@ -12,6 +12,10 @@ export default defineConfig({
         changeOrigin: true,
         secure: false, // Disable SSL verification in development
       },
+      '/api': {
+        target: 'http://localhost:44337',
+        changeOrigin: true,
+      },
     },
   },
   assetsInclude: ['**/*.md'],

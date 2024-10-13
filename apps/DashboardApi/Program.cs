@@ -30,15 +30,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
     ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
 
-// Add MySQL Health Check  
-builder.Services.AddHealthChecks()
-    .AddMySql(builder.Configuration.GetConnectionString("DefaultConnection"), 
-              name: "mysql", 
-              failureStatus: HealthStatus.Unhealthy);
 
-// Add HealthChecks UI with in-memory storage
-builder.Services.AddHealthChecksUI()
-    .AddInMemoryStorage();
+// Add health checks
+builder.Services.AddHealthChecks();
 
 // JWT Authentication Configuration
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -93,15 +87,10 @@ builder.Services.AddCors(options =>
 // Build the application
 var app = builder.Build();
 
-// HealthCheck endpoints
-app.UseHealthChecks("/health", new HealthCheckOptions
-{
-    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse // Provide a formatted UI response
-});
+// Add health check endpoint
+app.UseHealthChecks("/health-ui");
 
-// Serve the HealthChecks UI at /health-ui path
-app.UseHealthChecksUI(config => config.UIPath = "/health-ui");
-
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

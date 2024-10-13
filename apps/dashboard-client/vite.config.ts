@@ -7,7 +7,15 @@ export default defineConfig({
   plugins: [react(), vitePluginMd(),],
   server: {
     proxy: {
-      '/api': 'http://localhost:44337', // Proxy API requests to .NET Core server
+      '/health-ui': {
+        target: 'https://localhost:44337', // Your ASP.NET Core backend URL
+        changeOrigin: true,
+        secure: false, // Disable SSL verification in development
+      },
+      '/api': {
+        target: 'http://localhost:44337',
+        changeOrigin: true,
+      },
     },
   },
   assetsInclude: ['**/*.md'],

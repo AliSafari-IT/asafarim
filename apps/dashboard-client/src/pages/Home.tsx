@@ -84,12 +84,16 @@ const Home = () => {
       </div>}
 
       {data.length > 0 ? (
-        <ul>
+        <ul className="card m-4">
           {data.map((item) => (
             <li key={item.id}>
               <a href={item.slug}>{item.pageName}</a> - {item.description}
             </li>
           ))}
+          <div className="mt-4 bg-white text-blue-900 rounded-lg shadow-lg p-8 w-full max-w-xl text-center transform hover:scale-105 transition-transform duration-300 ease-in-out">
+            <a href="/health" className="text-blue-600 hover:underline">Health checks</a> - <a href="/health-ui" className="text-blue-600 hover:underline">Health checks UI</a>
+
+          </div>
         </ul>
       ) : (
         <p>No data available</p>

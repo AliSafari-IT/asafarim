@@ -2,11 +2,14 @@ using System.Text;
 using Core.Application.Interfaces.Repositories;
 using Core.Application.Sitemaps.Queries;
 using DashboardApi.Services;
+using HealthChecks.UI.Client;
 using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -19,16 +22,20 @@ builder.WebHost.ConfigureKestrel(options =>
     options.ListenLocalhost(44337, listenOptions => listenOptions.UseHttps()); // HTTPS port
 });
 
-// Get configuration instance
-var configuration = builder.Configuration;
+// Add services to the container.
+builder.Services.AddControllers();
 
-// Configure MySQL Database
+// Configure MySQL Database and Health Checks
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySql(configuration.GetConnectionString("DefaultConnection"),
-    ServerVersion.AutoDetect(configuration.GetConnectionString("DefaultConnection"))));
+    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
+    ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
 
-// Configure JWT Authentication
-var jwtSettings = configuration.GetSection("Jwt");
+
+// Add health checks
+builder.Services.AddHealthChecks();
+
+// JWT Authentication Configuration
+var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.ASCII.GetBytes(jwtSettings["Key"] ?? throw new ArgumentNullException("Jwt:Key"));
 
 builder.Services.AddAuthentication(options =>
@@ -49,11 +56,6 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
     };
 });
-
-// Hash password example (you can remove this in production)
-var hasher = new PasswordHasher<object>();
-string hashedPassword = hasher.HashPassword(null, "admin+123456");
-Console.WriteLine(hashedPassword);
 
 // Register services and repositories
 builder.Services.AddScoped<ISitemapRepository, SitemapRepository>();
@@ -82,11 +84,13 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Add controllers
-builder.Services.AddControllers();
-
+// Build the application
 var app = builder.Build();
 
+// Add health check endpoint
+app.UseHealthChecks("/health-ui");
+
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -97,18 +101,14 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    // Optionally add Swagger in non-development environments
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-    });
-
     app.UseHttpsRedirection();
 }
 
 // Use CORS policy
 app.UseCors("AllowAll");
+
+// Routing must be done before other middleware like authentication/authorization
+app.UseRouting();
 
 // Use authentication and authorization middleware
 app.UseAuthentication();

@@ -8,16 +8,18 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models; // Add this for Swagger
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-// Manually set the HTTPS port
+
+// Configure Kestrel to manually set HTTP and HTTPS ports
 builder.WebHost.ConfigureKestrel(options =>
 {
     options.ListenLocalhost(5146); // HTTP port
     options.ListenLocalhost(44337, listenOptions => listenOptions.UseHttps()); // HTTPS port
 });
-// Add services to the container.
+
+// Get configuration instance
 var configuration = builder.Configuration;
 
 // Configure MySQL Database
@@ -40,19 +42,20 @@ builder.Services.AddAuthentication(options =>
     {
         ValidateIssuer = true,
         ValidateAudience = true,
+        ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
         ValidIssuer = jwtSettings["Issuer"],
         ValidAudience = jwtSettings["Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(key)
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
     };
 });
 
- var hasher = new PasswordHasher<object>();
-        string hashedPassword = hasher.HashPassword(null, "admin+123456");
-        Console.WriteLine(hashedPassword);
+// Hash password example (you can remove this in production)
+var hasher = new PasswordHasher<object>();
+string hashedPassword = hasher.HashPassword(null, "admin+123456");
+Console.WriteLine(hashedPassword);
 
-
-// Register the Sitemap services and repositories
+// Register services and repositories
 builder.Services.AddScoped<ISitemapRepository, SitemapRepository>();
 builder.Services.AddScoped<GetSitemapQuery>();
 builder.Services.AddScoped<UserService>();
@@ -79,23 +82,35 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Add controllers
 builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// Enable Swagger middleware
-app.UseSwaggerConfiguration();
-
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
-    app.UseHttpsRedirection();  // Only use HTTPS redirection in non-development environments
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+    });
+}
+else
+{
+    // Optionally add Swagger in non-development environments
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+    });
+
+    app.UseHttpsRedirection();
 }
 
-
-// Middleware to use CORS
+// Use CORS policy
 app.UseCors("AllowAll");
 
-// Middleware to use Authentication and Authorization
+// Use authentication and authorization middleware
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -103,18 +118,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-// Swagger Configuration Extension
-public static class SwaggerExtensions
-{
-    public static IApplicationBuilder UseSwaggerConfiguration(this IApplicationBuilder app)
-    {
-        app.UseSwagger();
-        app.UseSwaggerUI(c =>
-        {
-            c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-        });
-
-        return app;
-    }
-}

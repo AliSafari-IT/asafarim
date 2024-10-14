@@ -3,7 +3,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using DashboardApi.Core.Domain.Entities;
-using Infrastructure.Data; // I have my ApplicationDbContext here
+using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore; // I have my ApplicationDbContext here
 
 namespace DashboardApi.Services
 {
@@ -29,6 +30,24 @@ namespace DashboardApi.Services
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
+
+            // Find all users with the given username
+            var duplicateUsers = await _context.Users
+                .Where(u => u.Username == user.Username)
+                .OrderByDescending(u => u.CreatedAt) // Order by creation date to get the latest
+                .ToListAsync();
+
+            // If there's more than one user with the same username, remove the latest one
+            if (duplicateUsers.Count > 1)
+            {
+                var latestUser = duplicateUsers.First(); // Get the latest user (ordered by CreatedAt)
+
+                _context.Users.Remove(latestUser); // Remove the latest duplicate
+                await _context.SaveChangesAsync();
+
+                throw new InvalidOperationException($"Latest duplicate user with username '{latestUser.Username}' has been removed.");
+            }
+
 
             var existingUser = _context.Users.FirstOrDefault(u => u.Username == user.Username);
             if (existingUser != null)

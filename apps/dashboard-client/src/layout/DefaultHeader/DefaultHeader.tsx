@@ -1,6 +1,6 @@
 export function DefaultHeader() {
   return (
-    <header className="w-full text-center bg-gray-800 text-white p-4">
+    <header className="w-full text-center bg-indigo-600 text-white">
       <h1 className="text-2xl font-bold">Welcome to ASafariM!</h1>
     </header>
   );

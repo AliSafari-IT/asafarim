@@ -25,13 +25,11 @@ if (!builder.Environment.IsDevelopment())
         });
     });
 }
-var httpPort = Environment.GetEnvironmentVariable("HTTP_PORT") ?? "5000";
-var httpsPort = Environment.GetEnvironmentVariable("HTTPS_PORT") ?? "5001";
 
 builder.WebHost.UseKestrel(options =>
 {
-    options.ListenAnyIP(int.Parse(httpPort));
-    options.ListenAnyIP(int.Parse(httpsPort), listenOptions => listenOptions.UseHttps());
+    options.ListenAnyIP(5000); // HTTP
+    options.ListenAnyIP(5001, listenOptions => listenOptions.UseHttps()); // HTTPS
     options.ListenLocalhost(5146); // HTTP
     options.ListenLocalhost(44337, listenOptions => listenOptions.UseHttps()); // HTTPS
 });

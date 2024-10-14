@@ -14,6 +14,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
+
 // Enable HTTPS only if not in development
 if (!builder.Environment.IsDevelopment())
 {
@@ -26,6 +27,7 @@ if (!builder.Environment.IsDevelopment())
     });
 }
 
+// Configure Kestrel to listen on multiple ports for both HTTP and HTTPS
 builder.WebHost.UseKestrel(options =>
 {
     options.ListenAnyIP(5000); // HTTP
@@ -34,7 +36,7 @@ builder.WebHost.UseKestrel(options =>
     options.ListenLocalhost(44337, listenOptions => listenOptions.UseHttps()); // HTTPS
 });
 
-// Add services to the container.
+// Add services to the container
 builder.Services.AddControllers();
 
 // Configure MySQL Database and Health Checks
@@ -116,8 +118,12 @@ else
     app.UseHttpsRedirection();
 }
 
-// Use CORS policy
-app.UseCors("AllowAll");
+// Use CORS policy for the frontend
+app.UseCors(builder => builder
+    .WithOrigins("http://localhost:5173")  // Change to your frontend's domain in production
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .AllowCredentials());
 
 // Routing must be done before other middleware like authentication/authorization
 app.UseRouting();

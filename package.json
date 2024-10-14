@@ -9,7 +9,10 @@
     "apps/*"
   ],
   "scripts": {
-    "dev": "concurrently \"yarn workspace dashboard-client dev\" \"dotnet run --project apps/DashboardApi/DashboardApi.csproj\""
+    "dev": "concurrently \"yarn workspace dashboard-client dev\" \"dotnet run --project apps/DashboardApi/DashboardApi.csproj\"",
+    "build": "yarn workspace dashboard-client build",
+    "start": "yarn workspace dashboard-client start",
+    "publish": "bash ./scripts/dotnet-publish.sh"
   },
   "devDependencies": {
     "concurrently": "^9.0.1"

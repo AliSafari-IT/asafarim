@@ -2,9 +2,9 @@ import Wrapper from "../layout/Wrapper/Wrapper";
 
 const Contact = () => {
   const headerBlock = (
-    <div className="w-full text-center mx-auto m-0 text-gray-200 p-8 bg-gray-700">
+    <header className="w-full text-center text-gray-200  bg-gray-700">
       <h1 className="text-3xl font-bold">Contact Us!</h1>
-    </div>
+    </header>
   );
 
   return (

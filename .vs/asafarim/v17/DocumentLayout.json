@@ -7,6 +7,14 @@
       "RelativeMoniker": "D:0:0:{10AAC103-A54F-40EB-9AA8-46371A4F2017}|apps\\DashboardApi\\DashboardApi.csproj|solutionrelative:apps\\dashboardapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{10AAC103-A54F-40EB-9AA8-46371A4F2017}|apps\\DashboardApi\\DashboardApi.csproj|e:\\asm\\apps\\dashboardapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{10AAC103-A54F-40EB-9AA8-46371A4F2017}|apps\\DashboardApi\\DashboardApi.csproj|solutionrelative:apps\\dashboardapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{10AAC103-A54F-40EB-9AA8-46371A4F2017}|apps\\DashboardApi\\DashboardApi.csproj|e:\\asm\\apps\\dashboardapi\\dashboardapi.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{10AAC103-A54F-40EB-9AA8-46371A4F2017}|apps\\DashboardApi\\DashboardApi.csproj|solutionrelative:apps\\dashboardapi\\dashboardapi.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{10AAC103-A54F-40EB-9AA8-46371A4F2017}|apps\\DashboardApi\\DashboardApi.csproj|e:\\asm\\apps\\dashboardapi\\infrastructure\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{10AAC103-A54F-40EB-9AA8-46371A4F2017}|apps\\DashboardApi\\DashboardApi.csproj|solutionrelative:apps\\dashboardapi\\infrastructure\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -34,7 +42,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 9,
           "Children": [
             {
               "$type": "Bookmark",
@@ -46,7 +54,33 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "E:\\asm\\apps\\DashboardApi\\appsettings.json",
+              "RelativeDocumentMoniker": "apps\\DashboardApi\\appsettings.json",
+              "ToolTip": "E:\\asm\\apps\\DashboardApi\\appsettings.json",
+              "RelativeToolTip": "apps\\DashboardApi\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-10-13T19:57:11.995Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "DashboardApi",
+              "DocumentMoniker": "E:\\asm\\apps\\DashboardApi\\DashboardApi.csproj",
+              "RelativeDocumentMoniker": "apps\\DashboardApi\\DashboardApi.csproj",
+              "ToolTip": "E:\\asm\\apps\\DashboardApi\\DashboardApi.csproj",
+              "RelativeToolTip": "apps\\DashboardApi\\DashboardApi.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-10-13T19:31:38.995Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "UserRole.cs",
               "DocumentMoniker": "E:\\asm\\apps\\DashboardApi\\Core\\Domain\\Entities\\UserRole.cs",
               "RelativeDocumentMoniker": "apps\\DashboardApi\\Core\\Domain\\Entities\\UserRole.cs",
@@ -58,7 +92,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "Role.cs",
               "DocumentMoniker": "E:\\asm\\apps\\DashboardApi\\Core\\Domain\\Entities\\Role.cs",
               "RelativeDocumentMoniker": "apps\\DashboardApi\\Core\\Domain\\Entities\\Role.cs",
@@ -70,7 +104,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "Sitemap.cs",
               "DocumentMoniker": "E:\\asm\\apps\\DashboardApi\\Core\\Domain\\Entities\\Sitemap.cs",
               "RelativeDocumentMoniker": "apps\\DashboardApi\\Core\\Domain\\Entities\\Sitemap.cs",
@@ -82,7 +116,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "User.cs",
               "DocumentMoniker": "E:\\asm\\apps\\DashboardApi\\Core\\Domain\\Entities\\User.cs",
               "RelativeDocumentMoniker": "apps\\DashboardApi\\Core\\Domain\\Entities\\User.cs",
@@ -94,7 +128,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "ApplicationDbContext.cs",
               "DocumentMoniker": "E:\\asm\\apps\\DashboardApi\\Infrastructure\\Data\\ApplicationDbContext.cs",
               "RelativeDocumentMoniker": "apps\\DashboardApi\\Infrastructure\\Data\\ApplicationDbContext.cs",
@@ -102,8 +136,7 @@
               "RelativeToolTip": "apps\\DashboardApi\\Infrastructure\\Data\\ApplicationDbContext.cs",
               "ViewState": "AgIAADYAAAAAAAAAAAAswBIAAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-10T23:03:14.969Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-10T23:03:14.969Z"
             },
             {
               "$type": "Document",
@@ -113,7 +146,7 @@
               "RelativeDocumentMoniker": "apps\\DashboardApi\\Program.cs",
               "ToolTip": "E:\\asm\\apps\\DashboardApi\\Program.cs",
               "RelativeToolTip": "apps\\DashboardApi\\Program.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAswBwAAAAyAAAAAAAAAA==",
+              "ViewState": "AgIAADYAAAAAAAAAAAAswDQAAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-10T22:45:19.016Z",
               "EditorCaption": ""

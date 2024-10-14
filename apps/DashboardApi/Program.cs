@@ -9,17 +9,21 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure Kestrel to manually set HTTP and HTTPS ports
-builder.WebHost.ConfigureKestrel(options =>
+var httpPort = Environment.GetEnvironmentVariable("HTTP_PORT") ?? "5000";
+var httpsPort = Environment.GetEnvironmentVariable("HTTPS_PORT") ?? "5001";
+
+builder.WebHost.UseKestrel(options =>
 {
-    options.ListenLocalhost(5146); // HTTP port
-    options.ListenLocalhost(44337, listenOptions => listenOptions.UseHttps()); // HTTPS port
+    options.ListenAnyIP(int.Parse(httpPort));
+    options.ListenAnyIP(int.Parse(httpsPort), listenOptions => listenOptions.UseHttps());
+    options.ListenLocalhost(5146); // HTTP
+    options.ListenLocalhost(44337, listenOptions => listenOptions.UseHttps()); // HTTPS
 });
 
 // Add services to the container.
@@ -30,9 +34,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
     ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
 
-
-// Add health checks
-builder.Services.AddHealthChecks();
+// Add health checks with MySQL
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<ApplicationDbContext>(builder.Configuration.GetConnectionString("DefaultConnection"));
 
 // JWT Authentication Configuration
 var jwtSettings = builder.Configuration.GetSection("Jwt");

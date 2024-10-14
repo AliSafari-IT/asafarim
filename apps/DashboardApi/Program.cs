@@ -14,7 +14,17 @@ using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
-
+// Enable HTTPS only if not in development
+if (!builder.Environment.IsDevelopment())
+{
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        options.ListenAnyIP(5001, listenOptions =>
+        {
+            listenOptions.UseHttps(); // Use SSL in production
+        });
+    });
+}
 var httpPort = Environment.GetEnvironmentVariable("HTTP_PORT") ?? "5000";
 var httpsPort = Environment.GetEnvironmentVariable("HTTPS_PORT") ?? "5001";
 

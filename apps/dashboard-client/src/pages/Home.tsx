@@ -38,7 +38,7 @@ const Home = () => {
 
     // Make the API call using the token
     axios
-      .get("https://localhost:44337/api/sitemap?userRole=Admin", {
+      .get("https://localhost:5000/api/sitemap?userRole=Admin", {
         headers: {
           Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
         },

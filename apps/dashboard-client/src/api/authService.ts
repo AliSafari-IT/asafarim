@@ -1,5 +1,5 @@
 // Set the API URL for your auth service
-const API_URL = 'https://localhost:44337/api/auth';
+const API_URL = 'http://localhost:5000/api/auth';
 
 // Use fetch instead of axios for the login function
 const login = async (username: string, password: string) => {

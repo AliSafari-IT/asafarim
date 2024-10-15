@@ -1,3 +1,5 @@
+// src/components/PrivateRoute.tsx
+
 import { Navigate } from "react-router-dom";
 
 const PrivateRoute = ({ children }: { children: JSX.Element }) => {
@@ -6,4 +8,5 @@ const PrivateRoute = ({ children }: { children: JSX.Element }) => {
     return user ? children : <Navigate to="/login" />;
   };
 
-  export default PrivateRoute
+  export default PrivateRoute;
+  

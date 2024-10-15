@@ -1,15 +1,19 @@
 {
   "name": "asafarim",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "author": "Ali <asafarim@gmail.com>",
   "license": "MIT",
-  "private": "true",
+  "private": true,
   "workspaces": [
     "apps/*"
   ],
   "scripts": {
-    "dev": "concurrently \"yarn workspace dashboard-client dev\" \"dotnet run --project apps/DashboardApi/DashboardApi.csproj\""
+    "dev": "concurrently \"yarn workspace dashboard-client dev\" \"dotnet run --project apps/DashboardApi/DashboardApi.csproj\"",
+    "build": "yarn workspace dashboard-client build",
+    "start": "yarn workspace dashboard-client start",
+    "uw": "bash /var/www/asafarim/scripts-prod/update-full-stack.sh",
+    "reinstallYarn": "bash /var/www/asafarim/scripts-prod/reinstall-asm-workspace.sh"
   },
   "devDependencies": {
     "concurrently": "^9.0.1"

@@ -1,3 +1,5 @@
+// src/layout/Wrapper/Wrapper.tsx
+
 import React from 'react';
 import DefaultFooter from '../DefaultFooter/DefaultFooter';
 import DefaultHeader from '../DefaultHeader/DefaultHeader';

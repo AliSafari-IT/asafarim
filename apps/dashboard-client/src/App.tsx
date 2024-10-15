@@ -1,3 +1,4 @@
+// src/App.tsx
 import {
   Routes,
   Route,
@@ -12,12 +13,9 @@ import LoginPage from "./pages/LoginPage";
 import LogoutPage from "./pages/LogoutPage";
 import SitemapPage from "./pages/Sitemap/SitemapPage";
 import NotFound from "./components/NotFound";
-
 import { initializeIcons } from '@fluentui/react/lib/Icons';
 // Initialize Fluent UI icons
 initializeIcons();
-
-
 
 function App() {
   return (
@@ -55,7 +53,7 @@ function App() {
 
       <Route
         path="/health-ui"
-        element={<Navigate to="https://localhost:44337/health-ui" />}
+        element={<Navigate to="/health-ui" />}
       />
       {/* Catch-all route */}
       <Route path="*" element={<NotFound />} />

@@ -11,7 +11,7 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure Kestrel for HTTP and HTTPS traffic, with environment-based ports
+// Configure Kestrel for HTTP and HTTPS traffic
 var environment = builder.Environment;
 if (environment.IsProduction())
 {
@@ -26,7 +26,7 @@ if (environment.IsProduction())
 }
 else
 {
-    // Default for development: local development ports
+    // Default for development
     builder.WebHost.UseKestrel(options =>
     {
         options.ListenLocalhost(5146); // HTTP (local dev)
@@ -34,20 +34,25 @@ else
     });
 }
 
+// CORS policy configuration
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", builder =>
+    {
+        builder.WithOrigins("http://localhost:5173", "https://asafarim.com") // Allow dev and prod origins
+               .AllowAnyMethod()
+               .AllowAnyHeader()
+               .AllowCredentials();
+    });
+});
 
-// Add services to the container.
 builder.Services.AddControllers();
-
-// Configure MySQL Database and Health Checks
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
     ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection")),
-    mySqlOptions => mySqlOptions.EnableRetryOnFailure())); // Explicitly specifying MySQL options and enabling retries
-// Add health checks with MySQL
-builder.Services.AddHealthChecks()
-    .AddDbContextCheck<ApplicationDbContext>();
+    mySqlOptions => mySqlOptions.EnableRetryOnFailure()));
 
-// JWT Authentication Configuration
+// JWT Configuration
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.ASCII.GetBytes(jwtSettings["Key"] ?? throw new ArgumentNullException("Jwt:Key"));
 
@@ -58,7 +63,7 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    options.RequireHttpsMetadata = true;
+    options.RequireHttpsMetadata = false; // Allow HTTP for local development
     options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -69,26 +74,16 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = jwtSettings["Issuer"],
         ValidAudience = jwtSettings["Audience"],
         ClockSkew = TimeSpan.Zero,
-
     };
 });
 
-// Register services and repositories
 builder.Services.AddScoped<ISitemapRepository, SitemapRepository>();
 builder.Services.AddScoped<GetSitemapQuery>();
 builder.Services.AddScoped<UserService>();
 
-// Add Swagger services
-builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "ASafariM API",
-        Version = "v1",
-        Description = "API documentation for ASafariM application"
-    });
-    // Add security definition for JWT in Swagger
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "ASafariM API", Version = "v1" });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -99,74 +94,22 @@ builder.Services.AddSwaggerGen(c =>
     });
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            new string[] { }
-        }
+        { new OpenApiSecurityScheme { Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } }, new string[] { } }
     });
 });
 
-// Configure CORS for both development and production environments
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowSpecific", builder =>
-    {
-        if (environment.IsProduction())
-        {
-            // In development, allow all origins for testing purposes
-            builder.AllowAnyOrigin()
-                   .AllowAnyMethod()
-                   .AllowAnyHeader();
-        }
-        else
-        {
-            // In production, restrict CORS to specific origins (e.g., your domain)
-            builder.WithOrigins("https://asafarim.com")
-                   .AllowAnyMethod()
-                   .AllowAnyHeader()
-                   .AllowCredentials();
-        }
-    });
-});
-
-// Build the application
 var app = builder.Build();
 
-// Add health check endpoint
-app.UseHealthChecks("/health-ui");
-
-// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "ASafariM API V1");
-    });
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ASafariM API V1"));
 }
-else
-{
-    app.UseHttpsRedirection(); // Ensure that HTTPS redirection is enabled in production
-    app.UseHsts(); // Enforce strict transport security in production
-}
-// Use CORS policy
-app.UseCors("AllowSpecific");
 
-// Routing
+app.UseHttpsRedirection();
 app.UseRouting();
-
-// Use authentication and authorization middleware
+app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
-
-// Map controllers to endpoints
 app.MapControllers();
-
 app.Run();

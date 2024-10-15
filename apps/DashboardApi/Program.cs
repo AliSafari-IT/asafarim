@@ -16,12 +16,12 @@ var environment = builder.Environment;
 if (environment.IsProduction())
 {
     var httpPort = Environment.GetEnvironmentVariable("HTTP_PORT") ?? "5000";
-    var httpsPort = Environment.GetEnvironmentVariable("HTTPS_PORT") ?? "5001";
+   // var httpsPort = Environment.GetEnvironmentVariable("HTTPS_PORT") ?? "5001";
     
     builder.WebHost.UseKestrel(options =>
     {
         options.ListenAnyIP(int.Parse(httpPort)); // HTTP (internal)
-        options.ListenAnyIP(int.Parse(httpsPort), listenOptions => listenOptions.UseHttps()); // HTTPS (external)
+ //       options.ListenAnyIP(int.Parse(httpsPort), listenOptions => listenOptions.UseHttps()); // HTTPS (external)
     });
 }
 else

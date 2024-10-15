@@ -38,11 +38,11 @@ const config = {
   favicon: "img/favicon.ico",
 
   // Set the production url of your site here
-  url: "https://asafarim.be",
+  url: "https://asafarim.com",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   // baseUrl: "/",
-  baseUrl: "/apps/techdocs/",
+  baseUrl: "/",
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: "asafarim",
@@ -175,7 +175,7 @@ const config = {
           items: [
             {
               label: "ASafariM",
-              to: "//asafarim.be",
+              to: "//asafarim.com",
               prependBaseUrlToHref: true,
             },
             {

@@ -8,6 +8,10 @@
 .docusaurus
 .cache-loader
 
+# But do not ignore plugins folder inside apps/techdocs
+!plugins/
+!apps/techdocs/plugins/custom-webpack-plugin/index.js
+
 # Misc
 .DS_Store
 .env.local

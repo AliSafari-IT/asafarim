@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# Set working directory to project root
+echo "Set working directory to project root: 
+
+# Set working directory to project root /var/www/asafarim"
 cd /var/www/asafarim
 
 # Step 1: Build the React app (frontend)
@@ -14,6 +16,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # Copy the built React app to the public directory
+echo "Copying built React app to public directory... from apps/dashboard-client/dist to /var/www/asafarim.com/public_html/"
 sudo cp -r dist/* /var/www/asafarim.com/public_html/
 
 # Step 2: Build and publish the ASP.NET Core app (backend)
@@ -22,6 +25,7 @@ cd /var/www/asafarim/apps/DashboardApi || { echo "Directory apps/DashboardApi no
 
 # Restore dependencies and publish in Release mode
 dotnet restore
+echo "Publishing the ASP.NET Core API... in Release mode to /var/www/asafarim.com/DashboardApi"
 dotnet publish -c Release -o /var/www/asafarim.com/DashboardApi
 
 if [ $? -ne 0 ]; then

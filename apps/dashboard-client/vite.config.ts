@@ -8,18 +8,5 @@ export default defineConfig({
   css: {
     postcss: './postcss.config.cjs',
   },
-  server: {
-    proxy: {
-      '/health-ui': {
-        target: 'https://localhost:44337', // Your ASP.NET Core backend URL
-        changeOrigin: true,
-        secure: false, // Disable SSL verification in development
-      },
-      '/api': {
-        target: 'http://localhost:44337',
-        changeOrigin: true,
-      },
-    },
-  },
   assetsInclude: ['**/*.md'],
 })

@@ -1,7 +1,6 @@
-// Set the API URL for your auth service
-const API_URL = 'http://localhost:5000/api/auth';
+const API_URL = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api/auth` : 'https://asafarim.com/api/auth';
+console.log(`API URL is: ${API_URL}`, `import.meta.env.VITE_API_URL is: ${import.meta.env.VITE_API_URL}`);
 
-// Use fetch instead of axios for the login function
 const login = async (username: string, password: string) => {
   console.log(`Attempting to login with username: ${username} and password: ${password}`);
   
@@ -10,11 +9,9 @@ const login = async (username: string, password: string) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Accept': 'application/json',
       },
       body: JSON.stringify({ username, password }),
-      // Optional: disable SSL certificate verification in development mode
-      // Note: fetch API doesn't directly support disabling SSL verification in the browser
     });
 
     if (!response.ok) {
@@ -35,5 +32,4 @@ const login = async (username: string, password: string) => {
   }
 };
 
-const authService = { login };
-export default authService;
+export default { login };

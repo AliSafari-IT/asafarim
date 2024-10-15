@@ -23,7 +23,7 @@ const Home = () => {
   const [error, setError] = useState<string | null>(null);
 
   const user = localStorage.getItem('user');
-
+  const API_URL = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : 'https://asafarim.com/api';
   // Fetch data from API
   useEffect(() => {
     // Retrieve the token from localStorage
@@ -36,9 +36,9 @@ const Home = () => {
       return;
     }
 
-    // Make the API call using the token
+    // Make the API call using the token: "https://localhost:44337/api/sitemap?userRole=Admin"
     axios
-      .get("https://localhost:5000/api/sitemap?userRole=Admin", {
+      .get(`${API_URL}/sitemap?userRole=Admin`, {
         headers: {
           Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
         },

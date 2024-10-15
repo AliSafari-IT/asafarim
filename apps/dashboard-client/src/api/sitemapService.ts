@@ -1,5 +1,6 @@
 // Set the API URL for your sitemap service
-const API_URL = 'https://localhost:44337/api/sitemap';
+const API_URL = import.meta.env.VITE_API_URL;
+console.log("sitemapService -> API_URL: " + API_URL);
 
 const getSitemap = async (userRole: string) => {
   console.log(`Fetching sitemap for userRole: ${userRole}`);

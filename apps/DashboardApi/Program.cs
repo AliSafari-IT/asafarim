@@ -2,51 +2,50 @@ using System.Text;
 using Core.Application.Interfaces.Repositories;
 using Core.Application.Sitemaps.Queries;
 using DashboardApi.Services;
-using HealthChecks.UI.Client;
 using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Enable HTTPS only if not in development
-if (!builder.Environment.IsDevelopment())
+// Configure Kestrel for HTTP and HTTPS traffic, with environment-based ports
+var environment = builder.Environment;
+if (environment.IsProduction())
 {
-    builder.WebHost.ConfigureKestrel(options =>
+    var httpPort = Environment.GetEnvironmentVariable("HTTP_PORT") ?? "5000";
+    var httpsPort = Environment.GetEnvironmentVariable("HTTPS_PORT") ?? "5001";
+    
+    builder.WebHost.UseKestrel(options =>
     {
-        options.ListenAnyIP(5001, listenOptions =>
-        {
-            listenOptions.UseHttps(); // Use SSL in production
-        });
+        options.ListenAnyIP(int.Parse(httpPort)); // HTTP (internal)
+        options.ListenAnyIP(int.Parse(httpsPort), listenOptions => listenOptions.UseHttps()); // HTTPS (external)
+    });
+}
+else
+{
+    // Default for development: local development ports
+    builder.WebHost.UseKestrel(options =>
+    {
+        options.ListenLocalhost(5146); // HTTP (local dev)
+        options.ListenLocalhost(44337, listenOptions => listenOptions.UseHttps()); // HTTPS (local dev)
     });
 }
 
-// Configure Kestrel to listen on multiple ports for both HTTP and HTTPS
-builder.WebHost.UseKestrel(options =>
-{
-    options.ListenAnyIP(5000); // HTTP
-    options.ListenAnyIP(5001, listenOptions => listenOptions.UseHttps()); // HTTPS
-    options.ListenLocalhost(5146); // HTTP
-    options.ListenLocalhost(44337, listenOptions => listenOptions.UseHttps()); // HTTPS
-});
 
-// Add services to the container
+// Add services to the container.
 builder.Services.AddControllers();
 
 // Configure MySQL Database and Health Checks
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
-    ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
-
+    ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection")),
+    mySqlOptions => mySqlOptions.EnableRetryOnFailure())); // Explicitly specifying MySQL options and enabling retries
 // Add health checks with MySQL
 builder.Services.AddHealthChecks()
-    .AddDbContextCheck<ApplicationDbContext>(builder.Configuration.GetConnectionString("DefaultConnection"));
+    .AddDbContextCheck<ApplicationDbContext>();
 
 // JWT Authentication Configuration
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -59,15 +58,18 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
+    options.RequireHttpsMetadata = true;
+    options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters
     {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
         ValidateIssuer = true,
         ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
         ValidIssuer = jwtSettings["Issuer"],
         ValidAudience = jwtSettings["Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
+        ClockSkew = TimeSpan.Zero,
+
     };
 });
 
@@ -82,19 +84,55 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "My API",
-        Version = "v1"
+        Title = "ASafariM API",
+        Version = "v1",
+        Description = "API documentation for ASafariM application"
+    });
+    // Add security definition for JWT in Swagger
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter your JWT with Bearer scheme",
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] { }
+        }
     });
 });
 
-// Configure CORS to allow any origin, method, and header
+// Configure CORS for both development and production environments
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", builder =>
+    options.AddPolicy("AllowSpecific", builder =>
     {
-        builder.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader();
+        if (environment.IsProduction())
+        {
+            // In development, allow all origins for testing purposes
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        }
+        else
+        {
+            // In production, restrict CORS to specific origins (e.g., your domain)
+            builder.WithOrigins("https://asafarim.com")
+                   .AllowAnyMethod()
+                   .AllowAnyHeader()
+                   .AllowCredentials();
+        }
     });
 });
 
@@ -110,22 +148,18 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "ASafariM API V1");
     });
 }
 else
 {
-    app.UseHttpsRedirection();
+    app.UseHttpsRedirection(); // Ensure that HTTPS redirection is enabled in production
+    app.UseHsts(); // Enforce strict transport security in production
 }
+// Use CORS policy
+app.UseCors("AllowSpecific");
 
-// Use CORS policy for the frontend
-app.UseCors(builder => builder
-    .WithOrigins("http://localhost:5173")  // Change to your frontend's domain in production
-    .AllowAnyMethod()
-    .AllowAnyHeader()
-    .AllowCredentials());
-
-// Routing must be done before other middleware like authentication/authorization
+// Routing
 app.UseRouting();
 
 // Use authentication and authorization middleware

@@ -12,6 +12,9 @@ import LoginPage from "./pages/LoginPage";
 import LogoutPage from "./pages/LogoutPage";
 import SitemapPage from "./pages/Sitemap/SitemapPage";
 import NotFound from "./components/NotFound";
+import { initializeIcons } from '@fluentui/react/lib/Icons';
+// Initialize Fluent UI icons
+initializeIcons();
 
 function App() {
   return (

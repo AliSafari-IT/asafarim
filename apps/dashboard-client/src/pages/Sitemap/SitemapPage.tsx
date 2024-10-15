@@ -1,3 +1,5 @@
+// src/pages/Sitemap/SitemapPage.tsx
+
 import { useEffect, useState } from 'react';
 import { IconButton, Dropdown, IDropdownOption } from '@fluentui/react';
 import sitemapService from '../../api/sitemapService';

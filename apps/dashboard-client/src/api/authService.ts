@@ -1,5 +1,8 @@
-const API_URL = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api/auth` : 'https://asafarim.com/api/auth';
-console.log(`API URL is: ${API_URL}`, `import.meta.env.VITE_API_URL is: ${import.meta.env.VITE_API_URL}`);
+// src/api/authService.ts
+
+// Set the API URL for your auth service
+const API_URL = (import.meta as any).env.VITE_API_URL ? `${(import.meta as any).env.VITE_API_URL}/api/auth` : 'https://asafarim.com/api/auth';
+console.log(`API URL is: ${API_URL}`, `import.meta.env.VITE_API_URL is: ${(import.meta as any).env.VITE_API_URL}`);
 
 const login = async (username: string, password: string) => {
   console.log(`Attempting to login with username: ${username} and password: ${password}`);

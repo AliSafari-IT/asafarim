@@ -37,4 +37,24 @@ fi
 echo "Restarting Nginx..."
 sudo systemctl restart nginx
 
+# Step 14: Build the React documentation app (techdocs)
+cd /var/www/asafarim/apps/techdocs || { echo "Directory apps/techdocs not found!"; exit 1; }
+npm run build
+
+if [ $? -ne 0 ]; then
+  echo "Techdocs build failed!"
+  exit 1
+fi
+
+sudo cp -r build/* /var/www/asafarim.com/techdocs
+
+if [ $? -ne 0 ]; then
+  echo "Techdocs copy failed!"
+  exit 1
+fi  
+
+echo "Full-stack update completed successfully!"
+
 echo "Deployment completed successfully!"
+
+

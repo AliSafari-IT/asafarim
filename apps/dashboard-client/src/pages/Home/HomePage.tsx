@@ -4,9 +4,10 @@ import Wrapper from "../../layout/Wrapper/Wrapper";
 import { Link } from "react-router-dom";
 import { HomeHeaderBlock } from "./HomeHeaderBlock";
 import NotAuthenticated from "../../components/NotAuthenticated";
+import { ISitemap } from "../../interfaces/ISitemap";
 
 const Home = () => {
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<ISitemap[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const envVariable = (import.meta as any).env;
@@ -33,6 +34,12 @@ const Home = () => {
       })
       .then((response) => {
         setData(response.data); // Set data from API
+        // Check if `data` is an array
+        if (Array.isArray(data)) {
+        } else {
+          console.error('Expected an array but got:', data);
+          // Handle non-array data here
+        }
         setLoading(false);
         setError(null);
       })
@@ -53,8 +60,8 @@ const Home = () => {
 
     return <Wrapper
       pageTitle="Home"
-      header={errorMessage}     
-      >
+      header={errorMessage}
+    >
     </Wrapper>;
   }
 
@@ -78,7 +85,7 @@ const Home = () => {
 
       {data.length > 0 ? (
         <ul className="card m-4">
-          {data.map((item) => (
+          {Array.isArray(data) && data.map((item) => (
             <li key={item.id}>
               <a href={item.slug}>{item.pageName}</a> - {item.description}
             </li>

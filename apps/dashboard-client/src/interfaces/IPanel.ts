@@ -1,5 +1,5 @@
 export interface IPanel {
-  id: number;
+  id: string;
   title: string;
   content: string;
   summary: string;

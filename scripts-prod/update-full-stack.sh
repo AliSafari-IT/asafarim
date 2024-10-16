@@ -46,6 +46,8 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
+# Copy the built React app to the public directory
+echo "Copying built React app to public directory... from /var/www/asafarim/apps/techdocs/build to /var/www/asafarim.com/techdocs"
 sudo cp -r build/* /var/www/asafarim.com/techdocs
 
 if [ $? -ne 0 ]; then

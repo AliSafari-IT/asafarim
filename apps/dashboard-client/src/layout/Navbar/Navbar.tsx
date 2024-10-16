@@ -19,13 +19,13 @@ function Navbar({ className }: { className?: string }) {
   const [isMenuOpen, setMenuOpen] = useState(false); // State to toggle mobile menu
 
   return (
-    <nav className={` text-white w-full flex justify-between items-center  ${className}`}>
+    <nav className={` text-white w-full flex justify-between items-center max-h-20 px-4 py-2 shadow-md ${isMenuOpen ? "bg-gray-800" : "bg-gray-900"} rem  ${className}`}>
       {/* Logo and Left-aligned Links */}
-      <div className="flex items-center space-x-4">
-        <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-3">
+        <div className="flex items-center">
           <Link to="/" className={`flex items-center ${isActive("/") ? "text-blue-400 underline" : "no-underline"}`}>
-            <img src={logo} alt="Brand Logo" className="w-10 h-10 bg-transparent fill-black py-2" />
-            <span className="text-xl font-bold tracking-wide ml-2">ASafariM</span>
+            <img src={logo} alt="Brand Logo" className="logo w-14 h-9 bg-transparent" />
+            <span className="text-2xl font-bold tracking-wide ml-2">ASafariM</span>
           </Link>
         </div>
         {/* Desktop Links */}
@@ -73,6 +73,7 @@ function Navbar({ className }: { className?: string }) {
         {!user ? (
           <Link
             to="/login"
+            title="Login"
             className={`hover:text-blue-400 transition-colors duration-300 ${isActive("/login") ? "text-blue-400 underline" : "no-underline"}`}
           >
             <IconLogin className="text-green-300 w-14 h-9 " aria-label="Login" title="Login" />
@@ -80,6 +81,7 @@ function Navbar({ className }: { className?: string }) {
         ) : (
           <Link
             to="/logout"
+            title="Logout"
             className={`hover:text-blue-400 transition-colors duration-300 ${isActive("/logout") ? "text-blue-400 underline" : "no-underline"}`}
           >
             <IconLogout className="text-red-700  w-14 h-9 " aria-label="Logout" title="Logout" />
@@ -101,8 +103,8 @@ function Navbar({ className }: { className?: string }) {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <AlertContainer close={() => setMenuOpen(false)} className="relative w-3/4 top-3 left-0 w-full flex flex-col items-around justify-center space-y-4 md:hidden hover:text-blue-400,transition-colors duration-300,cursor-pointer">
-          <ul className="list-none  space-y-4">
+        <AlertContainer close={() => setMenuOpen(false)} className="absolute w-full top-3 left-0 flex flex-col items-around justify-center md:hidden md:w-1/4 -z-10 bg-gray-900 hover:text-blue-400,transition-colors duration-300,cursor-pointer">
+          <ul className="list-none h-20  space-y-4">
             {/** Add link to /techdocs */}
             <li>
               <Link
@@ -110,7 +112,7 @@ function Navbar({ className }: { className?: string }) {
                 className={`hover:text-blue-400 transition-colors duration-300 ${isActive("/techdocs") ? "text-blue-400 underline" : "no-underline"}`}
                 onClick={() => setMenuOpen(false)}
               >
-                Tech Docs
+                Tech Docs <IconOpen className="text-gray-700  hover:text-indigo-700 cursor-pointer " aria-label="Logout" title="Logout" />
               </Link>
             </li>
             <li>

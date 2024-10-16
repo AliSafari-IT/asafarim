@@ -75,7 +75,7 @@ function Navbar({ className }: { className?: string }) {
             to="/login"
             className={`hover:text-blue-400 transition-colors duration-300 ${isActive("/login") ? "text-blue-400 underline" : "no-underline"}`}
           >
-            <IconLogin className="text-green-300 pr-4" aria-label="Login" title="Login" />
+            <IconLogin className="text-green-300 w-14 h-9 " aria-label="Login" title="Login" />
           </Link>
         ) : (
           <Link

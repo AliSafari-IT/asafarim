@@ -35,7 +35,7 @@ const LoginPage = () => {
       if (error?.response && error.response.status === 401) {
         setError(`Invalid username or password: (Error ${error.response.status})`);
       } else {
-        setError('An unexpected error occurred. Please try again later.');
+        setError('An unexpected error occurred. Please try again later. (Error 500: Internal Server Error)');
       }
     } finally {
       setLoading(false);

@@ -7,7 +7,7 @@ import {
 import PrivateRoute from "./components/PrivateRoute";
 import About from "./pages/AboutMe/About";
 import Contact from "./pages/Contact";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/Dashboard/DashboardPage";
 import LoginPage from "./pages/LoginPage";
 import LogoutPage from "./pages/LogoutPage";
 import SitemapPage from "./pages/Sitemap/SitemapPage";

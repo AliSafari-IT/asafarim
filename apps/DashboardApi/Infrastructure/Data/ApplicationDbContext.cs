@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
-using Core.Domain.Entities;
-using DashboardApi.Core.Domain.Entities;  // Fully qualify the Role from this namespace
+
+using DashboardApi.Core.Domain.Entities;
+using Core.Domain.Entities;  // Fully qualify the Role from this namespace
 
 namespace Infrastructure.Data
 {
@@ -54,7 +55,7 @@ namespace Infrastructure.Data
                     PageName = "Contact",
                     Description = "Contact Page",
                     Slug = "/contact",
-                    AccessByRole = Core.Domain.Entities.Role.StandardUser
+                    AccessByRole = Core.Domain.Enum.EnumUserRole.StandardUser
                 },
                 new Sitemap
                 {
@@ -62,7 +63,7 @@ namespace Infrastructure.Data
                     PageName = "About",
                     Description = "About Page",
                     Slug = "/about",
-                    AccessByRole = Core.Domain.Entities.Role.StandardUser
+                    AccessByRole = Core.Domain.Enum.EnumUserRole.StandardUser
                 }
             );
 

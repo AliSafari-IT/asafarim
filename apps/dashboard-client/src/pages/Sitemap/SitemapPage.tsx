@@ -5,16 +5,18 @@ import { IconButton, Dropdown, IDropdownOption } from '@fluentui/react';
 import sitemapService from '../../api/sitemapService';
 import '../../styles/sitemap-page.css';
 import Wrapper from '../../layout/Wrapper/Wrapper';
+import { IRole } from '../../interfaces/IRole';
+import { ISitemapItem } from '../../interfaces/ISitemapItem';
 
 const SitemapPage = () => {
-  const [sitemapData, setSitemapData] = useState<any[]>([]);
+  const [sitemapData, setSitemapData] = useState<ISitemapItem []>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     // Fetch sitemap data from API
     const fetchData = async () => {
       try {
-        const data = await sitemapService.getSitemap("Admin");
+        const data = await sitemapService.getSitemap(IRole.Admin);
         setSitemapData(data);
         setLoading(false);
       } catch (error) {

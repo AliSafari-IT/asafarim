@@ -1,5 +1,5 @@
 const API_URL = (import.meta as any).env.VITE_API_URL
-  ? `${(import.meta as any).env.VITE_API_URL}/api/auth`
+  ? `${(import.meta as any).env.VITE_API_URL}/auth`
   : 'https://asafarim.com/api/auth';
 console.log(`API URL is: ${API_URL}`, `import.meta.env.VITE_API_URL is: ${(import.meta as any).env.VITE_API_URL}`);
 

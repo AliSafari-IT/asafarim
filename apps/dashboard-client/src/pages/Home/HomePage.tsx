@@ -4,10 +4,10 @@ import Wrapper from "../../layout/Wrapper/Wrapper";
 import { Link } from "react-router-dom";
 import { HomeHeaderBlock } from "./HomeHeaderBlock";
 import NotAuthenticated from "../../components/NotAuthenticated";
-import { ISitemap } from "../../interfaces/ISitemap";
+import { ISitemapItem } from "../../interfaces/ISitemapItem";
 
 const Home = () => {
-  const [data, setData] = useState<ISitemap[]>([]);
+  const [data, setData] = useState<ISitemapItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const envVariable = (import.meta as any).env;
@@ -33,9 +33,9 @@ const Home = () => {
         },
       })
       .then((response) => {
-        setData(response.data); // Set data from API
         // Check if `data` is an array
         if (Array.isArray(data)) {
+          setData(response.data); // Set data from API
         } else {
           console.error('Expected an array but got:', data);
           // Handle non-array data here
@@ -67,7 +67,6 @@ const Home = () => {
 
   return (
     <Wrapper header={<HomeHeaderBlock />} pageTitle={"Home"} >
-      <h1 className="text-3xl font-bold">Home Page</h1>
       {error && <p>{error}</p>}
       {user && <div className="bg-white text-blue-900 rounded-lg shadow-lg p-8 w-full max-w-xl text-center transform hover:scale-105 transition-transform duration-300 ease-in-out">
         <h2 className="text-3xl font-semibold mb-4">Manage Your Dashboard</h2>

@@ -1,6 +1,6 @@
 import { IRole } from "./IRole";
 
-export interface ISitemap {
+export interface ISitemapItem {
   id: string;
   pageName: string;
   description: string;

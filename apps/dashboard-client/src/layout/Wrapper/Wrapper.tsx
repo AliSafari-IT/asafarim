@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import DefaultFooter from '../DefaultFooter/DefaultFooter';
 import DefaultHeader from '../DefaultHeader/DefaultHeader';
-import Navbar from '../Navbar/Navbar';
+import Navbar from '../Navbar/NavExample';
 
 interface LayoutProps {
   header?: React.ReactNode;

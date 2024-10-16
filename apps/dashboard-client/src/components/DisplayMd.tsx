@@ -22,12 +22,10 @@ const DisplayMd: React.FC<DisplayMdProps> = ({ filePath }) => {
   }
 
   return (
-    <div className="container">
-      <div className="markdown-container">
+    <div className="markdown-container">
         {/* Render the markdown content directly */}
         <ReactMarkdown>{filePath}</ReactMarkdown>
       </div>
-    </div>
   );
 };
 

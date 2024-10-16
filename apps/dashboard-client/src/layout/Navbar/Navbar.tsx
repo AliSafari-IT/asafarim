@@ -1,16 +1,14 @@
 // Navbar.tsx
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import logo from './logoT.svg';
 import {
-  Library24Color as IconOpen, Dismiss24Regular,
+  
   PersonAccounts24Filled as IconLogin, SignOut24Regular as IconLogout,
   PersonInfo24Regular as IconAbout,
   PhoneVibrate24Regular as IconContact,
   DeveloperBoard24Regular as IconDashboard,
-  Home24Regular as IconHome,
   PersonAccounts24Regular as IconUser,
-  Search24Regular as IconSearch,
   Teaching24Regular as IconTeaching
 } from '@fluentui/react-icons';
 
@@ -36,7 +34,7 @@ function Navbar({ className }: { className?: string }) {
     }`;
 
   return (
-    <nav className="bg-gray-900 w-full border-b shadow-md border-gray-200 px-4 py-4 flex items-center justify-between relative">
+    <nav className={"bg-gray-900 w-full border-b shadow-md border-gray-200 px-4 py-4 flex items-center justify-between relative " + className}>
       {/* Left side */}
       <div className="flex items-center space-x-4">
         <a
@@ -77,14 +75,14 @@ function Navbar({ className }: { className?: string }) {
             <IconLogout />
           </a>
         ) : (
-          <a href="/login" className={navLinkClass('/login')}>
+          <a href="/login" className={navLinkClass('/login') + ' pr-8'}>
             <IconLogin />
           </a>
         )}
       </div>
 
       {/* Hamburger Icon */}
-      <div className="sm:hidden">
+      <div className="sm:hidden pr-5">
         <button
           onClick={() => setMenuOpen(!menuOpen)}
           className="focus:outline-none"

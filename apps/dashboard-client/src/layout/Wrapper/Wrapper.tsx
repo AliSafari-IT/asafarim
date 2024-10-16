@@ -61,8 +61,7 @@ const Wrapper: React.FC<LayoutProps> = ({
       <div className={`flex flex-col min-h-screen w-full bg-gray-800 text-black bg-gradient-to-r from-blue-500 to-indigo-600 ${className} layout-container`} style={style}>
         {/* Navbar */}
         {navbarBlock}
-
-        <div className="flex flex-grow w-full">
+ <main>
           {/* Sidebar */}
           {sidebar && (
             <aside className={`sidebar ${sidebarClassName}`} style={sidebarStyle}>
@@ -70,14 +69,13 @@ const Wrapper: React.FC<LayoutProps> = ({
             </aside>
           )}
 
-          {/* Main Content */}
-          <div className={`content flex-grow  ${contentClassName}`} style={contentStyle}>
+
             {headerBlock}
-            <main>{content ?? children}</main>
+           {content ?? children}
+           </main>
             {footerBlock}
-          </div>
         </div>
-      </div>
+
     </>
   );
 };

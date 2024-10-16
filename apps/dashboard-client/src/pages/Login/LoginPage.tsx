@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import authService from '../api/authService';
-import Wrapper from '../layout/Wrapper/Wrapper';
+import authService from '../../api/authService';
+import Wrapper from '../../layout/Wrapper/Wrapper';
 import { useNavigate } from 'react-router-dom';
-import AlertContainer from '../components/AlertContainer';
+import AlertContainer from '../../components/AlertContainer';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
@@ -43,7 +43,7 @@ const LoginPage = () => {
   };
 
   return (
-    <Wrapper header={<div className="w-full text-center text-gray-200 py-8 text-2xl border border-gray-700 bg-gray-700">Login</div>}>
+    <Wrapper header={<div className="w-full text-center text-gray-200 py-8 text-2xl border border-gray-700 bg-gray-700 z-10">Login</div>}>
       <AlertContainer theme="info" className="w-1/2 mx-auto my-10 px-4 py-3 rounded relative">
         <form onSubmit={handleLogin} className="flex flex-col items-center justify-center space-y-4">
           

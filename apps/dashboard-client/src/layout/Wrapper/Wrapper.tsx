@@ -1,6 +1,6 @@
 // src/layout/Wrapper/Wrapper.tsx
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import DefaultFooter from '../DefaultFooter/DefaultFooter';
 import DefaultHeader from '../DefaultHeader/DefaultHeader';
 import Navbar from '../Navbar/Navbar';
@@ -19,6 +19,7 @@ interface LayoutProps {
   sidebarStyle?: React.CSSProperties;
   style?: React.CSSProperties;
   pageTitle?: string;
+  pageDescription?: string;
   children?: React.ReactNode;
 }
 
@@ -38,38 +39,46 @@ const Wrapper: React.FC<LayoutProps> = ({
   style = {},
   pageTitle,
   children,
+  pageDescription = 'ASafariM React .Net Core TypeScript Client',
 }) => {
-  // Set the document title if provided
-  if (pageTitle) {
-    document.title = pageTitle;
-  }
 
   // Default header, footer, and navbar
+  const sidebarBlock = sidebar ?? <div className="w-64 h-full bg-gray-800 text-white">Sidebar</div>;
   const headerBlock = header ?? <DefaultHeader />;
   const footerBlock = footer ?? <DefaultFooter />;
   const navbarBlock = navbar ?? <Navbar className={`p-0 m-0 ${navbarClassName}`} />;
 
+  // Page title
+  const title = `${pageTitle ? `${pageTitle} | ` : ''}ASafariM`;
+  const description = pageDescription;
+  useEffect(() => {
+    document.title = title;
+    document.querySelector('meta[name="description"]')?.setAttribute('content', description);
+  }, [pageTitle]);
+
   return (
-    <div className={`flex flex-col min-h-screen w-full bg-gray-800 text-black bg-gradient-to-r from-blue-500 to-indigo-600 ${className}`} style={style}>
-      {/* Navbar */}
-      {navbarBlock}
+    <>      
+      <div className={`flex flex-col min-h-screen w-full bg-gray-800 text-black bg-gradient-to-r from-blue-500 to-indigo-600 ${className} layout-container`} style={style}>
+        {/* Navbar */}
+        {navbarBlock}
 
-      <div className="flex flex-grow w-full">
-        {/* Sidebar */}
-        {sidebar && (
-          <aside className={`sidebar ${sidebarClassName}`} style={sidebarStyle}>
-            {sidebar}
-          </aside>
-        )}
+        <div className="flex flex-grow w-full">
+          {/* Sidebar */}
+          {sidebar && (
+            <aside className={`sidebar ${sidebarClassName}`} style={sidebarStyle}>
+              {sidebarBlock}
+            </aside>
+          )}
 
-        {/* Main Content */}
-        <div className={`content flex-grow  ${contentClassName}`} style={contentStyle}>
-          {headerBlock}
-          <main>{content ?? children}</main>
-          {footerBlock}
+          {/* Main Content */}
+          <div className={`content flex-grow  ${contentClassName}`} style={contentStyle}>
+            {headerBlock}
+            <main>{content ?? children}</main>
+            {footerBlock}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

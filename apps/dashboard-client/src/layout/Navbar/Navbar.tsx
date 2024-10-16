@@ -8,6 +8,7 @@ import {
   PhoneVibrate24Regular as IconContact,
   DeveloperBoardSearch24Regular as IconDashboard
 } from '@fluentui/react-icons';
+import AlertContainer from "../../components/AlertContainer";
 // Helper function to check if a route is active
 const isActive = (path: string) => {
   return useLocation().pathname === path;
@@ -29,6 +30,15 @@ function Navbar({ className }: { className?: string }) {
         </div>
         {/* Desktop Links */}
         <ul className="list-none  hidden md:flex space-x-6">
+          <li>
+            <Link
+              to="//techdocs.asafarim.com"
+              className={`hover:text-blue-400 transition-colors duration-300 ${isActive("/techdocs") ? "text-blue-400 underline" : "no-underline"}`}
+              onClick={() => setMenuOpen(false)}
+            >
+              Tech Docs
+            </Link>
+          </li>
           <li>
             <Link
               to="/about"
@@ -91,8 +101,18 @@ function Navbar({ className }: { className?: string }) {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="relative top-3 left-0 w-full flex flex-col items-around justify-center space-y-4 md:hidden hover:text-blue-400,transition-colors duration-300,cursor-pointer">
+        <AlertContainer close={() => setMenuOpen(false)} className="relative w-3/4 top-3 left-0 w-full flex flex-col items-around justify-center space-y-4 md:hidden hover:text-blue-400,transition-colors duration-300,cursor-pointer">
           <ul className="list-none  space-y-4">
+            {/** Add link to /techdocs */}
+            <li>
+              <Link
+                to="//techdocs.asafarim.com"
+                className={`hover:text-blue-400 transition-colors duration-300 ${isActive("/techdocs") ? "text-blue-400 underline" : "no-underline"}`}
+                onClick={() => setMenuOpen(false)}
+              >
+                Tech Docs
+              </Link>
+            </li>
             <li>
               <Link
                 to="/about"
@@ -143,7 +163,7 @@ function Navbar({ className }: { className?: string }) {
 
             )}
           </div>
-        </div>
+        </AlertContainer>
       )}
     </nav>
   );

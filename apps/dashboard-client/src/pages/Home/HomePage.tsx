@@ -1,29 +1,17 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Wrapper from "../layout/Wrapper/Wrapper";
+import Wrapper from "../../layout/Wrapper/Wrapper";
 import { Link } from "react-router-dom";
-
-const HeaderComponent = () => {
-  return (
-    <div className="w-full text-center mx-auto m-0 text-gray-200 p-4 bg-gray-700">
-      <h1 className="text-5xl font-extrabold mb-4 animate-pulse">
-        Welcome to the ASafariM Dashboard
-      </h1>
-      <p className="text-lg font-light max-w-lg mx-auto">
-        Explore your personalized dashboard, manage your panels, and stay up to
-        date with the latest updates in a clean, intuitive interface.
-      </p>
-    </div>
-  );
-};
+import { HomeHeaderBlock } from "./HomeHeaderBlock";
+import NotAuthenticated from "../../components/NotAuthenticated";
 
 const Home = () => {
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
+  const envVariable = (import.meta as any).env;
   const user = localStorage.getItem('user');
-  const API_URL = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : 'https://asafarim.com/api';
+  const API_URL = envVariable.VITE_API_URL;
   // Fetch data from API
   useEffect(() => {
     // Retrieve the token from localStorage
@@ -45,7 +33,8 @@ const Home = () => {
       })
       .then((response) => {
         setData(response.data); // Set data from API
-        setLoading(false); // Set loading to false once data is fetched
+        setLoading(false);
+        setError(null);
       })
       .catch((_err) => {
         setError("Failed to load data"); // Handle error
@@ -58,15 +47,19 @@ const Home = () => {
   }
 
   if (error) {
-    return <Wrapper header={<div className="  bg-warning  alert alert-danger">No authentication token found. Please log in.</div>}>
-      <Link to={"/login"} title="Login" className="bg-red link button ">
-        Login
-      </Link>
+    const errorMessage = (<div className="w-1/2 mx-auto my-10 px-4 py-3 rounded relative" role="alert">
+      <NotAuthenticated />
+    </div>);
+
+    return <Wrapper
+      pageTitle="Home"
+      header={errorMessage}     
+      >
     </Wrapper>;
   }
 
   return (
-    <Wrapper header={<HeaderComponent />} >
+    <Wrapper header={<HomeHeaderBlock />} pageTitle={"Home"} >
       <h1 className="text-3xl font-bold">Home Page</h1>
       {error && <p>{error}</p>}
       {user && <div className="bg-white text-blue-900 rounded-lg shadow-lg p-8 w-full max-w-xl text-center transform hover:scale-105 transition-transform duration-300 ease-in-out">

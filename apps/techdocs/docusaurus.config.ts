@@ -139,7 +139,8 @@ const config = {
       logo: {
         alt: "DevDocsCentral Logo",
         src: "img/logoT.svg",
-        
+        target: "_self",
+        href: "https://asafarim.com",
       },
       items: [
         {

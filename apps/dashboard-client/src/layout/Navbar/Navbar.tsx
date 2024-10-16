@@ -82,7 +82,7 @@ function Navbar({ className }: { className?: string }) {
             to="/logout"
             className={`hover:text-blue-400 transition-colors duration-300 ${isActive("/logout") ? "text-blue-400 underline" : "no-underline"}`}
           >
-            <IconLogout className="text-red-600 p-4" aria-label="Logout" title="Logout" />
+            <IconLogout className="text-red-700  w-14 h-9 " aria-label="Logout" title="Logout" />
           </Link>
         )}
       </div>

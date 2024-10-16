@@ -1,10 +1,12 @@
 // src/api/sitemapService.ts
 
+import { IRole } from "../interfaces/IRole";
+
 // Set the API URL for your sitemap service
 const API_URL =  (import.meta as any).env.VITE_API_URL;
 console.log("sitemapService -> API_URL: " + API_URL);
 
-const getSitemap = async (userRole: string) => {
+const getSitemap = async (userRole: IRole) => {
   console.log(`Fetching sitemap for userRole: ${userRole}`);
 
   const token = localStorage.getItem('token');
@@ -13,7 +15,7 @@ const getSitemap = async (userRole: string) => {
   }
 
   try {
-    const response = await fetch(`${API_URL}/api/sitemap?userRole=${userRole}`, {
+    const response = await fetch(`${API_URL}/sitemap?roleIndex=${userRole}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Core.Application.Interfaces.Repositories;
 using Core.Domain.Entities;
+using Core.Domain.Enum;
 
 namespace Core.Application.Sitemaps.Queries
 {
@@ -13,12 +14,12 @@ namespace Core.Application.Sitemaps.Queries
             _sitemapRepository = sitemapRepository;
         }
 
-        public IEnumerable<Sitemap> Execute(Role userRole)
+        public IEnumerable<Sitemap> Execute(EnumUserRole roleIndex)
         {
             var allSitemaps = _sitemapRepository.GetAllSitemapItems();
-
+            Console.WriteLine(allSitemaps);
             // Filter based on the user role
-            return allSitemaps.Where(s => s.AccessByRole <= userRole);
+            return allSitemaps.Where(s => s.AccessByRole <= roleIndex);
         }
     }
 }

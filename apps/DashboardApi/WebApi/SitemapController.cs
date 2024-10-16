@@ -1,11 +1,13 @@
 using Core.Application.Sitemaps.Queries;
 using Core.Domain.Entities;
+using Core.Domain.Enum;
+using DashboardApi.Core.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace WebApi.Controllers
+namespace DashboardApi.WebApi
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -19,11 +21,11 @@ namespace WebApi.Controllers
             _getSitemapQuery = getSitemapQuery;
         }
 
-        // Example: Fetch sitemap for a logged-in user
+        // Example: Fetch sitemap for a logged-in user (with a given role)
         [HttpGet]
-        public IActionResult GetSitemap(Role userRole)
+        public IActionResult GetSitemap(EnumUserRole roleIndex)
         {
-            IEnumerable<Sitemap> sitemapItems = _getSitemapQuery.Execute(userRole);
+            IEnumerable<Sitemap> sitemapItems = _getSitemapQuery.Execute(roleIndex);
 
             if (sitemapItems == null)
             {
@@ -31,28 +33,6 @@ namespace WebApi.Controllers
             }
 
             return Ok(sitemapItems);
-        }
-
-        [Authorize(Roles = "Admin")]  // Ensure the user has Admin role
-        [HttpGet("api/sitemap")]
-        public IActionResult GetSitemap([FromQuery] string userRole)
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-
-            if (identity == null || !identity.IsAuthenticated)
-            {
-                return Unauthorized();  // Log token validation failure
-            }
-
-            if (userRole == null)
-            {
-                return BadRequest();
-
-            }
-
-            return GetSitemap((Role)Enum.Parse(typeof(Role), userRole));
-
-
         }
     }
 }

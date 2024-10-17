@@ -13,12 +13,14 @@ import LogoutPage from "./pages/LogoutPage";
 import SitemapPage from "./pages/Sitemap/SitemapPage";
 import NotFound from "./components/NotFound";
 import Home from "./pages/Home/HomePage";
+import PostDetail from "./pages/Post/PostDetail";
 
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/posts/:slug" element={<PostDetail />} />
       <Route path="/about" element={<About />} />
       <Route path="/contact" element={<Contact />} />
 

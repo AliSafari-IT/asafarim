@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using Core.Application.Interfaces.Repositories;
 using Core.Application.Sitemaps.Queries;
 using DashboardApi.Services;
@@ -41,6 +42,13 @@ namespace DashboardApi
                 });
             }
 
+            // Logging
+            builder.Services.AddLogging(builder =>
+            {
+                builder.AddConsole()
+                       .AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Information);
+            });
+
             // CORS policy configuration
             builder.Services.AddCors(options =>
             {
@@ -54,6 +62,14 @@ namespace DashboardApi
             });
 
             builder.Services.AddControllers();
+
+            builder.Services.AddEndpointsApiExplorer();
+            // Add services to the container.
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
+            // Database Configuration
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
                 ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection")),

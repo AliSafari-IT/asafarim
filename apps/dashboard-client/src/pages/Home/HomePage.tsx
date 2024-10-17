@@ -4,50 +4,45 @@ import Wrapper from "../../layout/Wrapper/Wrapper";
 import { Link } from "react-router-dom";
 import { HomeHeaderBlock } from "./HomeHeaderBlock";
 import NotAuthenticated from "../../components/NotAuthenticated";
-import { ISitemapItem } from "../../interfaces/ISitemapItem";
+import { ITopic } from "../../interfaces/ITopic";
+import Topics from "../Topic/Topics";
 
 const Home = () => {
-  const [data, setData] = useState<ISitemapItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [topics, setTopics] = useState<ITopic[]>([]);
   const envVariable = (import.meta as any).env;
   const user = localStorage.getItem('user');
   const API_URL = envVariable.VITE_API_URL;
-  // Fetch data from API
+
+  // Retrieve topics
   useEffect(() => {
-    // Retrieve the token from localStorage
     const userData = localStorage.getItem('user');
     const token = userData ? JSON.parse(userData).token : null;
+    axios
+      .get(`${API_URL}/topics`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setTopics(response.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setError("Failed to load topics");
+        setLoading(false);
+      });
+  }, [ API_URL ]);
 
-    if (!token) {
+  useEffect(() => {
+    if (!user) {
       setError('No authentication token found. Please log in.');
       setLoading(false);
       return;
     }
-
-    // Make the API call using the token: "https://localhost:44337/api/sitemap?userRole=Admin"
-    axios
-      .get(`${API_URL}/sitemap?userRole=Admin`, {
-        headers: {
-          Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
-        },
-      })
-      .then((response) => {
-        // Check if `data` is an array
-        if (Array.isArray(data)) {
-          setData(response.data); // Set data from API
-        } else {
-          console.error('Expected an array but got:', data);
-          // Handle non-array data here
-        }
-        setLoading(false);
-        setError(null);
-      })
-      .catch((_err) => {
-        setError("Failed to load data"); // Handle error
-        setLoading(false); // Stop loading if there's an error
-      });
-  }, []);
+  }, [topics]);
 
   if (loading) {
     return <p>Loading...</p>;
@@ -62,41 +57,14 @@ const Home = () => {
       pageTitle="Home"
       header={errorMessage}
     >
+      <Topics topics={topics} />
     </Wrapper>;
   }
 
   return (
     <Wrapper header={<HomeHeaderBlock />} pageTitle={"Home"} >
       {error && <p>{error}</p>}
-      {user && <div className="bg-white text-blue-900 rounded-lg shadow-lg p-8 w-full max-w-xl text-center transform hover:scale-105 transition-transform duration-300 ease-in-out">
-        <h2 className="text-3xl font-semibold mb-4">Manage Your Dashboard</h2>
-        <p className="mb-6 text-lg font-light">
-          Dive into the detailed overview of all your panels, add new ones, or
-          make changes with a single click.
-        </p>
-        <Link
-          to="/dashboard"
-          className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-md text-lg transition-colors duration-300 ease-in-out"
-        >
-          View Dashboard
-        </Link>
-      </div>}
-
-      {data.length > 0 ? (
-        <ul className="card m-4">
-          {Array.isArray(data) && data.map((item) => (
-            <li key={item.id}>
-              <a href={item.slug}>{item.pageName}</a> - {item.description}
-            </li>
-          ))}
-          <div className="mt-4 bg-white text-blue-900 rounded-lg shadow-lg p-8 w-full max-w-xl text-center transform hover:scale-105 transition-transform duration-300 ease-in-out">
-            <a href="/health" className="text-blue-600 hover:underline">Health checks</a> - <a href="/health-ui" className="text-blue-600 hover:underline">Health checks UI</a>
-
-          </div>
-        </ul>
-      ) : (
-        <p>No data available</p>
-      )}
+      <Topics topics={topics} />
     </Wrapper>
   );
 };

@@ -17,7 +17,7 @@ namespace Infrastructure.Data
         public DbSet<User> Users { get; set; }
         public DbSet<DashboardApi.Core.Domain.Entities.Role> Roles { get; set; }  // Fully qualified
         public DbSet<UserRole> UserRoles { get; set; }
-        public DbSet<Sitemap> Sitemaps { get; set; }
+        public DbSet<SitemapEntity> Sitemaps { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -48,8 +48,8 @@ namespace Infrastructure.Data
                 .HasForeignKey(ur => ur.RoleId);
 
             // Seed Sitemap data
-            modelBuilder.Entity<Sitemap>().HasData(
-                new Sitemap
+            modelBuilder.Entity<SitemapEntity>().HasData(
+                new SitemapEntity
                 {
                     Id = Guid.NewGuid(),
                     PageName = "Contact",
@@ -57,7 +57,7 @@ namespace Infrastructure.Data
                     Slug = "/contact",
                     AccessByRole = Core.Domain.Enum.EnumUserRole.StandardUser
                 },
-                new Sitemap
+                new SitemapEntity
                 {
                     Id = Guid.NewGuid(),
                     PageName = "About",

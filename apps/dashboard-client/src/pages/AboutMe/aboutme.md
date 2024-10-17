@@ -94,7 +94,7 @@ This project exemplifies my ability to deliver end-to-end solutions that are not
 
 - **Implementation of High-Resolution Data**: Integrated high-resolution spatial data (e.g., NEXRAD radar, digital topography, and land use) into hydrologic models, significantly improving their performance and accuracy.
 
-[Visit my Google Scholar profile](https://scholar.google.com/citations?user=YZs9ktMAAAAJ&hl=en).
+For insights into my scientific research and academic endeavors from before I became a developer, please see my [Google Scholar profile](https://scholar.google.com/citations?user=YZs9ktMAAAAJ&hl=en).
 
 ## Personal Attributes 💪
 

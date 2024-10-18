@@ -12,18 +12,20 @@ const Home = () => {
   const [topics, setTopics] = useState<ITopic[]>([]);
   const envVariable = (import.meta as any).env;
   const user = localStorage.getItem('user');
-  //  if window.location.hostname === 'asafarim.com'
-  let API_URL = envVariable.VITE_API_URL;
-  // check if we are on subdomain preview.asafarim.com or asafarim.com
+
+  // Determine the correct API URL based on the current hostname
+  let API_URL = envVariable.VITE_API_URL || 'https://asafarim.com/api';
   if (window.location.hostname === 'preview.asafarim.com') {
-    API_URL = envVariable.Preview_URL + "/api"
+    API_URL = envVariable.Preview_URL + "/api";
   }
+
   console.log('API_URL in Home: ', API_URL);
 
   // Retrieve topics
   useEffect(() => {
     const userData = localStorage.getItem('user');
     const token = userData ? JSON.parse(userData).token : null;
+    
     axios
       .get(`${API_URL}/topics`, {
         headers: {
@@ -39,7 +41,7 @@ const Home = () => {
         setError("Failed to load topics");
         setLoading(false);
       });
-  }, [ API_URL ]);
+  }, [API_URL]);
 
   useEffect(() => {
     if (!user) {
@@ -54,20 +56,21 @@ const Home = () => {
   }
 
   if (error) {
-    const errorMessage = (<div className="w-1/2 mx-auto my-10 px-4 py-3 rounded relative" role="alert">
-      <NotAuthenticated />
-    </div>);
+    const errorMessage = (
+      <div className="w-1/2 mx-auto my-10 px-4 py-3 rounded relative" role="alert">
+        <NotAuthenticated />
+      </div>
+    );
 
-    return <Wrapper
-      pageTitle="Home"
-      header={errorMessage}
-    >
-      <Topics topics={topics} />
-    </Wrapper>;
+    return (
+      <Wrapper pageTitle="Home" header={errorMessage}>
+        <Topics topics={topics} />
+      </Wrapper>
+    );
   }
 
   return (
-    <Wrapper header={<HomeHeaderBlock />} pageTitle={"Home"} >
+    <Wrapper header={<HomeHeaderBlock />} pageTitle={"Home"}>
       {error && <p>{error}</p>}
       <Topics topics={topics} />
     </Wrapper>

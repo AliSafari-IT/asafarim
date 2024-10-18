@@ -1,9 +1,11 @@
-// src/api/sitemapService.ts
-
 import { IRole } from "../interfaces/IRole";
 
-// Set the API URL for your sitemap service
-const API_URL =  (import.meta as any).env.VITE_API_URL;
+// Determine the correct API URL based on the current hostname
+let API_URL = (import.meta as any).env.VITE_API_URL || 'https://asafarim.com/api';
+if (window.location.hostname === 'preview.asafarim.com') {
+  API_URL = (import.meta as any).env.Preview_URL + "/api";
+}
+
 console.log("sitemapService -> API_URL: " + API_URL);
 
 const getSitemap = async (userRole: IRole) => {
@@ -36,7 +38,6 @@ const getSitemap = async (userRole: IRole) => {
     throw error;
   }
 };
-
 
 const sitemapService = { getSitemap };
 export default sitemapService;

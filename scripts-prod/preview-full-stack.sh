@@ -37,11 +37,16 @@ fi
 echo "Restarting ASP.NET Core API..."
 sudo systemctl restart dashboardapi
 
-# Step 3: Restart Nginx to apply changes
+if [ $? -ne 0 ]; then
+  echo "ASP.NET Core API restart failed!"
+  exit 1
+fi
+
+# Step 4: Restart Nginx to apply changes
 echo "Restarting Nginx..."
 sudo systemctl restart nginx
 
-# Step 14: Build the React documentation app (techdocs)
+# Step 5: Build the React documentation app (techdocs)
 cd /var/www/asafarim/apps/techdocs || { echo "Directory apps/techdocs not found!"; exit 1; }
 npm run build
 
@@ -50,7 +55,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-# Copy the built React app to the public directory
+# Step 6: Copy the built React app to the public directory
 echo "Copying built React app to public directory... from /var/www/asafarim/apps/techdocs/build to /var/www/asafarim.com/techdocs"
 sudo cp -r build/* /var/www/preview.asafarim.com/techdocs
 

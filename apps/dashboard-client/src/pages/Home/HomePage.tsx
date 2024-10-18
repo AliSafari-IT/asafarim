@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Wrapper from "../../layout/Wrapper/Wrapper";
-import { Link } from "react-router-dom";
 import { HomeHeaderBlock } from "./HomeHeaderBlock";
 import NotAuthenticated from "../../components/NotAuthenticated";
 import { ITopic } from "../../interfaces/ITopic";

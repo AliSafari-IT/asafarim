@@ -12,7 +12,13 @@ const Home = () => {
   const [topics, setTopics] = useState<ITopic[]>([]);
   const envVariable = (import.meta as any).env;
   const user = localStorage.getItem('user');
-  const API_URL = envVariable.VITE_API_URL;
+  //  if window.location.hostname === 'asafarim.com'
+  let API_URL = envVariable.VITE_API_URL;
+  // check if we are on subdomain preview.asafarim.com or asafarim.com
+  if (window.location.hostname === 'preview.asafarim.com') {
+    API_URL = envVariable.Preview_URL + "/api"
+  }
+  console.log('API_URL in Home: ', API_URL);
 
   // Retrieve topics
   useEffect(() => {

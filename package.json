@@ -13,6 +13,7 @@
     "build": "yarn workspace dashboard-client build",
     "start": "yarn workspace dashboard-client start",
     "uw": "bash /var/www/asafarim/scripts-prod/update-full-stack.sh",
+    "pw": "bash /var/www/asafarim/scripts-prod/preview-full-stack.sh",
     "reinstallYarn": "bash /var/www/asafarim/scripts-prod/reinstall-asm-workspace.sh"
   },
   "devDependencies": {

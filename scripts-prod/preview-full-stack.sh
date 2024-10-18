@@ -64,7 +64,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi  
 
-echo "Full-stack PREVIEW completed successfully!"
+echo "Full-stack PREVIEW build completed successfully!"
 
 echo "Deployment PREVIEW successfully completed!"
 

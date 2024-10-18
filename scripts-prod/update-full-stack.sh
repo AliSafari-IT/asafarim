@@ -63,7 +63,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi  
 
-echo "Full-stack update completed successfully!"
+echo "Full-stack updated completed successfully!"
 echo "Deployment completed successfully!"
 
 

@@ -54,7 +54,12 @@ namespace DashboardApi
             {
                 options.AddPolicy("AllowFrontend", builder =>
                 {
-                    builder.WithOrigins("http://localhost:5173", "https://asafarim.com", "https://preview.asafarim.com", "https://techdocs.asafarim.com") // Allow dev and prod origins
+                    builder.WithOrigins(
+                        "http://localhost:5173",
+                        "https://asafarim.com",
+                        "https://preview.asafarim.com",
+                        "https://techdocs.asafarim.com"
+                    ) // Allow dev and prod origins
                            .AllowAnyMethod()
                            .AllowAnyHeader()
                            .AllowCredentials();
@@ -128,30 +133,6 @@ namespace DashboardApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ASafariM API V1"));
             }
-
-            // Custom CORS Middleware: Here I can create a custom middleware that checks the Origin header and allows any subdomain of asafarim.com.
-            app.Use(async (context, next) =>
-                {
-                    var origin = context.Request.Headers["Origin"].ToString();
-
-                    // Check if the origin is a subdomain of asafarim.com
-                    if (!string.IsNullOrEmpty(origin) && (origin.EndsWith(".asafarim.com") || origin == "https://asafarim.com"))
-                    {
-                        context.Response.Headers.Add("Access-Control-Allow-Origin", origin);
-                        context.Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-                        context.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Authorization");
-                        context.Response.Headers.Add("Access-Control-Allow-Credentials", "true");
-                    }
-
-                    if (context.Request.Method == "OPTIONS")
-                    {
-                        // Handle CORS preflight requests
-                        context.Response.StatusCode = 204; // No Content
-                        return;
-                    }
-
-                    await next();
-                });
 
             app.UseHttpsRedirection();
             app.UseRouting();

@@ -33,6 +33,10 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
+# Step 3: Restart the ASP.NET Core app (backend) to apply changes and restart Nginx
+echo "Restarting ASP.NET Core API..."
+sudo systemctl restart dashboardapi
+
 # Step 3: Restart Nginx to apply changes
 echo "Restarting Nginx..."
 sudo systemctl restart nginx

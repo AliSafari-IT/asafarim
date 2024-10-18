@@ -29,7 +29,7 @@ namespace DashboardApi.Core.Domain.Entities
         public DateTime UpdatedAt { get; set; }
 
         // Navigation properties
-        public List<UserRole> UserRoles { get; set; } = new List<UserRole>();
-        public List<BlogPost> BlogPosts { get; set; } = new List<BlogPost>();
+        public List<UserRole>? UserRoles { get; set; } = new List<UserRole>();
+        public List<BlogPost>? BlogPosts { get; set; } = new List<BlogPost>();
     }
 }

@@ -124,12 +124,14 @@ namespace DashboardApi
                 {
         { new OpenApiSecurityScheme { Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } }, new string[] { } }
                 });
+                     c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First()); //This line
+
             });
 
             var app = builder.Build();
-
             if (app.Environment.IsDevelopment())
             {
+app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ASafariM API V1"));
             }

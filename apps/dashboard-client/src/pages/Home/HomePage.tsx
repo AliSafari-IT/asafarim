@@ -25,7 +25,7 @@ const Home = () => {
   useEffect(() => {
     const userData = localStorage.getItem('user');
     const token = userData ? JSON.parse(userData).token : null;
-    
+
     axios
       .get(`${API_URL}/topics`, {
         headers: {
@@ -41,19 +41,13 @@ const Home = () => {
         setError("Failed to load topics");
         setLoading(false);
       });
-  }, [API_URL]);
+      if (!user) {
+        setError('No authentication token found. Please log in.');
+        setLoading(false);
+        return;
+      }
+  }, [API_URL, topics.length, user]);
 
-  useEffect(() => {
-    if (!user) {
-      setError('No authentication token found. Please log in.');
-      setLoading(false);
-      return;
-    }
-  }, [topics]);
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
 
   if (error) {
     const errorMessage = (
@@ -72,7 +66,8 @@ const Home = () => {
   return (
     <Wrapper header={<HomeHeaderBlock />} pageTitle={"Home"}>
       {error && <p>{error}</p>}
-      <Topics topics={topics} />
+      {topics.length > 0 ? <Topics topics={topics} /> : <p>No topics found.</p>
+      }
     </Wrapper>
   );
 };

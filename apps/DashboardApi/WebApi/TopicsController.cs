@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Core.Domain.Entities;
 using Infrastructure.Data;
 
-namespace DashboardApi.Controllers
+namespace DashboardApi.WebApi
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -36,6 +36,15 @@ namespace DashboardApi.Controllers
             if (topic == null)
                 return NotFound();
 
+            return Ok(topic);
+        }
+
+        // Create a new topic
+        [HttpPost]
+        public async Task<IActionResult> CreateTopic([FromBody] Topic topic)
+        {
+            _context.Topics.Add(topic);
+            await _context.SaveChangesAsync();
             return Ok(topic);
         }
     }

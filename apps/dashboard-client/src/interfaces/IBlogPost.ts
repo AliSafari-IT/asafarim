@@ -1,7 +1,9 @@
+import { DiffcultyLevelEnum } from "./DiffcultyLevelEnum";
 import { ITag } from "./ITag";
 import { ITopic } from "./ITopic";
 
 export interface IBlogPost {
+    difficultyLevel: DiffcultyLevelEnum;
     id: string;
     title: string;
     content: string;
@@ -19,4 +21,3 @@ export interface IBlogPost {
     tags: ITag[];
     topic: ITopic; // Optional if you need topic info in posts
   }
-  

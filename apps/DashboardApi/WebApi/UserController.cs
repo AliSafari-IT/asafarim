@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using DashboardApi.Services;  // Add the correct namespace
 
+namespace DashboardApi.WebApi;
 public class UserController : ControllerBase
 {
     private readonly UserService _userService;
@@ -16,4 +17,5 @@ public class UserController : ControllerBase
         await _userService.CreateNewUserAsync();
         return Ok("User created successfully!");
     }
+
 }

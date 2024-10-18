@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Core.Domain.Entities;
 using Infrastructure.Data;
 
-namespace DashboardApi.Controllers
+namespace DashboardApi.WebApi
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -28,6 +28,15 @@ namespace DashboardApi.Controllers
                 return NotFound();
             }
 
+            return Ok(post);
+        }
+
+        // Create 
+        [HttpPost]
+        public async Task<IActionResult> CreatePost([FromBody] BlogPost post)
+        {
+            _context.BlogPosts.Add(post);
+            await _context.SaveChangesAsync();
             return Ok(post);
         }
 

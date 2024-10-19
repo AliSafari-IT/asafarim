@@ -12,7 +12,12 @@ import {
   Teaching24Regular as IconTeaching
 } from '@fluentui/react-icons';
 
-function Navbar({ className }: { className?: string }) {
+interface NavbarProps {
+  className?: string;
+  children?: React.ReactNode; // Add this line
+}
+
+function Navbar({ className }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   const user = localStorage.getItem('user');

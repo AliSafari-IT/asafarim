@@ -4,12 +4,12 @@ import Wrapper from "../../layout/Wrapper/Wrapper";
 import aboutMeMd from './aboutme.md?raw';
 
 export default function About(): JSX.Element {
-  const envVariable = (import.meta as any).env;
+  // const envVariable = (import.meta as any).env;
 
-  let APP_URL = envVariable.VITE_API_URL || 'https://asafarim.com';
-  if (window.location.hostname === 'preview.asafarim.com') {
-    APP_URL = envVariable.Preview_URL;
-  }
+  // let APP_URL = envVariable.VITE_API_URL || 'https://asafarim.com';
+  // if (window.location.hostname === 'preview.asafarim.com') {
+  //   APP_URL = envVariable.Preview_URL;
+  // }
 
   const headerBlock = (
     <div className="w-full text-center m-0 text-gray-200 p-3 bg-gray-700">

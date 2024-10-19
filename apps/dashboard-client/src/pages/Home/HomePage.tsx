@@ -19,7 +19,7 @@ const Home = () => {
     API_URL = envVariable.Preview_URL + "/api";
   }
 
-  console.log('API_URL in Home: ', API_URL);
+  console.log('API_URL in Home: ', API_URL, loading, error);
 
   // Retrieve topics
   useEffect(() => {

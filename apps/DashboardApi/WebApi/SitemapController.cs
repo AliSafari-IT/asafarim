@@ -25,7 +25,7 @@ namespace DashboardApi.WebApi
         [HttpGet]
         public IActionResult GetSitemap(EnumUserRole roleIndex)
         {
-            IEnumerable<Sitemap> sitemapItems = _getSitemapQuery.Execute(roleIndex);
+            IEnumerable<SitemapEntity> sitemapItems = _getSitemapQuery.Execute(roleIndex);
 
             if (sitemapItems == null)
             {

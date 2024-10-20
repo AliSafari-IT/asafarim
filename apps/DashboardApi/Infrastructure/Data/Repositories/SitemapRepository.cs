@@ -3,12 +3,13 @@ using System.Linq.Expressions;
 using Core.Application.Interfaces.Repositories;
 using Core.Domain.Entities;
 using Core.Domain.Enum;
+using DashboardApi.Core.Domain.Entities;
 
 namespace Infrastructure.Data.Repositories
 {
     public class SitemapRepository : ISitemapRepository
     {
-        public Task<Sitemap> AddAsync(Sitemap entity)
+        public Task<SitemapEntity> AddAsync(SitemapEntity entity)
         {
             throw new NotImplementedException();
         }
@@ -18,7 +19,7 @@ namespace Infrastructure.Data.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<bool> AnyAsync(Expression<Func<Sitemap, bool>> predicate)
+        public Task<bool> AnyAsync(Expression<Func<SitemapEntity, bool>> predicate)
         {
             throw new NotImplementedException();
         }
@@ -33,17 +34,17 @@ namespace Infrastructure.Data.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<int> CountAsync(Expression<Func<Sitemap, bool>> predicate)
+        public Task<int> CountAsync(Expression<Func<SitemapEntity, bool>> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public Task<int> CountAsync(Expression<Func<Sitemap, bool>> predicate, Func<IQueryable<Sitemap>, IOrderedQueryable<Sitemap>> orderBy)
+        public Task<int> CountAsync(Expression<Func<SitemapEntity, bool>> predicate, Func<IQueryable<SitemapEntity>, IOrderedQueryable<SitemapEntity>> orderBy)
         {
             throw new NotImplementedException();
         }
 
-        public Task<int> CountAsync(Expression<Func<Sitemap, bool>> predicate, Func<IQueryable<Sitemap>, IOrderedQueryable<Sitemap>> orderBy, int? skip, int? take)
+        public Task<int> CountAsync(Expression<Func<SitemapEntity, bool>> predicate, Func<IQueryable<SitemapEntity>, IOrderedQueryable<SitemapEntity>> orderBy, int? skip, int? take)
         {
             throw new NotImplementedException();
         }
@@ -63,7 +64,7 @@ namespace Infrastructure.Data.Repositories
             throw new NotImplementedException();
         }
 
-        public Task DeleteAsync(Sitemap entity)
+        public Task DeleteAsync(SitemapEntity entity)
         {
             throw new NotImplementedException();
         }
@@ -78,12 +79,12 @@ namespace Infrastructure.Data.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Sitemap>> FindAsync(Expression<Func<Sitemap, bool>> predicate)
+        public Task<IEnumerable<SitemapEntity>> FindAsync(Expression<Func<SitemapEntity, bool>> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Sitemap>> FindAsync(Expression<Func<Sitemap, bool>> predicate, Func<IQueryable<Sitemap>, IOrderedQueryable<Sitemap>> orderBy, int? skip, int? take)
+        public Task<IEnumerable<SitemapEntity>> FindAsync(Expression<Func<SitemapEntity, bool>> predicate, Func<IQueryable<SitemapEntity>, IOrderedQueryable<SitemapEntity>> orderBy, int? skip, int? take)
         {
             throw new NotImplementedException();
         }
@@ -98,17 +99,17 @@ namespace Infrastructure.Data.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<Sitemap> FirstOrDefaultAsync(Expression<Func<Sitemap, bool>> predicate, Func<IQueryable<Sitemap>, IOrderedQueryable<Sitemap>> orderBy, int? skip, int? take)
+        public Task<SitemapEntity> FirstOrDefaultAsync(Expression<Func<SitemapEntity, bool>> predicate, Func<IQueryable<SitemapEntity>, IOrderedQueryable<SitemapEntity>> orderBy, int? skip, int? take)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Sitemap> FirstOrDefaultAsync(Expression<Func<Sitemap, bool>> predicate)
+        public Task<SitemapEntity> FirstOrDefaultAsync(Expression<Func<SitemapEntity, bool>> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Sitemap> FirstOrDefaultAsync(Expression<Func<Sitemap, bool>> predicate, Func<IQueryable<Sitemap>, IOrderedQueryable<Sitemap>> orderBy)
+        public Task<SitemapEntity> FirstOrDefaultAsync(Expression<Func<SitemapEntity, bool>> predicate, Func<IQueryable<SitemapEntity>, IOrderedQueryable<SitemapEntity>> orderBy)
         {
             throw new NotImplementedException();
         }
@@ -128,15 +129,15 @@ namespace Infrastructure.Data.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Sitemap>> GetAllAsync()
+        public Task<IEnumerable<SitemapEntity>> GetAllAsync()
         {
             throw new NotImplementedException();
         }
 
         // Simulating data; in real use, this could be fetched from a database.
-        public IEnumerable<Sitemap> GetAllSitemapItems()
+        public IEnumerable<SitemapEntity> GetAllSitemapItems()
         {
-            return new List<Sitemap>
+            return new List<SitemapEntity>
             {
                 new() { Id = Guid.NewGuid(), PageName = "Home", Description = "Home Page", Slug = "/", AccessByRole = EnumUserRole.Guest },
                 new() { Id = Guid.NewGuid(), PageName = "About", Description = "About Us", Slug = "/about", AccessByRole = EnumUserRole.Guest },
@@ -145,27 +146,27 @@ namespace Infrastructure.Data.Repositories
             };
         }
 
-        public Task<Sitemap> GetByIdAsync(int id)
+        public Task<SitemapEntity> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Sitemap>> GetPagedReponseAsync(int pageNumber, int pageSize)
+        public Task<IEnumerable<SitemapEntity>> GetPagedReponseAsync(int pageNumber, int pageSize)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Sitemap>> GetPagedReponseAsync(int pageNumber, int pageSize, Func<IQueryable<Sitemap>, IOrderedQueryable<Sitemap>> orderBy)
+        public Task<IEnumerable<SitemapEntity>> GetPagedReponseAsync(int pageNumber, int pageSize, Func<IQueryable<SitemapEntity>, IOrderedQueryable<SitemapEntity>> orderBy)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Sitemap>> GetPagedReponseAsync(int pageNumber, int pageSize, Expression<Func<Sitemap, bool>> predicate)
+        public Task<IEnumerable<SitemapEntity>> GetPagedReponseAsync(int pageNumber, int pageSize, Expression<Func<SitemapEntity, bool>> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Sitemap>> GetPagedReponseAsync(int pageNumber, int pageSize, Expression<Func<Sitemap, bool>> predicate, Func<IQueryable<Sitemap>, IOrderedQueryable<Sitemap>> orderBy)
+        public Task<IEnumerable<SitemapEntity>> GetPagedReponseAsync(int pageNumber, int pageSize, Expression<Func<SitemapEntity, bool>> predicate, Func<IQueryable<SitemapEntity>, IOrderedQueryable<SitemapEntity>> orderBy)
         {
             throw new NotImplementedException();
         }
@@ -190,12 +191,12 @@ namespace Infrastructure.Data.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<Sitemap> SingleOrDefaultAsync(Expression<Func<Sitemap, bool>> predicate)
+        public Task<SitemapEntity> SingleOrDefaultAsync(Expression<Func<SitemapEntity, bool>> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Sitemap> SingleOrDefaultAsync(Expression<Func<Sitemap, bool>> predicate, Func<IQueryable<Sitemap>, IOrderedQueryable<Sitemap>> orderBy)
+        public Task<SitemapEntity> SingleOrDefaultAsync(Expression<Func<SitemapEntity, bool>> predicate, Func<IQueryable<SitemapEntity>, IOrderedQueryable<SitemapEntity>> orderBy)
         {
             throw new NotImplementedException();
         }
@@ -210,7 +211,7 @@ namespace Infrastructure.Data.Repositories
             throw new NotImplementedException();
         }
 
-        public Task UpdateAsync(Sitemap entity)
+        public Task UpdateAsync(SitemapEntity entity)
         {
             throw new NotImplementedException();
         }

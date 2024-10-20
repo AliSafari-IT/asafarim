@@ -1,9 +1,14 @@
 // src/layout/Wrapper/Wrapper.tsx
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Stack } from '@fluentui/react/lib/Stack';
+import { mergeStyles } from '@fluentui/react/lib/Styling';
+import { Panel, PanelType } from '@fluentui/react/lib/Panel';
+import { IconButton } from '@fluentui/react/lib/Button';
 import DefaultFooter from '../DefaultFooter/DefaultFooter';
 import DefaultHeader from '../DefaultHeader/DefaultHeader';
 import Navbar from '../Navbar/Navbar';
+import Loading from '../../components/Loading/Loading';
 
 interface LayoutProps {
   header?: React.ReactNode;
@@ -23,7 +28,25 @@ interface LayoutProps {
   children?: React.ReactNode;
 }
 
-// Layout component with support for custom header, footer, navbar, sidebar, and content
+// Styles for Fluent UI components
+const sidebarStyles = mergeStyles({
+  width: 250,
+  backgroundColor: '#f3f2f1',
+  overflowY: 'auto',
+});
+
+const contentStyles = mergeStyles({
+  flexGrow: 1,
+  padding: 20,
+  backgroundColor: '#ffffff',
+});
+
+const layoutContainerStyles = mergeStyles({
+  minHeight: '100vh',
+});
+
+
+
 const Wrapper: React.FC<LayoutProps> = ({
   header,
   footer,
@@ -32,51 +55,98 @@ const Wrapper: React.FC<LayoutProps> = ({
   sidebarClassName = '',
   navbar,
   navbarClassName = '',
-  contentClassName = '',
   content,
-  contentStyle = {},
   sidebarStyle = {},
   style = {},
   pageTitle,
   children,
   pageDescription = 'ASafariM React .Net Core TypeScript Client',
 }) => {
+  const [isMobile, setIsMobile] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const navbarStyles = mergeStyles({navbarClassName  });
+  // Detect screen size and update isMobile state
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768); // You can adjust the breakpoint as needed
+    };
+    handleResize(); // Set the initial state
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Default header, footer, and navbar
-  const sidebarBlock = sidebar ?? <div className="w-64 h-full bg-gray-800 text-white">Sidebar</div>;
+  const sidebarBlock = sidebar ?? (
+    <div className={sidebarStyles} style={sidebarStyle}>
+      Sidebar
+    </div>
+  );
   const headerBlock = header ?? <DefaultHeader />;
   const footerBlock = footer ?? <DefaultFooter />;
-  const navbarBlock = navbar ?? <Navbar className={`p-0 m-0 ${navbarClassName}`} />;
 
-  // Page title
+  // Modify navbar to include a menu button in mobile view
+  const navbarBlock = navbar ?? (
+    <Navbar className={`${navbarStyles} `}>
+      {isMobile && (
+        <IconButton
+          iconProps={{ iconName: 'GlobalNavButton' }}
+          title="Open Menu"
+          ariaLabel="Open Menu"
+          onClick={() => setIsSidebarOpen(true)}
+        />
+      )}
+    </Navbar>
+  );
+
+  // Page title and description
   const title = `${pageTitle ? `${pageTitle} | ` : ''}ASafariM`;
   const description = pageDescription;
   useEffect(() => {
     document.title = title;
-    document.querySelector('meta[name="description"]')?.setAttribute('content', description);
-  }, [pageTitle]);
+    document
+      .querySelector('meta[name="description"]')
+      ?.setAttribute('content', description);
+  }, [title, description]);
 
   return (
-    <>      
-      <div className={`flex flex-col min-h-screen w-full bg-gray-800 text-black bg-gradient-to-r from-blue-500 to-indigo-600 ${className} layout-container`} style={style}>
-        {/* Navbar */}
-        {navbarBlock}
- <main>
-          {/* Sidebar */}
-          {sidebar && (
-            <aside className={`sidebar ${sidebarClassName}`} style={sidebarStyle}>
-              {sidebarBlock}
-            </aside>
-          )}
+    <div className={`${layoutContainerStyles} ${className}`} style={style}>
+      {/* Navbar */}
+      {navbarBlock}
 
+      {/* Main Content Area */}
+      <Stack horizontal={!isMobile} tokens={{ childrenGap: 0 }} style={{ flexGrow: 1 }}>
+        {/* Sidebar */}
+        {!isMobile && sidebar && (
+          <Stack.Item disableShrink className={sidebarClassName}>
+            {sidebarBlock}
+          </Stack.Item>
+        )}
 
-            {headerBlock}
-           {content ?? children}
-           </main>
-            {footerBlock}
-        </div>
+        {/* Content Area */}
+        <Stack.Item grow className={contentStyles}>
+          {/* Header */}
+          {headerBlock}
+          {/* Main Content */}
+          {content ?? children}
+          {/* Footer */}
+          {footerBlock}
+        </Stack.Item>
+      </Stack>
 
-    </>
+      {/* Sidebar Panel for Mobile View */}
+      {isMobile && (
+        <Panel
+          isLightDismiss
+          isOpen={isSidebarOpen}
+          onDismiss={() => setIsSidebarOpen(false)}
+          closeButtonAriaLabel="Close"
+          type={PanelType.smallFixedNear}
+          headerText="Menu"
+        >
+          {sidebarBlock}
+        </Panel>
+      )}
+    </div>
   );
 };
 

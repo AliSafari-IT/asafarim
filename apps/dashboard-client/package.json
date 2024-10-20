@@ -21,12 +21,14 @@
     "react-dom": "^18.3.1",
     "react-markdown": "^9.0.1",
     "react-router-dom": "^6.26.2",
+    "rehype-sanitize": "^6.0.0",
     "tailwindcss": "^3.4.13",
     "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",
     "@testing-library/react": "^16.0.1",
+    "@types/graceful-fs": "^4.1.9",
     "@types/jest": "^29.5.13",
     "@types/node": "^22.7.5",
     "@types/react": "^18.3.10",

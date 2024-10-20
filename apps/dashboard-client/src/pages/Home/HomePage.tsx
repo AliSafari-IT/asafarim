@@ -1,102 +1,88 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Wrapper from "../../layout/Wrapper/Wrapper";
-import { Link } from "react-router-dom";
 import { HomeHeaderBlock } from "./HomeHeaderBlock";
 import NotAuthenticated from "../../components/NotAuthenticated";
-import { ISitemapItem } from "../../interfaces/ISitemapItem";
+import { ITopic } from "../../interfaces/ITopic";
+import Topics from "../Topic/Topics";
+import Loading from "../../components/Loading/Loading";
 
 const Home = () => {
-  const [data, setData] = useState<ISitemapItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [topics, setTopics] = useState<ITopic[]>([]);
   const envVariable = (import.meta as any).env;
   const user = localStorage.getItem('user');
-  const API_URL = envVariable.VITE_API_URL;
-  // Fetch data from API
+
+  // Determine the correct API URL based on the current hostname
+  let API_URL = envVariable.VITE_API_URL || 'https://asafarim.com/api';
+  if (window.location.hostname === 'preview.asafarim.com') {
+    API_URL = envVariable.VITE_PREVIEW_URL || 'https://preview.asafarim.com/api';
+  }
+
+
+
+  // Retrieve topics
   useEffect(() => {
-    // Retrieve the token from localStorage
+    console.log('Environment Variables:', envVariable);
+    console.log('API_URL in Home: ', API_URL);
     const userData = localStorage.getItem('user');
     const token = userData ? JSON.parse(userData).token : null;
 
     if (!token) {
       setError('No authentication token found. Please log in.');
       setLoading(false);
-      return;
+      // log error
+      console.error('No authentication token found. Please log in.');
     }
 
-    // Make the API call using the token: "https://localhost:44337/api/sitemap?userRole=Admin"
+    setLoading(true);
     axios
-      .get(`${API_URL}/sitemap?userRole=Admin`, {
+      .get(`${API_URL}/topics`, {
         headers: {
-          Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
+          // Authorization: `Bearer ${token}`,
+        },
+        params: {
+          roleIndex: user,
         },
       })
       .then((response) => {
-        // Check if `data` is an array
-        if (Array.isArray(data)) {
-          setData(response.data); // Set data from API
-        } else {
-          console.error('Expected an array but got:', data);
-          // Handle non-array data here
-        }
+        console.log("Data: ", response.data);
+        setTopics(response.data);
         setLoading(false);
         setError(null);
       })
-      .catch((_err) => {
-        setError("Failed to load data"); // Handle error
-        setLoading(false); // Stop loading if there's an error
+      .catch((err) => {
+        console.error(err);
+        setError("Failed to load topics");
+        setLoading(false);
       });
-  }, []);
+  }, [API_URL, user]);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <Wrapper pageTitle="Home">
+        <Loading size={50} color="skyblue" />
+      </Wrapper>
+    );
   }
 
   if (error) {
-    const errorMessage = (<div className="w-1/2 mx-auto my-10 px-4 py-3 rounded relative" role="alert">
-      <NotAuthenticated />
-    </div>);
-
-    return <Wrapper
-      pageTitle="Home"
-      header={errorMessage}
-    >
-    </Wrapper>;
+    return (
+      <Wrapper pageTitle="Home">
+        <div className="w-1/2 mx-auto my-10 px-4 py-3 rounded relative" role="alert">
+          <NotAuthenticated />
+        </div>
+        <p>{error}</p>
+      </Wrapper>
+    );
   }
 
   return (
-    <Wrapper header={<HomeHeaderBlock />} pageTitle={"Home"} >
-      {error && <p>{error}</p>}
-      {user && <div className="bg-white text-blue-900 rounded-lg shadow-lg p-8 w-full max-w-xl text-center transform hover:scale-105 transition-transform duration-300 ease-in-out">
-        <h2 className="text-3xl font-semibold mb-4">Manage Your Dashboard</h2>
-        <p className="mb-6 text-lg font-light">
-          Dive into the detailed overview of all your panels, add new ones, or
-          make changes with a single click.
-        </p>
-        <Link
-          to="/dashboard"
-          className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-md text-lg transition-colors duration-300 ease-in-out"
-        >
-          View Dashboard
-        </Link>
-      </div>}
-
-      {data.length > 0 ? (
-        <ul className="card m-4">
-          {Array.isArray(data) && data.map((item) => (
-            <li key={item.id}>
-              <a href={item.slug}>{item.pageName}</a> - {item.description}
-            </li>
-          ))}
-          <div className="mt-4 bg-white text-blue-900 rounded-lg shadow-lg p-8 w-full max-w-xl text-center transform hover:scale-105 transition-transform duration-300 ease-in-out">
-            <a href="/health" className="text-blue-600 hover:underline">Health checks</a> - <a href="/health-ui" className="text-blue-600 hover:underline">Health checks UI</a>
-
-          </div>
-        </ul>
-      ) : (
-        <p>No data available</p>
-      )}
+    <Wrapper header={<HomeHeaderBlock />} pageTitle={"Home"}>
+      <div id="home">
+        {topics.length > 0 ? <Topics topics={topics} /> : <p>No topics found.</p>}
+      </div>
     </Wrapper>
   );
 };

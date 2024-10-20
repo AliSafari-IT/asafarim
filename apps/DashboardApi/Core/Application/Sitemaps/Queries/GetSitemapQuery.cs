@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Core.Application.Interfaces.Repositories;
 using Core.Domain.Entities;
 using Core.Domain.Enum;
+using DashboardApi.Core.Domain.Entities;
 
 namespace Core.Application.Sitemaps.Queries
 {
@@ -14,7 +15,7 @@ namespace Core.Application.Sitemaps.Queries
             _sitemapRepository = sitemapRepository;
         }
 
-        public IEnumerable<Sitemap> Execute(EnumUserRole roleIndex)
+        public IEnumerable<SitemapEntity> Execute(EnumUserRole roleIndex)
         {
             var allSitemaps = _sitemapRepository.GetAllSitemapItems();
             Console.WriteLine(allSitemaps);

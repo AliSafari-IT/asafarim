@@ -1,9 +1,9 @@
 using System;
 using Core.Domain.Enum;
 
-namespace Core.Domain.Entities
+namespace DashboardApi.Core.Domain.Entities
 {
-    public class Sitemap
+    public class SitemapEntity
     {
         public Guid Id { get; set; }
 
@@ -15,7 +15,7 @@ namespace Core.Domain.Entities
         // AccessByRole will be stored as a string in the database
         public EnumUserRole AccessByRole { get; set; }
 
-                public void ModifySitemapItem(string newPageName, string newDescription, string newSlug, EnumUserRole newAccessByRole) 
+        public void ModifySitemapItem(string newPageName, string newDescription, string newSlug, EnumUserRole newAccessByRole) 
         {
             PageName = newPageName;
             Description = newDescription;

@@ -21,7 +21,7 @@ DevKnowledgeBase is a comprehensive platform to explore, learn, and innovate in 
 
 - **Title**: DevKnowledgeBase
 - **Tagline**: Explore, Learn, Innovate
-- **URL**: [https://asafarim.be](https://asafarim.be)
+- **URL**: [https://asafarim.com](https://asafarim.com)
 - **Base URL**: /
 - **Organization Name**: asafarim
 - **Project Name**: DevDocsCentral

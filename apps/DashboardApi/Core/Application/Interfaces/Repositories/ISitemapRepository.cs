@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using Core.Domain.Entities;
 using Core.Domain.Enum;
+using DashboardApi.Core.Domain.Entities;
 
 namespace Core.Application.Interfaces.Repositories
 {
-    public interface ISitemapRepository: IRepository<Sitemap>, IRepository<SitemapItem>
+    public interface ISitemapRepository: IRepository<SitemapEntity>, IRepository<SitemapItem>
     {
-        IEnumerable<Sitemap> GetAllSitemapItems();
+        IEnumerable<SitemapEntity> GetAllSitemapItems();
+
     }
 
     public class SitemapItem

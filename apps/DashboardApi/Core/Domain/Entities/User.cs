@@ -1,18 +1,35 @@
-﻿using Core.Domain.Entities;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Core.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace DashboardApi.Core.Domain.Entities
 {
+    [Index(nameof(Username), IsUnique = true)]
+    [Index(nameof(Email), IsUnique = true)]
     public class User
     {
-        public Guid Id {  get; set; }
-        public required string Username { get; set; }
-        public required string Email { get; set; }
-        public  string? PasswordHash { get; set; }
+        [Key]
+        public Guid Id { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        [Required, MaxLength(20), MinLength(3)]
+        public string Username { get; set; }
+
+        [Required, EmailAddress]
+        public string Email { get; set; }
+
+        public string? PasswordHash { get; set; }
+
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
-        // Navigation property to the join table
-        public List<UserRole> UserRoles { get; set; } = new List<UserRole>();
-
+        // Navigation properties
+        public List<UserRole>? UserRoles { get; set; } = new List<UserRole>();
+        public List<BlogPost>? BlogPosts { get; set; } = new List<BlogPost>();
     }
 }

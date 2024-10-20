@@ -4,7 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using DashboardApi.Core.Domain.Entities;
 using Infrastructure.Data;
-using Microsoft.EntityFrameworkCore; // I have my ApplicationDbContext here
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc; // I have my ApplicationDbContext here
 
 namespace DashboardApi.Services
 {
@@ -18,6 +19,7 @@ namespace DashboardApi.Services
             _context = context;
             _passwordHasher = new PasswordHasher<User>();
         }
+
 
         public async Task CreateNewUserAsync()
         {
@@ -81,6 +83,159 @@ namespace DashboardApi.Services
             {
                 throw new Exception("StandardUser role not found.");
             }
+        }
+
+        public async Task<User> GetUserByUsernameAsync(string username)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+        }
+
+        public async Task<User> GetUserByEmailAsync(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        }
+
+        public async Task<User> GetUserByIdAsync(Guid id)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+        }
+
+        public async Task UpdateUserAsync(User user)
+        {
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteUserAsync(User user)
+        {
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateUserPasswordAsync(User user, string newPassword)
+        {
+            var hashedPassword = _passwordHasher.HashPassword(user, newPassword);
+            user.PasswordHash = hashedPassword;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateUserEmailAsync(User user, string newEmail)
+        {
+            user.Email = newEmail;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateUserUsernameAsync(User user, string newUsername)
+        {
+            user.Username = newUsername;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateUserRolesAsync(User user, string[] roles)
+        {
+            // Remove all user roles
+            _context.UserRoles.RemoveRange(_context.UserRoles.Where(ur => ur.UserId == user.Id));
+            await _context.SaveChangesAsync();
+
+            // Add new user roles
+            foreach (var role in roles)
+            {
+                var roleEntity = await _context.Roles.FirstOrDefaultAsync(r => r.Name == role);
+                if (roleEntity != null)
+                {
+                    var userRole = new UserRole
+                    {
+                        UserId = user.Id,
+                        RoleId = roleEntity.Id
+                    };
+                    _context.UserRoles.Add(userRole);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<string>> GetUserRolesAsync(User user)
+        {
+            var userRoles = await _context.UserRoles
+                .Where(ur => ur.UserId == user.Id)
+                .Join(_context.Roles, ur => ur.RoleId, r => r.Id, (ur, r) => new { Role = r })
+                .Select(ur => ur.Role.Name)
+                .ToListAsync();
+
+            return userRoles;
+        }
+
+        public async Task<List<User>> GetUsersAsync()
+        {
+            return await _context.Users.ToListAsync();
+        }
+
+        public async Task<List<User>> GetUsersByRoleAsync(string roleName)
+        {
+            var role = await _context.Roles.FirstOrDefaultAsync(r => r.Name == roleName);
+            if (role == null)
+            {
+                throw new Exception($"Role '{roleName}' not found.");
+            }
+
+            return await _context.Users
+                .Join(_context.UserRoles, u => u.Id, ur => ur.UserId, (u, ur) => new { User = u, UserRole = ur })
+                .Where(ur => ur.UserRole.RoleId == role.Id)
+                .Select(ur => ur.User)
+                .ToListAsync();
+        }
+
+        public async Task<List<User>> GetUsersByNameAsync(string name)
+        {
+            return await _context.Users
+                .Where(u => u.Username.Contains(name))
+                .ToListAsync();
+        }
+
+        public async Task<List<User>> GetUsersByEmailAsync(string email)
+        {
+            return await _context.Users
+                .Where(u => u.Email.Contains(email))
+                .ToListAsync();
+        }
+
+        public async Task<List<User>> GetUsersByRoleAndNameAsync(string roleName, string name)
+        {
+            var role = await _context.Roles.FirstOrDefaultAsync(r => r.Name == roleName) ?? throw new Exception($"Role '{roleName}' not found.");
+            return await _context.Users
+                .Join(_context.UserRoles, u => u.Id, ur => ur.UserId, (u, ur) => new { User = u, UserRole = ur })
+                .Where(ur => ur.UserRole.RoleId == role.Id && ur.User.Username.Contains(name))
+                .Select(ur => ur.User)
+                .ToListAsync();
+        }
+
+        // Delete a user by ID
+        public async Task DeleteUserAsync(Guid id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                throw new Exception($"User with ID '{id}' not found.");
+            }
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+        }
+
+        internal object? GetUserRoles()
+        {
+            var userRoles = _context.UserRoles
+                .Join(_context.Roles, ur => ur.RoleId, r => r.Id, (ur, r) => new { Role = r })
+                .Select(ur => ur.Role.Name)
+                .ToList();
+            return userRoles;
+        }
+
+        internal async Task CreateNewUser(User user)
+        {
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+            
         }
     }
 }

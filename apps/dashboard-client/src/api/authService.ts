@@ -1,14 +1,6 @@
-const getApiUrl = () => {
-  const host = window.location.hostname;
-  if (host === 'preview.asafarim.com') {
-    return 'https://preview.asafarim.com/api';
-  }
-  return host === 'asafarim.com' ? 'https://asafarim.com/api' : `${(import.meta as any).env.VITE_API_URL}`; // 'https://localhost:44337/api'
-};
-
+import API_URL from "./getApiUrls";
 
 const login = async (username: string, password: string) => {
-  const API_URL = getApiUrl();
   console.debug('API_URL in authService: ' + API_URL);
   try {
     const response = await fetch(`${API_URL}/auth/login`, {

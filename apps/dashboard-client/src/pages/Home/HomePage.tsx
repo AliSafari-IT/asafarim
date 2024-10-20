@@ -24,9 +24,9 @@ const Home = () => {
   useEffect(() => {
     let isMounted = true; // Flag to track component mounting state
     console.log('Environment Variables:', envVariable);
-    console.log('API_URL in Home: ', API_URL);
     const userData = localStorage.getItem('user');
     const token = userData ? JSON.parse(userData).token : null;
+    console.debug('API_URL in Home: ', API_URL, "token: ", token, "user: ", user);
 
     setLoading(true);
     axios

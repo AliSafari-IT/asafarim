@@ -12,13 +12,20 @@ const Home = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [topics, setTopics] = useState<ITopic[]>([]);
-  const user = localStorage.getItem('user');
+  const userData = localStorage.getItem('user');
+  const token = userData ? JSON.parse(userData).token : null;
 
   // Retrieve topics
   useEffect(() => {
     const fetchTopics = async () => {
       try {
-        const response = await axios.get(`${API_URL}/topics`);
+        const headers = token
+          ? {
+              Authorization: `Bearer ${token}`,
+            }
+          : {};
+
+        const response = await axios.get(`${API_URL}/topics`, { headers });
         console.log("Response from /api/topics: ", response);
         setTopics(response.data);
       } catch (error: any) {
@@ -28,10 +35,8 @@ const Home = () => {
       }
     };
 
-    if (!user) {
-      fetchTopics();  
-    }
-  }, [API_URL, user]);
+    fetchTopics();
+  }, [token]);
 
   if (loading) {
     return (

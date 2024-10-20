@@ -1,12 +1,16 @@
 # Akkodis Targeted Résumé
+
+
    ## **Alireza SAFARI**
-   
+---
+ 
     📨:     Meybroekstraat 48 
             3510 Hasselt
 
     📞:     0484.995707
 
       🇪:     asafarim@gmail.com 
+---
 
 ## Professional Summary
 

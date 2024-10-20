@@ -1,18 +1,18 @@
 .markdown-container {
-  background-color: #f9f9fb;  /* Light background for readability */
-  padding: 2rem; /* Add some padding */
-  border-radius: 10px; /* Rounded corners */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  font-family: 'Roboto', sans-serif; /* Modern, clean font */
-  line-height: 1.7; /* Good readability */
-  color: #333; /* Dark gray text */
-  margin: 0 auto; /* Center and add vertical space */
+  background-color: #f9f9fb;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.7;
+  color: #333;
+  margin: 0 auto;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .markdown-container:hover {
-  transform: translateY(-5px); /* Slight lift on hover for an interactive feel */
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
 .markdown-container h1,
@@ -21,7 +21,7 @@
 .markdown-container h4,
 .markdown-container h5,
 .markdown-container h6 {
-  color: #0056b3; /* Standout blue for headers */
+  color: #0056b3;
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
   font-weight: 600;
@@ -69,7 +69,7 @@
 }
 
 .markdown-container ul ul {
-  list-style-type: circle; /* Nested lists with different styles */
+  list-style-type: circle;
 }
 
 .markdown-container ol {
@@ -77,7 +77,7 @@
 }
 
 .markdown-container li {
-  margin-bottom: 0.5rem; /* Space between list items */
+  margin-bottom: 0.5rem;
 }
 
 .markdown-container strong,
@@ -154,6 +154,38 @@
   max-width: 100%;
   display: block;
   margin: 1rem auto;
+}
+
+/* Styles for details and summary elements */
+.markdown-container details {
+  margin: 1em 0;
+  padding: 0.5em;
+  background-color: #f9f9fb;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.markdown-container summary {
+  font-weight: bold;
+  cursor: pointer;
+  outline: none;
+  list-style: none;
+}
+
+.markdown-container details[open] summary:before {
+  content: '▾ ';
+}
+
+.markdown-container summary:before {
+  content: '▸ ';
+}
+
+.markdown-container details > *:not(summary) {
+  margin-left: 1em;
+}
+
+.markdown-container summary:hover {
+  color: #003d82;
 }
 
 @media (max-width: 968px) {

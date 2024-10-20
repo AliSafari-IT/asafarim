@@ -6,13 +6,7 @@ import NotAuthenticated from "../../components/NotAuthenticated";
 import { ITopic } from "../../interfaces/ITopic";
 import Topics from "../Topic/Topics";
 import Loading from "../../components/Loading/Loading";
-
-// Determine the correct API URL based on the current hostname
-const envVariable = (import.meta as any).env;
-let API_URL = envVariable.VITE_API_URL || 'https://asafarim.com/api';
-if (window.location.hostname === 'preview.asafarim.com') {
-  API_URL = envVariable.VITE_PREVIEW_URL || 'https://preview.asafarim.com/api';
-}
+import API_URL from "../../api/getApiUrls";
 
 const Home = () => {
   const [loading, setLoading] = useState<boolean>(true);

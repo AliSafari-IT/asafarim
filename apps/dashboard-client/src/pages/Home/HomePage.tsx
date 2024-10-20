@@ -7,20 +7,18 @@ import { ITopic } from "../../interfaces/ITopic";
 import Topics from "../Topic/Topics";
 import Loading from "../../components/Loading/Loading";
 
+// Determine the correct API URL based on the current hostname
+const envVariable = (import.meta as any).env;
+let API_URL = envVariable.VITE_API_URL || 'https://asafarim.com/api';
+if (window.location.hostname === 'preview.asafarim.com') {
+  API_URL = envVariable.VITE_PREVIEW_URL || 'https://preview.asafarim.com/api';
+}
+
 const Home = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [topics, setTopics] = useState<ITopic[]>([]);
-  const envVariable = (import.meta as any).env;
   const user = localStorage.getItem('user');
-
-  // Determine the correct API URL based on the current hostname
-  let API_URL = envVariable.VITE_API_URL || 'https://asafarim.com/api';
-  if (window.location.hostname === 'preview.asafarim.com') {
-    API_URL = envVariable.VITE_PREVIEW_URL || 'https://preview.asafarim.com/api';
-  }
-
-
 
   // Retrieve topics
   useEffect(() => {
@@ -57,7 +55,7 @@ const Home = () => {
         setError("Failed to load topics");
         setLoading(false);
       });
-  }, [API_URL, user]);
+  }, [API_URL, user, topics]);
 
   if (loading) {
     return (

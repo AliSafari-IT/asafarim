@@ -12,9 +12,21 @@ const login = async (username: string, password: string) => {
       body: JSON.stringify({ username, password }),
     });
 
+   
     if (!response.ok) {
-      const { message } = await response.json();
-      throw new Error(`Login failed with status: ${response.status}, message: ${message}`);
+      let errorMessage = 'Login failed';
+      try {
+        // Attempt to extract the error message from JSON response
+        const errorData = await response.json();
+        if (errorData.message) {
+          errorMessage = `Login failed: ${errorData.message}`;
+        }
+      } catch (err) {
+        // JSON parsing failed, maybe HTML response (e.g., a server error page)
+        errorMessage = `Login failed with status: ${response.status}`;
+      }
+
+      throw new Error(errorMessage);
     }
 
     const data = await response.json();

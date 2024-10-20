@@ -19,6 +19,7 @@ const Home = () => {
     const fetchTopics = async () => {
       try {
         const response = await axios.get(`${API_URL}/topics`);
+        console.log("Response from /api/topics: ", response);
         setTopics(response.data);
       } catch (error: any) {
         setError(error.message);

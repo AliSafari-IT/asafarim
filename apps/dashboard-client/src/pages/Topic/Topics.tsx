@@ -18,12 +18,19 @@ const Topics = ({ topics }: TopicsProps) => {
   // Use useMemo to memoize sorted topics to avoid sorting on every render
   const sortedTopics = useMemo(() => {
     return [...topics].sort((a, b) => {
+      // Ensure difficultyLevel is defined for comparison
+      const difficultyA = a.difficultyLevel ?? '';
+      const difficultyB = b.difficultyLevel ?? '';
+
       // First, sort by difficulty level
-      const difficultyComparison = a.difficultyLevel.localeCompare(b.difficultyLevel);
+      const difficultyComparison = difficultyA.localeCompare(difficultyB);
       if (difficultyComparison !== 0) return difficultyComparison;
 
       // If difficulty levels are the same, sort by lastUpdated
-      return new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime();
+      const lastUpdatedA = new Date(a.lastUpdated).getTime() || 0;
+      const lastUpdatedB = new Date(b.lastUpdated).getTime() || 0;
+
+      return lastUpdatedB - lastUpdatedA;
     });
   }, [topics]);
 
@@ -33,9 +40,11 @@ const Topics = ({ topics }: TopicsProps) => {
         // Sort relatedPosts based on difficultyLevel
         const sortedRelatedPosts = useMemo(() => {
           return topic.relatedPosts
-            ? [...topic.relatedPosts].sort((a: IBlogPost, b: IBlogPost) =>
-                a.difficultyLevel.localeCompare(b.difficultyLevel)
-              )
+            ? [...topic.relatedPosts].sort((a: IBlogPost, b: IBlogPost) => {
+                const difficultyA = a.difficultyLevel ?? '';
+                const difficultyB = b.difficultyLevel ?? '';
+                return difficultyA.localeCompare(difficultyB);
+              })
             : [];
         }, [topic.relatedPosts]);
 

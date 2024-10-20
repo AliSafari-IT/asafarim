@@ -35,6 +35,7 @@ const LoginPage = () => {
       if (error?.response && error.response.status === 401) {
         setError(`Invalid username or password: (Error ${error.response.status})`);
       } else {
+        console.error('An unexpected error occurred:', error);
         setError('An unexpected error occurred. Please try again later. (Error 500: Internal Server Error)');
       }
     } finally {
@@ -69,6 +70,7 @@ const LoginPage = () => {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Add your password"
               className="p-2 border rounded-md w-full max-w-xs"
+              autoComplete='current-password'
               required
             />
           </div>

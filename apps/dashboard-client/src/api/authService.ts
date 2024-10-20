@@ -1,18 +1,15 @@
-// Determine the correct API URL based on the current hostname
-let API_URL = (import.meta as any).env.VITE_API_URL || 'https://asafarim.com/api';
+const getApiUrl = () => {
+  const host = window.location.hostname;
+  if (host === 'preview.asafarim.com') {
+    return 'https://preview.asafarim.com/api';
+  }
+  return host === 'asafarim.com' ? 'https://asafarim.com/api' : `${(import.meta as any).env.VITE_API_URL}`; // 'https://localhost:44337/api'
+};
 
-// Dynamically update the API URL if the user is on a subdomain like preview.asafarim.com
-if (window.location.hostname === 'preview.asafarim.com') {
-  API_URL = 'https://preview.asafarim.com/api';
-} else if (window.location.hostname === 'asafarim.com') {
-  API_URL = 'https://asafarim.com/api';
-}
 
-// Log the final API URL for debugging
-console.log(`API URL in Home: ${API_URL}`);
-
-// Continue with your login function
-const login = async (username: string, password: string) => { 
+const login = async (username: string, password: string) => {
+  const API_URL = getApiUrl();
+  console.debug('API_URL in authService: ' + API_URL);
   try {
     const response = await fetch(`${API_URL}/auth/login`, {
       method: 'POST',
@@ -24,10 +21,8 @@ const login = async (username: string, password: string) => {
     });
 
     if (!response.ok) {
-      const errorResponse = await response.json();
-      const error = new Error(`Login failed with status: ${response.status}`);
-      (error as any).response = { status: response.status, message: errorResponse.message };
-      throw error;
+      const { message } = await response.json();
+      throw new Error(`Login failed with status: ${response.status}, message: ${message}`);
     }
 
     const data = await response.json();
@@ -43,3 +38,4 @@ const login = async (username: string, password: string) => {
 };
 
 export default { login };
+

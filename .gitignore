@@ -85,3 +85,6 @@ Migrations/
 *.bak
 *.swp
 *.swo
+
+# exceptions
+!apps/dashboard-client/src/declarations.d.ts

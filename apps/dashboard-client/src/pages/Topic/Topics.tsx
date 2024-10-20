@@ -1,19 +1,21 @@
 import { Link } from "react-router-dom";
-import { ITopic } from "../../interfaces/ITopic"; // Ensure you have IPost interface
+import { ITopic } from "../../interfaces/ITopic";
 import { NotebookSectionArrowRight24Regular } from "@fluentui/react-icons/fonts";
 import { useMemo } from "react";
 import { IBlogPost } from "../../interfaces/IBlogPost";
+import Loading from "../../components/Loading/Loading";
 
 interface TopicsProps {
   topics: ITopic[];
 }
 
 const Topics = ({ topics }: TopicsProps) => {
+  // Check if topics are empty, display loading indicator
   if (!topics || topics.length === 0) {
-    return <p>Loading...</p>;
+    return <Loading size={50} color="#ff4500" />;
   }
 
-  // Use useMemo to memoize sorted topics
+  // Use useMemo to memoize sorted topics to avoid sorting on every render
   const sortedTopics = useMemo(() => {
     return [...topics].sort((a, b) => {
       // First, sort by difficulty level
@@ -29,19 +31,21 @@ const Topics = ({ topics }: TopicsProps) => {
     <div className="flex flex-col space-y-4">
       {sortedTopics.map((topic: ITopic) => {
         // Sort relatedPosts based on difficultyLevel
-        const sortedRelatedPosts = topic.relatedPosts
-          ? [...topic.relatedPosts].sort((a: IBlogPost, b: IBlogPost) =>
-              a.difficultyLevel.localeCompare(b.difficultyLevel)
-            )
-          : [];
+        const sortedRelatedPosts = useMemo(() => {
+          return topic.relatedPosts
+            ? [...topic.relatedPosts].sort((a: IBlogPost, b: IBlogPost) =>
+                a.difficultyLevel.localeCompare(b.difficultyLevel)
+              )
+            : [];
+        }, [topic.relatedPosts]);
 
         return (
-          <details key={topic.id} className="border rounded shadow-sm">
-            <summary className="cursor-pointer bg-gray-100 p-4" aria-label={`Topic ${topic.name}`}>
+          <details key={topic.id} className="border rounded shadow-sm" open>
+            <summary className="cursor-pointer bg-gray-900 p-4" aria-label={`Topic ${topic.name}`}>
               <h3 className="text-xl font-semibold">{topic.name}</h3>
-              <p className="text-gray-600">{topic.description}</p>
+              <p className="text-blue-200">{topic.description}</p>
             </summary>
-            <div className="p-4 bg-white">
+            <div className="p-4 bg-gray-100 text-black">
               <p>
                 <strong>Category:</strong> {topic.technologyCategory}
               </p>
@@ -61,10 +65,7 @@ const Topics = ({ topics }: TopicsProps) => {
                     </li>
                   ))
                 ) : (
-                  <li
-                    key={topic.id}
-                    className="text-gray-600 mt-2 list-none scroll-ml-6 ml-8 "
-                  >
+                  <li key={topic.id} className="text-gray-600 mt-2 list-none scroll-ml-6 ml-8">
                     <NotebookSectionArrowRight24Regular
                       style={{ color: "red", fontSize: "24px" }}
                     />

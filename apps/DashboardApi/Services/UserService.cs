@@ -202,12 +202,7 @@ namespace DashboardApi.Services
 
         public async Task<List<User>> GetUsersByRoleAndNameAsync(string roleName, string name)
         {
-            var role = await _context.Roles.FirstOrDefaultAsync(r => r.Name == roleName);
-            if (role == null)
-            {
-                throw new Exception($"Role '{roleName}' not found.");
-            }
-
+            var role = await _context.Roles.FirstOrDefaultAsync(r => r.Name == roleName) ?? throw new Exception($"Role '{roleName}' not found.");
             return await _context.Users
                 .Join(_context.UserRoles, u => u.Id, ur => ur.UserId, (u, ur) => new { User = u, UserRole = ur })
                 .Where(ur => ur.UserRole.RoleId == role.Id && ur.User.Username.Contains(name))

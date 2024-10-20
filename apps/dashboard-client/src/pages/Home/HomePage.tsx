@@ -5,6 +5,7 @@ import { HomeHeaderBlock } from "./HomeHeaderBlock";
 import NotAuthenticated from "../../components/NotAuthenticated";
 import { ITopic } from "../../interfaces/ITopic";
 import Topics from "../Topic/Topics";
+import Loading from "../../components/Loading/Loading";
 
 const Home = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -16,33 +17,40 @@ const Home = () => {
   // Determine the correct API URL based on the current hostname
   let API_URL = envVariable.VITE_API_URL || 'https://asafarim.com/api';
   if (window.location.hostname === 'preview.asafarim.com') {
-    API_URL = envVariable.VITE_PREVIEW_URL + "/api";
+    API_URL = envVariable.VITE_PREVIEW_URL || 'https://preview.asafarim.com/api';
   }
 
-  console.log('Environment Variables:', envVariable);
-  console.log('API_URL in Home: ', API_URL);
+
 
   // Retrieve topics
   useEffect(() => {
+    console.log('Environment Variables:', envVariable);
+    console.log('API_URL in Home: ', API_URL);
     const userData = localStorage.getItem('user');
     const token = userData ? JSON.parse(userData).token : null;
 
     if (!token) {
       setError('No authentication token found. Please log in.');
       setLoading(false);
-      return;
+      // log error
+      console.error('No authentication token found. Please log in.');
     }
 
     setLoading(true);
     axios
       .get(`${API_URL}/topics`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          // Authorization: `Bearer ${token}`,
+        },
+        params: {
+          roleIndex: user,
         },
       })
       .then((response) => {
+        console.log("Data: ", response.data);
         setTopics(response.data);
         setLoading(false);
+        setError(null);
       })
       .catch((err) => {
         console.error(err);
@@ -54,7 +62,7 @@ const Home = () => {
   if (loading) {
     return (
       <Wrapper pageTitle="Home">
-        <p>Loading...</p>
+        <Loading size={50} color="skyblue" />
       </Wrapper>
     );
   }
@@ -72,7 +80,9 @@ const Home = () => {
 
   return (
     <Wrapper header={<HomeHeaderBlock />} pageTitle={"Home"}>
-      {topics.length > 0 ? <Topics topics={topics} /> : <p>No topics found.</p>}
+      <div id="home">
+        {topics.length > 0 ? <Topics topics={topics} /> : <p>No topics found.</p>}
+      </div>
     </Wrapper>
   );
 };

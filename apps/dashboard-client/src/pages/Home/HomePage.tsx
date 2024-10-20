@@ -16,16 +16,24 @@ const Home = () => {
   // Determine the correct API URL based on the current hostname
   let API_URL = envVariable.VITE_API_URL || 'https://asafarim.com/api';
   if (window.location.hostname === 'preview.asafarim.com') {
-    API_URL = envVariable.Preview_URL + "/api";
+    API_URL = envVariable.VITE_PREVIEW_URL + "/api";
   }
 
-  console.log('API_URL in Home: ', API_URL, loading, error);
+  console.log('Environment Variables:', envVariable);
+  console.log('API_URL in Home: ', API_URL);
 
   // Retrieve topics
   useEffect(() => {
     const userData = localStorage.getItem('user');
     const token = userData ? JSON.parse(userData).token : null;
 
+    if (!token) {
+      setError('No authentication token found. Please log in.');
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
     axios
       .get(`${API_URL}/topics`, {
         headers: {
@@ -41,33 +49,30 @@ const Home = () => {
         setError("Failed to load topics");
         setLoading(false);
       });
-      if (!user) {
-        setError('No authentication token found. Please log in.');
-        setLoading(false);
-        return;
-      }
-  }, [API_URL, topics.length, user]);
+  }, [API_URL, user]);
 
+  if (loading) {
+    return (
+      <Wrapper pageTitle="Home">
+        <p>Loading...</p>
+      </Wrapper>
+    );
+  }
 
   if (error) {
-    const errorMessage = (
-      <div className="w-1/2 mx-auto my-10 px-4 py-3 rounded relative" role="alert">
-        <NotAuthenticated />
-      </div>
-    );
-
     return (
-      <Wrapper pageTitle="Home" header={errorMessage}>
-        <Topics topics={topics} />
+      <Wrapper pageTitle="Home">
+        <div className="w-1/2 mx-auto my-10 px-4 py-3 rounded relative" role="alert">
+          <NotAuthenticated />
+        </div>
+        <p>{error}</p>
       </Wrapper>
     );
   }
 
   return (
     <Wrapper header={<HomeHeaderBlock />} pageTitle={"Home"}>
-      {error && <p>{error}</p>}
-      {topics.length > 0 ? <Topics topics={topics} /> : <p>No topics found.</p>
-      }
+      {topics.length > 0 ? <Topics topics={topics} /> : <p>No topics found.</p>}
     </Wrapper>
   );
 };

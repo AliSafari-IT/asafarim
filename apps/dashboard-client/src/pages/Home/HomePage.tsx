@@ -22,45 +22,21 @@ const Home = () => {
 
   // Retrieve topics
   useEffect(() => {
-    let isMounted = true; // Flag to track component mounting state
-    console.log('Environment Variables:', envVariable);
-    const userData = localStorage.getItem('user');
-    const token = userData ? JSON.parse(userData).token : null;
-    console.debug('API_URL in Home: ', API_URL, "token: ", token, "user: ", user);
-
-    setLoading(true);
-    axios
-      .get(`${API_URL}/topics`, {
-        headers: {
-          // Authorization: `Bearer ${token}`,
-        },
-        params: {
-          roleIndex: user,
-        },
-        
-      })
-      .then((response) => {
-        if (isMounted) {
-          console.log("Data: ", response.data);
-          setTopics(response.data);
-          setLoading(false);
-          setError(null);
-          console.log("Topics: ", response.data);
-        }
-      })
-      .catch((err) => {
-        if (isMounted) {
-          console.error(err);
-          setError("Failed to load topics");
-          setLoading(false);
-        }
-      });
-
-    // Cleanup function to avoid memory leaks
-    return () => {
-      isMounted = false;
+    const fetchTopics = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/topics`);
+        setTopics(response.data);
+      } catch (error: any) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
     };
-  }, [API_URL]);
+
+    if (!user) {
+      fetchTopics();  
+    }
+  }, [API_URL, user]);
 
   if (loading) {
     return (

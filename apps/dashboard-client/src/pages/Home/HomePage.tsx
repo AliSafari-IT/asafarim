@@ -22,17 +22,11 @@ const Home = () => {
 
   // Retrieve topics
   useEffect(() => {
+    let isMounted = true; // Flag to track component mounting state
     console.log('Environment Variables:', envVariable);
     console.log('API_URL in Home: ', API_URL);
     const userData = localStorage.getItem('user');
     const token = userData ? JSON.parse(userData).token : null;
-
-    if (!token) {
-      setError('No authentication token found. Please log in.');
-      setLoading(false);
-      // log error
-      console.error('No authentication token found. Please log in.');
-    }
 
     setLoading(true);
     axios
@@ -45,17 +39,27 @@ const Home = () => {
         },
       })
       .then((response) => {
-        console.log("Data: ", response.data);
-        setTopics(response.data);
-        setLoading(false);
-        setError(null);
+        if (isMounted) {
+          console.log("Data: ", response.data);
+          setTopics(response.data);
+          setLoading(false);
+          setError(null);
+          console.log("Topics: ", response.data);
+        }
       })
       .catch((err) => {
-        console.error(err);
-        setError("Failed to load topics");
-        setLoading(false);
+        if (isMounted) {
+          console.error(err);
+          setError("Failed to load topics");
+          setLoading(false);
+        }
       });
-  }, [API_URL, user, topics]);
+
+    // Cleanup function to avoid memory leaks
+    return () => {
+      isMounted = false;
+    };
+  }, [API_URL]);
 
   if (loading) {
     return (
@@ -65,7 +69,7 @@ const Home = () => {
     );
   }
 
-  if (error) {
+  if (error && topics.length === 0) {
     return (
       <Wrapper pageTitle="Home">
         <div className="w-1/2 mx-auto my-10 px-4 py-3 rounded relative" role="alert">

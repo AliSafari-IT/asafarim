@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { ITopic } from "../../interfaces/ITopic";
 import { NotebookSectionArrowRight24Regular } from "@fluentui/react-icons/fonts";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { IBlogPost } from "../../interfaces/IBlogPost";
 import Loading from "../../components/Loading/Loading";
 
@@ -34,6 +34,13 @@ const Topics = ({ topics }: TopicsProps) => {
     });
   }, [topics]);
 
+  // State to manage which topic is expanded
+  const [expandedTopicId, setExpandedTopicId] = useState<string | null>(null);
+
+  const handleToggle = (topicId: string) => {
+    setExpandedTopicId((prevId) => (prevId === topicId ? null : topicId));
+  };
+
   return (
     <div className="flex flex-col space-y-4">
       {sortedTopics.map((topic: ITopic) => {
@@ -49,7 +56,12 @@ const Topics = ({ topics }: TopicsProps) => {
         }, [topic.relatedPosts]);
 
         return (
-          <details key={topic.id} className="border rounded shadow-sm" open>
+          <details
+            key={topic.id}
+            className="border rounded shadow-sm"
+            open={expandedTopicId === topic.id}
+            onClick={() => handleToggle(topic.id)}
+          >
             <summary className="cursor-pointer bg-gray-900 p-4" aria-label={`Topic ${topic.name}`}>
               <h3 className="text-xl font-semibold">{topic.name}</h3>
               <p className="text-blue-200">{topic.description}</p>
@@ -74,7 +86,10 @@ const Topics = ({ topics }: TopicsProps) => {
                     </li>
                   ))
                 ) : (
-                  <li key={topic.id} className="text-gray-600 mt-2 list-none scroll-ml-6 ml-8">
+                  <li
+                    key={`${topic.id}-no-posts`}
+                    className="text-gray-600 mt-2 list-none scroll-ml-6 ml-8"
+                  >
                     <NotebookSectionArrowRight24Regular
                       style={{ color: "red", fontSize: "24px" }}
                     />

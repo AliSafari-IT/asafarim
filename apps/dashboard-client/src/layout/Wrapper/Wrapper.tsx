@@ -8,7 +8,6 @@ import { IconButton } from '@fluentui/react/lib/Button';
 import DefaultFooter from '../DefaultFooter/DefaultFooter';
 import DefaultHeader from '../DefaultHeader/DefaultHeader';
 import Navbar from '../Navbar/Navbar';
-import Loading from '../../components/Loading/Loading';
 
 interface LayoutProps {
   header?: React.ReactNode;

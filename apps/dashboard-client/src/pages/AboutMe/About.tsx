@@ -1,8 +1,12 @@
 import DisplayMd from "../../components/DisplayMd";
+import { useTheme } from "../../hooks/useTheme";
 import Wrapper from "../../layout/Wrapper/Wrapper";
 import aboutMeMd from './aboutme.md?raw';
 
 export default function About(): JSX.Element {
+  // get current theme
+  const theme = useTheme().theme;
+  
   const headerBlock = (
     <div className="w-full text-center m-0 text-gray-200 p-3 min-h-6 bg-gray-700">
       <h1 className="text-2xl font-bold">About Me 🛠️</h1>
@@ -31,7 +35,7 @@ export default function About(): JSX.Element {
 
   return (
     <Wrapper header={headerBlock} footer={null} className="p-0 m-0" sidebar={asideBlock}>
-      <DisplayMd markdownContent={aboutMeMd} />
+      <DisplayMd markdownContent={aboutMeMd} theme={theme} />
     </Wrapper>
   );
 }

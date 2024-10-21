@@ -17,14 +17,14 @@ import PostDetail from "./pages/Post/PostDetail";
 import AkkodisTargetedResume from "./pages/AboutMe/TailoredCV/Akkodis";
 import './styles/custom.css';
 import { useEffect, useState } from "react";
-// import { useTheme } from "./hooks/useTheme";
-import { getTheme, setThemeCookie } from "./utils/themeUtils";
+ import { useTheme } from "./hooks/useTheme";
 function App() {
-  const [theme] = useState(getTheme());
+  const [theme] = useState(useTheme().theme);
 
   useEffect(() => {
     document.body.setAttribute('data-theme', theme); // Apply the theme
-    setThemeCookie(theme); // Store the theme in a cookie for cross-domain use
+    localStorage.setItem('theme', theme);
+    // Log the theme
     console.log('Theme is', theme);
   }, [theme]);
   

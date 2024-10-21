@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using DashboardApi.Core.Domain.Models;
 
+namespace DashboardApi.WebApi;
 [ApiController]
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
@@ -24,7 +25,7 @@ public class AuthController : ControllerBase
         _passwordHasher = new PasswordHasher<User>();
     }
 
-    [HttpPost("login")]
+    [HttpPost("login", Name = "Login")]
     public IActionResult Login([FromBody] LoginRequest request)
     {
         // Find the user in the database

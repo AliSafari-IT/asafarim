@@ -15,28 +15,9 @@ const Topics = ({ topics }: TopicsProps) => {
     return <Loading size={50} color="#ff4500" />;
   }
 
-  // Use useMemo to memoize sorted topics to avoid sorting on every render
-  const sortedTopics = useMemo(() => {
-    return [...topics].sort((a, b) => {
-      // Ensure difficultyLevel is defined for comparison
-      const difficultyA = a.difficultyLevel ?? '';
-      const difficultyB = b.difficultyLevel ?? '';
-
-      // First, sort by difficulty level
-      const difficultyComparison = difficultyA.localeCompare(difficultyB);
-      if (difficultyComparison !== 0) return difficultyComparison;
-
-      // If difficulty levels are the same, sort by lastUpdated
-      const lastUpdatedA = new Date(a.lastUpdated).getTime() || 0;
-      const lastUpdatedB = new Date(b.lastUpdated).getTime() || 0;
-
-      return lastUpdatedB - lastUpdatedA;
-    });
-  }, [topics]);
-
   return (
     <div className="flex flex-col space-y-4">
-      {sortedTopics.map((topic: ITopic) => {
+      {topics.map((topic: ITopic) => {
         // Sort relatedPosts based on difficultyLevel
         const sortedRelatedPosts = useMemo(() => {
           return topic.relatedPosts

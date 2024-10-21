@@ -25,6 +25,7 @@ function App() {
   useEffect(() => {
     document.body.setAttribute('data-theme', theme); // Apply the theme
     setThemeCookie(theme); // Store the theme in a cookie for cross-domain use
+    console.log('Theme is', theme);
   }, [theme]);
   
   // const { theme } = useTheme();

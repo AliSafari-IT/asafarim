@@ -23,7 +23,10 @@ const Home = () => {
           ? {
               Authorization: `Bearer ${token}`,
             }
-          : {};
+          : {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+          };
 
         const response = await axios.get(`${API_URL}/topics`, { headers });
         console.log("Response from /api/topics: ", response);

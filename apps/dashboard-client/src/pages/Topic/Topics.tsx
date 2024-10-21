@@ -11,7 +11,7 @@ interface TopicsProps {
 
 const Topics = ({ topics }: TopicsProps) => {
   // Check if topics are empty, display loading indicator
-  if (!topics || topics.length === 0) {
+  if (!topics || !Array.isArray(topics) || topics.length === 0) {
     return <Loading size={50} color="#ff4500" />;
   }
 

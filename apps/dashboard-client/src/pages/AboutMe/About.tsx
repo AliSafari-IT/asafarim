@@ -6,13 +6,13 @@ export default function About(): JSX.Element {
   // get current theme
 
   const headerBlock = (
-    <div className="w-full text-center m-0 text-gray-200 p-3 min-h-6 bg-gray-700">
+    <div className="w-full text-center mx-auto m-0 primary">
       <h1 className="text-2xl font-bold">About Me 🛠️</h1>
     </div>
   );
 
   const asideBlock = (
-    <div className="w-full text-center m-0 text-gray-200 p-3  bg-gray-700">
+    <div className="w-full text-center m-0">
       <h1 className="text-xl font-bold">About Me 🛠️</h1> 
       <div>
         <ul className="list-none flex flex-col justify-start items-start ">

@@ -82,7 +82,7 @@ function Navbar({ className }: NavbarProps) {
           className="focus:outline-none"
         >
           <svg
-            className="w-6 h-6 text-blue-300"
+            className="w-6 h-6 "
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -103,7 +103,7 @@ function Navbar({ className }: NavbarProps) {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="absolute top-full left-0 right-0 bg-white shadow-md sm:hidden  z-50">
+        <div className="absolute top-full left-0 right-0  shadow-md sm:hidden  z-50">
           <a href="//techdocs.asafarim.com" className={mobileNavLinkClass('/techdocs')}>
             <span>Tech Docs</span>
             <IconTeaching className="inline-block ml-2" />

@@ -31,11 +31,11 @@ const Topics = ({ topics }: TopicsProps) => {
 
         return (
           <details key={topic.id} className="border rounded shadow-sm" open>
-            <summary className="cursor-pointer bg-gray-900 p-4" aria-label={`Topic ${topic.name}`}>
+            <summary className="cursor-pointer  p-4" aria-label={`Topic ${topic.name}`}>
               <h3 className="text-xl font-semibold">{topic.name}</h3>
-              <p className="text-blue-200">{topic.description}</p>
+              <p className="">{topic.description}</p>
             </summary>
-            <div className="p-4 bg-gray-100 text-black">
+            <div className="p-4 ">
               <p>
                 <strong>Category:</strong> {topic.technologyCategory}
               </p>
@@ -49,15 +49,15 @@ const Topics = ({ topics }: TopicsProps) => {
                 {sortedRelatedPosts.length > 0 ? (
                   sortedRelatedPosts.map((post: IBlogPost) => (
                     <li key={post.id}>
-                      <Link to={`/posts/${post.slug}`} className="text-blue-600 hover:underline">
+                      <Link to={`/posts/${post.slug}`} className=" hover:underline">
                         {post.title}
                       </Link>
                     </li>
                   ))
                 ) : (
-                  <li key={topic.id} className="text-gray-600 mt-2 list-none scroll-ml-6 ml-8">
+                  <li key={topic.id} className=" mt-2 list-none scroll-ml-6 ml-8">
                     <NotebookSectionArrowRight24Regular
-                      style={{ color: "red", fontSize: "24px" }}
+                      style={{ color: "red", fontSize: "24px", verticalAlign: "middle", marginTop: "-3px", marginRight: "10px" }}
                     />
                     No posts found
                   </li>

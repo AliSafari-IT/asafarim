@@ -60,7 +60,7 @@ function Navbar({ className }: NavbarProps) {
 
       {/* Right side */}
       <div className="hidden sm:flex items-center space-x-4">
-        <a href="/contact" className={navLinkClass('/contact')}>
+        <a href="//techdocs.asafarim.com/Contact" className={navLinkClass('/contact')}>
           Contact
         </a>
 

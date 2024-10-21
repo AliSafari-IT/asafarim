@@ -20,7 +20,7 @@ import { useEffect, useState } from "react";
 // import { useTheme } from "./hooks/useTheme";
 import { getTheme, setThemeCookie } from "./utils/themeUtils";
 function App() {
-  const [theme, setTheme] = useState(getTheme());
+  const [theme] = useState(getTheme());
 
   useEffect(() => {
     document.body.setAttribute('data-theme', theme); // Apply the theme

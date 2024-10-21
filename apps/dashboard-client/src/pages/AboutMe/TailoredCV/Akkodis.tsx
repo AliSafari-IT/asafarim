@@ -12,7 +12,7 @@ export default function AkkodisTargetedResume (): JSX.Element {
 
   return (
     <Wrapper header={headerBlock} footer={null} className="p-0 m-0  ">
-      <DisplayMd filePath={Akkodis} />
+      <DisplayMd markdownContent={Akkodis} />
     </Wrapper>
   );
 };

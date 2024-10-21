@@ -6,8 +6,6 @@ import logo from './logoT.svg';
 import {  
   PersonInfo24Regular as IconAbout,
   PhoneVibrate24Regular as IconContact,
-  DeveloperBoard24Regular as IconDashboard,
-  PersonAccounts24Regular as IconUser,
   Teaching24Regular as IconTeaching
 } from '@fluentui/react-icons';
 import ToggleTheme from '../../components/theme/ToggleTheme';

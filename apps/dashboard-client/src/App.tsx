@@ -15,8 +15,15 @@ import NotFound from "./components/NotFound";
 import Home from "./pages/Home/HomePage";
 import PostDetail from "./pages/Post/PostDetail";
 import AkkodisTargetedResume from "./pages/AboutMe/TailoredCV/Akkodis";
+import './styles/custom.css';
+import { useEffect } from "react";
+import { useTheme } from "./hooks/useTheme";
 function App() {
-  
+  const { theme } = useTheme();
+  useEffect(() => {
+    document.body.setAttribute('data-theme', theme); 
+  }, [theme]);
+
   return (
     <Routes>
       <Route path="/" element={<Home />} />

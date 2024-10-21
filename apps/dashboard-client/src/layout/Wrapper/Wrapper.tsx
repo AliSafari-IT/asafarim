@@ -1,5 +1,3 @@
-// src/layout/Wrapper/Wrapper.tsx
-
 import React, { useEffect, useState } from 'react';
 import { Stack } from '@fluentui/react/lib/Stack';
 import { mergeStyles } from '@fluentui/react/lib/Styling';
@@ -8,6 +6,7 @@ import { IconButton } from '@fluentui/react/lib/Button';
 import DefaultFooter from '../DefaultFooter/DefaultFooter';
 import DefaultHeader from '../DefaultHeader/DefaultHeader';
 import Navbar from '../Navbar/Navbar';
+import { useTheme } from '../../hooks/useTheme'; // Assuming the useTheme hook is in hooks
 
 interface LayoutProps {
   header?: React.ReactNode;
@@ -27,25 +26,7 @@ interface LayoutProps {
   children?: React.ReactNode;
 }
 
-// Styles for Fluent UI components
-const sidebarStyles = mergeStyles({
-  width: 250,
-  backgroundColor: '#f3f2f1',
-  overflowY: 'auto',
-});
-
-const contentStyles = mergeStyles({
-  flexGrow: 1,
-  padding: 20,
-  backgroundColor: '#ffffff',
-});
-
-const layoutContainerStyles = mergeStyles({
-  minHeight: '100vh',
-});
-
-
-
+// Wrapper component
 const Wrapper: React.FC<LayoutProps> = ({
   header,
   footer,
@@ -63,7 +44,33 @@ const Wrapper: React.FC<LayoutProps> = ({
 }) => {
   const [isMobile, setIsMobile] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const navbarStyles = mergeStyles({navbarClassName  });
+
+  // Get the current theme (light or dark) using the useTheme hook
+  const { theme } = useTheme();
+
+  // Dynamic styles based on theme
+  const sidebarStyles = mergeStyles({
+    width: 250,
+    backgroundColor: theme === 'dark' ? '#333333' : '#f3f2f1', // Adjust based on theme
+    overflowY: 'auto',
+  });
+
+  const contentStyles = mergeStyles({
+    flexGrow: 1,
+    padding: 20,
+    backgroundColor: theme === 'dark' ? '#1a1a1a' : '#ffffff', // Adjust based on theme
+    color: theme === 'dark' ? '#ffffff' : '#000000', // Text color based on theme
+  });
+
+  const layoutContainerStyles = mergeStyles({
+    minHeight: '100vh',
+    backgroundColor: theme === 'dark' ? '#000000' : '#ffffff', // Adjust background color
+  });
+
+  const navbarStyles = mergeStyles({
+    navbarClassName,
+  });
+
   // Detect screen size and update isMobile state
   useEffect(() => {
     const handleResize = () => {
@@ -85,7 +92,7 @@ const Wrapper: React.FC<LayoutProps> = ({
 
   // Modify navbar to include a menu button in mobile view
   const navbarBlock = navbar ?? (
-    <Navbar className={`${navbarStyles} `}>
+    <Navbar className={`${navbarStyles}`}>
       {isMobile && (
         <IconButton
           iconProps={{ iconName: 'GlobalNavButton' }}

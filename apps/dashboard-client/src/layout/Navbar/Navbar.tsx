@@ -24,18 +24,18 @@ function Navbar({ className }: NavbarProps) {
 
   const navLinkClass = (path: string) =>
     `hidden sm:inline-block px-3 py-2 rounded-md ${isActive(path)
-      ? 'text-white bg-blue-500 font-bold'
+      ? 'buttonActive font-bold'
       : 'text-blue-300 hover:text-teal-600 hover:underline'
     }`;
 
   const mobileNavLinkClass = (path: string) =>
     `block px-3 py-1 text-sm z-10 rounded-md ${isActive(path)
-      ? 'text-white bg-blue-500 font-bold'
+      ? 'buttonActive font-bold'
       : 'text-gray-600 hover:bg-gray-100 hover:text-blue-500'
     }`;
   
   return (
-    <nav className={"bg-gray-900 w-full border-b shadow-md border-gray-200 px-0 py-4 flex items-center justify-between relative " + className}>
+    <nav className={"navbarTheme w-full border-b shadow-md border-gray-200 px-0 py-4 flex items-center justify-between relative " + className}>
       {/* Left side */}
       <div className="flex items-center space-x-4">
         <a

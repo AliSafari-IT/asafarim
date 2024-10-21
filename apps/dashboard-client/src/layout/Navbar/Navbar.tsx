@@ -1,16 +1,17 @@
-// Navbar.tsx
+// E:\asm\apps\dashboard-client\src\layout\Navbar\Navbar.tsx
+
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import logo from './logoT.svg';
-import {
-  
-  PersonAccounts24Filled as IconLogin, SignOut24Regular as IconLogout,
+import {  
   PersonInfo24Regular as IconAbout,
   PhoneVibrate24Regular as IconContact,
   DeveloperBoard24Regular as IconDashboard,
   PersonAccounts24Regular as IconUser,
   Teaching24Regular as IconTeaching
 } from '@fluentui/react-icons';
+import ToggleTheme from '../../components/theme/ToggleTheme';
+import AccountComponent from '../../components/user/AccountComponent';
 
 interface NavbarProps {
   className?: string;
@@ -21,29 +22,26 @@ function Navbar({ className }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   const user = localStorage.getItem('user');
-
   const isActive = (path: string) => location.pathname === path;
 
   const navLinkClass = (path: string) =>
-    `hidden sm:inline-block px-3 py-2 rounded-md ${
-      isActive(path)
-        ? 'text-white bg-blue-500 font-bold'
-        : 'text-blue-300 hover:text-teal-600 hover:underline'
+    `hidden sm:inline-block px-3 py-2 rounded-md ${isActive(path)
+      ? 'text-white bg-blue-500 font-bold'
+      : 'text-blue-300 hover:text-teal-600 hover:underline'
     }`;
 
   const mobileNavLinkClass = (path: string) =>
-    `block px-4 py-2 ${
-      isActive(path)
-        ? 'text-white bg-blue-500 font-bold'
-        : 'text-gray-600 hover:bg-gray-100'
+    `block px-3 py-1 text-sm z-10 rounded-md ${isActive(path)
+      ? 'text-white bg-blue-500 font-bold'
+      : 'text-gray-600 hover:bg-gray-100 hover:text-blue-500'
     }`;
 
   return (
-    <nav className={"bg-gray-900 w-full border-b shadow-md border-gray-200 px-4 py-4 flex items-center justify-between relative " + className}>
+    <nav className={"bg-gray-900 w-full border-b shadow-md border-gray-200 px-0 py-4 flex items-center justify-between relative " + className}>
       {/* Left side */}
       <div className="flex items-center space-x-4">
         <a
-          href="//asafarim.com"
+          href="/"
           className="flex items-center text-blue-300 no-underline hover:text-teal-600 hover:underline"
         >
           <img src={logo} alt="Brand Logo" className="h-8 w-8 mr-2" />
@@ -67,23 +65,16 @@ function Navbar({ className }: NavbarProps) {
         <a href="/contact" className={navLinkClass('/contact')}>
           Contact
         </a>
+
         {user && (
           <a href="/user-account" className={navLinkClass('/user-account')}>
             User Profile
           </a>
         )}
-        {user ? (
-          <a
-            href="/logout"
-            className="hidden sm:inline-block px-3 py-2 rounded-md text-blue-300 no-underline hover:text-red-600 hover:underline"
-          >
-            <IconLogout />
-          </a>
-        ) : (
-          <a href="/login" className={navLinkClass('/login') + ' pr-8'}>
-            <IconLogin />
-          </a>
-        )}
+        {/* Add the AccountComponent here */}
+        <AccountComponent />
+        {/* Add the ToggleTheme component here */}
+        <ToggleTheme className="hidden sm:inline-block pr-3" />
       </div>
 
       {/* Hamburger Icon */}
@@ -114,7 +105,7 @@ function Navbar({ className }: NavbarProps) {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="absolute top-full left-0 right-0 bg-white shadow-md sm:hidden">
+        <div className="absolute top-full left-0 right-0 bg-white shadow-md sm:hidden  z-50">
           <a href="//techdocs.asafarim.com" className={mobileNavLinkClass('/techdocs')}>
             <span>Tech Docs</span>
             <IconTeaching className="inline-block ml-2" />
@@ -127,32 +118,9 @@ function Navbar({ className }: NavbarProps) {
             <span>Contact</span>
             <IconContact className="inline-block ml-2" />
           </a>
-          {user && (
-            <a href="/dashboard" className={mobileNavLinkClass('/dashboard')}>
-              <span>Dashboard</span>
-              <IconDashboard className="inline-block ml-2" />
-            </a>
-          )}
-          {user && (
-            <a href="/user-account" className={mobileNavLinkClass('/user-account')}>
-              <span>User Profile</span>
-              <IconUser className="inline-block ml-2" />
-            </a>
-          )}
-          {user ? (
-            <a
-              href="/logout"
-              className="block px-4 py-2 text-gray-600 hover:bg-gray-100"
-            >
-              <span>Logout</span>
-              <IconLogout className="inline-block ml-2" />
-            </a>
-          ) : (
-            <a href="/login" className={mobileNavLinkClass('/login')}>
-              <span>Login</span>
-              <IconLogin className="inline-block ml-2" />
-            </a>
-          )}
+
+          {/* Use the AccountComponent for mobile */}
+          <AccountComponent isMobile={true} className={mobileNavLinkClass('/login')} />
         </div>
       )}
     </nav>

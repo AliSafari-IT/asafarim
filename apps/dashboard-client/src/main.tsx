@@ -4,12 +4,15 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
 import './index.css';
 import { initializeIcons } from '@fluentui/font-icons-mdl2';
+import { ThemeProvider } from './hooks/useTheme';
 
 initializeIcons();
 
 const AppWithRouter = () => (
   <Router>
-    <App />
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
   </Router>
 )
 

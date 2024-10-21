@@ -15,9 +15,8 @@ import NotFound from "./components/NotFound";
 import Home from "./pages/Home/HomePage";
 import PostDetail from "./pages/Post/PostDetail";
 import AkkodisTargetedResume from "./pages/AboutMe/TailoredCV/Akkodis";
-
-
 function App() {
+  
   return (
     <Routes>
       <Route path="/" element={<Home />} />
@@ -25,7 +24,6 @@ function App() {
       <Route path="/about" element={<About />} />
       <Route path="/about/akkodis-targeted-resume" element={<AkkodisTargetedResume />} />
       <Route path="/contact" element={<Contact />} />
-
       <Route
         path="/dashboard"
         element={

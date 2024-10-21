@@ -33,7 +33,7 @@ function Navbar({ className }: NavbarProps) {
       ? 'text-white bg-blue-500 font-bold'
       : 'text-gray-600 hover:bg-gray-100 hover:text-blue-500'
     }`;
-
+  
   return (
     <nav className={"bg-gray-900 w-full border-b shadow-md border-gray-200 px-0 py-4 flex items-center justify-between relative " + className}>
       {/* Left side */}

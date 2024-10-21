@@ -16,10 +16,18 @@ import Home from "./pages/Home/HomePage";
 import PostDetail from "./pages/Post/PostDetail";
 import AkkodisTargetedResume from "./pages/AboutMe/TailoredCV/Akkodis";
 import './styles/custom.css';
-import { useEffect } from "react";
-import { useTheme } from "./hooks/useTheme";
+import { useEffect, useState } from "react";
+// import { useTheme } from "./hooks/useTheme";
+import { getTheme, setThemeCookie } from "./utils/themeUtils";
 function App() {
-  const { theme } = useTheme();
+  const [theme, setTheme] = useState(getTheme());
+
+  useEffect(() => {
+    document.body.setAttribute('data-theme', theme); // Apply the theme
+    setThemeCookie(theme); // Store the theme in a cookie for cross-domain use
+  }, [theme]);
+  
+  // const { theme } = useTheme();
   useEffect(() => {
     document.body.setAttribute('data-theme', theme); 
   }, [theme]);

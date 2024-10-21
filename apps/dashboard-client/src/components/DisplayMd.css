@@ -220,18 +220,4 @@
     font-size: 1.1rem;
   }
 
-/* Default styles (light theme) */
-strong,
- b {
-  color: var(--md-strong-color, #9ae3f5); /* Default strong text color for light mode */
-  font-weight: 700;
-}
-
-/* Dark theme */
-[data-theme="dark"]  strong,
-[data-theme="dark"]  b {
-  color: var(--md-strong-color-dark, #baeeee); /* Set a higher contrast color for dark mode */
-  font-weight: 700;
-}
-
 }

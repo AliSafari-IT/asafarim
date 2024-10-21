@@ -17,7 +17,7 @@ const Topics = ({ topics }: TopicsProps) => {
 
   return (
     <div className="flex flex-col space-y-4">
-      {topics.map((topic: ITopic) => {
+      {topics?.map((topic: ITopic) => {
         // Sort relatedPosts based on difficultyLevel
         const sortedRelatedPosts = useMemo(() => {
           return topic.relatedPosts

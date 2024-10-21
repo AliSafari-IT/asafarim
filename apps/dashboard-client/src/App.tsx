@@ -24,8 +24,6 @@ function App() {
   useEffect(() => {
     document.body.setAttribute('data-theme', theme); // Apply the theme
     localStorage.setItem('theme', theme);
-    // Log the theme
-    console.log('Theme is', theme);
   }, [theme]);
   
   // const { theme } = useTheme();

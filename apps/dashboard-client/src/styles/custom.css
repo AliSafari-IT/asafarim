@@ -26,7 +26,7 @@
   --color-secondary: #0d3f57;
   --color-success: #047a28;
   --color-warning: #d38620;
-  --color-info: #afe7e7;
+  --color-info: #0b82c7;
   --color-danger: #c53232;
 
   --navbar-bg-color: #1c5f4c;
@@ -198,6 +198,12 @@ b {
 [data-theme="dark"] b {
   color: var(--md-strong-color-dark, #4c88af);
 }
+
+svg {
+  fill: currentColor;
+}
+
+
 
 .primary {
   color: var(--color-primary);

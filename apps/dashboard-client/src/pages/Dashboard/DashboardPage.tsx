@@ -2,12 +2,22 @@
 import { Link } from "@fluentui/react";
 import Wrapper from "../../layout/Wrapper/Wrapper";
 import { DashboardHeaderBlock } from "./DashboardHeaderBlock";
+import { Button, FluentProvider, webDarkTheme, webLightTheme } from "@fluentui/react-components";
+import { useTheme } from "../../hooks/useTheme";
+import CardContainer from "../../components/Containers/CardContainer";
 
 const Dashboard = () => {
+  // get current theme
+  const theme = useTheme().theme == 'dark' ? webDarkTheme : webLightTheme;
   return (
     <Wrapper header={<DashboardHeaderBlock/>}>
       
-      <p>Welcome to the dashboard!</p>
+      <FluentProvider theme={theme}>
+              <p>Welcome to the dashboard!</p>
+              <Button appearance="primary">Hello Fluent UI React</Button>
+              <CardContainer/>
+
+      </FluentProvider>
 
       <div className="p-8">
         <h1 className="text-2xl font-bold mb-4">Sitemap</h1>

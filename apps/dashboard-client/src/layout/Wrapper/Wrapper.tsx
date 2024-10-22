@@ -34,7 +34,7 @@ const Wrapper: React.FC<LayoutProps> = ({
   sidebar,
   sidebarClassName = '',
   navbar,
-  navbarClassName = '',
+  navbarClassName = 'z-50',
   content,
   sidebarStyle = {},
   style = {},
@@ -117,7 +117,9 @@ const Wrapper: React.FC<LayoutProps> = ({
   return (
     <div className={`${layoutContainerStyles} ${className}`} style={style}>
       {/* Navbar */}
-      {navbarBlock}
+      <div className={navbarStyles}>
+        {navbarBlock}
+      </div>
 
       {/* Main Content Area */}
       <Stack horizontal={!isMobile} tokens={{ childrenGap: 0 }} style={{ flexGrow: 1 }}>

@@ -15,7 +15,7 @@ import NotFound from "./components/NotFound";
 import Home from "./pages/Home/HomePage";
 import PostDetail from "./pages/Post/PostDetail";
 import AkkodisTargetedResume from "./pages/AboutMe/TailoredCV/Akkodis";
-import './styles/custom.css';
+import './styles/custom.scss';
 import { useEffect, useState } from "react";
  import { useTheme } from "./hooks/useTheme";
 function App() {

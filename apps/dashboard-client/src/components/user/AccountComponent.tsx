@@ -24,18 +24,18 @@ const AccountComponent: React.FC<AccountComponentProps> = ({ isMobile = false, c
         {user ? (
           <a
             href="/logout"
-            className={`block px-4 py-2 text-gray-600 hover:bg-gray-100 ${className}`}
+            className={`block px-4 py-2   ${className}`}
           >
             <span>Logout</span>
-            <IconLogout className="inline-block ml-2" />
+            <IconLogout className="inline-block ml-2 -mb-2" />
           </a>
         ) : (
           <a
             href="/login"
-            className={`block px-4 py-2 text-gray-600 hover:bg-gray-100 ${className}`}
+            className={`block px-4 py-2   ${className}`}
           >
             <span>Login</span>
-            <IconLogin className="inline-block ml-2" />
+            <IconLogin className="inline-block ml-2 -mb-2" />
           </a>
         )}
       </>

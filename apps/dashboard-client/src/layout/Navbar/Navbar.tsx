@@ -1,14 +1,15 @@
 // E:\asm\apps\dashboard-client\src\layout\Navbar\Navbar.tsx
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import logo from './logoT.svg';
 import {  
-  PersonInfo24Regular as IconAbout,
+  PersonCircle24Regular  as IconAbout,
   PhoneVibrate24Regular as IconContact,
-  Teaching24Regular as IconTeaching
+  Teaching24Regular as IconTeaching,
+  Board24Regular as IconDashboard
 } from '@fluentui/react-icons';
-import ToggleTheme from '../../components/theme/ToggleTheme';
+import ToggleTheme, { ToggleThemeIcon } from '../../components/theme/ToggleTheme';
 import AccountComponent from '../../components/user/AccountComponent';
 
 interface NavbarProps {
@@ -22,20 +23,42 @@ function Navbar({ className }: NavbarProps) {
   const user = localStorage.getItem('user');
   const isActive = (path: string) => location.pathname === path;
 
+  const [currentTheme, setCurrentTheme] = useState(localStorage.getItem('theme'));
+
+  useEffect(() => {
+    const handleThemeChange = (event: MediaQueryListEvent) => {
+      if (event.matches) {
+        setCurrentTheme('dark');
+      } else {
+        setCurrentTheme('light');
+      }
+    };
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: light)');
+    mediaQuery.addEventListener('change', handleThemeChange);
+    return () => {
+      mediaQuery.removeEventListener('change', handleThemeChange);
+    };
+  }, []);
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
   const navLinkClass = (path: string) =>
     `hidden sm:inline-block px-3 py-2 rounded-md ${isActive(path)
-      ? 'buttonActive font-bold'
-      : 'text-blue-300 hover:text-teal-600 hover:underline'
+      ? 'font-bold'
+      : 'hover:underline'
     }`;
 
   const mobileNavLinkClass = (path: string) =>
-    `block px-3 py-1 text-sm z-10 rounded-md ${isActive(path)
+    `block  px-3 py-1 text-sm rounded-md ${isActive(path)
       ? 'buttonActive font-bold'
-      : 'text-gray-600 hover:bg-gray-100 hover:text-blue-500'
+      : ''
     }`;
   
   return (
-    <nav className={"navbarTheme w-full border-b shadow-md border-gray-200 px-0 py-4 flex items-center justify-between relative " + className}>
+    <nav className={"w-full border-b shadow-md border-gray-200 px-0 py-4 flex items-center justify-between relative " + className}>
       {/* Left side */}
       <div className="flex items-center space-x-4">
         <a
@@ -70,9 +93,9 @@ function Navbar({ className }: NavbarProps) {
           </a>
         )}
         {/* Add the AccountComponent here */}
-        <AccountComponent />
+        <AccountComponent className="-mb-2" />
         {/* Add the ToggleTheme component here */}
-        <ToggleTheme className="hidden sm:inline-block pr-3" />
+        <ToggleTheme className="pr-2"/>
       </div>
 
       {/* Hamburger Icon */}
@@ -103,22 +126,30 @@ function Navbar({ className }: NavbarProps) {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="absolute top-full left-0 right-0  shadow-md sm:hidden  z-50">
-          <a href="//techdocs.asafarim.com" className={mobileNavLinkClass('/techdocs')}>
+        <div className="">
+          <ToggleTheme  className="mb-3 absolute left-3 top-5  "/>
+          <a href="//techdocs.asafarim.com" className={`${mobileNavLinkClass('/techdocs')} block right-3 top-10`}>
             <span>Tech Docs</span>
-            <IconTeaching className="inline-block ml-2" />
+            <IconTeaching className="inline-block ml-2 -mb-2" />
           </a>
           <a href="/about" className={mobileNavLinkClass('/about')}>
             <span>About</span>
-            <IconAbout className="inline-block ml-2" />
+            <IconAbout className="inline-block ml-2 -mb-2" />
           </a>
           <a href="/contact" className={mobileNavLinkClass('/contact')}>
             <span>Contact</span>
-            <IconContact className="inline-block ml-2" />
+            <IconContact className="inline-block ml-2 -mb-2" />
           </a>
 
+          {user && (
+            <a href="/dashboard" className={mobileNavLinkClass('/dashboard')}>
+              <span>Dashboard</span>
+              <IconDashboard className="inline-block ml-2 -mb-2" />
+            </a>
+          )}
+
           {/* Use the AccountComponent for mobile */}
-          <AccountComponent isMobile={true} className={mobileNavLinkClass('/login')} />
+          <AccountComponent isMobile={true} className={mobileNavLinkClass(user ? '/login': '/logout')} />
         </div>
       )}
     </nav>

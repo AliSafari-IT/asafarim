@@ -9,7 +9,7 @@ import {
   Teaching24Regular as IconTeaching,
   Board24Regular as IconDashboard
 } from '@fluentui/react-icons';
-import ToggleTheme, { ToggleThemeIcon } from '../../components/theme/ToggleTheme';
+import ToggleTheme from '../../components/theme/ToggleTheme';
 import AccountComponent from '../../components/user/AccountComponent';
 
 interface NavbarProps {
@@ -22,28 +22,6 @@ function Navbar({ className }: NavbarProps) {
   const location = useLocation();
   const user = localStorage.getItem('user');
   const isActive = (path: string) => location.pathname === path;
-
-  const [currentTheme, setCurrentTheme] = useState(localStorage.getItem('theme'));
-
-  useEffect(() => {
-    const handleThemeChange = (event: MediaQueryListEvent) => {
-      if (event.matches) {
-        setCurrentTheme('dark');
-      } else {
-        setCurrentTheme('light');
-      }
-    };
-
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: light)');
-    mediaQuery.addEventListener('change', handleThemeChange);
-    return () => {
-      mediaQuery.removeEventListener('change', handleThemeChange);
-    };
-  }, []);
-
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
 
   const navLinkClass = (path: string) =>
     `hidden sm:inline-block px-3 py-2 rounded-md ${isActive(path)
@@ -126,7 +104,7 @@ function Navbar({ className }: NavbarProps) {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="">
+        <div className="sm:hidden">
           <ToggleTheme  className="mb-3 absolute left-3 top-5  "/>
           <a href="//techdocs.asafarim.com" className={`${mobileNavLinkClass('/techdocs')} block right-3 top-10`}>
             <span>Tech Docs</span>

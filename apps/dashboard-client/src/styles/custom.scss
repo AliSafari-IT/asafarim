@@ -2,7 +2,7 @@
  * asafarim/src/css/custom.scss
  * Custom styles based on Teams Light and Teams Dark themes (Fluent UI).
  */
-
+ @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 @import url("https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap");
 
 /* Light theme (Teams Light) */
@@ -43,8 +43,8 @@
   --input-border-color: #d2d0ce;
   --input-focus-border-color: #6264a7;
 
-  --font-family-body: "Segoe UI", sans-serif;
-  --font-family-heading: "Segoe UI", sans-serif;
+  --font-family-body: "Noto Sans", sans-serif;
+  --font-family-heading: "Noto Sans", sans-serif;
   --font-size-base: 14px;
   --font-weight-normal: 400;
   --font-weight-bold: 600;
@@ -75,6 +75,8 @@
   --md-summary-hover-color: #004578; /* Teams hover color for summary */
   --md-strong-color: #0063b1; /* Teams blue for bold/strong text */
   --md-strong-hover-color: #004578; /* Darker blue on hover for bold/strong text */
+
+  --label-text-color: #ffffff;
 }
 
 /* Dark theme (Teams Dark) */
@@ -133,6 +135,8 @@
   --md-summary-hover-color: #a0a0ff; /* Brighter hover color */
   --md-strong-color: #8a8cff; /* Light blue for bold/strong text */
   --md-strong-hover-color: #a0a0ff; /* Brighter blue on hover for bold/strong text */
+
+  --label-text-color: #1f1f1f;
 }
 
 /* Global elements */
@@ -220,6 +224,10 @@ textarea {
     border-color: var(--input-focus-border-color);
     box-shadow: 0 0 5px var(--input-focus-border-color);
   }
+}
+label {
+  color: var(--label-text-color);
+  transition: color var(--transition-speed);
 }
 
 /* Panels */
@@ -311,7 +319,7 @@ h1:hover, h2:hover, h3:hover, h4:hover, h5:hover, h6:hover {
 .markdown-container {
   background-color: var(--md-bg-color);
   color: var(--md-text-color);
-  font-family: "Segoe UI", sans-serif;
+  font-family: "Noto Sans", sans-serif;
   line-height: 1.6;
 
   h1,
@@ -419,7 +427,7 @@ h1:hover, h2:hover, h3:hover, h4:hover, h5:hover, h6:hover {
 body {
   background-color: var(--md-bg-color);
   color: var(--md-text-color);
-  font-family: "Segoe UI", sans-serif;
+  font-family: "Noto Sans", sans-serif;
   line-height: 1.6;
 }
 

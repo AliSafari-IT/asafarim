@@ -18,6 +18,8 @@ import AkkodisTargetedResume from "./pages/AboutMe/TailoredCV/Akkodis";
 import './styles/custom.scss';
 import { useEffect, useState } from "react";
  import { useTheme } from "./hooks/useTheme";
+import AddTagForm from "./components/crud/AddTagForm";
+import DelCard from "./components/Containers/Card/DelCard";
 function App() {
   const [theme] = useState(useTheme().theme);
 
@@ -35,17 +37,15 @@ function App() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/posts/:slug" element={<PostDetail />} />
+
+      <Route path="/tags/add" element={<AddTagForm />} />
+      <Route path={"/:model/delete/:id"} element={<DelCard />}/>
+      <Route path="/dashboard" element={<PrivateRoute ><Dashboard /></PrivateRoute>} />
+
       <Route path="/about" element={<About />} />
       <Route path="/about/akkodis-targeted-resume" element={<AkkodisTargetedResume />} />
       <Route path="/contact" element={<Contact />} />
-      <Route
-        path="/dashboard"
-        element={
-          <PrivateRoute>
-            <Dashboard />
-          </PrivateRoute>
-        }
-      />
+      
       <Route
         path="/manage-sitemap-content"
         element={

@@ -42,6 +42,10 @@ namespace Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            // Define the unique index on the Name property
+            modelBuilder.Entity<Tag>()
+                .HasIndex(t => t.Name)
+                .IsUnique();
 
             // Configure many-to-many relationship between User and BlogPost
             modelBuilder.Entity<User>()

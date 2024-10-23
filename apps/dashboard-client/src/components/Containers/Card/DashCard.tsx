@@ -12,10 +12,12 @@ import {
   CardHeader,
   CardPreview,
 } from "@fluentui/react-components";
+import { Delete16Regular } from "@fluentui/react-icons/fonts";
+import { useNavigate } from "react-router-dom";
 
 const resolveAsset = (asset: string) => {
   const ASSET_URL =
-    "https://raw.githubusercontent.com/microsoft/fluentui/master/packages/react-components/react-card/stories/src/assets/";
+    "/dist/img/svgs/";
 
   return `${ASSET_URL}${asset}`;
 };
@@ -23,9 +25,8 @@ const resolveAsset = (asset: string) => {
 const useStyles = makeStyles({
   card: {
     margin: "auto",
-    width: "375px",
-    maxWidth: "380px",
-    minWidth: "375px",
+    width: "320px",
+    maxWidth: "400px",
     boxShadow: "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(190,0,60,0.24)",
     transition: "all 0.3s cubic-bezier(.25,.8,.25,1)",
     "&:hover": {
@@ -34,41 +35,43 @@ const useStyles = makeStyles({
     "&:focus": {
       outline: "none",
     }
+
   },
 });
 interface DashCardProps {
+  modelName?: string;
+  modelId?: string;
+  name?: string;
   title?: string;
   description?: string;
   imgPath?: string;
   imgAlt?: string;
   content?: string;
 }
-export const DashCard: React.FC<DashCardProps> = ({ title,description,imgPath='',imgAlt='Image', content }) => {
+export const DashCard: React.FC<DashCardProps> = ({modelName = 'topics', modelId, name, title,description,imgPath='',imgAlt='Image', content }) => {
   const styles = useStyles();
+  const navigate = useNavigate();
 
   return (
     <Card className={styles.card}>
       <CardHeader
         image={
           <img
-            src={resolveAsset("avatar_elvia.svg")}
-            alt="Elvia Atkins avatar picture"
+            src={resolveAsset(imgPath)}
+            alt={imgAlt}
           />
         }
         header={
           <Body1>
-            <strong>{title}</strong>
+            <strong>{title ?? name}</strong>
           </Body1>
         }
-        description={<Caption1>{description}</Caption1>}
+        action={<Button icon={<Delete16Regular style={{ color: "red" }} />} onClick={() => { navigate(`/${modelName}s/delete/${modelId}`) }}/>}
+        description={<Caption1>{description ?? name}</Caption1>}
       />
 
-      <CardPreview
-        logo={
-          <img src={resolveAsset(imgPath)} alt={imgAlt} />
-        }
-      >
-        <Body1>{content}</Body1>        
+      <CardPreview>
+        <Body1 style={{marginLeft: 10, marginRight: 10, whiteSpace: 'pre-line', wordBreak: 'break-word', overflowWrap: 'break-word'}}>{content ?? description ?? name}</Body1>        
       </CardPreview>
 
       <CardFooter>

@@ -14,7 +14,7 @@ import AccountComponent from '../../components/user/AccountComponent';
 
 interface NavbarProps {
   className?: string;
-  children?: React.ReactNode; // Add this line
+  children?: React.ReactNode;
 }
 
 function Navbar({ className }: NavbarProps) {
@@ -70,9 +70,7 @@ function Navbar({ className }: NavbarProps) {
             User Profile
           </a>
         )}
-        {/* Add the AccountComponent here */}
         <AccountComponent className="-mb-2" />
-        {/* Add the ToggleTheme component here */}
         <ToggleTheme className="pr-2"/>
       </div>
 

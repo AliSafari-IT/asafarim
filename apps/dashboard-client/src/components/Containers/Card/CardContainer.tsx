@@ -1,8 +1,6 @@
 // src/components/CardContainer.tsx
 import React, { useState } from 'react';
-
 import {
-  Button,
   FluentProvider,
   makeStyles,
   Text,
@@ -11,8 +9,9 @@ import {
 } from '@fluentui/react-components';
 import { DashCard } from './DashCard';
 import { TextField } from '@fluentui/react';
-import { useTheme } from '../../hooks/useTheme';
+import { useTheme } from '../../../hooks/useTheme';
 import { ArrowLeft24Regular, ArrowRight24Regular } from '@fluentui/react-icons';
+import dashboardCards from '../../../data/dashboardCards';
 
 const useStyles = makeStyles({
   container: {
@@ -31,13 +30,27 @@ const useStyles = makeStyles({
   pagination: {
     display: 'flex',
     alignItems: 'center',
-    gap: '10px',
+    gap: '5px',
   },
 });
 
+function MdSkipNext({ click }: { click: () => void }) {
+  const l = "2.5em";
+  return <svg
+    xmlns="http://www.w3.org/2000/svg"
+    style={{ cursor: 'pointer' }}
+    onClick={click}
+    stroke="currentColor" fill="currentColor" 
+    strokeWidth={0} 
+    viewBox="0 0 24 24" 
+    height={l} width={l}>
+    <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" />
+  </svg>;
+}
+
 const CardContainer: React.FC = () => {
   const classes = useStyles();
-  const totalCards = 9; // Adjust as needed
+  const totalCards = dashboardCards.length; // Adjust as needed
   const cardsPerPage = 3;
   const totalPages = Math.ceil(totalCards / cardsPerPage);
 
@@ -82,38 +95,30 @@ const CardContainer: React.FC = () => {
 
   return (
     <FluentProvider theme={theme}>
-    <div className={classes.container}>
-      <div className={classes.cardsWrapper}>{currentCards}</div>
-
-      <div className={classes.pagination}>
-        <Button
-          appearance="secondary"
-          onClick={goToPreviousPage}
-          disabled={currentPage === 1}
-        >
-          <ArrowLeft24Regular />
-        </Button>
-        <Button
-          appearance="secondary"
-          onClick={goToNextPage}
-          disabled={currentPage === totalPages}
-        >
-          <ArrowRight24Regular />
-        </Button>
-        <TextField
-          label="Go to page:"
-          value={inputPage}
-          onChange={(e) => setInputPage((e.target as HTMLInputElement).value)}
-          styles={{ root: { width: '100px' } }}
-        />
-        <Button onClick={goToPage} appearance="primary">
-          Go
-        </Button>
-        <Text>
-          Page {currentPage} of {totalPages}
-        </Text>
+      <div className={classes.container}>
+        <div className={classes.cardsWrapper}>{currentCards}</div>
+        {totalPages > 1 && <div className={classes.pagination}>
+          <ArrowLeft24Regular onClick={goToPreviousPage} style={{ cursor: 'pointer' }} />
+          <ArrowRight24Regular onClick={goToNextPage} style={{ cursor: 'pointer' }} />
+          <TextField
+            value={inputPage}
+            onChange={(e) => setInputPage((e.target as HTMLInputElement).value)}
+            styles={{
+              root: { width: '35px', margin: '10px', color: 'skyblue' },
+              field: { textAlign: 'center', fontWeight: 'bold', verticalAlign: 'middle', color: 'blue' },
+            }}
+            onKeyUp={(e) => {
+              if (e.key === 'Enter') {
+                goToPage();
+              }
+            }}
+          />
+          <MdSkipNext click={goToPage} />
+          <Text>
+            Page {currentPage} of {totalPages}
+          </Text>
+        </div>}
       </div>
-    </div>
     </FluentProvider>
   );
 };

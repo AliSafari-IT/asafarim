@@ -2,9 +2,9 @@
 import { Link } from "@fluentui/react";
 import Wrapper from "../../layout/Wrapper/Wrapper";
 import { DashboardHeaderBlock } from "./DashboardHeaderBlock";
-import { Button, FluentProvider, webDarkTheme, webLightTheme } from "@fluentui/react-components";
+import { FluentProvider, webDarkTheme, webLightTheme } from "@fluentui/react-components";
 import { useTheme } from "../../hooks/useTheme";
-import CardContainer from "../../components/Containers/CardContainer";
+import CardContainer from "../../components/Containers/Card/CardContainer";
 
 const Dashboard = () => {
   // get current theme
@@ -13,8 +13,7 @@ const Dashboard = () => {
     <Wrapper header={<DashboardHeaderBlock/>}>
       
       <FluentProvider theme={theme}>
-              <p>Welcome to the dashboard!</p>
-              <Button appearance="primary">Hello Fluent UI React</Button>
+
               <CardContainer/>
 
       </FluentProvider>

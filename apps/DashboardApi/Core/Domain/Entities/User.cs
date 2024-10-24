@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
 using Core.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,19 +19,23 @@ namespace DashboardApi.Core.Domain.Entities
         [Required]
         public string Name { get; set; }
 
-        [Required, MaxLength(20), MinLength(3)]
+        [Required, MaxLength(20, ErrorMessage = "Username cannot be longer than 20 characters"), MinLength(3, ErrorMessage = "Username must be at least 3 characters long")]
         public string Username { get; set; }
 
-        [Required, EmailAddress]
+        [Required, EmailAddress, MaxLength(50, ErrorMessage = "Email cannot be longer than 50 characters")]
         public string Email { get; set; }
 
         public string? PasswordHash { get; set; }
 
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public BlogPost[]? BlogPosts { get; internal set; }
+        public UserRole[]? UserRoles { get; internal set; }
 
-        // Navigation properties
-        public List<UserRole>? UserRoles { get; set; } = new List<UserRole>();
-        public List<BlogPost>? BlogPosts { get; set; } = new List<BlogPost>();
+        public User() { 
+            Id = Guid.NewGuid();                        
+        }
     }
+
+
 }

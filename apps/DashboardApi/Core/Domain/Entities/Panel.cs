@@ -4,7 +4,7 @@ namespace ASafaraiM.Server.CoreLayer.Entities.Panels
 {
     public class Panel
     {
-        public long Id { get; set; }
+        public Guid Id { get; set; }
 
         public string Title { get; set; }
 
@@ -19,6 +19,7 @@ namespace ASafaraiM.Server.CoreLayer.Entities.Panels
 
         public Panel()
         {
+            Id = Guid.NewGuid();
             Title = string.Empty;
             DateCreated = DateTime.UtcNow;
             DateModified = DateCreated;

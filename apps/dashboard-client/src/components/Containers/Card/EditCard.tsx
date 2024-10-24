@@ -129,7 +129,7 @@ const EditCard: React.FC = () => {
                                         root: { width: '100%' },
                                        screenReaderText: { display: 'none' },
                                     }}
-                                /> :
+                                /> : key !== 'id' &&
                                 <TextField
                                     key={key}
                                     value={value}

@@ -12,6 +12,15 @@ namespace DashboardApi.Core.Domain.Entities
         public required string Description { get; set; }
         public required string Slug { get; set; }
 
+        public SitemapEntity() 
+        {
+            Id = Guid.NewGuid();
+            PageName = string.Empty;
+            Description = string.Empty;
+            Slug = string.Empty;
+            AccessByRole = EnumUserRole.Guest;
+        }
+
         // AccessByRole will be stored as a string in the database
         public EnumUserRole AccessByRole { get; set; }
 

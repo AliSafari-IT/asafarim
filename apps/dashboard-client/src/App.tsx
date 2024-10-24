@@ -20,6 +20,8 @@ import { useEffect, useState } from "react";
  import { useTheme } from "./hooks/useTheme";
 import AddTagForm from "./components/crud/AddTagForm";
 import DelCard from "./components/Containers/Card/DelCard";
+import EditCard from "./components/Containers/Card/EditCard";
+import AddForm from "./components/crud/AddForm";
 function App() {
   const [theme] = useState(useTheme().theme);
 
@@ -38,8 +40,10 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/posts/:slug" element={<PostDetail />} />
 
-      <Route path="/tags/add" element={<AddTagForm />} />
+      <Route path="/:model/add" element={<AddForm />} />
       <Route path={"/:model/delete/:id"} element={<DelCard />}/>
+      <Route path="/:model/edit/:id" element={<EditCard />} />
+
       <Route path="/dashboard" element={<PrivateRoute ><Dashboard /></PrivateRoute>} />
 
       <Route path="/about" element={<About />} />

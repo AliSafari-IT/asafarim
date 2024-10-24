@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardPreview,
 } from "@fluentui/react-components";
-import { Delete16Regular } from "@fluentui/react-icons/fonts";
+import { Delete16Regular as IconDelete, Edit16Regular as IconEdit } from "@fluentui/react-icons/fonts";
 import { useNavigate } from "react-router-dom";
 
 const resolveAsset = (asset: string) => {
@@ -48,7 +48,7 @@ interface DashCardProps {
   imgAlt?: string;
   content?: string;
 }
-export const DashCard: React.FC<DashCardProps> = ({modelName = 'topics', modelId, name, title,description,imgPath='',imgAlt='Image', content }) => {
+export const DashCard: React.FC<DashCardProps> = ({ modelName = 'topics', modelId, name, title, description, imgPath = '', imgAlt = 'Image', content }) => {
   const styles = useStyles();
   const navigate = useNavigate();
 
@@ -66,16 +66,21 @@ export const DashCard: React.FC<DashCardProps> = ({modelName = 'topics', modelId
             <strong>{title ?? name}</strong>
           </Body1>
         }
-        action={<Button icon={<Delete16Regular style={{ color: "red" }} />} onClick={() => { navigate(`/${modelName}s/delete/${modelId}`) }}/>}
+        action={
+          <>
+            <Button icon={<IconDelete style={{ color: "red" }} />} onClick={() => { navigate(`/${modelName}s/delete/${modelId}`) }} />
+            <Button icon={<IconEdit style={{ color: "blue" }} />} onClick={() => { navigate(`/${modelName}s/edit/${modelId}`) }} />
+          </>
+        }
         description={<Caption1>{description ?? name}</Caption1>}
       />
 
       <CardPreview>
-        <Body1 style={{marginLeft: 10, marginRight: 10, whiteSpace: 'pre-line', wordBreak: 'break-word', overflowWrap: 'break-word'}}>{content ?? description ?? name}</Body1>        
+        <Body1 style={{ marginLeft: 10, marginRight: 10, whiteSpace: 'pre-line', wordBreak: 'break-word', overflowWrap: 'break-word' }}>{content ?? description ?? name}</Body1>
       </CardPreview>
 
       <CardFooter>
-        <Button icon={<ArrowReplyRegular fontSize={16} />} onClick={() => {alert("Reply")}}>Reply</Button>
+        <Button icon={<ArrowReplyRegular fontSize={16} />} onClick={() => { alert("Reply") }}>Reply</Button>
         <Button icon={<ShareRegular fontSize={16} />} onClick={() => { alert("Share") }}>Share</Button>
       </CardFooter>
     </Card>

@@ -29,7 +29,7 @@ const AddTagForm: React.FC = () => {
         e.preventDefault();
 
         try {
-            await dashboardServices.addTag({ name: tagName, title: tagTitle });
+            await dashboardServices.addEntity('tags', { name: tagName, title: tagTitle });
             alert('Tag added successfully!');
             navigate('/dashboard');  // Navigate back to the main page after submission
         } catch (error) {

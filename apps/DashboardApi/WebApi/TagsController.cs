@@ -56,15 +56,18 @@ namespace DashboardApi.WebApi
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTag(Guid id, [FromBody] Tag tag)
         {
-            if (id != tag.Id)
+            if (id != tag.Id && id != Guid.Empty)
             {
-                return BadRequest("Tag ID mismatch.");
+                return BadRequest("Tag ID mismatch: " + id + " vs. " + tag.Id);
             }
 
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+
+            // Exclude blogPosts if it is not needed for the update
+            tag.BlogPosts = null;
 
             _context.Entry(tag).State = EntityState.Modified;
 

@@ -39,6 +39,17 @@ namespace DashboardApi.WebApi
             return Ok(topic);
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateTopic(Guid id, [FromBody] Topic topic)
+        {
+            if (id != topic.Id)
+                return BadRequest("Topic ID mismatch: " + id + " vs. " + topic.Id);
+
+            _context.Entry(topic).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
         // Create a new topic
         [HttpPost]
         public async Task<IActionResult> CreateTopic([FromBody] Topic topic)
@@ -47,5 +58,21 @@ namespace DashboardApi.WebApi
             await _context.SaveChangesAsync();
             return Ok(topic);
         }
+
+        // Delete a topic
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTopic(Guid id)
+        {
+            var topic = await _context.Topics.FindAsync(id);
+            if (topic == null)
+            {
+                return NotFound();
+            }
+            _context.Topics.Remove(topic);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        
     }
 }

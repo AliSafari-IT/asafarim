@@ -52,8 +52,8 @@ const CardContainer: React.FC = () => {
   useEffect(() => {
     const loadTopics = async () => {
       try {
-        const fetchedTopics = await dashboardServices.fetchTopics();
-        setTopics(fetchedTopics);
+        const fetchedTopics = await dashboardServices.fetchEntities( 'topic');
+        setTopics(fetchedTopics.data);
       } catch (error) {
         console.error('Error fetching topics:', error);
       }
@@ -61,15 +61,14 @@ const CardContainer: React.FC = () => {
 
     const loadTags = async () => {
       try {
-        const fetchedTags = await dashboardServices.fetchTags();
-        setTags(fetchedTags);
+        const fetchedTags = await dashboardServices.fetchEntities('tag');
+        setTags(fetchedTags.data);
       } catch (error) {
         console.error('Error fetching tags:', error);
       }
     };
 
     loadTags();
-
     loadTopics();
   }, []);
 
@@ -147,7 +146,7 @@ const CardContainer: React.FC = () => {
   return (
     <FluentProvider theme={theme}>
       <div className={classes.container}>
-        <h1>Topics</h1>
+      <h1><span>Topics </span> <Button icon={<IconAdd fontSize={16} />} onClick={() => navigate('/topics/add')} title='Add New Topic' /></h1>
         <div className={classes.cardsWrapper}>
           {currentTopics? currentTopics.map((topic, index) => (
             <DashCard
@@ -192,7 +191,7 @@ const CardContainer: React.FC = () => {
         )}
       </div>
       <div className={classes.container}>
-        <h1><span>Tags </span> <Button icon={<IconAdd fontSize={16} />} onClick={() => navigate('/add-tag')} title='Add New Tag' /></h1>
+        <h1><span>Tags </span> <Button icon={<IconAdd fontSize={16} />} onClick={() => navigate('/tags/add')} title='Add New Tag' /></h1>
         <div className={classes.cardsWrapper}>
           {currentTags? currentTags.map((tag, index) => (
             <DashCard

@@ -9,20 +9,8 @@ const DelCard = () => {
 
   const handleDelete = async () => {
     try {
-      switch (model) {
-        case 'tags':
-          await dashboardServices.deleteTag(id!);
-          break;
-        case 'topics':
-          await dashboardServices.deleteTopic(id!);
-          break;
-        case 'blogposts':
-          await dashboardServices.deleteBlogPost(id!);
-          break;
-        default:
-          alert('Unknown model type.');
-          return;
-      }
+      console.log('Delete', model, 'ID:', id);
+      await dashboardServices.deleteEntity(model??'', id!);
       alert(`${model} deleted successfully`);
       navigate(-1); // Go back after deletion
     } catch (error) {

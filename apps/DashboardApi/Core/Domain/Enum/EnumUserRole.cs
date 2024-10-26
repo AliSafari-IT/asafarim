@@ -1,11 +1,9 @@
-namespace Core.Domain.Enum
+namespace DashboardApi.Core.Domain.Enum;
+public enum EnumUserRole
 {
-    public enum EnumUserRole
-    {
-        Guest,
-        StandardUser,
-        Admin,
-        SuperAdmin,
-        Moderator
-    }
+    Guest,
+    StandardUser,
+    Admin,
+    SuperAdmin,
+    Moderator
 }

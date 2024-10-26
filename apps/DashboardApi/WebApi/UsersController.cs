@@ -3,8 +3,6 @@
 using Microsoft.AspNetCore.Mvc;
 using DashboardApi.Services;  
 using Microsoft.EntityFrameworkCore;
-using Core.Domain.Entities;
-using Infrastructure.Data;
 using DashboardApi.Core.Domain.Entities;
 
 

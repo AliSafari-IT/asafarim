@@ -1,10 +1,7 @@
 using System.Text;
 using System.Text.Json.Serialization;
-using Core.Application.Interfaces.Repositories;
 using Core.Application.Sitemaps.Queries;
 using DashboardApi.Services;
-using Infrastructure.Data;
-using Infrastructure.Data.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -13,97 +10,101 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 using DashboardApi.WebApi.Extensions;
+using DashboardApi.Infrastructure.Data;
+using DashboardApi.Core.Application.Interfaces.Repositories;
+using DashboardApi.Infrastructure.Data.Repositories;
 
-namespace DashboardApi;
-
-public partial class Program
+namespace DashboardApi
 {
-    public static void Main(string[] args)
+    public partial class Program
     {
-        var builder = WebApplication.CreateBuilder(args);
-
-        var environment = builder.Environment;
-
-        // Configure Kestrel
-        if (environment.IsProduction())
+        public static void Main(string[] args)
         {
-            var httpPort = Environment.GetEnvironmentVariable("HTTP_PORT") ?? "5000";
+            var builder = WebApplication.CreateBuilder(args);
 
-            builder.WebHost.UseKestrel(options =>
+            var environment = builder.Environment;
+
+            // Configure Kestrel
+            if (environment.IsProduction())
             {
-                options.ListenAnyIP(int.Parse(httpPort)); // HTTP (internal)
-            });
-        }
-        else
-        {
-            builder.WebHost.UseKestrel(options =>
+                var httpPort = Environment.GetEnvironmentVariable("HTTP_PORT") ?? "5000";
+
+                builder.WebHost.UseKestrel(options =>
+                {
+                    options.ListenAnyIP(int.Parse(httpPort)); // HTTP (internal)
+                });
+            }
+            else
             {
-                options.ListenLocalhost(5146); // HTTP (local dev)
-                options.ListenLocalhost(44337, listenOptions => listenOptions.UseHttps()); // HTTPS (local dev)
-            });
-        }
+                builder.WebHost.UseKestrel(options =>
+                {
+                    options.ListenLocalhost(5146); // HTTP (local dev)
+                    options.ListenLocalhost(44337, listenOptions => listenOptions.UseHttps()); // HTTPS (local dev)
+                });
+            }
 
-        // Logging
-        builder.Services.AddLogging(builder =>
-        {
-            builder.AddConsole()
-                   .AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Information);
-        });
-
-        // Add CORS Policy
-        builder.Services.AddCors(options =>
-        {
-            options.AddPolicy("AllowFrontend", builder =>
+            // Logging
+            builder.Services.AddLogging(builder =>
             {
-                builder.WithOrigins(
-                    "http://localhost:5173",
-                    "https://asafarim.com",
-                    "https://preview.asafarim.com",
-                    "https://techdocs.asafarim.com"
-                )
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials();
+                builder.AddConsole()
+                       .AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Information);
             });
-        });
 
-        // Add Controllers and JSON Options
-        builder.Services.AddControllers()
-            .AddJsonOptions(options =>
-                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+            // Add CORS Policy
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend", builder =>
+                {
+                    builder.WithOrigins(
+                        "http://localhost:5173",
+                        "https://asafarim.com",
+                        "https://preview.asafarim.com",
+                        "https://techdocs.asafarim.com"
+                    )
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
+                });
+            });
 
-        // Add the extracted JWT Authentication configuration
-        builder.Services.AddJwtAuthentication(builder.Configuration);
+            // Add Controllers and JSON Options
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
-        // Add Swagger Documentation using the extension method
-        builder.Services.AddSwaggerDocumentation();
-        // Add the database context
-        builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
-            ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection")),
-            mySqlOptions => mySqlOptions.EnableRetryOnFailure()));
+            // Add the extracted JWT Authentication configuration
+            builder.Services.AddJwtAuthentication(builder.Configuration);
 
-        // Add Services and Repositories
-        builder.Services.AddScoped<ISitemapRepository, SitemapRepository>();
-        builder.Services.AddScoped<GetSitemapQuery>();
-        builder.Services.AddScoped<UserService>();
+            // Add Swagger Documentation using the extension method
+            builder.Services.AddSwaggerDocumentation();
+            // Add the database context
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
+                ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection")),
+                mySqlOptions => mySqlOptions.EnableRetryOnFailure()));
 
-        var app = builder.Build();
+            // Add Services and Repositories
+            builder.Services.AddScoped<ISitemapRepository, SitemapRepository>();
+            builder.Services.AddScoped<GetSitemapQuery>();
+            builder.Services.AddScoped<UserService>();
 
-        // Development-only middleware
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseDeveloperExceptionPage();
-            app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ASafariM API V1"));
+            var app = builder.Build();
+
+            // Development-only middleware
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ASafariM API V1"));
+            }
+
+            app.UseHttpsRedirection();
+            app.UseRouting();
+            app.UseCors("AllowFrontend");
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.MapControllers();
+            app.Run();
         }
-
-        app.UseHttpsRedirection();
-        app.UseRouting();
-        app.UseCors("AllowFrontend");
-        app.UseAuthentication();
-        app.UseAuthorization();
-        app.MapControllers();
-        app.Run();
     }
 }

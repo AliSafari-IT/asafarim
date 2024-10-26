@@ -36,6 +36,6 @@ export const useTheme = (): ThemeContextProps => {
   if (!context) {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
-  console.log('useTheme', context.theme);
+  //console.log('useTheme', context.theme);
   return context;
 };

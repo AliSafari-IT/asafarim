@@ -25,6 +25,7 @@ const useStyles = makeStyles({
     }
 });
 
+// Get the relevant fields for the model
 const AddForm: React.FC = () => {
     const { model } = useParams(); // 'tags', 'topics', etc.
     const classes = useStyles();
@@ -69,6 +70,8 @@ const AddForm: React.FC = () => {
 
     const renderField = (field: { name: string, type: string, itemType?: string, readonly?: boolean }) => {
         const { name, type, itemType, readonly } = field;
+        const isItem = itemType !== undefined;
+        console.log("isItem", isItem);
         const label = name.charAt(0).toUpperCase() + name.slice(1);
 
         if (type === 'array') {

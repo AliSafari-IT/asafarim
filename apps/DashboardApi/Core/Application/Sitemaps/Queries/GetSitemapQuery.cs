@@ -1,8 +1,7 @@
 using System.Collections.Generic;
-using Core.Application.Interfaces.Repositories;
-using Core.Domain.Entities;
-using Core.Domain.Enum;
+using DashboardApi.Core.Application.Interfaces.Repositories;
 using DashboardApi.Core.Domain.Entities;
+using DashboardApi.Core.Domain.Enum;
 
 namespace Core.Application.Sitemaps.Queries
 {

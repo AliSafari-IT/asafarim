@@ -9,11 +9,13 @@ import Loading from "../../components/Loading/Loading";
 import API_URL from "../../api/getApiUrls";
 
 const Home = () => {
+  console.log("API_URL", API_URL);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [topics, setTopics] = useState<ITopic[]>([]);
   const userData = localStorage.getItem('user');
   const token = userData ? JSON.parse(userData).token : null;
+  
 
   // Retrieve topics
   useEffect(() => {

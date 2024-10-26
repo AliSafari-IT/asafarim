@@ -1,7 +1,6 @@
 using Core.Application.Sitemaps.Queries;
-using Core.Domain.Entities;
-using Core.Domain.Enum;
 using DashboardApi.Core.Domain.Entities;
+using DashboardApi.Core.Domain.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;

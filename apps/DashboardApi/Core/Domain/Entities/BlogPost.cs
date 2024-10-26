@@ -1,12 +1,6 @@
-using DashboardApi.Core.Domain.Entities;
 
-namespace Core.Domain.Entities;
-
-/// <summary>
-/// Represents a blog post.
-/// </summary>
-
-public class BlogPost
+namespace DashboardApi.Core.Domain.Entities;
+    public class BlogPost
 {
     // Properties
     public Guid Id { get; set; }

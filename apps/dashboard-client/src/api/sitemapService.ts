@@ -1,7 +1,7 @@
-import { IRole } from "../interfaces/IRole";
+import { IRoleEnum } from "../interfaces/IRole";
 import API_URL from "./getApiUrls";
 
-const getSitemap = async (userRole: IRole) => {
+const getSitemap = async (userRole: IRoleEnum) => {
   console.log(`Fetching sitemap for userRole: ${userRole}`);
 
   const token = localStorage.getItem('token');

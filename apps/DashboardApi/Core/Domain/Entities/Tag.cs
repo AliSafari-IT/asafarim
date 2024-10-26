@@ -1,9 +1,13 @@
+// apps/DashboardApi/Core/Domain/Entities/Tag.cs
+namespace DashboardApi.Core.Domain.Entities;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
-using Core.Domain.Entities;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Core.Domain.Entities;
+
 
 public class Tag
 {

@@ -1,71 +1,94 @@
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using DashboardApi.Core.Domain.Entities;
 using DashboardApi.Infrastructure.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace DashboardApi.Services;
-public class ProjectService
+namespace DashboardApi.Services
 {
-    private readonly ApplicationDbContext _context;
-    public ProjectService(ApplicationDbContext context)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ProjectsController : ControllerBase
     {
-        _context = context;
-    }
+        private readonly ProjectServices _projectServices;
 
-    public async Task<Project> GetProjectByIdAsync(Guid id)
-    {
-        return await _context.Projects
-            .FirstOrDefaultAsync(p => p.Id == id);
-    }
+        public ProjectsController(ProjectServices projectServices)
+        {
+            _projectServices = projectServices;
+        }
 
-    public async Task<Project> GetProjectByNameAsync(string name)
-    {
-        return await _context.Projects
-            .FirstOrDefaultAsync(p => p.Title == name);
-    }
+        [HttpGet]
+        public async Task<IActionResult> GetProjects()
+        {
+            var projects = await _projectServices.GetProjectsAsync();
+            return Ok(projects);
+        }
 
-    public async Task<List<Project>> GetProjectsAsync()
-    {
-        return await _context.Projects.ToListAsync();
-    }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetProject(Guid id)
+        {
+            var project = await _projectServices.GetProjectAsync(id);
+            if (project == null)
+            {
+                return NotFound();
+            }
+            return Ok(project);
+        }
 
-    public async Task<Project> AddProjectAsync(Project project)
-    {
-        _context.Projects.Add(project);
-        await _context.SaveChangesAsync();
-        return project;
-    }
+        [HttpPost]
+        public async Task<IActionResult> AddProject([FromBody] Project project)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-    public async Task<Project> UpdateProjectAsync(Project project)
-    {
-        _context.Projects.Update(project);
-        await _context.SaveChangesAsync();
-        return project;
-    }
+            var addedProject = await _projectServices.AddProjectAsync(project);
+            return CreatedAtAction(nameof(GetProject), new { id = addedProject.Id }, addedProject);
+        }
 
-    public async Task DeleteProjectAsync(Project project)
-    {
-        _context.Projects.Remove(project);
-        await _context.SaveChangesAsync();
-    }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateProject(Guid id, [FromBody] Project project)
+        {
+            if (id != project.Id || id == Guid.Empty)
+            {
+                return BadRequest("Project ID mismatch");
+            }
 
-    public async Task MarkAsCompletedAsync(Project project)
-    {
-        project.IsCompleted = true;
-        _context.Projects.Update(project);
-        await _context.SaveChangesAsync();
-    }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-    public async Task<List<Project>> GetProjectsByUserAsync(User user)
-    {
-        return await _context.Projects
-            .Where(p => p.OwnerId == user.Id)
-            .ToListAsync();
-    }
+            try
+            {
+                await _projectServices.UpdateProjectAsync(project);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await _projectServices.ProjectExistsAsync(id))
+                {
+                    return NotFound();
+                }
+                throw;
+            }
 
-    public async Task<List<Project>> GetProjectsByUserAndNameAsync(User user, string name)
-    {
-        return await _context.Projects
-            .Where(p => p.OwnerId == user.Id && p.Title.Contains(name))
-            .ToListAsync();
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProject(Guid id)
+        {
+            var project = await _projectServices.GetProjectAsync(id);
+            if (project == null)
+            {
+                return NotFound();
+            }
+
+            await _projectServices.DeleteProjectAsync(project);
+            return NoContent();
+        }
     }
 }

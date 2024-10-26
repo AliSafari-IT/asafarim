@@ -47,6 +47,11 @@ function App() {
 
       <Route path="/dashboard" element={<PrivateRoute ><Dashboard /></PrivateRoute>} />
       <Route path="/projects" element={<ProjectHome key={Math.random()}/>} />
+      {/* Add routes for CRUD operations about projects here */}
+      <Route path="/projects/:id" element={<ProjectHome key={Math.random()}/>} />
+      
+
+
       <Route path="/about" element={<About />} />
       <Route path="/about/akkodis-targeted-resume" element={<AkkodisTargetedResume />} />
       <Route path="/contact" element={<Contact />} />

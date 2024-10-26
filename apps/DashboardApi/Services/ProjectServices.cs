@@ -74,4 +74,21 @@ public class ProjectServices
             .Where(p => p.OwnerId == user.Id)
             .ToListAsync();
     }
+
+    internal async Task SaveChangesAsync()
+    {
+        await _context.SaveChangesAsync();
+    }
+
+    internal object Entry(Project project)
+    {
+        var entry = _context.Entry(project);
+        return entry;
+
+    }
+
+    internal async Task<bool> ProjectExistsAsync(Guid id)
+    {
+        return await _context.Projects.AnyAsync(p => p.Id == id);
+    }
 }

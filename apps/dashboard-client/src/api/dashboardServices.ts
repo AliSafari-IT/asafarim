@@ -7,7 +7,7 @@ const fetchEntities = async (entityTableName: string) => {
     return axios.get(`${API_URL}/${entityTableName}s`)
         .catch(error => {
             console.error('Error fetching entities:', error);
-            throw new Error('Failed to fetch entities: ' + entityTableName);
+            throw new Error('Failed to fetch entities: ' + entityTableName + 's. ('  + error+ ')');
         });
 }
 

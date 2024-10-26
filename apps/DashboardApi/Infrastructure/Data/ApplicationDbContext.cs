@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using DashboardApi.Core.Domain.Entities;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using DashboardApi.Core.Domain.Junctions;
 using DashboardApi.Core.Application.Interfaces.Repositories;
 
 namespace DashboardApi.Infrastructure.Data;
@@ -43,10 +42,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<Tag> Tags { get; set; }
     public DbSet<Topic> Topics { get; set; }
     public DbSet<BlogPost> BlogPosts { get; set; }
-
-    public DbSet<BlogPostTag> BlogPostTags { get; set; }
-
-    public DbSet<BlogPostTopic> BlogPostTopics { get; set; }
+    public DbSet<Panel> Panels { get; set; }
+    public DbSet<Panel> PanelItems { get; set; }
 
     public DbSet<SitemapItem> SitemapItems { get; set; }
     public DbSet<Project> Projects { get; set; }
@@ -65,26 +62,6 @@ public class ApplicationDbContext : DbContext
             .HasIndex(t => t.Name)
             .IsUnique();
 
-        // Configure many-to-many relationship between User and BlogPost
-        modelBuilder.Entity<User>()
-            .HasMany(u => u.BlogPosts)
-            .WithMany(bp => bp.Authors)
-            .UsingEntity<Dictionary<string, object>>(
-                "UserBlogPost",
-                j => j
-                    .HasOne<BlogPost>()
-                    .WithMany()
-                    .HasForeignKey("BlogPostsId")
-                    .HasConstraintName("FK_UserBlogPost_BlogPosts_BlogPostId")
-                    .OnDelete(DeleteBehavior.Cascade),
-                j => j
-                    .HasOne<User>()
-                    .WithMany()
-                    .HasForeignKey("UsersId")
-                    .HasConstraintName("FK_UserBlogPost_Users_UserId")
-                    .OnDelete(DeleteBehavior.Cascade));
-
-
         var hashedPassword = "AQAAAAIAAYagAAAAEOKlPRS/QM3Cwap8gPgQxmoe3YnRicXFekLb+BVDYrQvr349cjI0d3LD9G/rPWOhEQ=="; // Password: Ali+123456/
 
         // User and Role IDs
@@ -101,6 +78,10 @@ public class ApplicationDbContext : DbContext
 
         // Sitemap IDs
         var sitemap1Id = new Guid("55555555-5555-5555-5555-555555555555");
+
+        var ClientId = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6");
+        var OwnerId = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6");
+
 
         // Seed User
         modelBuilder.Entity<User>().HasData(new User
@@ -161,29 +142,19 @@ public class ApplicationDbContext : DbContext
         });
 
         // Seed Project
-        modelBuilder.Entity<Project>().HasData(new Project
-        {
-            Id = sitemap1Id,
-            Title = "Sitemap",
-            Description = "Sitemap for the website.",
-            DateCreated = DateTime.UtcNow,
-            DateModified = DateTime.UtcNow
-        });
+        // Existing user seed data
+        var userId01 = new Guid("c032f3c0-877a-11ef-b2d0-bc2411fc845a");
 
-        // Seed BlogPostTag
-        modelBuilder.Entity<BlogPostTag>().HasData(
-            new BlogPostTag
+        modelBuilder.Entity<Project>().HasData(
+            new Project
             {
-                BlogPostId = post1Id,
-                TagId = tag1Id
-            },
-            new BlogPostTag
-            {
-                BlogPostId = post1Id,
-                TagId = tag2Id
+                Id = new Guid("c032f3c0-877a-11ef-b2d0-bc2411fc845a"),
+                Title = "Test Project 02",
+                Description = "Test Project 02 Description",
+                OwnerId = userId01
             }
         );
-
+        // Seed Tag
         modelBuilder.Entity<Tag>().HasData(
             new Tag
             {
@@ -197,17 +168,6 @@ public class ApplicationDbContext : DbContext
                 Name = "DotNet",
                 Title = ".NET"
             }
-        );
-
-        // Seed the join table for User and BlogPost
-        modelBuilder.Entity("UserBlogPost").HasData(
-            new { UsersId = userId, BlogPostsId = post1Id }
-        );
-
-        // Seed the join table for BlogPost and Tag
-        modelBuilder.Entity("BlogPostTag").HasData(
-            new { BlogPostsId = post1Id, TagsId = tag1Id },
-            new { BlogPostsId = post1Id, TagsId = tag2Id }
         );
 
         // Configure the composite primary key for UserRole

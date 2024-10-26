@@ -87,6 +87,7 @@ namespace DashboardApi
             builder.Services.AddScoped<ISitemapRepository, SitemapRepository>();
             builder.Services.AddScoped<GetSitemapQuery>();
             builder.Services.AddScoped<UserService>();
+            builder.Services.AddScoped<ProjectServices>();
 
             var app = builder.Build();
 

@@ -3,7 +3,7 @@ DESCRIBE Topics;
 
 
 
-SELECT * FROM BlogPostTag;
+SELECT * FROM users;
 
 
 --  Delete from Tags where id = '33333333-3333-3333-3333-333333333333';

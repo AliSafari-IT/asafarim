@@ -1,5 +1,5 @@
 ﻿using Ganss.Xss;
-
+using System.ComponentModel.DataAnnotations.Schema;
 namespace DashboardApi.Core.Domain.Entities;
 
 public class Panel

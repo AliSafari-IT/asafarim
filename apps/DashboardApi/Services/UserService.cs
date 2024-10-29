@@ -1,13 +1,15 @@
-using Microsoft.AspNetCore.Identity;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using DashboardApi.Core.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
 using DashboardApi.Infrastructure.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using DashboardApi.Core.Exceptions;
 
 namespace DashboardApi.Services;
+
 public class UserService
 {
     private readonly ApplicationDbContext _context;
@@ -17,6 +19,27 @@ public class UserService
     {
         _context = context;
         _passwordHasher = new PasswordHasher<User>();
+    }
+
+    public double ParseStringToDouble(string? s)
+    {
+        if (string.IsNullOrEmpty(s))
+        {
+            // Handle the null case as needed, e.g., return a default value or throw an exception
+            throw new ArgumentNullException(nameof(s), "Input cannot be null or empty.");
+        }
+
+        return double.Parse(s); // Safe to parse now
+    }
+
+    public User? GetUserById(Guid id)
+    {
+        var user = _context.Users.Find(id); // This might return null
+        if (user == null)
+        {
+            throw new NotFoundException("User not found."); // Handle the null case
+        }
+        return user; // Ensure the method signature allows for null if you decide to return null
     }
 
 
@@ -29,12 +52,12 @@ public class UserService
             Username = "ali",
             Email = "ali@asm.com",
             CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
+            UpdatedAt = DateTime.UtcNow,
         };
 
         // Find all users with the given username
-        var duplicateUsers = await _context.Users
-            .Where(u => u.Username == user.Username)
+        var duplicateUsers = await _context
+            .Users.Where(u => u.Username == user.Username)
             .OrderByDescending(u => u.CreatedAt) // Order by creation date to get the latest
             .ToListAsync();
 
@@ -46,17 +69,19 @@ public class UserService
             _context.Users.Remove(latestUser); // Remove the latest duplicate
             await _context.SaveChangesAsync();
 
-            throw new InvalidOperationException($"Latest duplicate user with username '{latestUser.Username}' has been removed.");
+            throw new InvalidOperationException(
+                $"Latest duplicate user with username '{latestUser.Username}' has been removed."
+            );
         }
-
 
         var existingUser = _context.Users.FirstOrDefault(u => u.Username == user.Username);
         if (existingUser != null)
         {
             // Request a new username if the current one already exists
-            throw new InvalidOperationException("Username already exists. Please choose a different username.");
+            throw new InvalidOperationException(
+                "Username already exists. Please choose a different username."
+            );
         }
-
 
         // Hash the password
         user.PasswordHash = _passwordHasher.HashPassword(user, "Ali+123456/");
@@ -69,11 +94,7 @@ public class UserService
         var standardUserRole = _context.Roles.FirstOrDefault(r => r.Name == "StandardUser");
         if (standardUserRole != null)
         {
-            var userRole = new UserRole
-            {
-                UserId = user.Id,
-                RoleId = standardUserRole.Id
-            };
+            var userRole = new UserRole { UserId = user.Id, RoleId = standardUserRole.Id };
 
             _context.UserRoles.Add(userRole);
             await _context.SaveChangesAsync();
@@ -142,11 +163,7 @@ public class UserService
             var roleEntity = await _context.Roles.FirstOrDefaultAsync(r => r.Name == role);
             if (roleEntity != null)
             {
-                var userRole = new UserRole
-                {
-                    UserId = user.Id,
-                    RoleId = roleEntity.Id
-                };
+                var userRole = new UserRole { UserId = user.Id, RoleId = roleEntity.Id };
                 _context.UserRoles.Add(userRole);
             }
         }
@@ -156,8 +173,8 @@ public class UserService
 
     public async Task<List<string>> GetUserRolesAsync(User user)
     {
-        var userRoles = await _context.UserRoles
-            .Where(ur => ur.UserId == user.Id)
+        var userRoles = await _context
+            .UserRoles.Where(ur => ur.UserId == user.Id)
             .Join(_context.Roles, ur => ur.RoleId, r => r.Id, (ur, r) => new { Role = r })
             .Select(ur => ur.Role.Name)
             .ToListAsync();
@@ -178,8 +195,13 @@ public class UserService
             throw new Exception($"Role '{roleName}' not found.");
         }
 
-        return await _context.Users
-            .Join(_context.UserRoles, u => u.Id, ur => ur.UserId, (u, ur) => new { User = u, UserRole = ur })
+        return await _context
+            .Users.Join(
+                _context.UserRoles,
+                u => u.Id,
+                ur => ur.UserId,
+                (u, ur) => new { User = u, UserRole = ur }
+            )
             .Where(ur => ur.UserRole.RoleId == role.Id)
             .Select(ur => ur.User)
             .ToListAsync();
@@ -187,23 +209,26 @@ public class UserService
 
     public async Task<List<User>> GetUsersByNameAsync(string name)
     {
-        return await _context.Users
-            .Where(u => u.Username.Contains(name))
-            .ToListAsync();
+        return await _context.Users.Where(u => u.Username.Contains(name)).ToListAsync();
     }
 
     public async Task<List<User>> GetUsersByEmailAsync(string email)
     {
-        return await _context.Users
-            .Where(u => u.Email.Contains(email))
-            .ToListAsync();
+        return await _context.Users.Where(u => u.Email.Contains(email)).ToListAsync();
     }
 
     public async Task<List<User>> GetUsersByRoleAndNameAsync(string roleName, string name)
     {
-        var role = await _context.Roles.FirstOrDefaultAsync(r => r.Name == roleName) ?? throw new Exception($"Role '{roleName}' not found.");
-        return await _context.Users
-            .Join(_context.UserRoles, u => u.Id, ur => ur.UserId, (u, ur) => new { User = u, UserRole = ur })
+        var role =
+            await _context.Roles.FirstOrDefaultAsync(r => r.Name == roleName)
+            ?? throw new Exception($"Role '{roleName}' not found.");
+        return await _context
+            .Users.Join(
+                _context.UserRoles,
+                u => u.Id,
+                ur => ur.UserId,
+                (u, ur) => new { User = u, UserRole = ur }
+            )
             .Where(ur => ur.UserRole.RoleId == role.Id && ur.User.Username.Contains(name))
             .Select(ur => ur.User)
             .ToListAsync();
@@ -223,8 +248,8 @@ public class UserService
 
     internal object? GetUserRoles()
     {
-        var userRoles = _context.UserRoles
-            .Join(_context.Roles, ur => ur.RoleId, r => r.Id, (ur, r) => new { Role = r })
+        var userRoles = _context
+            .UserRoles.Join(_context.Roles, ur => ur.RoleId, r => r.Id, (ur, r) => new { Role = r })
             .Select(ur => ur.Role.Name)
             .ToList();
         return userRoles;
@@ -234,6 +259,5 @@ public class UserService
     {
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
-
     }
 }

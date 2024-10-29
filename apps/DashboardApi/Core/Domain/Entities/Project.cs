@@ -1,22 +1,31 @@
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
-namespace DashboardApi.Core.Domain.Entities;
-
+namespace DashboardApi.Core.Domain.Entities
+{
     public class Project
     {
+        [Key]
         public Guid Id { get; set; }
-        public string Title { get; set; }
-        public string? Description { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
-        public bool IsCompleted { get; set; }
-        public decimal Budget { get; set; }
-        public Guid ClientId { get; set; }
-         public User? Client { get; set; } 
 
-        // Navigation properties (optional if Project has related entities)
-        public Guid OwnerId { get; set; } // Assuming Project has an owner or creator
-        public User? Owner { get; set; }  // Reference to User entity, if applicable
+        [Required]
+        public string Title { get; set; } = string.Empty;
+
+        public string? Description { get; set; }
+
+        public DateTime StartDate { get; set; }
+
+        public DateTime? EndDate { get; set; }
+
+        public bool IsCompleted { get; set; } = false;
+
+        public decimal Budget { get; set; } = 0;
+
+        // Navigation properties for many-to-many relationship
+        public virtual ICollection<ProjectClient> ProjectClients { get; set; } = new List<ProjectClient>();
+
+        public virtual User? Owner { get; set; }  // Reference to Owner User
 
         // Metadata
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;
@@ -29,15 +38,13 @@ namespace DashboardApi.Core.Domain.Entities;
             DateModified = DateTime.UtcNow;
         }
 
-        public void UpdateProjectDetails(string title, string description, Guid clientId, Guid ownerId, DateTime? endDate, decimal budget)
+        public void UpdateProjectDetails(string title, string? description, DateTime? endDate, decimal budget)
         {
             Title = title;
             Description = description;
-            ClientId = clientId;
-            OwnerId = ownerId;
             EndDate = endDate;
             Budget = budget;
             DateModified = DateTime.UtcNow;
         }
-
     }
+}

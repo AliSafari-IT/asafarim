@@ -33,8 +33,8 @@ public class BlogPost
         LastUpdated = DateTime.UtcNow;
         ViewCount = 0;
         IsPublished = false;
-        Tags = [];
-        Authors = [];
+        Tags = new List<Tag>();
+        Authors = new List<User>();
 
     }
 }

@@ -15,10 +15,5 @@ public class Tag
     public string? Title { get; set; }
 
     public List<BlogPost>? BlogPosts { get; set; } = new List<BlogPost>();
-
-    public Tag()
-    {
-        Id = Guid.NewGuid();
-    }
 }
 

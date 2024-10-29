@@ -5,11 +5,12 @@ import rehypeSanitize from 'rehype-sanitize';
 import './DisplayMd.css';
 
 interface DisplayMdProps {
+  id?: string;
   markdownContent: string;
   theme?: string
 }
 
-const DisplayMd: React.FC<DisplayMdProps> = ({ markdownContent, theme }) => {
+const DisplayMd: React.FC<DisplayMdProps> = ({ markdownContent, theme, id, ...props }) => {
 
   useEffect(() => {
 
@@ -24,7 +25,7 @@ const DisplayMd: React.FC<DisplayMdProps> = ({ markdownContent, theme }) => {
   }, [theme]);
 
   return (
-    <div className="markdown-container" >
+    <div className="markdown-container" id={id}>
       <ReactMarkdown rehypePlugins={[rehypeRaw, rehypeSanitize]}>
         {markdownContent}
       </ReactMarkdown>

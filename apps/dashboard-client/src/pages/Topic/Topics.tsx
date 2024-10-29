@@ -17,7 +17,7 @@ const Topics = ({ topics }: TopicsProps) => {
 
   return (
     <div className="flex flex-col space-y-4">
-      {topics?.map((topic: ITopic) => {
+      {topics?.map((topic: ITopic, index: number) => {
         // Sort relatedPosts based on difficultyLevel
         const sortedRelatedPosts = useMemo(() => {
           return topic.relatedPosts
@@ -30,7 +30,7 @@ const Topics = ({ topics }: TopicsProps) => {
         }, [topic.relatedPosts]);
 
         return (
-          <details key={topic.id} className="border rounded shadow-sm" open>
+          <details key={topic.id} className="border rounded shadow-sm" open={index===0} >
             <summary className="cursor-pointer  p-4" aria-label={`Topic ${topic.name}`}>
               <h3 className="text-xl font-semibold">{topic.name}</h3>
               <p className="">{topic.description}</p>

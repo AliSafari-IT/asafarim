@@ -1,9 +1,13 @@
+// apps/DashboardApi/Core/Domain/Entities/Tag.cs
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
-using Core.Domain.Entities;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Core.Domain.Entities;
+namespace DashboardApi.Core.Domain.Entities;
 
 public class Tag
 {
@@ -15,5 +19,12 @@ public class Tag
     public string? Title { get; set; }
 
     public List<BlogPost>? BlogPosts { get; set; } = new List<BlogPost>();
+    public List<BlogPostTag> BlogPostTags { get; set; } = new List<BlogPostTag>();
+
+
+    public Tag()
+    {
+        Id = Guid.NewGuid();
+    }
 }
 

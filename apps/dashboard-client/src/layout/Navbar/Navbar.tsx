@@ -1,13 +1,14 @@
 // E:\asm\apps\dashboard-client\src\layout\Navbar\Navbar.tsx
 
-import {  useState } from 'react';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import logo from './logoT.svg';
-import {  
-  PersonCircle24Regular  as IconAbout,
+import {
+  PersonCircle24Regular as IconAbout,
   PhoneVibrate24Regular as IconContact,
   Teaching24Regular as IconTeaching,
-  Board24Regular as IconDashboard
+  Board24Regular as IconDashboard,
+  ProjectionScreenText24Regular as IconProject,
 } from '@fluentui/react-icons';
 import ToggleTheme from '../../components/theme/ToggleTheme';
 import AccountComponent from '../../components/user/AccountComponent';
@@ -34,7 +35,7 @@ function Navbar({ className }: NavbarProps) {
       ? 'buttonActive font-bold'
       : ''
     }`;
-  
+
   return (
     <nav className={"w-full border-b shadow-md border-gray-200 px-0 py-4 flex items-center justify-between relative " + className}>
       {/* Left side */}
@@ -48,6 +49,9 @@ function Navbar({ className }: NavbarProps) {
         </a>
         <a href="//techdocs.asafarim.com" className={navLinkClass('/techdocs')}>
           Tech Docs
+        </a>
+        <a href="/projects" className={navLinkClass('/projects')}>
+          Projects
         </a>
         <a href="/about" className={navLinkClass('/about')}>
           About
@@ -71,7 +75,7 @@ function Navbar({ className }: NavbarProps) {
           </a>
         )}
         <AccountComponent className="-mb-2" />
-        <ToggleTheme className="pr-2"/>
+        <ToggleTheme className="pr-2" />
       </div>
 
       {/* Hamburger Icon */}
@@ -103,10 +107,14 @@ function Navbar({ className }: NavbarProps) {
       {/* Mobile Menu */}
       {menuOpen && (
         <div className="sm:hidden">
-          <ToggleTheme  className="mb-3 absolute left-3 top-5  "/>
+          <ToggleTheme className="mb-3 absolute left-3 top-5  " />
           <a href="//techdocs.asafarim.com" className={`${mobileNavLinkClass('/techdocs')} block right-3 top-10`}>
             <span>Tech Docs</span>
             <IconTeaching className="inline-block ml-2 -mb-2" />
+          </a>
+          <a href="/projects" className={mobileNavLinkClass('/projects')}>
+            <span> Projects</span>
+            <IconProject className="inline-block ml-2 -mb-2" />
           </a>
           <a href="/about" className={mobileNavLinkClass('/about')}>
             <span>About</span>
@@ -125,7 +133,7 @@ function Navbar({ className }: NavbarProps) {
           )}
 
           {/* Use the AccountComponent for mobile */}
-          <AccountComponent isMobile={true} className={mobileNavLinkClass(user ? '/login': '/logout')} />
+          <AccountComponent isMobile={true} className={mobileNavLinkClass(user ? '/login' : '/logout')} />
         </div>
       )}
     </nav>

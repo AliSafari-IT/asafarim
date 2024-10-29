@@ -1,135 +1,124 @@
 import React, { useState } from 'react';
-import { Button, makeStyles } from '@fluentui/react-components';
-import { useNavigate, useParams } from 'react-router-dom';
-import { TextField } from '@fluentui/react';
-import Wrapper from '../../layout/Wrapper/Wrapper';
-import dashboardServices from '../../api/dashboardServices';
-import fieldsService from '../../interfaces/fields';
-
-const useStyles = makeStyles({
-    formContainer: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '10px',
-        padding: '20px',
-    },
-    formField: {
-        width: '300px',
-    },
-    tagField: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '5px',
-        marginBottom: '10px'
-    }
-});
+import axios from 'axios';
 
 const AddForm: React.FC = () => {
-    const { model } = useParams(); // 'tags', 'topics', etc.
-    const classes = useStyles();
-    const navigate = useNavigate();
-    const [data, setData] = useState<any>({
-        tags: [''] // Initialize tags with an empty string
+    const [formData, setFormData] = useState({
+        name: '',
+        title: '',
+        description: '',
+        startDate: '',
+        endDate: '',
+        budget: 0,
+        clientId: '',
+        ownerId: '',
     });
 
-    // Get the relevant fields for the model
-    const attributes = fieldsService.getFields(model!);
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setFormData(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
         try {
-            await dashboardServices.addEntity(model!, data);
-            alert(`${model?.slice(0, -1).toUpperCase()} added successfully!`);
-            navigate('/dashboard');
+            const response = await axios.post('https://localhost:44337/api/projects', formData);
+            console.log('Project added:', response.data);
+            // Optionally reset the form
+            setFormData({
+                name: '',
+                title: '',
+                description: '',
+                startDate: '',
+                endDate: '',
+                budget: 0,
+                clientId: '',
+                ownerId: '',
+            });
         } catch (error) {
-            console.error(`Error adding ${model?.slice(0, -1)}:`, error);
-            alert(`Failed to add the ${model?.slice(0, -1)}.`);
+            console.error('Error adding project:', error);
         }
-    };
-
-    // Handle change for array fields (e.g., tags)
-    const handleArrayChange = (index: number, value: string) => {
-        const newTags = [...data.tags];
-        newTags[index] = value;
-        setData({ ...data, tags: newTags });
-    };
-
-    // Add a new tag input
-    const addTagField = () => {
-        setData({ ...data, tags: [...data.tags, ''] });
-    };
-
-    // Remove a tag input
-    const removeTagField = (index: number) => {
-        const newTags = [...data.tags];
-        newTags.splice(index, 1); // Remove the tag at the given index
-        setData({ ...data, tags: newTags });
-    };
-
-    const renderField = (field: { name: string, type: string, itemType?: string, readonly?: boolean }) => {
-        const { name, type, itemType, readonly } = field;
-        const label = name.charAt(0).toUpperCase() + name.slice(1);
-
-        if (type === 'array') {
-            // For array fields (like tags), render multiple text fields
-            return (
-                <div key={name}>
-                    <label>{label}</label>
-                    {data[name]?.map((tag: string, index: number) => (
-                        <div key={index} className={classes.tagField}>
-                            <TextField
-                                className={classes.formField}
-                                value={tag || ''}
-                                onChange={(e) => handleArrayChange(index, (e.target as HTMLInputElement).value)}
-                                required
-                            />
-                            <Button
-                                appearance="primary"
-                                type="button"
-                                onClick={() => removeTagField(index)}
-                                disabled={data[name]?.length <= 1}
-                            >
-                                Remove
-                            </Button>
-                        </div>
-                    ))}
-                    <Button
-                        appearance="secondary"
-                        type="button"
-                        onClick={addTagField}
-                    >
-                        Add Tag
-                    </Button>
-                </div>
-            );
-        }
-
-        return (
-            <TextField
-                key={name}
-                label={label}
-                className={classes.formField}
-                type={type}
-                value={data[name] || ''}
-                onChange={(e) => setData({ ...data, [name]: (e.target as HTMLInputElement).value })}
-                disabled={readonly} // Disable fields like 'id' if readonly is true
-                required
-            />
-        );
     };
 
     return (
-        <Wrapper header={<h1 className="text-3xl font-bold text-center">Add New {model?.slice(0, -1).toUpperCase()}</h1>}>
-            <div className={classes.formContainer}>
-                <form onSubmit={handleSubmit}>
-                    {attributes.map((field) => renderField(field))}
-                    <Button type="submit" style={{ float: 'right', marginTop: '10px' }}>
-                        Add {model?.slice(0, -1).toUpperCase()}
-                    </Button>
-                </form>
+        <form onSubmit={handleSubmit}>
+            <div>
+                <label>Name:</label>
+                <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                />
             </div>
-        </Wrapper>
+            <div>
+                <label>Title:</label>
+                <input
+                    type="text"
+                    name="title"
+                    value={formData.title}
+                    onChange={handleChange}
+                />
+            </div>
+            <div>
+                <label>Description:</label>
+                <textarea
+                    name="description"
+                    value={formData.description}
+                    onChange={handleChange}
+                />
+            </div>
+            <div>
+                <label>Start Date:</label>
+                <input
+                    type="date"
+                    name="startDate"
+                    value={formData.startDate}
+                    onChange={handleChange}
+                />
+            </div>
+            <div>
+                <label>End Date:</label>
+                <input
+                    type="date"
+                    name="endDate"
+                    value={formData.endDate}
+                    onChange={handleChange}
+                />
+            </div>
+            <div>
+                <label>Budget:</label>
+                <input
+                    type="number"
+                    name="budget"
+                    value={formData.budget}
+                    onChange={handleChange}
+                />
+            </div>
+            <div>
+                <label>Client ID:</label>
+                <input
+                    type="text"
+                    name="clientId"
+                    value={formData.clientId}
+                    onChange={handleChange}
+                />
+            </div>
+            <div>
+                <label>Owner ID:</label>
+                <input
+                    type="text"
+                    name="ownerId"
+                    value={formData.ownerId}
+                    onChange={handleChange}
+                />
+            </div>
+            <button type="submit">Add Project</button>
+        </form>
     );
 };
 

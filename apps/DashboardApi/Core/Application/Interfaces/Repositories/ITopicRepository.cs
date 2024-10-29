@@ -1,8 +1,7 @@
 using System.Linq.Expressions;
-using Core.Domain.Entities;
+using DashboardApi.Core.Domain.Entities;
 
-namespace Core.Application.Interfaces.Repositories;
-
+namespace DashboardApi.Core.Application.Interfaces.Repositories;
 public interface ITopicRepository : IRepository<Topic>
 {
 }
@@ -21,7 +20,7 @@ public interface IRepository<T>
     Task DeleteAsync(T entity);
 
     Task<int> SaveChangesAsync();
-    
+
     Task<int> CountAsync();
 
     Task<bool> ExistsAsync(int id);

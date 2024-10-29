@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Core.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace DashboardApi.Core.Domain.Entities
@@ -15,21 +14,26 @@ namespace DashboardApi.Core.Domain.Entities
         public Guid Id { get; set; }
 
         [Required]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
-        [Required, MaxLength(20), MinLength(3)]
-        public string Username { get; set; }
+        [Required, MaxLength(20, ErrorMessage = "Username cannot be longer than 20 characters"), MinLength(3, ErrorMessage = "Username must be at least 3 characters long")]
+        public string Username { get; set; } = string.Empty;
 
-        [Required, EmailAddress]
-        public string Email { get; set; }
+        [Required, EmailAddress, MaxLength(50, ErrorMessage = "Email cannot be longer than 50 characters")]
+        public string Email { get; set; } = string.Empty;
 
         public string? PasswordHash { get; set; }
 
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-        // Navigation properties
-        public List<UserRole>? UserRoles { get; set; } = new List<UserRole>();
-        public List<BlogPost>? BlogPosts { get; set; } = new List<BlogPost>();
+        // Changed from arrays to lists
+        public List<BlogPost> BlogPosts { get; internal set; } = new List<BlogPost>();
+        public List<UserRole> UserRoles { get; internal set; } = new List<UserRole>();
+
+        public User()
+        {
+            Id = Guid.NewGuid();
+        }
     }
 }

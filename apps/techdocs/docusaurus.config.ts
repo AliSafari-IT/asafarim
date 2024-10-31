@@ -2,6 +2,12 @@
 import { themes as prismThemes } from "prism-react-renderer";
 import type * as Preset from "@docusaurus/preset-classic";
 import path from "path";
+import tailwindPlugin from "./plugins/tailwind-config.cjs";
+
+import resolveConfig from 'tailwindcss/resolveConfig';
+import tailwindConfig from './tailwind.config.js';
+
+const fullConfig = resolveConfig(tailwindConfig);
 
 const getIntlVars = {
   defaultLocale: "en",
@@ -149,12 +155,6 @@ const config = {
           position: "left",
           label: "TechTutorialVault",
         },
-        {
-          to: "docs/category/topics",
-          activeBasePath: "docs",
-          label: "DevDocsCentral",
-          position: "left",
-        },
         { to: "/blog", label: "Blog", position: "left" },
         { to: "code-n-create", label: "Code & Create", position: "left" },
         { to: "/ideahub", label: "Idea Hub", position: "left" },
@@ -169,7 +169,6 @@ const config = {
       ],
     },
     footer: {
-      style: "dark",
       links: [
         {
           title: "TechDocsHub",
@@ -248,6 +247,7 @@ const config = {
   } satisfies Preset.ThemeConfig,
 
   plugins: [
+    tailwindPlugin,
     function (context, options) {
       return {
         name: "custom-docusaurus-plugin",

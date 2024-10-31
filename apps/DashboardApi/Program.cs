@@ -1,14 +1,15 @@
 using System.Text;
 using System.Text.Json.Serialization;
-using Core.Application.Interfaces.Repositories;
-using Core.Application.Sitemaps.Queries;
 using DashboardApi.Services;
-using Infrastructure.Data;
-using Infrastructure.Data.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+
+using DashboardApi.WebApi.Extensions;
+using DashboardApi.Infrastructure.Data;
 
 namespace DashboardApi
 {
@@ -16,25 +17,22 @@ namespace DashboardApi
     {
         public static void Main(string[] args)
         {
+            var builder = WebApplication.CreateBuilder(args);
 
-            WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-
-            // Configure Kestrel for HTTP and HTTPS traffic
             var environment = builder.Environment;
+
+            // Configure Kestrel
             if (environment.IsProduction())
             {
                 var httpPort = Environment.GetEnvironmentVariable("HTTP_PORT") ?? "5000";
-                // var httpsPort = Environment.GetEnvironmentVariable("HTTPS_PORT") ?? "5001";
 
                 builder.WebHost.UseKestrel(options =>
                 {
                     options.ListenAnyIP(int.Parse(httpPort)); // HTTP (internal)
-                                                              //       options.ListenAnyIP(int.Parse(httpsPort), listenOptions => listenOptions.UseHttps()); // HTTPS (external)
                 });
             }
             else
             {
-                // Default for development
                 builder.WebHost.UseKestrel(options =>
                 {
                     options.ListenLocalhost(5146); // HTTP (local dev)
@@ -49,7 +47,7 @@ namespace DashboardApi
                        .AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Information);
             });
 
-            // CORS policy configuration
+            // Add CORS Policy
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowFrontend", builder =>
@@ -59,79 +57,39 @@ namespace DashboardApi
                         "https://asafarim.com",
                         "https://preview.asafarim.com",
                         "https://techdocs.asafarim.com"
-                    ) // Allow dev and prod origins
-                           .AllowAnyMethod()
-                           .AllowAnyHeader()
-                           .AllowCredentials();
+                    )
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
                 });
             });
 
-            builder.Services.AddControllers();
-
-            builder.Services.AddEndpointsApiExplorer();
-            // Add services to the container.
+            // Add Controllers and JSON Options
             builder.Services.AddControllers()
                 .AddJsonOptions(options =>
                     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
-            // Database Configuration
+            // Add the extracted JWT Authentication configuration
+            builder.Services.AddJwtAuthentication(builder.Configuration);
+
+            // Add Swagger Documentation using the extension method
+            builder.Services.AddSwaggerDocumentation();
+            // Add the database context
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
                 ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection")),
                 mySqlOptions => mySqlOptions.EnableRetryOnFailure()));
 
-            // JWT Configuration
-            var jwtSettings = builder.Configuration.GetSection("Jwt");
-            var key = Encoding.ASCII.GetBytes(jwtSettings["Key"] ?? throw new ArgumentNullException("Jwt:Key"));
-
-            builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                options.RequireHttpsMetadata = false; // Allow HTTP for local development
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidIssuer = jwtSettings["Issuer"],
-                    ValidAudience = jwtSettings["Audience"],
-                    ClockSkew = TimeSpan.Zero,
-                };
-            });
-
-            builder.Services.AddScoped<ISitemapRepository, SitemapRepository>();
-            builder.Services.AddScoped<GetSitemapQuery>();
+            // Add Services and Repositories
             builder.Services.AddScoped<UserService>();
-
-            builder.Services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ASafariM API", Version = "v1" });
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    In = ParameterLocation.Header,
-                    Description = "Please enter your JWT with Bearer scheme",
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer"
-                });
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-        { new OpenApiSecurityScheme { Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } }, new string[] { } }
-                });
-                     c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First()); //This line
-
-            });
+           // builder.Services.AddScoped<ProjectServices>();
 
             var app = builder.Build();
+            SwaggerExtensionsBase.UseSwaggerConfiguration(app);
+            // Development-only middleware
             if (app.Environment.IsDevelopment())
             {
-app.UseDeveloperExceptionPage();
+                app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ASafariM API V1"));
             }
@@ -143,7 +101,6 @@ app.UseDeveloperExceptionPage();
             app.UseAuthorization();
             app.MapControllers();
             app.Run();
-
         }
     }
 }

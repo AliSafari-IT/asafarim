@@ -1,42 +1,39 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-/**
- * Fetches the contents of a markdown file and returns an object with
- * `content`, `error`, and `loading` properties.
- *
- * `content` is the text content of the markdown file, initially an empty string.
- * `error` is an error message if the fetch fails, or `null` otherwise.
- * `loading` is a boolean indicating whether the fetch is in progress.
- *
- * @param {string} filePath URL of the markdown file to fetch.
- * @returns {object} An object with `content`, `error`, and `loading` properties.
- */
-const useMarkdown = (filePath: string) => { 
-  const [content, setContent] = useState('');
+function useMarkdown(filePath: string) {
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [markdownContent, setMarkdownContent] = useState('');
 
   useEffect(() => {
     const fetchMarkdown = async () => {
       try {
-        const response = await fetch(filePath);
+        console.log('Fetching markdown file from:', filePath); // Add this log to check the file path
+        const response = await fetch(filePath); // Ensure this fetches the correct markdown file URL
+    
         if (!response.ok) {
-          throw new Error('Failed to load markdown file.');
+          throw new Error(`Failed to fetch markdown file: ${response.statusText}`);
         }
-        const markdown = await response.text();
-        
-        setContent(markdown);
-      } catch (err: any) {
-        setError(err.message);
+    
+        const text = await response.text();
+        console.log('Fetched markdown content:', text); // Check if the content is valid markdown
+    
+        setMarkdownContent(text);
+      } catch (err) {
+        setError('Failed to load markdown file.');
+        console.error('Error fetching markdown:', err); // Log any fetch errors
       } finally {
         setLoading(false);
       }
     };
+    
 
-    fetchMarkdown();
+    if (filePath) {
+      fetchMarkdown();
+    }
   }, [filePath]);
 
-  return { content, error, loading };
-};
+  return { error, loading, markdownContent };
+}
 
 export default useMarkdown;

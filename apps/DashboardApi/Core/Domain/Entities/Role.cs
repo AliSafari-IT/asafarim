@@ -1,14 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
 
 namespace DashboardApi.Core.Domain.Entities
 {
     public class Role
     {
+        [Key]
         public Guid Id { get; set; }
-        public required string Name { get; set; }
+
+        [Required]
+        public string Name { get; set; } = string.Empty;
+
         public string? Description { get; internal set; }
 
-        // Navigation property to the join table
-        public List<UserRole> UserRoles { get; set; } = new List<UserRole>();
+        public List<User> Users { get; set; } = new List<User>();
+
+        public List<Permission> Permissions { get; set; } = new List<Permission>();
+
+        public Role() { }
     }
 }

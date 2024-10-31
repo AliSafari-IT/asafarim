@@ -1,13 +1,18 @@
 // src/pages/Dashboard.tsx
-import { Link } from "@fluentui/react";
 import Wrapper from "../../layout/Wrapper/Wrapper";
 import { DashboardHeaderBlock } from "./DashboardHeaderBlock";
+import { FluentProvider, Link, webDarkTheme, webLightTheme } from "@fluentui/react-components";
+import { useTheme } from "../../hooks/useTheme";
+import CardContainer from "../../components/Containers/Card/CardContainer";
 
 const Dashboard = () => {
+  // get current theme
+  const theme = useTheme().theme == 'dark' ? webDarkTheme : webLightTheme;
   return (
-    <Wrapper header={<DashboardHeaderBlock/>}>
-      
-      <p>Welcome to the dashboard!</p>
+    <Wrapper header={<DashboardHeaderBlock />}>
+      <FluentProvider theme={theme}>
+        <CardContainer />
+      </FluentProvider>
 
       <div className="p-8">
         <h1 className="text-2xl font-bold mb-4">Sitemap</h1>
@@ -20,7 +25,7 @@ const Dashboard = () => {
             Home
           </a></li>
           <li className="text-lg">
-            <Link to="/about">About</Link>
+            <Link href="/about">About</Link>
           </li>
           <li className="text-lg">
             <Link href="/manage-sitemap-content" target="_self">Sitemap Page</Link>

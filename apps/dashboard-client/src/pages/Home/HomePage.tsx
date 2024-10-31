@@ -6,58 +6,42 @@ import NotAuthenticated from "../../components/NotAuthenticated";
 import { ITopic } from "../../interfaces/ITopic";
 import Topics from "../Topic/Topics";
 import Loading from "../../components/Loading/Loading";
+import API_URL from "../../api/getApiUrls";
 
 const Home = () => {
+  console.log("API_URL", API_URL);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [topics, setTopics] = useState<ITopic[]>([]);
-  const envVariable = (import.meta as any).env;
-  const user = localStorage.getItem('user');
-
-  // Determine the correct API URL based on the current hostname
-  let API_URL = envVariable.VITE_API_URL || 'https://asafarim.com/api';
-  if (window.location.hostname === 'preview.asafarim.com') {
-    API_URL = envVariable.VITE_PREVIEW_URL || 'https://preview.asafarim.com/api';
-  }
-
-
+  const userData = localStorage.getItem('user');
+  const token = userData ? JSON.parse(userData).token : null;
+  
 
   // Retrieve topics
   useEffect(() => {
-    console.log('Environment Variables:', envVariable);
-    console.log('API_URL in Home: ', API_URL);
-    const userData = localStorage.getItem('user');
-    const token = userData ? JSON.parse(userData).token : null;
+    const fetchTopics = async () => {
+      try {
+        const headers = token
+          ? {
+              Authorization: `Bearer ${token}`,
+            }
+          : {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+          };
 
-    if (!token) {
-      setError('No authentication token found. Please log in.');
-      setLoading(false);
-      // log error
-      console.error('No authentication token found. Please log in.');
-    }
-
-    setLoading(true);
-    axios
-      .get(`${API_URL}/topics`, {
-        headers: {
-          // Authorization: `Bearer ${token}`,
-        },
-        params: {
-          roleIndex: user,
-        },
-      })
-      .then((response) => {
-        console.log("Data: ", response.data);
+        const response = await axios.get(`${API_URL}/topics`, { headers });
+        console.log("Response from /api/topics: ", response);
         setTopics(response.data);
+      } catch (error: any) {
+        setError(error.message);
+      } finally {
         setLoading(false);
-        setError(null);
-      })
-      .catch((err) => {
-        console.error(err);
-        setError("Failed to load topics");
-        setLoading(false);
-      });
-  }, [API_URL, user]);
+      }
+    };
+
+    fetchTopics();
+  }, [token]);
 
   if (loading) {
     return (
@@ -67,7 +51,7 @@ const Home = () => {
     );
   }
 
-  if (error) {
+  if (error && topics.length === 0) {
     return (
       <Wrapper pageTitle="Home">
         <div className="w-1/2 mx-auto my-10 px-4 py-3 rounded relative" role="alert">

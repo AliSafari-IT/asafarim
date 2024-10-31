@@ -1,14 +1,7 @@
-import { IRole } from "../interfaces/IRole";
+import { IRoleEnum } from "../interfaces/IRole";
+import API_URL from "./getApiUrls";
 
-// Determine the correct API URL based on the current hostname
-let API_URL = (import.meta as any).env.VITE_API_URL || 'https://asafarim.com/api';
-if (window.location.hostname === 'preview.asafarim.com') {
-  API_URL = (import.meta as any).env.Preview_URL + "/api";
-}
-
-console.log("sitemapService -> API_URL: " + API_URL);
-
-const getSitemap = async (userRole: IRole) => {
+const getSitemap = async (userRole: IRoleEnum) => {
   console.log(`Fetching sitemap for userRole: ${userRole}`);
 
   const token = localStorage.getItem('token');

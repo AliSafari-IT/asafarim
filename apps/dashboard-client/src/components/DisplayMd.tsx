@@ -1,28 +1,34 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
-import rehypeRaw from 'rehype-raw'; 
-import rehypeSanitize from 'rehype-sanitize'; 
+import rehypeRaw from 'rehype-raw';
+import rehypeSanitize from 'rehype-sanitize';
 import './DisplayMd.css';
-import useMarkdown from '../hooks/useMarkdown';
 
 interface DisplayMdProps {
-  filePath: string;
+  id?: string;
+  markdownContent: string;
+  theme?: string
 }
 
-const DisplayMd: React.FC<DisplayMdProps> = ({ filePath }) => {
-  const {  error, loading } = useMarkdown(filePath);
+const DisplayMd: React.FC<DisplayMdProps> = ({ markdownContent, theme, id, ...props }) => {
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+  useEffect(() => {
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+    if (theme === 'dark') {
+      document.body.setAttribute('data-theme', 'dark');
+    }
+
+    if (theme === 'light') {
+      document.body.setAttribute('data-theme', 'light');
+    }
+
+  }, [theme]);
 
   return (
-    <div className="markdown-container">
-      <ReactMarkdown rehypePlugins={[rehypeRaw, rehypeSanitize]}>{filePath}</ReactMarkdown>
+    <div className="markdown-container" id={id}>
+      <ReactMarkdown rehypePlugins={[rehypeRaw, rehypeSanitize]}>
+        {markdownContent}
+      </ReactMarkdown>
     </div>
   );
 };

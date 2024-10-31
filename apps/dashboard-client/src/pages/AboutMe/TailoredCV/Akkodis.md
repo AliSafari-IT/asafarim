@@ -7,7 +7,7 @@
     📨:     Meybroekstraat 48 
             3510 Hasselt
 
-    📞:     0484.995707
+    📞:     0484.******
 
       🇪:     asafarim@gmail.com 
 ---

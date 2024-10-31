@@ -1,18 +1,7 @@
-// Determine the correct API URL based on the current hostname
-let API_URL = (import.meta as any).env.VITE_API_URL || 'https://asafarim.com/api';
+import API_URL from "./getApiUrls";
 
-// Dynamically update the API URL if the user is on a subdomain like preview.asafarim.com
-if (window.location.hostname === 'preview.asafarim.com') {
-  API_URL = 'https://preview.asafarim.com/api';
-} else if (window.location.hostname === 'asafarim.com') {
-  API_URL = 'https://asafarim.com/api';
-}
-
-// Log the final API URL for debugging
-console.log(`API URL in Home: ${API_URL}`);
-
-// Continue with your login function
-const login = async (username: string, password: string) => { 
+const login = async (username: string, password: string) => {
+  console.debug('API_URL in authService: ' + API_URL);
   try {
     const response = await fetch(`${API_URL}/auth/login`, {
       method: 'POST',
@@ -23,11 +12,21 @@ const login = async (username: string, password: string) => {
       body: JSON.stringify({ username, password }),
     });
 
+   
     if (!response.ok) {
-      const errorResponse = await response.json();
-      const error = new Error(`Login failed with status: ${response.status}`);
-      (error as any).response = { status: response.status, message: errorResponse.message };
-      throw error;
+      let errorMessage = 'Login failed';
+      try {
+        // Attempt to extract the error message from JSON response
+        const errorData = await response.json();
+        if (errorData.message) {
+          errorMessage = `Login failed: ${errorData.message}`;
+        }
+      } catch (err) {
+        // JSON parsing failed, maybe HTML response (e.g., a server error page)
+        errorMessage = `Login failed with status: ${response.status}`;
+      }
+
+      throw new Error(errorMessage);
     }
 
     const data = await response.json();
@@ -43,3 +42,4 @@ const login = async (username: string, password: string) => {
 };
 
 export default { login };
+

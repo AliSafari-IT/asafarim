@@ -10,11 +10,11 @@ interface AlertContainerProps {
 }
 
 const themeStyles: { [key: string]: string } = {
-  info: 'bg-blue-100 border-blue-400 text-blue-800',
-  success: 'bg-green-100 border-green-400 text-green-800',
-  warning: 'bg-yellow-100 border-yellow-400 text-yellow-800',
-  danger: 'bg-red-100 border-red-400 text-red-800',
-  none: 'bg-gray-100 border-gray-400 text-gray-800',
+  info: 'border-blue-400 ',
+  success: 'border-green-400',
+  warning: 'border-yellow-400',
+  danger: 'border-red-400',
+  none: '',
 };
 
 const AlertContainer: React.FC<AlertContainerProps> = ({ theme = 'none', children }) => {

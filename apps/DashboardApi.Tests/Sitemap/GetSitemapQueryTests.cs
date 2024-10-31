@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Core.Application.Interfaces.Repositories;
 using Core.Application.Sitemaps.Queries;
 using Core.Domain.Enum;
-using Sitemap = DashboardApi.Core.Domain.Entities.SitemapEntity;
+using Sitemap = DashboardApi.Core.Domain.Entities.SitePage;
 using DashboardApi.Core.Domain.Entities;
 
 namespace DashboardApi.Tests.Sitemap
@@ -22,7 +22,7 @@ namespace DashboardApi.Tests.Sitemap
         public void Execute_ShouldReturnAllSitemaps_WhenUserHasHighestRole()
         {
             // Arrange
-            var sitemaps = new List<SitemapEntity>
+            var sitemaps = new List<SitePage>
             {
                 new() { Id = Guid.NewGuid(), Slug = "/", Description = "Home Page", PageName = "Home", AccessByRole = EnumUserRole.Admin },
                 new() { Id = Guid.NewGuid(), AccessByRole = EnumUserRole.StandardUser, Description = "About Us", PageName = "About", Slug = "/about" },
@@ -43,7 +43,7 @@ namespace DashboardApi.Tests.Sitemap
         public void Execute_ShouldReturnOnlyGuestSitemaps_WhenUserHasLowestRole()
         {
             // Arrange
-           var sitemaps = new List<SitemapEntity>
+           var sitemaps = new List<SitePage>
             {
                 new() { Id = Guid.NewGuid(), Slug = "/", Description = "Home Page", PageName = "Home", AccessByRole = EnumUserRole.Admin },
                 new() { Id = Guid.NewGuid(), AccessByRole = EnumUserRole.StandardUser, Description = "About Us", PageName = "About", Slug = "/about" },

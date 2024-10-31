@@ -35,6 +35,7 @@ const LoginPage = () => {
       if (error?.response && error.response.status === 401) {
         setError(`Invalid username or password: (Error ${error.response.status})`);
       } else {
+        console.error('An unexpected error occurred:', error);
         setError('An unexpected error occurred. Please try again later. (Error 500: Internal Server Error)');
       }
     } finally {
@@ -43,13 +44,13 @@ const LoginPage = () => {
   };
 
   return (
-    <Wrapper header={<div className="w-full text-center text-gray-200 py-8 text-2xl border border-gray-700 bg-gray-700 z-10">Login</div>}>
+    <Wrapper header={<div className="w-full text-center py-8 text-2xl border z-10">Login</div>}>
       <AlertContainer theme="info" className="w-1/2 mx-auto my-10 px-4 py-3 rounded relative">
         <form onSubmit={handleLogin} className="flex flex-col items-center justify-center space-y-4">
           
           {/* Input for username */}
           <div className="w-full max-w-xs">
-            <label htmlFor="username" className="block mb-2 text-gray-700 font-bold">Username:</label>
+            <label htmlFor="username" className="block mb-2  font-bold">Username:</label>
             <input
               type="text"
               value={username}
@@ -62,20 +63,21 @@ const LoginPage = () => {
 
           {/* Input for password */}
           <div className='w-full max-w-xs'>
-            <label htmlFor="password" className='block mb-2 text-gray-700 font-bold'>Password:</label>
+            <label htmlFor="password" className='block mb-2 font-bold'>Password:</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Add your password"
               className="p-2 border rounded-md w-full max-w-xs"
+              autoComplete='current-password'
               required
             />
           </div>
 
           {/* Display error with alert info style */}
           {error && (
-            <div className="max-w-xs w-full p-4 mb-2 bg-red-50 border border-red-200 text-red-700 rounded-lg shadow text-center">
+            <div className="max-w-xs w-full p-4 mb-2 danger  border border-red-200  rounded-lg shadow text-center">
               <p className="text-sm font-medium">{error}</p>
             </div>
           )}

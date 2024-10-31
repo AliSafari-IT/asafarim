@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Core.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace DashboardApi.Core.Domain.Entities
@@ -12,24 +11,27 @@ namespace DashboardApi.Core.Domain.Entities
     public class User
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
-        [Required, MaxLength(20), MinLength(3)]
-        public string Username { get; set; }
+        [Required, MaxLength(20, ErrorMessage = "Username cannot be longer than 20 characters"), MinLength(3, ErrorMessage = "Username must be at least 3 characters long")]
+        public string Username { get; set; } = string.Empty;
 
-        [Required, EmailAddress]
-        public string Email { get; set; }
+        [Required, EmailAddress, MaxLength(50, ErrorMessage = "Email cannot be longer than 50 characters")]
+        public string Email { get; set; } = string.Empty;
 
         public string? PasswordHash { get; set; }
 
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public virtual ICollection<UserBlogPost> UserBlogPosts { get; set; } = new List<UserBlogPost>();
 
-        // Navigation properties
-        public List<UserRole>? UserRoles { get; set; } = new List<UserRole>();
-        public List<BlogPost>? BlogPosts { get; set; } = new List<BlogPost>();
+        // Constructor is optional as properties are initialized above
+        public User()
+        {
+            // No need to initialize collections or properties again since they have default values
+        }
     }
 }

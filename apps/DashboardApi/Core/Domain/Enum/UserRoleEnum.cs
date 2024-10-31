@@ -1,5 +1,5 @@
 namespace DashboardApi.Core.Domain.Enum;
-public enum EnumUserRole
+public enum UserRoleEnum
 {
     Guest,
     StandardUser,

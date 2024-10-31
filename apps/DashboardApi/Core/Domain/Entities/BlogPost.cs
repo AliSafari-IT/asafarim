@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using DashboardApi.Core.Domain.Enum;
-using DashboardApi.Core.Domain.Models;
 using DashboardApi.Core.Helpers;
-using DashboardApi.Core.Domain.Entities; 
 
 namespace DashboardApi.Core.Domain.Entities
 {
     public class BlogPost
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
         public string Title { get; set; } = string.Empty;
@@ -27,7 +25,6 @@ namespace DashboardApi.Core.Domain.Entities
 
         public int ViewCount { get; set; } = 0;
 
-        [ForeignKey("TopicId")]
         public Guid? TopicId { get; set; }
 
         public DateTime LastUpdated { get; set; } = DateTime.UtcNow;
@@ -38,22 +35,27 @@ namespace DashboardApi.Core.Domain.Entities
 
         public string MetaDescription { get; set; } = string.Empty;
 
-        public List<Tag> Tags { get; set; } = new List<Tag>();
+        public virtual ICollection<UserBlogPost> RelatedUserBlogPosts { get; set; } = new List<UserBlogPost>();
 
-        public List<User> Authors { get; set; } = new List<User>();
+        public List<Tag> Tags { get; set; } = new List<Tag>();
 
         public DifficultyLevelEnum DifficultyLevel { get; set; } = DifficultyLevelEnum.Easy;
 
-        // Slug property
-        public string Slug => SlugHelper.GenerateSlug(Title); // Ensure SlugHelper is correctly defined
-public List<BlogPostTag> BlogPostTags { get; set; } = new List<BlogPostTag>();
+        public virtual ICollection<User> Authors { get; set; } = new List<User>();
 
-        // Constructor
-        public BlogPost()
+        public TechnologyCategoryEnum TechnologyCategory { get; set; } = TechnologyCategoryEnum.Other;
+        public virtual ICollection<UserBlogPost> UserBlogPosts { get; set; } = new List<UserBlogPost>();
+
+        public void AddTag(Tag tag)
         {
-            Id = Guid.NewGuid();
-            PublishedDate = DateTime.UtcNow;
-            LastUpdated = DateTime.UtcNow;
+            Tags.Add(tag);
+        }
+
+        public string Slug => SlugHelper.GenerateSlug(Title);
+
+        public void AddAuthor(User user)
+        {
+            Authors.Add(user);
         }
     }
 }

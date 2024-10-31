@@ -1,111 +1,179 @@
+// apps/DashboardApi/Infrastructure/Data/ApplicationDbContext.cs
+
 using System;
+using System.ComponentModel.DataAnnotations;
 using DashboardApi.Core.Domain.Entities;
+using DashboardApi.Core.Domain.Enum;
 using Microsoft.EntityFrameworkCore;
 
 namespace DashboardApi.Infrastructure.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options) { }
-
         public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }
-        public DbSet<UserRole> UserRoles { get; set; }
-        public DbSet<Tag> Tags { get; set; }
-        public DbSet<Topic> Topics { get; set; }
         public DbSet<BlogPost> BlogPosts { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Permission> Permissions { get; set; }
+        public DbSet<Topic> Topics { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<Project> Projects { get; set; }
-        public DbSet<BlogPostTag> BlogPostTags { get; set; }
-        public DbSet<ProjectClient> ProjectClients { get; set; } // Add DbSet for ProjectClient
+        public DbSet<ProjectClient> ProjectClients { get; set; }
+        public DbSet<Panel> Panels { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            var userId1 = new Guid("c032f3c0-877a-11ef-b2d0-bc2411fc845a"); // Unique user ID
-            var userId2 = new Guid("00000000-0000-0000-0000-000000000002"); // Another unique user ID
-            var existingUserId = new Guid("00000000-0000-0000-0000-000000000005"); // Make sure this is unique or remove it
-            var hashedPassword =
-                "AQAAAAIAAYagAAAAEOKlPRS/QM3Cwap8gPgQxmoe3YnRicXFekLb+BVDYrQvr349cjI0d3LD9G/rPWOhEQ=="; // Password: Ali+123456/
+            // Seed Users
+            var adminUser = new User
+            {
+                Id = Guid.NewGuid(),
+                Username = "admin",
+                Email = "admin@asm.com",
+                PasswordHash = "AQAAAAIAAYagAAAAEOKlPRS/QM3Cwap8gPgQxmoe3YnRicXFekLb+BVDYrQvr349cjI0d3LD9G/rPWOhEQ==",
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
 
-            // Seed users with unique IDs only
-            modelBuilder
-                .Entity<User>()
-                .HasData(
-                    new User
-                    {
-                        Id = userId1,
-                        Name = "tara",
-                        Username = "tara",
-                        Email = "tara@examplea.com",
-                        PasswordHash = hashedPassword,
-                    },
-                    new User
-                    {
-                        Id = userId2,
-                        Name = "kian",
-                        Username = "kian",
-                        Email = "kian@exampleb.com",
-                        PasswordHash = hashedPassword,
-                    },
-                    new User
-                    {
-                        Id = existingUserId, // Only if this ID is unique and intentional
-                        Name = "DuplicateUser" // Ensure this user is supposed to be seeded
-                    }
-                );
+            var regularUser = new User
+            {
+                Id = Guid.NewGuid(),
+                Username = "ali",
+                Email = "ali@asm.com",
+                PasswordHash = "AQAAAAIAAYagAAAAEOKlPRS/QM3Cwap8gPgQxmoe3YnRicXFekLb+BVDYrQvr349cjI0d3LD9G/rPWOhEQ==",
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
 
-            // Continue seeding other entities such as Projects here...
-            var projectId1 = new Guid("00000000-0000-0000-0000-000000000003");
-            var projectId2 = new Guid("00000000-0000-0000-0000-000000000004");
+            modelBuilder.Entity<User>().HasData(adminUser, regularUser);
 
-            // Seed projects
-            modelBuilder
-                .Entity<Project>()
-                .HasData(
-                    new Project
-                    {
-                        Id = projectId1,
-                        Title = "Project 1",
-                    },
-                    new Project
-                    {
-                        Id = projectId2,
-                        Title = "Project 2",
-                    }
-                );
+            // Seed Roles
+            var adminRole = new Role
+            {
+                Id = Guid.NewGuid(),
+                Name = "Admin",
+                Description = "Admin Role",
+            };
 
-            // Define the BlogPostTag entity with a composite key
-            modelBuilder.Entity<BlogPostTag>().HasKey(bpt => new { bpt.BlogPostId, bpt.TagId });
+            var userRole = new Role
+            {
+                Id = Guid.NewGuid(),
+                Name = "User",
+                Description = "User Role",
+            };
 
-            // Configure the many-to-many relationship for BlogPostTag
-            modelBuilder
-                .Entity<BlogPostTag>()
-                .HasOne(bpt => bpt.BlogPost)
-                .WithMany(bp => bp.BlogPostTags)
-                .HasForeignKey(bpt => bpt.BlogPostId);
+            modelBuilder.Entity<Role>().HasData(adminRole, userRole);
 
-            modelBuilder
-                .Entity<BlogPostTag>()
-                .HasOne(bpt => bpt.Tag)
-                .WithMany(t => t.BlogPostTags)
-                .HasForeignKey(bpt => bpt.TagId);
+            // Seed Permissions
+            var adminPermission = new Permission
+            {
+                Id = Guid.NewGuid(),
+                Name = "Admin rights",
+                Description = "All permission rights including create, read, update, delete, view",
+            };
 
-            // Define the composite key for the ProjectClient entity
-            modelBuilder.Entity<ProjectClient>().HasKey(pc => new { pc.ProjectId, pc.ClientId });
+            var userPermission = new Permission
+            {
+                Id = Guid.NewGuid(),
+                Name = "User rights",
+                Description = "Included permission rights: create, read, update, soft delete, view",
+            };
 
-            modelBuilder
-                .Entity<ProjectClient>()
-                .HasOne(pc => pc.Project)
-                .WithMany(p => p.ProjectClients)
-                .HasForeignKey(pc => pc.ProjectId);
+            modelBuilder.Entity<Permission>().HasData(adminPermission, userPermission);
 
-            modelBuilder
-                .Entity<ProjectClient>()
-                .HasOne(pc => pc.Client)
-                .WithMany() // If you don't need to reference all clients from User, keep it empty
-                .HasForeignKey(pc => pc.ClientId);
+            // Seed Topics
+            var topic1 = new Topic
+            {
+                Id = Guid.NewGuid(),
+                Name = "Database Schema",
+                Description = "Creating a database schema for a new product",
+                DifficultyLevel = DifficultyLevelEnum.Easy,
+                TechnologyCategory = TechnologyCategoryEnum.Database,
+                CreatedDate = DateTime.UtcNow,
+                LastUpdated = DateTime.UtcNow,
+                PostCount = 0
+            };
+
+            var topic2 = new Topic
+            {
+                Id = Guid.NewGuid(),
+                Name = "React Typescript Blog",
+                Description = "Creating a blog with React and Typescript",
+                DifficultyLevel = DifficultyLevelEnum.Medium,
+                TechnologyCategory = TechnologyCategoryEnum.Frontend,
+                CreatedDate = DateTime.UtcNow,
+                LastUpdated = DateTime.UtcNow,
+                PostCount = 0
+            };
+
+            modelBuilder.Entity<Topic>().HasData(topic1, topic2);
+
+            // Seed BlogPosts
+            var blogPost1 = new BlogPost
+            {
+                Id = Guid.NewGuid(),
+                Title = "Creating a Database Schema",
+                Content = "Detailed explanation of creating a database schema.",
+                PublishedDate = DateTime.UtcNow,
+                LastUpdated = DateTime.UtcNow,
+                DifficultyLevel = DifficultyLevelEnum.Easy,
+                TopicId = topic1.Id,
+                IsPublished = true
+            };
+
+            var blogPost2 = new BlogPost
+            {
+                Id = Guid.NewGuid(),
+                Title = "React and Typescript",
+                Content = "Creating a blog using React and Typescript.",
+                PublishedDate = DateTime.UtcNow,
+                LastUpdated = DateTime.UtcNow,
+                DifficultyLevel = DifficultyLevelEnum.Medium,
+                TopicId = topic2.Id,
+                IsPublished = true
+            };
+
+            modelBuilder.Entity<BlogPost>().HasData(blogPost1, blogPost2);
+
+            // Seed Projects
+            var project1 = new Project
+            {
+                Id = Guid.NewGuid(),
+                Title = "Database Schema Project",
+                Description = "Create a database schema for a new product",
+                StartDate = DateTime.UtcNow,
+                Budget = 1000,
+                IsCompleted = false,
+                DateCreated = DateTime.UtcNow,
+                DateModified = DateTime.UtcNow
+            };
+
+            modelBuilder.Entity<Project>().HasData(project1);
+
+            // Seed UserRoles
+            var userRoleEntry = new UserRole
+            {
+                Id = Guid.NewGuid(),
+                UserId = adminUser.Id,
+                RoleId = adminRole.Id
+            };
+
+            modelBuilder.Entity<UserRole>().HasData(userRoleEntry);
+
+            // UserBlogPost   
+            modelBuilder.Entity<UserBlogPost>()
+        .HasKey(ub => new { ub.UserId, ub.BlogPostId });
+
+            modelBuilder.Entity<UserBlogPost>()
+                .HasOne(ub => ub.User)
+                .WithMany(u => u.UserBlogPosts)
+                .HasForeignKey(ub => ub.UserId);
+
+            modelBuilder.Entity<UserBlogPost>()
+                .HasOne(ub => ub.BlogPost)
+                .WithMany(b => b.UserBlogPosts)
+                .HasForeignKey(ub => ub.BlogPostId);
         }
     }
 }

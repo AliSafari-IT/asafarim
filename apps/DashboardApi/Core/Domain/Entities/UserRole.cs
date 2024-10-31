@@ -26,18 +26,5 @@ namespace DashboardApi.Core.Domain.Entities
         {
             Id = Guid.NewGuid(); // Automatically generate a unique Guid for each UserRole instance
         }
-
-        // Constructor to initialize UserId and RoleId
-        public UserRole(Guid userId, Guid roleId) : this() // Call the default constructor
-        {
-            UserId = userId;
-            RoleId = roleId;
-        }
-
-        // Optional: Constructor to initialize all properties
-        public UserRole(Guid id, Guid userId, Guid roleId) : this(userId, roleId)
-        {
-            Id = id; // Allow setting a specific Id if needed
-        }
     }
 }

@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using DashboardApi.Core.Domain.Models;
 using DashboardApi.Infrastructure.Data;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 
 namespace DashboardApi.WebApi
 {
@@ -39,14 +41,17 @@ namespace DashboardApi.WebApi
             var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, request.Password);
             if (passwordVerificationResult != PasswordVerificationResult.Success)
             {
-                Console.WriteLine(request.Username + " → " + request.Password + " → user.PasswordHash: " + user.PasswordHash + " passwordVerificationResult: "+ passwordVerificationResult.ToString());
+                // Log invalid attempts
+                Console.WriteLine($"{request.Username} → {request.Password} → user.PasswordHash: {user.PasswordHash} passwordVerificationResult: {passwordVerificationResult}");
                 return Unauthorized("Invalid username or password.");
             }
 
-            // Generate token and return success
-
+            // Generate token and return the current authenticated User with token
             var token = GenerateJwtToken(user);
-            return Ok(new { token });
+            var currentUserWithToken = new { username = user.Username, token };
+
+            // Return the current authenticated User with token
+            return Ok(new { currentUserWithToken });
         }
 
         private string GenerateJwtToken(User user)
@@ -54,7 +59,6 @@ namespace DashboardApi.WebApi
             var jwtSettings = _configuration.GetSection("Jwt");
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"])); // Retrieve the key from appsettings.json
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
 
             // Add claims based on user's roles
             var claims = new[]
@@ -64,17 +68,15 @@ namespace DashboardApi.WebApi
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 
-             var token = new JwtSecurityToken(
+            var token = new JwtSecurityToken(
                 issuer: jwtSettings["Issuer"],
                 audience: jwtSettings["Audience"],
                 claims: claims,
                 expires: DateTime.Now.AddMinutes(double.Parse(jwtSettings["ExpiresInMinutes"])),
-                signingCredentials: creds);
+                signingCredentials: creds
+            );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
-
-
 }
-

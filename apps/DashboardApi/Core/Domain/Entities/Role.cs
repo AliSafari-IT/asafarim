@@ -7,6 +7,7 @@ namespace DashboardApi.Core.Domain.Entities
 {
     public class Role
     {
+        [Key]
         public Guid Id { get; set; }
 
         [Required]
@@ -14,17 +15,10 @@ namespace DashboardApi.Core.Domain.Entities
 
         public string? Description { get; internal set; }
 
-        // Navigation property to the join table
-        public List<UserRole> UserRoles { get; set; } = new List<UserRole>();
+        public List<User> Users { get; set; } = new List<User>();
 
-        // Constructor
-        public Role(string name, string? description = null)
-        {
-            Id = Guid.NewGuid();
-            Name = name;
-            Description = description;
-        }
+        public List<Permission> Permissions { get; set; } = new List<Permission>();
 
-        public Role() {}
+        public Role() { }
     }
 }

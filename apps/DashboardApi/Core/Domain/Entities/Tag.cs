@@ -11,6 +11,7 @@ namespace DashboardApi.Core.Domain.Entities;
 
 public class Tag
 {
+    [Key]
     public Guid Id { get; set; }
 
     [Required]
@@ -18,13 +19,11 @@ public class Tag
 
     public string? Title { get; set; }
 
-    public List<BlogPost>? BlogPosts { get; set; } = new List<BlogPost>();
-    public List<BlogPostTag> BlogPostTags { get; set; } = new List<BlogPostTag>();
-
-
     public Tag()
     {
         Id = Guid.NewGuid();
     }
+
+    public List<BlogPost> BlogPosts { get; set; }
 }
 

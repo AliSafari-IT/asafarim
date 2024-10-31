@@ -1,6 +1,5 @@
 using System.Text;
 using System.Text.Json.Serialization;
-using Core.Application.Sitemaps.Queries;
 using DashboardApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -11,8 +10,6 @@ using Microsoft.OpenApi.Models;
 
 using DashboardApi.WebApi.Extensions;
 using DashboardApi.Infrastructure.Data;
-using DashboardApi.Core.Application.Interfaces.Repositories;
-using DashboardApi.Infrastructure.Data.Repositories;
 
 namespace DashboardApi
 {
@@ -84,13 +81,11 @@ namespace DashboardApi
                 mySqlOptions => mySqlOptions.EnableRetryOnFailure()));
 
             // Add Services and Repositories
-            builder.Services.AddScoped<ISitemapRepository, SitemapRepository>();
-            builder.Services.AddScoped<GetSitemapQuery>();
             builder.Services.AddScoped<UserService>();
-            builder.Services.AddScoped<ProjectServices>();
+           // builder.Services.AddScoped<ProjectServices>();
 
             var app = builder.Build();
-
+            SwaggerExtensionsBase.UseSwaggerConfiguration(app);
             // Development-only middleware
             if (app.Environment.IsDevelopment())
             {

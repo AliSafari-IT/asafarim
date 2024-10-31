@@ -11,7 +11,7 @@ namespace DashboardApi.Core.Domain.Entities
     public class User
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
         public string Name { get; set; } = string.Empty;
@@ -26,14 +26,12 @@ namespace DashboardApi.Core.Domain.Entities
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public virtual ICollection<UserBlogPost> UserBlogPosts { get; set; } = new List<UserBlogPost>();
 
-        // Changed from arrays to lists
-        public List<BlogPost> BlogPosts { get; internal set; } = new List<BlogPost>();
-        public List<UserRole> UserRoles { get; internal set; } = new List<UserRole>();
-
+        // Constructor is optional as properties are initialized above
         public User()
         {
-            Id = Guid.NewGuid();
+            // No need to initialize collections or properties again since they have default values
         }
     }
 }

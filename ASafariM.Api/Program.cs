@@ -20,41 +20,35 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
+var logDirectory =
+    (Environment.GetEnvironmentVariable("ASAFARIM_ENV") == "production")
+        ? "/var/www/asafarim/logs"
+        : "E:/ASafariM/Logs";
+
+if (!Directory.Exists(logDirectory))
+{
+    Directory.CreateDirectory(logDirectory);
+}
+
+Serilog.Debugging.SelfLog.Enable(Console.Error);
+
+var logFilePath = Path.Combine(logDirectory, $"api.log");
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.Console()
+    .WriteTo.File(
+        logFilePath,
+        rollingInterval: RollingInterval.Hour,
+        retainedFileCountLimit: 2,
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level}] {Message}{NewLine}{Exception}"
+    )
+    .CreateLogger();
+Log.Information("Serilog configured successfully.");
+Log.Information("Starting up the application...");
+
 try
 {
     var builder = WebApplication.CreateBuilder(args);
-    var isDevelopment = builder.Environment.IsDevelopment();
-
-    // Configure Serilog
-    var loggerConfiguration = new LoggerConfiguration()
-        .MinimumLevel.Information()
-        .WriteTo.Console();
-
-    // Only add file logging in development
-    if (isDevelopment)
-    {
-        var logDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
-        Directory.CreateDirectory(logDirectory);
-
-        var logFilePath = Path.Combine(logDirectory, $"log-api.log");
-        loggerConfiguration.WriteTo.File(
-            logFilePath,
-            rollingInterval: RollingInterval.Day,
-            retainedFileCountLimit: 2,
-            outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level}] {Message}{NewLine}{Exception}"
-        );
-
-        Log.Information("Development environment detected. File logging enabled.");
-    }
-    else
-    {
-        Log.Information("Production environment detected. Console-only logging enabled.");
-    }
-
-    // Create and set the logger
-    Log.Logger = loggerConfiguration.CreateLogger();
-    Log.Information("Serilog configured successfully.");
-    Log.Information("Starting up the application...");
 
     // Add Serilog to the container
     builder.Host.UseSerilog();
@@ -139,20 +133,13 @@ try
         })
         .AddJwtBearer(options =>
         {
-            var jwtSettings = builder.Configuration.GetSection("Jwt");
-            var key = System.Text.Encoding.ASCII.GetBytes(
-                jwtSettings["Key"] ?? "your-default-secret-key-here-minimum-16-characters"
-            );
-
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidIssuer = jwtSettings["Issuer"] ?? "asafarim.com",
-                ValidAudience = jwtSettings["Audience"] ?? "asafarim.com",
-                IssuerSigningKey = new SymmetricSecurityKey(key),
+                // Add your token validation parameters here
             };
         });
 
@@ -174,7 +161,7 @@ try
     Log.Information("Application started.");
 
     // Configure the HTTP request pipeline.
-    if (isDevelopment)
+    if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
         app.UseSwaggerUI(c =>
@@ -209,9 +196,6 @@ try
             await next.Invoke();
         }
     );
-
-    // Map health checks
-    app.MapHealthChecks("/health");
 
     // Map controllers after all middleware
     app.MapControllers();

@@ -15,6 +15,7 @@ using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -140,8 +141,10 @@ try
         .AddJwtBearer(options =>
         {
             var jwtSettings = builder.Configuration.GetSection("Jwt");
-            var key = System.Text.Encoding.ASCII.GetBytes(jwtSettings["Key"] ?? "your-default-secret-key-here-minimum-16-characters");
-            
+            var key = System.Text.Encoding.ASCII.GetBytes(
+                jwtSettings["Key"] ?? "your-default-secret-key-here-minimum-16-characters"
+            );
+
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
@@ -150,7 +153,7 @@ try
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = jwtSettings["Issuer"] ?? "asafarim.com",
                 ValidAudience = jwtSettings["Audience"] ?? "asafarim.com",
-                IssuerSigningKey = new SymmetricSecurityKey(key)
+                IssuerSigningKey = new SymmetricSecurityKey(key),
             };
         });
 
@@ -169,8 +172,9 @@ try
     });
 
     // Add health checks
-    builder.Services.AddHealthChecks()
-        .AddDbContextCheck<AppDbContext>(name: "Database")
+    builder
+        .Services.AddHealthChecks()
+        .AddCheck<DbContextHealthCheck>("Database", tags: new[] { "ready" })
         .AddCheck("self", () => HealthCheckResult.Healthy());
 
     var app = builder.Build();
@@ -229,4 +233,30 @@ catch (Exception ex)
 finally
 {
     Log.CloseAndFlush();
+}
+
+public class DbContextHealthCheck : IHealthCheck
+{
+    private readonly AppDbContext _dbContext;
+
+    public DbContextHealthCheck(AppDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
+    public async Task<HealthCheckResult> CheckHealthAsync(
+        HealthCheckContext context,
+        CancellationToken cancellationToken = default
+    )
+    {
+        try
+        {
+            await _dbContext.Database.ExecuteSqlRawAsync("SELECT 1", cancellationToken);
+            return HealthCheckResult.Healthy("Database is healthy");
+        }
+        catch (Exception ex)
+        {
+            return HealthCheckResult.Unhealthy("Database is unhealthy", ex);
+        }
+    }
 }

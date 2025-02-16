@@ -73,7 +73,8 @@ namespace ASafariM.Presentation.Controllers
         {
             try
             {
-                var uptime = DateTime.UtcNow - Process.GetCurrentProcess().StartTime.ToUniversalTime();
+                var uptime =
+                    DateTime.UtcNow - Process.GetCurrentProcess().StartTime.ToUniversalTime();
                 var uptimeStr = uptime.ToString(@"dd\.hh\:mm\:ss");
                 Log.Debug("System uptime: {Uptime}", uptimeStr);
                 return uptimeStr;
@@ -150,7 +151,7 @@ namespace ASafariM.Presentation.Controllers
                     Log.Debug("Disk space info: {@DiskInfo}", diskInfo);
                     return diskInfo;
                 }
-                
+
                 Log.Warning("No ready drives found");
                 return "Drive not available";
             }
@@ -169,9 +170,14 @@ namespace ASafariM.Presentation.Controllers
                 {
                     machineName = Environment.MachineName,
                     osVersion = Environment.OSVersion.ToString(),
-                    frameworkVersion = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription,
+                    frameworkVersion = System
+                        .Runtime
+                        .InteropServices
+                        .RuntimeInformation
+                        .FrameworkDescription,
                     processArchitecture = System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture.ToString(),
-                    environmentVariables = Environment.GetEnvironmentVariables()
+                    environmentVariables = Environment
+                        .GetEnvironmentVariables()
                         .Keys.Cast<string>()
                         .Take(5)
                         .ToDictionary(k => k, k => Environment.GetEnvironmentVariable(k)),
@@ -300,7 +306,10 @@ namespace ASafariM.Presentation.Controllers
                         var gitDir = Path.GetDirectoryName(gitHeadPath); // Path to .git directory
                         if (gitDir == null)
                         {
-                            Log.Warning("Could not determine git directory from path: {GitPath}", gitHeadPath);
+                            Log.Warning(
+                                "Could not determine git directory from path: {GitPath}",
+                                gitHeadPath
+                            );
                             continue;
                         }
 

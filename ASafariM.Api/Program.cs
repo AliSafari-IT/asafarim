@@ -168,6 +168,11 @@ try
         );
     });
 
+    // Add health checks
+    builder.Services.AddHealthChecks()
+        .AddDbContextCheck<AppDbContext>(name: "Database")
+        .AddCheck("self", () => HealthCheckResult.Healthy());
+
     var app = builder.Build();
     Log.Information("Application started.");
 
@@ -207,6 +212,9 @@ try
             await next.Invoke();
         }
     );
+
+    // Map health checks
+    app.MapHealthChecks("/health");
 
     // Map controllers after all middleware
     app.MapControllers();

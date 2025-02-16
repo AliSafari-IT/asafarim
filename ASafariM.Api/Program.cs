@@ -84,10 +84,9 @@ try
                 builder
                     .WithOrigins(
                         "http://localhost:3000",
-                        "asafarim.com",
-                        "https://www.asafarim.com",
-                        "www.asafarim.com"
-                    ) // Frontend URL
+                        "https://asafarim.com",
+                        "https://www.asafarim.com"
+                    )
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials();
@@ -125,6 +124,7 @@ try
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
 
+    var jwtSettings = builder.Configuration.GetSection("Jwt");
     builder
         .Services.AddAuthentication(options =>
         {
@@ -139,22 +139,42 @@ try
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                // Add your token validation parameters here
+                ValidIssuer = jwtSettings["Issuer"],
+                ValidAudience = jwtSettings["Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    System.Text.Encoding.UTF8.GetBytes(jwtSettings["Key"])
+                ),
+                ClockSkew = TimeSpan.Zero
             };
         });
 
     Log.Information("JWT authentication configured.");
 
-    builder.Services.AddSwaggerGen();
-    builder.Services.AddCors(options =>
+    builder.Services.AddSwaggerGen(c =>
     {
-        options.AddPolicy(
-            "AllowAll",
-            policy =>
+        c.SwaggerDoc("v1", new OpenApiInfo { Title = "ASafariM API", Version = "v1" });
+        c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        {
+            Description = "JWT Authorization header using the Bearer scheme.",
+            Name = "Authorization",
+            In = ParameterLocation.Header,
+            Type = SecuritySchemeType.ApiKey,
+            Scheme = "Bearer"
+        });
+        c.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
             {
-                policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                },
+                Array.Empty<string>()
             }
-        );
+        });
     });
 
     var app = builder.Build();
@@ -204,7 +224,11 @@ try
 }
 catch (Exception ex)
 {
-    Log.Fatal(ex, "Failed to create the application builder.");
+    Log.Fatal(ex, "Application startup failed: {ErrorMessage}", ex.Message);
+    if (ex.InnerException != null)
+    {
+        Log.Fatal(ex.InnerException, "Inner exception: {ErrorMessage}", ex.InnerException.Message);
+    }
     throw;
 }
 finally

@@ -7,6 +7,7 @@ import DisplayMd from "@/components/MarkdownPage/DisplayMd";
 import { useLocation } from "react-router-dom";
 import readme from './README.md?raw';
 import React, { useEffect } from "react";
+import UnderConstruction from '../UnderConstruction';
 
 export const Home = () => {
   const user = useAuth(); 
@@ -33,6 +34,7 @@ export const Home = () => {
 
   return (
     <Layout  header={<></>} pageTitle="Home">
+      <UnderConstruction />
       <DisplayMd markdownContent={mdFile}   id="readMe"  />
       <StacksPage docBranch="techDocs" stackTitle="Tech Stacks"/>
       <HomePanels />

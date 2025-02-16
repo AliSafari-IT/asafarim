@@ -1,0 +1,19 @@
+{
+  "name": "asafarim-api",
+  "packageManager": "yarn@4.6.0",
+  "repository": "https://asafarim-website@dev.azure.com/asafarim-website/asafarim/_git/asafarim",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "dotnet watch run --project ./ASafariM.Api.csproj",
+    "run": "dotnet run --project ./ASafariM.Api.csproj",
+    "restore": "dotnet restore --project ./ASafariM.Api.csproj",
+    "build": "dotnet build --project ./ASafariM.Api.csproj",
+    "test": "dotnet test --project ./ASafariM.Api.csproj",
+    "publish": "dotnet publish --project ./ASafariM.Api.csproj",
+    "clean": "dotnet clean --project ./ASafariM.Api.csproj",
+    "ui": "cd .. && yarn workspace asafarim-ui start",
+    "api": "cd .. && yarn workspace asafarim-api start",
+    "dev": "concurrently \"yarn api\" \"yarn ui\""
+  }
+}

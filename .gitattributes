@@ -1,0 +1,10 @@
+/.yarn/**            linguist-vendored
+/.yarn/releases/*    binary
+/.yarn/plugins/**/*  binary
+/.pnp.*              binary linguist-generated
+
+# C# files
+*.cs text=auto eol=lf
+*.cshtml text=auto eol=lf
+*.csproj text=auto eol=lf
+*.sln text=auto eol=lf

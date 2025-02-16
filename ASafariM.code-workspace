@@ -1,0 +1,62 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "API",
+			"path": "./ASafariM.Api"
+		},
+		{
+			"name": "ASM-UI",
+			"path": "./ASafariM.Clients/asafarim-ui"
+		},
+		{
+			"name": "Application",
+			"path": "./ASafariM.Application"
+		},
+		{
+			"name": "Domain",
+			"path": "./ASafariM.Domain"
+		},
+		{
+			"name": "Infrastructure",
+			"path": "./ASafariM.Infrastructure"
+		},
+		{
+			"name": "Presentation",
+			"path": "./ASafariM.Presentation"
+		},
+		{
+			"name": "Tests",
+			"path": "./ASafariM.Test"
+		},
+		{
+			"name": "MD-docs",
+			"path": "./docs"
+		},
+		{
+			"name": "Logs",
+			"path": "./logs"
+		}
+	],
+	"settings": {
+		"sqltools.connections": [
+			{
+				"mysqlOptions": {
+					"authProtocol": "default",
+					"enableSsl": "Disabled"
+				},
+				"previewLimit": 50,
+				"server": "localhost",
+				"port": 3306,
+				"driver": "MySQL",
+				"name": "ASafariM",
+				"database": "asmDB",
+				"username": "ali",
+				"password": "Ali+123456/"
+			}
+		],
+		"codium.codeCompletion.enable": true
+	}
+}

@@ -1,45 +1,46 @@
 using System.IO;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
-namespace ASafariM.Api.Controllers
+[ApiController]
+[Route("api/[controller]")]
+public class LogsController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class LogsController : ControllerBase
+    private readonly ILogger<LogsController> _logger;
+
+    public LogsController(ILogger<LogsController> logger)
     {
-        private static readonly object _lock = new object();
-
-        [HttpPost]
-        public IActionResult Log(LogMessage logMessage)
-        {
-            var logDirectory =
-                (Environment.GetEnvironmentVariable("ASAFARIM_ENV") == "production")
-                    ? "/var/www/asafarim/logs"
-                    : "E:/ASafariM/Logs";
-
-            if (!Directory.Exists(logDirectory))
-            {
-                Directory.CreateDirectory(logDirectory);
-            }
-
-            var logFilePath = Path.Combine(logDirectory, $"log-ui_{DateTime.Now:yyyyMMdd}.log");
-
-            // Format the log message with a timestamp and level
-            var formattedMessage =
-                $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff} [{logMessage.Level}] {logMessage.Message}{Environment.NewLine}";
-
-            lock (_lock)
-            {
-                System.IO.File.AppendAllText(logFilePath, formattedMessage);
-            }
-
-            return Ok();
-        }
+        _logger = logger;
     }
 
-    public class LogMessage
+    [HttpGet]
+    public IActionResult GetLogs()
     {
-        public string? Message { get; set; }
-        public string? Level { get; set; }
+        try
+        {
+            // Specify the log file path
+            string logFilePath = Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory,
+                "logs",
+                "log-api_.log"
+            );
+
+            if (!System.IO.File.Exists(logFilePath))
+            {
+                return NotFound("Log file not found.");
+            }
+
+            // Read the log file content
+            string logContent = System.IO.File.ReadAllText(logFilePath, Encoding.UTF8);
+
+            // Return the log content as plain text
+            return Content(logContent, "text/plain", Encoding.UTF8);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving logs");
+            return StatusCode(500, "Internal server error.");
+        }
     }
 }

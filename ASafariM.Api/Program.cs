@@ -133,13 +133,18 @@ try
         })
         .AddJwtBearer(options =>
         {
+            var jwtSettings = builder.Configuration.GetSection("Jwt");
+            var key = System.Text.Encoding.ASCII.GetBytes(jwtSettings["Key"] ?? "your-default-secret-key-here-minimum-16-characters");
+            
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                // Add your token validation parameters here
+                ValidIssuer = jwtSettings["Issuer"] ?? "asafarim.com",
+                ValidAudience = jwtSettings["Audience"] ?? "asafarim.com",
+                IssuerSigningKey = new SymmetricSecurityKey(key)
             };
         });
 

@@ -143,10 +143,11 @@ backend/ASafariM.Infrastructure.dll
 backend/ASafariM.Infrastructure.pdb
 backend/ASafariM.Presentation.dll
 backend/ASafariM.Presentation.pdb
-backend/E:/ASafariM/Logs/log-202502062025020621.txt
-backend/E:/ASafariM/Logs/log-202502062025020622.txt
-backend/E:/ASafariM/Logs/log-202502072025020708.txt
-backend/E:/ASafariM/Logs/ui-log-20250206.txt
-backend/E:/ASafariM/Logs/ui-log-20250207.txt
-ASafariM.Api/E:/ASafariM/Logs/log-202502062025020620.txt
-ASafariM.Api/E:/ASafariM/Logs/log-202502062025020621.txt
+
+# Ignore all log files and directories
+logs/
+Logs/
+*.log
+log-*.txt
+backend/E:/ASafariM/Logs/
+backend/E:/ASafariM/logs/

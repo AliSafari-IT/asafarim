@@ -36,6 +36,7 @@ dist/**
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.yarn.lock
 
 # Ignore coverage directory for testing
 coverage/
@@ -146,8 +147,7 @@ backend/ASafariM.Presentation.pdb
 
 # Ignore all log files and directories
 logs/
-Logs/
+Log/
 *.log
 log-*.txt
-backend/E:/ASafariM/Logs/
-backend/E:/ASafariM/logs/
+

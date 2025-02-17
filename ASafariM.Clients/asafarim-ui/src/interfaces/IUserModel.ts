@@ -1,0 +1,33 @@
+export interface IUserModel {
+  id: string;
+  email: string;
+  normalizedEmail?: string;
+  firstName: string;
+  lastName: string;
+  bio?: string;
+  userName?: string;
+  normalizedUserName?: string;
+  password?: string;
+  isAdmin: boolean;
+  userId?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  isDeleted?: boolean;
+  deletedAt?: string;
+  profilePicture?: string;
+  createdBy?: string;
+  updatedBy?: string;
+  deletedBy?: string;
+  isActive?: boolean;
+  dateOfBirth?: string;
+  lastLogin?: string;
+  failedLoginAttempts?: number;
+  isLockedOut?: boolean;
+  lockoutEnd?: string;
+  securityStamp?: string;
+  concurrencyStamp?: string;
+  phoneNumber?: string;
+  phoneNumberConfirmed?: boolean;
+  emailConfirmed?: boolean;
+  remark?: string;
+}

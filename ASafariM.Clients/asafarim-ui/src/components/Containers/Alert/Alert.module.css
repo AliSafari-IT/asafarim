@@ -1,0 +1,120 @@
+.alert {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 16px;
+  border-radius: 8px;
+  margin: 8px 0;
+  animation: slideIn 0.3s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.content {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex: 1;
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+}
+
+.message {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.closeButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.closeButton:hover {
+  opacity: 1;
+}
+
+/* Variant Styles */
+.info {
+  background-color: #e8f4fd;
+  border: 1px solid #b3e0ff;
+  color: #0066cc;
+}
+
+.info .iconWrapper {
+  background-color: #0066cc;
+  color: white;
+}
+
+.success {
+  background-color: #e6f7ed;
+  border: 1px solid #b3e6c9;
+  color: #00994d;
+}
+
+.success .iconWrapper {
+  background-color: #00994d;
+  color: white;
+}
+
+.warning {
+  background-color: #fff8e6;
+  border: 1px solid #ffe0b3;
+  color: #cc7700;
+}
+
+.warning .iconWrapper {
+  background-color: #cc7700;
+  color: white;
+}
+
+.danger {
+  background-color: #ffebeb;
+  border: 1px solid #ffcccc;
+  color: #cc0000;
+}
+
+.danger .iconWrapper {
+  background-color: #cc0000;
+  color: white;
+}
+
+.error {
+  background-color: #ffe6e6;
+  border: 1px solid #ffb3b3;
+  color: #990000;
+}
+
+.error .iconWrapper {
+  background-color: #990000;
+  color: white;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

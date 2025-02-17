@@ -100,7 +100,7 @@ Scaffolding/
 *.log
 *.gz
 usersecrets/secrets.json
-
+backend/
 backend/*.dll
 backend/*.pdb
 backend/ASafariM.Api.dll

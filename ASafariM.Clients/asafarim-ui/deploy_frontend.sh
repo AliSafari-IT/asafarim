@@ -11,7 +11,7 @@ cd "$FRONTEND_DIR" || { echo "❌ Error: Frontend directory not found!"; exit 1;
 
 # Step 2: Install dependencies
 echo "📦 Installing dependencies..."
-yarn cache clean && rm -rf node_modules .yarn/cache && yarn install || { echo "❌ Error: Failed to install dependencies!"; exit 1; }
+yarn cache clean && rm -rf node_modules && rm -rf .yarn/cache && yarn install || { echo "❌ Error: Failed to install dependencies!"; exit 1; }
 
 # Step 3: Build the frontend
 echo "⚙️ Building frontend..."

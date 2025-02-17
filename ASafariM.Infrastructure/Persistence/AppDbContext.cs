@@ -562,7 +562,7 @@ public class AppDbContext : DbContext
                         UserName = username,
                         NormalizedUserName = username.ToUpperInvariant(),
                         PasswordHash = passwordHash,
-                        LastLogin = DateTime.UtcNow,
+                        LastLogin = new DateTime(2025, 2, 17, 10, 0, 0),
                         PhoneNumber = phoneNr,
                         PhoneNumberConfirmed = true,
                         SecurityStamp = email,
@@ -570,9 +570,9 @@ public class AppDbContext : DbContext
                         IsActive = true,
                         ProfilePicture = "https://asafarim.com/logoT.svg",
                         CreatedBy = userId,
-                        CreatedAt = DateTime.UtcNow,
+                        CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0),
                         UpdatedBy = userId,
-                        UpdatedAt = DateTime.UtcNow,
+                        UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0),
                         IsAdmin = false,
                         IsSuperAdmin = false,
                         IsPending = false,
@@ -591,7 +591,6 @@ public class AppDbContext : DbContext
                     }
                 );
         }
-
         modelBuilder
             .Entity<Role>()
             .HasData(

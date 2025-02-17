@@ -20,6 +20,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Serilog;
 using Serilog.Events;
 
@@ -52,14 +53,28 @@ try
 
     var builder = WebApplication.CreateBuilder(args);
 
+    // Add Serilog
+    builder.Host.UseSerilog(
+        (context, services, configuration) =>
+            configuration
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .MinimumLevel.Override("System", LogEventLevel.Warning)
+                .MinimumLevel.Information()
+                .WriteTo.Console()
+                .WriteTo.File(
+                    logFilePath,
+                    rollingInterval: RollingInterval.Hour,
+                    retainedFileCountLimit: 24,
+                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}"
+                )
+                .Enrich.FromLogContext()
+    );
+
+    // Register ILogger
+    builder.Services.AddSingleton(Log.Logger);
+
     // Add basic services
-    builder.Host.UseSerilog();
     builder.Services.AddHealthChecks();
-    builder.Services.AddLogging(loggingBuilder =>
-    {
-        loggingBuilder.ClearProviders();
-        loggingBuilder.AddSerilog(dispose: true);
-    });
 
     // Configure DbContext with validation
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -70,14 +85,21 @@ try
 
     builder.Services.AddDbContext<AppDbContext>(options =>
     {
-        options.UseMySql(
-            connectionString,
-            new MySqlServerVersion(new Version(8, 0, 31)),
-            mySqlOptions =>
-            {
-                mySqlOptions.EnableRetryOnFailure(5);
-            }
-        );
+        options
+            .UseMySql(
+                connectionString,
+                new MySqlServerVersion(new Version(8, 0, 31)),
+                mySqlOptions =>
+                {
+                    mySqlOptions.EnableRetryOnFailure(
+                        maxRetryCount: 5,
+                        maxRetryDelay: TimeSpan.FromSeconds(30),
+                        errorNumbersToAdd: null
+                    );
+                }
+            )
+            .EnableSensitiveDataLogging()
+            .EnableDetailedErrors();
     });
 
     // Register application services

@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using System.Reflection;
 using ASafariM.Api;
 using ASafariM.Application;
 using ASafariM.Application.Mappings;
@@ -11,79 +13,96 @@ using ASafariM.Infrastructure.Repositories;
 using ASafariM.Infrastructure.Services;
 using ASafariM.Presentation;
 using AutoMapper;
-using Google.Protobuf.WellKnownTypes;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using Serilog.Events;
 
+// Configure logging first
 var logDirectory =
-    (Environment.GetEnvironmentVariable("ASAFARIM_ENV") == "production")
+    Environment.GetEnvironmentVariable("ASAFARIM_ENV") == "production"
         ? "/var/www/asafarim/logs"
         : "E:/ASafariM/Logs";
 
-if (!Directory.Exists(logDirectory))
-{
-    Directory.CreateDirectory(logDirectory);
-}
+Directory.CreateDirectory(logDirectory);
+var logFilePath = Path.Combine(logDirectory, "api.log");
 
-Serilog.Debugging.SelfLog.Enable(Console.Error);
-
-var logFilePath = Path.Combine(logDirectory, $"api.log");
 Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .MinimumLevel.Override("System", LogEventLevel.Warning)
     .MinimumLevel.Information()
     .WriteTo.Console()
     .WriteTo.File(
         logFilePath,
         rollingInterval: RollingInterval.Hour,
-        retainedFileCountLimit: 2,
-        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level}] {Message}{NewLine}{Exception}"
+        retainedFileCountLimit: 24,
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}"
     )
+    .Enrich.FromLogContext()
     .CreateLogger();
-Log.Information("Serilog configured successfully.");
-Log.Information("Starting up the application...");
-
-// ...existing code...
 
 try
 {
+    Log.Information("Starting up ASafariM API");
+
     var builder = WebApplication.CreateBuilder(args);
 
-    // Add Serilog to the container
+    // Add basic services
     builder.Host.UseSerilog();
-    builder.Services.AddSingleton(Log.Logger);
+    builder.Services.AddHealthChecks();
+    builder.Services.AddLogging(loggingBuilder =>
+    {
+        loggingBuilder.ClearProviders();
+        loggingBuilder.AddSerilog(dispose: true);
+    });
 
-    // Configure DbContext
+    // Configure DbContext with validation
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    if (string.IsNullOrEmpty(connectionString))
+    {
+        throw new InvalidOperationException("Database connection string is missing");
+    }
+
     builder.Services.AddDbContext<AppDbContext>(options =>
+    {
         options.UseMySql(
             connectionString,
-            new MySqlServerVersion(new Version(8, 0, 31)), // Adjust version as needed
+            new MySqlServerVersion(new Version(8, 0, 31)),
             mySqlOptions =>
-                mySqlOptions.EnableRetryOnFailure(
-                    maxRetryCount: 5,
-                    maxRetryDelay: TimeSpan.FromSeconds(10),
-                    errorNumbersToAdd: null
-                )
-        )
-    );
+            {
+                mySqlOptions
+                    .EnableRetryOnFailure(5)
+                    .EnableDetailedErrors()
+                    .EnableSensitiveDataLogging();
+            }
+        );
+    });
 
-    Log.Information("DbContext configured successfully.");
+    // Register application services
+    try
+    {
+        ServiceRegistration.RegisterServices(builder);
+        Log.Information("Services registered successfully");
+    }
+    catch (Exception ex)
+    {
+        Log.Error(ex, "Service registration failed");
+        throw;
+    }
 
-    // Call the RegisterServices method
-    ServiceRegistration.RegisterServices(builder);
-
-    // Add CORS
+    // Configure CORS
     builder.Services.AddCors(options =>
     {
         options.AddPolicy(
             "AllowFrontend",
-            builder =>
+            policy =>
             {
-                builder
+                policy
                     .WithOrigins(
                         "http://localhost:3000",
                         "https://asafarim.com",
@@ -96,12 +115,10 @@ try
         );
     });
 
-    Log.Information("CORS policy configured.");
-
-    // Register AutoMapper with all profiles
-    builder.Services.AddAutoMapper(cfg =>
+    // Configure AutoMapper
+    builder.Services.AddAutoMapper(config =>
     {
-        cfg.AddMaps(
+        config.AddMaps(
             new[]
             {
                 typeof(UserMappingProfile).Assembly,
@@ -112,85 +129,49 @@ try
         );
     });
 
-    Log.Information("AutoMapper profiles registered.");
-
-    // Register MVC with controllers from all assemblies
+    // Add API Controllers
     builder
-        .Services.AddMvc()
+        .Services.AddControllers()
         .AddApplicationPart(
             typeof(ASafariM.Presentation.Controllers.MarkdownFilesController).Assembly
-        )
-        .AddControllersAsServices();
+        );
 
-    // Register controllers and API explorer
-    builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
 
-    // Comment out JWT authentication configuration for now
-    /*
-    var jwtSettings = builder.Configuration.GetSection("Jwt");
-    builder
-        .Services.AddAuthentication(options =>
-        {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
-        .AddJwtBearer(options =>
-        {
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = jwtSettings["Issuer"],
-                ValidAudience = jwtSettings["Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(
-                    System.Text.Encoding.UTF8.GetBytes(jwtSettings["Key"])
-                ),
-                ClockSkew = TimeSpan.Zero,
-            };
-        });
-
-    Log.Information("JWT authentication configured.");
-    */
-
+    // Configure Swagger
     builder.Services.AddSwaggerGen(c =>
     {
-        c.SwaggerDoc("v1", new OpenApiInfo { Title = "ASafariM API", Version = "v1" });
-        c.AddSecurityDefinition(
-            "Bearer",
-            new OpenApiSecurityScheme
+        c.SwaggerDoc(
+            "v1",
+            new OpenApiInfo
             {
-                Description = "JWT Authorization header using the Bearer scheme.",
-                Name = "Authorization",
-                In = ParameterLocation.Header,
-                Type = SecuritySchemeType.ApiKey,
-                Scheme = "Bearer",
-            }
-        );
-        c.AddSecurityRequirement(
-            new OpenApiSecurityRequirement
-            {
-                {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer",
-                        },
-                    },
-                    Array.Empty<string>()
-                },
+                Title = "ASafariM API",
+                Version = "v1",
+                Description = "API for ASafariM platform",
             }
         );
     });
 
+    // Build the application
     var app = builder.Build();
-    Log.Information("Application started.");
 
-    // Configure the HTTP request pipeline.
+    // Validate AutoMapper configuration
+    using (var scope = app.Services.CreateScope())
+    {
+        try
+        {
+            var mapper = scope.ServiceProvider.GetRequiredService<IMapper>();
+            mapper.ConfigurationProvider.AssertConfigurationIsValid();
+            Log.Information("AutoMapper configuration validated successfully");
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "AutoMapper configuration validation failed");
+            throw;
+        }
+    }
+
+    // Configure the HTTP request pipeline
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
@@ -201,20 +182,35 @@ try
         });
     }
 
+    // Global error handling
+    app.UseExceptionHandler(errorApp =>
+    {
+        errorApp.Run(async context =>
+        {
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            context.Response.ContentType = "application/json";
+
+            var error = context.Features.Get<IExceptionHandlerFeature>();
+            if (error != null)
+            {
+                Log.Error(error.Error, "Unhandled exception");
+                await context.Response.WriteAsJsonAsync(
+                    new
+                    {
+                        Error = "An error occurred processing your request",
+                        Detail = app.Environment.IsDevelopment() ? error.Error.Message : null,
+                    }
+                );
+            }
+        });
+    });
+
     app.UseHttpsRedirection();
     app.UseRouting();
-
-    // Use CORS before auth
     app.UseCors("AllowFrontend");
-
-    // Add static files middleware
     app.UseStaticFiles();
 
-    // Comment out authentication and authorization for now
-    // app.UseAuthentication();
-    // app.UseAuthorization();
-
-    // Ensure the inline middleware is correctly implemented
+    // Request logging middleware
     app.Use(
         async (context, next) =>
         {
@@ -224,25 +220,30 @@ try
                 context.Request.Path,
                 context.Request.ContentType
             );
-            await next.Invoke();
+            await next();
         }
     );
 
-    // Map controllers after all middleware
+    // Health check endpoint
+    app.MapHealthChecks("/health");
+
+    // Controller endpoints
     app.MapControllers();
 
-    app.Run();
+    // Start the application
+    await app.RunAsync();
 }
 catch (Exception ex)
 {
-    Log.Fatal(ex, "Application startup failed: {ErrorMessage}", ex.Message);
+    Log.Fatal(ex, "Application terminated unexpectedly");
     if (ex.InnerException != null)
     {
-        Log.Fatal(ex.InnerException, "Inner exception: {ErrorMessage}", ex.InnerException.Message);
+        Log.Fatal(ex.InnerException, "Inner exception details");
     }
     throw;
 }
 finally
 {
+    Log.Information("Shutting down application");
     Log.CloseAndFlush();
 }

@@ -46,6 +46,8 @@ Log.Logger = new LoggerConfiguration()
 Log.Information("Serilog configured successfully.");
 Log.Information("Starting up the application...");
 
+// ...existing code...
+
 try
 {
     var builder = WebApplication.CreateBuilder(args);
@@ -124,6 +126,8 @@ try
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
 
+    // Comment out JWT authentication configuration for now
+    /*
     var jwtSettings = builder.Configuration.GetSection("Jwt");
     builder
         .Services.AddAuthentication(options =>
@@ -144,37 +148,43 @@ try
                 IssuerSigningKey = new SymmetricSecurityKey(
                     System.Text.Encoding.UTF8.GetBytes(jwtSettings["Key"])
                 ),
-                ClockSkew = TimeSpan.Zero
+                ClockSkew = TimeSpan.Zero,
             };
         });
 
     Log.Information("JWT authentication configured.");
+    */
 
     builder.Services.AddSwaggerGen(c =>
     {
         c.SwaggerDoc("v1", new OpenApiInfo { Title = "ASafariM API", Version = "v1" });
-        c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-        {
-            Description = "JWT Authorization header using the Bearer scheme.",
-            Name = "Authorization",
-            In = ParameterLocation.Header,
-            Type = SecuritySchemeType.ApiKey,
-            Scheme = "Bearer"
-        });
-        c.AddSecurityRequirement(new OpenApiSecurityRequirement
-        {
+        c.AddSecurityDefinition(
+            "Bearer",
+            new OpenApiSecurityScheme
             {
-                new OpenApiSecurityScheme
-                {
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "Bearer"
-                    }
-                },
-                Array.Empty<string>()
+                Description = "JWT Authorization header using the Bearer scheme.",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer",
             }
-        });
+        );
+        c.AddSecurityRequirement(
+            new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer",
+                        },
+                    },
+                    Array.Empty<string>()
+                },
+            }
+        );
     });
 
     var app = builder.Build();
@@ -200,8 +210,9 @@ try
     // Add static files middleware
     app.UseStaticFiles();
 
-    app.UseAuthentication();
-    app.UseAuthorization();
+    // Comment out authentication and authorization for now
+    // app.UseAuthentication();
+    // app.UseAuthorization();
 
     // Ensure the inline middleware is correctly implemented
     app.Use(

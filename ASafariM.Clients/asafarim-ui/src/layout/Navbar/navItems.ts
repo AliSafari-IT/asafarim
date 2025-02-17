@@ -1,1 +1,0 @@
-export * as navItems from './navItemsList';

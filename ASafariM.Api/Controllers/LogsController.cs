@@ -23,7 +23,7 @@ public class LogsController : ControllerBase
             string logFilePath = Path.Combine(
                 AppDomain.CurrentDomain.BaseDirectory,
                 "logs",
-                "log-api.log"
+                "api.log"
             );
 
             if (!System.IO.File.Exists(logFilePath))

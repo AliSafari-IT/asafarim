@@ -562,7 +562,7 @@ public class AppDbContext : DbContext
                         UserName = username,
                         NormalizedUserName = username.ToUpperInvariant(),
                         PasswordHash = passwordHash,
-                        LastLogin = new DateTime(2025, 2, 17, 10, 0, 0),
+                        LastLogin = new DateTime(2025, 2, 17, 10, 0, 0), // Use a static date
                         PhoneNumber = phoneNr,
                         PhoneNumberConfirmed = true,
                         SecurityStamp = email,
@@ -570,9 +570,9 @@ public class AppDbContext : DbContext
                         IsActive = true,
                         ProfilePicture = "https://asafarim.com/logoT.svg",
                         CreatedBy = userId,
-                        CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0),
+                        CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0), // Use a static date
                         UpdatedBy = userId,
-                        UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0),
+                        UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0), // Use a static date
                         IsAdmin = false,
                         IsSuperAdmin = false,
                         IsPending = false,
@@ -584,7 +584,7 @@ public class AppDbContext : DbContext
                         IsEditor = false,
                         IsLockedOut = false,
                         IsVerified = true,
-                        DateOfBirth = new DateTime(1975 + (i / 12), 1 + (i % 12), 1 + (i % 28)),
+                        DateOfBirth = new DateTime(1975 + (i / 12), 1 + (i % 12), 1 + (i % 28)), // Use a static date
                         IsDeleted = false,
                         DeletedBy = null,
                         DeletedAt = null,

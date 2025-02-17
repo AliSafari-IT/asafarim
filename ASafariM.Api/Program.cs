@@ -75,10 +75,7 @@ try
             new MySqlServerVersion(new Version(8, 0, 31)),
             mySqlOptions =>
             {
-                mySqlOptions
-                    .EnableRetryOnFailure(5)
-                    .EnableDetailedErrors()
-                    .EnableSensitiveDataLogging();
+                mySqlOptions.EnableRetryOnFailure(5);
             }
         );
     });

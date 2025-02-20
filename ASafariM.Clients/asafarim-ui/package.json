@@ -14,6 +14,8 @@
     "serve": "cross-env NODE_ENV=development concurrently \"postcss ./src/index.css -o public/build/tailwind.css --watch\"  \"live-server ./\"",
     "dev": "concurrently \"yarn workspace asafarim-api start\" \"yarn workspace asafarim-ui start\"",
     "rebuild": "yarn install && vite build",
+    "clean": "node -e \"const { rmSync } = require('fs'); const paths = ['./node_modules', './package-lock.json']; paths.forEach(p => { try { rmSync(p, { recursive: true, force: true }); console.log('Removed:', p); } catch (err) { if (err.code !== 'ENOENT') console.error('Error removing', p, err); } });\"",
+    "reinstall": "yarn clean && yarn install",
     "start": "vite",
     "build": "yarn && tsc -b && vite build",
     "lint": "eslint .",

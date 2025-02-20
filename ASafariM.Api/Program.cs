@@ -102,6 +102,20 @@ try
             .EnableDetailedErrors();
     });
 
+    // Configure AutoMapper
+    var mapperConfig = new MapperConfiguration(cfg =>
+    {
+        cfg.AddMaps(new[] {
+            typeof(UserMappingProfile).Assembly,
+            typeof(AutoMapperProfile).Assembly,
+            typeof(BlogMappingProfile).Assembly,
+            typeof(PreferenceMappingProfile).Assembly
+        });
+    });
+
+    IMapper mapper = mapperConfig.CreateMapper();
+    builder.Services.AddSingleton(mapper);
+
     // Register application services
     try
     {
@@ -134,20 +148,6 @@ try
         );
     });
 
-    // Configure AutoMapper
-    builder.Services.AddAutoMapper(config =>
-    {
-        config.AddMaps(
-            new[]
-            {
-                typeof(UserMappingProfile).Assembly,
-                typeof(AutoMapperProfile).Assembly,
-                typeof(BlogMappingProfile).Assembly,
-                typeof(PreferenceMappingProfile).Assembly,
-            }
-        );
-    });
-
     // Add API Controllers
     builder
         .Services.AddControllers()
@@ -173,22 +173,6 @@ try
 
     // Build the application
     var app = builder.Build();
-
-    // Validate AutoMapper configuration
-    using (var scope = app.Services.CreateScope())
-    {
-        try
-        {
-            var mapper = scope.ServiceProvider.GetRequiredService<IMapper>();
-            mapper.ConfigurationProvider.AssertConfigurationIsValid();
-            Log.Information("AutoMapper configuration validated successfully");
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex, "AutoMapper configuration validation failed");
-            throw;
-        }
-    }
 
     // Configure the HTTP request pipeline
     if (app.Environment.IsDevelopment())

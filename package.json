@@ -4,7 +4,7 @@
   "repository": "https://github.com/AliSafari-IT/ASafariM.git",
   "version": "0.1.0",
   "private": true,
-  "author": "Ali Safari",
+  "author": "Ali Safari <asafarim@gmail.com>",
   "scripts": {
     "co": "git add . && python .github/scripts/generate_commit_message.py && git push",
     "clean": "dotnet clean ./ASafariM.Api/ASafariM.Api.csproj && dotnet clean ./ASafariM.Application/ASafariM.Application.csproj && dotnet clean ./ASafariM.Infrastructure/ASafariM.Infrastructure.csproj && dotnet clean ./ASafariM.Presentation/ASafariM.Presentation.csproj && dotnet clean ./ASafariM.Domain/ASafariM.Domain.csproj",

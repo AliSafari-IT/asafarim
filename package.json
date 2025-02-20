@@ -2,7 +2,11 @@
   "name": "asafarim",
   "packageManager": "yarn@4.6.0",
   "repository": "https://github.com/AliSafari-IT/ASafariM.git",
+  "version": "0.1.0",
+  "private": true,
+  "author": "Ali Safari",
   "scripts": {
+    "commit": "git add . && python .github/scripts/generate_commit_message.py",
     "clean": "dotnet clean ./ASafariM.Api/ASafariM.Api.csproj && dotnet clean ./ASafariM.Application/ASafariM.Application.csproj && dotnet clean ./ASafariM.Infrastructure/ASafariM.Infrastructure.csproj && dotnet clean ./ASafariM.Presentation/ASafariM.Presentation.csproj && dotnet clean ./ASafariM.Domain/ASafariM.Domain.csproj",
     "restore": "dotnet restore ./ASafariM.Api/ASafariM.Api.csproj && dotnet restore ./ASafariM.Application/ASafariM.Application.csproj && dotnet restore ./ASafariM.Infrastructure/ASafariM.Infrastructure.csproj && dotnet restore ./ASafariM.Presentation/ASafariM.Presentation.csproj && dotnet restore ./ASafariM.Domain/ASafariM.Domain.csproj",
     "build": "dotnet build ./ASafariM.Api/ASafariM.Api.csproj && dotnet build ./ASafariM.Application/ASafariM.Application.csproj && dotnet build ./ASafariM.Infrastructure/ASafariM.Infrastructure.csproj && dotnet build ./ASafariM.Presentation/ASafariM.Presentation.csproj && dotnet build ./ASafariM.Domain/ASafariM.Domain.csproj",

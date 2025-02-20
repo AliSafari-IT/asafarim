@@ -12,6 +12,7 @@ import UnderConstruction from '../UnderConstruction';
 export const Home = () => {
   const user = useAuth(); 
   const location = useLocation();
+  var isUnderConstruction = false;
 
   const [mdFile, setMdFile] = React.useState<string>('');
   useEffect(() => {
@@ -34,7 +35,7 @@ export const Home = () => {
 
   return (
     <Layout  header={<></>} pageTitle="Home">
-      <UnderConstruction />
+      {isUnderConstruction && <UnderConstruction />}
       <DisplayMd markdownContent={mdFile}   id="readMe"  />
       <StacksPage docBranch="techDocs" stackTitle="Tech Stacks"/>
       <HomePanels />

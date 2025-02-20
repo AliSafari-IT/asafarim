@@ -85,7 +85,7 @@ echo "🔄 Applying database migrations..."
 dotnet tool restore || { echo "❌ Error: Failed to restore .NET tools!"; exit 1; }
 cd "$BASE_DIR"
 # yarn migadd || { echo "❌ Error: Migration addition failed!"; exit 1; }
- dotnet ef database update || { echo "❌ Error: Database migration failed!"; exit 1; }
+ cd "$BACKEND_DIR" && dotnet ef database update --project ASafariM.Api.csproj || { echo "❌ Error: Database migration failed!"; exit 1; }
 
 # Step 6: Restart backend service
 echo "🔄 Restarting backend service..."

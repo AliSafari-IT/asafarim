@@ -3,8 +3,7 @@
   border-collapse: collapse;
 }
 
-.sitemap-page th,
-.sitemap-page td {
+.sitemap-page :is(th, td) {
   padding: 8px 12px;
   border-bottom: 1px solid #ddd;
 }

@@ -11,7 +11,7 @@
       background-color: var(--bg-secondary);
     }
 
-    .ms-label {
+    :is(.ms-label, .ms-Checkbox-text) {
       font-size: 1.0rem;
       font-weight: 400;
       color: var(--text-primary);
@@ -22,21 +22,10 @@
       &:hover {
         color: var(--primary);
       }
-      border: olivedrab;
     }
 
-    .ms-Checkbox-text {
-      font-size: 1.0rem;
-      font-weight: 400;
-      color: var(--text-primary);
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      transition: all 0.3s ease;
-      &:hover {
-        color: var(--primary);
-      }
-     
+    .ms-label {
+      border: olivedrab;
     }
   }
 }

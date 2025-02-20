@@ -105,9 +105,7 @@
   font-weight: 600;
 }
 
-.add-entity-form input,
-.add-entity-form select,
-.add-entity-form textarea {
+.add-entity-form :is(input, select, textarea) {
   width: calc(100% - 20px);
   padding: 8px;
   border: 1px solid var(--border-color);

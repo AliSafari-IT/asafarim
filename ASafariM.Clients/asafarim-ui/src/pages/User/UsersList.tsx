@@ -228,48 +228,48 @@ const UsersList: React.FC = () => {
         </div>
         {deleteDialogOpen && (
           <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
-            <div className="bg-[var(--background-base)] border border-[var(--border-default)] p-8 rounded-xl shadow-xl max-w-md w-full mx-4 transform transition-all">
+            <div className="bg-[var(--bg-primary)] border border-[var(--border-secondary)] p-8 rounded-xl shadow-xl max-w-md w-full mx-4 transform transition-all">
               <div className="text-center mb-6">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[var(--background-danger-subtle)] flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-[var(--text-danger)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[var(--bg-danger)] flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-[var(--text-inverted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                   </svg>
                 </div>
-                <h2 className="text-2xl font-bold text-[var(--text-default)]">Delete User</h2>
-                <p className="mt-2 text-[var(--text-muted)]">Please select a deletion method:</p>
+                <h2 className="text-2xl font-bold text-[var(--text-primary)]">Delete User</h2>
+                <p className="mt-2 text-[var(--text-secondary)]">Please select a deletion method:</p>
               </div>
 
               <div className="space-y-4">
                 <button
-                  className="w-full group p-4 rounded-xl border-2 border-[var(--border-default)] hover:border-[var(--border-warning)] hover:bg-[var(--background-warning-subtle)] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--border-warning)] focus:ring-opacity-50"
+                  className="w-full group p-4 rounded-xl border-2 border-[var(--border-secondary)] hover:border-[var(--warning)] hover:bg-[var(--bg-warning)] hover:bg-opacity-10 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--warning)] focus:ring-opacity-50"
                   onClick={handleSoftDelete}
                 >
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="w-10 h-10 rounded-full bg-[var(--background-warning-subtle)] flex items-center justify-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[var(--text-warning)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div className="w-10 h-10 rounded-full bg-[var(--bg-warning)] flex items-center justify-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[var(--text-inverted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
                       </svg>
                     </div>
-                    <h3 className="font-semibold text-lg text-[var(--text-default)]">Soft Delete</h3>
+                    <h3 className="font-semibold text-lg text-[var(--text-primary)]">Soft Delete</h3>
                   </div>
-                  <p className="text-sm text-[var(--text-muted)] pl-[52px]">
+                  <p className="text-sm text-[var(--text-secondary)] pl-[52px]">
                     Marks the user as deleted while preserving their data. Can be restored later if needed.
                   </p>
                 </button>
 
                 <button
-                  className="w-full group p-4 rounded-xl border-2 border-[var(--border-default)] hover:border-[var(--border-danger)] hover:bg-[var(--background-danger-subtle)] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--border-danger)] focus:ring-opacity-50"
+                  className="w-full group p-4 rounded-xl border-2 border-[var(--border-secondary)] hover:border-[var(--error)] hover:bg-[var(--bg-danger)] hover:bg-opacity-10 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--error)] focus:ring-opacity-50"
                   onClick={handlePermanentDelete}
                 >
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="w-10 h-10 rounded-full bg-[var(--background-danger-subtle)] flex items-center justify-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[var(--text-danger)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div className="w-10 h-10 rounded-full bg-[var(--bg-danger)] flex items-center justify-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[var(--text-inverted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                       </svg>
                     </div>
-                    <h3 className="font-semibold text-lg text-[var(--text-default)]">Permanent Delete</h3>
+                    <h3 className="font-semibold text-lg text-[var(--text-primary)]">Permanent Delete</h3>
                   </div>
-                  <p className="text-sm text-[var(--text-muted)] pl-[52px]">
+                  <p className="text-sm text-[var(--text-secondary)] pl-[52px]">
                     Permanently removes all user data. This action cannot be undone.
                   </p>
                 </button>
@@ -277,7 +277,7 @@ const UsersList: React.FC = () => {
                 <div className="pt-4 flex justify-end">
                   <button
                     onClick={handleCancelDelete}
-                    className="px-6 py-2 border-2 border-[var(--border-default)] rounded-lg hover:bg-[var(--background-subtle)] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--border-default)] focus:ring-opacity-50"
+                    className="px-6 py-2 border-2 border-[var(--border-secondary)] rounded-lg text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--border-secondary)] focus:ring-opacity-50"
                   >
                     Cancel
                   </button>

@@ -1,7 +1,7 @@
 {
   "name": "asafarim-api",
   "packageManager": "yarn@4.6.0",
-  "repository": "https://asafarim-website@dev.azure.com/asafarim-website/asafarim/_git/asafarim",
+  "repository": "https://github.com/AliSafari-IT/ASafariM.git",
   "version": "0.1.0",
   "private": true,
   "scripts": {

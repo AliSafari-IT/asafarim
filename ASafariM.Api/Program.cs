@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
@@ -28,7 +29,7 @@ using Serilog.Events;
 var logDirectory =
     Environment.GetEnvironmentVariable("ASAFARIM_ENV") == "production"
         ? "/var/www/asafarim/logs"
-        : "E:/ASafariM/Logs";
+        : "D:/repos/ASafariM/Logs";
 
 Directory.CreateDirectory(logDirectory);
 var logFilePath = Path.Combine(logDirectory, "api.log");
@@ -129,26 +130,25 @@ try
     }
 
     // Configure CORS
+    Log.Information("Configuring CORS...");
     builder.Services.AddCors(options =>
     {
-        options.AddPolicy(
-            "AllowFrontend",
-            policy =>
-            {
-                policy
-                    .WithOrigins(
-                        "http://localhost:3000",
-                        "https://asafarim.com",
-                        "https://www.asafarim.com"
-                    )
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials();
-            }
-        );
+        options.AddPolicy(name: "AllowFrontend", builder =>
+        {
+            builder
+                .WithOrigins(
+                    "http://localhost:3000",
+                    "https://asafarim.com",
+                    "https://www.asafarim.com"
+                )
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials();
+        });
     });
 
     // Add API Controllers
+    Log.Information("Configuring API Controllers...");
     builder
         .Services.AddControllers()
         .AddApplicationPart(
@@ -158,6 +158,7 @@ try
     builder.Services.AddEndpointsApiExplorer();
 
     // Configure Swagger
+    Log.Information("Configuring Swagger...");
     builder.Services.AddSwaggerGen(c =>
     {
         c.SwaggerDoc(
@@ -172,9 +173,11 @@ try
     });
 
     // Build the application
+    Log.Information("Building the application...");
     var app = builder.Build();
 
     // Configure the HTTP request pipeline
+    Log.Information("Configuring the HTTP request pipeline...");
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
@@ -186,6 +189,7 @@ try
     }
 
     // Global error handling
+    Log.Information("Configuring global error handling...");
     app.UseExceptionHandler(errorApp =>
     {
         errorApp.Run(async context =>
@@ -208,12 +212,33 @@ try
         });
     });
 
+    // HTTPS redirection
+    Log.Information("Configuring HTTPS redirection...");
     app.UseHttpsRedirection();
+
+    // Routing
+    Log.Information("Configuring routing...");
     app.UseRouting();
+
+    // CORS - Must be after UseRouting and before UseAuthentication
+    Log.Information("Configuring CORS...");
     app.UseCors("AllowFrontend");
+
+    // Authentication & Authorization
+    Log.Information("Configuring authentication...");
+    app.UseAuthentication();
+    app.UseAuthorization();
+
+    // Map Controllers
+    Log.Information("Mapping controller endpoints...");
+    app.MapControllers();
+
+    // Static files
+    Log.Information("Configuring static files...");
     app.UseStaticFiles();
 
     // Request logging middleware
+    Log.Information("Configuring request logging middleware...");
     app.Use(
         async (context, next) =>
         {
@@ -228,13 +253,20 @@ try
     );
 
     // Health check endpoint
+    Log.Information("Configuring health check endpoint...");
     app.MapHealthChecks("/health");
 
-    // Controller endpoints
-    app.MapControllers();
-
     // Start the application
-    await app.RunAsync();
+    try
+    {
+    Log.Information("Starting the application...");
+        await app.RunAsync();
+        Log.Information("Application stopped gracefully.");
+    }
+    catch (Exception ex)
+    {
+        Log.Fatal(ex, "Application crashed after startup.");
+    }
 }
 catch (Exception ex)
 {

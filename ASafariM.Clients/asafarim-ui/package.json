@@ -22,7 +22,7 @@
     "build": "cross-env NODE_ENV=production yarn build:prod",
     "lint": "eslint .",
     "preview": "vite preview",
-    "stop": "npx kill-port 5173",
+    "stop": "npx kill-port 3000",
     "rs": "yarn stop && yarn dev",
     "test": "vitest",
     "test:run": "vitest run"

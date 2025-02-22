@@ -1,3 +1,4 @@
+import { updateUserProfile } from '@/api/authapi';
 import { updateUser } from '@/api/userService';
 import { IUserModelUpdate } from '@/interfaces';
 import { IUserInfo } from '@/interfaces/IUserInfo';
@@ -18,16 +19,22 @@ const handleUpdateProfile = async (
     }
 
     try {
-        const updatedUser = { ...authenticatedUser, email, firstName, lastName } as IUserModelUpdate;
-        console.debug("updatedUser:", updatedUser);
-        await updateUser(updatedUser);
+        const updatedUser = {
+            id: authenticatedUser.id,
+            firstName,
+            lastName,
+            // Add other required fields
+        } as IUserModelUpdate;
+        
+        await updateUserProfile(updatedUser);  // Use new function
         setMessage({ type: 'success', text: 'Profile updated successfully!' });
 
-        await delay(2000);
-        setMessage({ type: 'warning', text: 'We will now re-login to let the updated details take effect.' });
-
-        await delay(2000);
-        localStorage.removeItem('auth');
+        // Force a refresh of the user data
+        const auth = JSON.parse(localStorage.getItem('auth') || '{}');
+        auth.user = { ...auth.user, firstName, lastName };
+        localStorage.setItem('auth', JSON.stringify(auth));
+        
+        // Trigger auth state change to refresh the UI
         window.dispatchEvent(new Event('authStateChange'));
     } catch (err) {
         console.error('Error updating profile:', err);

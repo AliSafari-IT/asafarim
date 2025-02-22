@@ -100,7 +100,7 @@
         <mxCell id="VaOV-I-g1Bq7-4re6kjI-50" value="+ DeleteProject()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="VaOV-I-g1Bq7-4re6kjI-46" vertex="1">
           <mxGeometry y="104" width="178" height="26" as="geometry" />
         </mxCell>
-        <mxCell id="VaOV-I-g1Bq7-4re6kjI-56" value="ProjectsController&amp;nbsp;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="VaOV-I-g1Bq7-4re6kjI-56" value="ProjectController&amp;nbsp;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="120" y="380" width="180" height="156" as="geometry" />
         </mxCell>
         <mxCell id="VaOV-I-g1Bq7-4re6kjI-57" value="+ GetProjects()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="VaOV-I-g1Bq7-4re6kjI-56" vertex="1">

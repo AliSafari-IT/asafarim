@@ -26,7 +26,10 @@ namespace ASafariM.Presentation.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllUsers([FromQuery] bool includeSoftDeleted = false)
         {
-            Log.Information("Getting all users. Including soft deleted: {IncludeSoftDeleted}", includeSoftDeleted);
+            Log.Information(
+                "Getting all users. Including soft deleted: {IncludeSoftDeleted}",
+                includeSoftDeleted
+            );
             try
             {
                 var users = await _userService.GetAllUsersAsync(includeSoftDeleted);
@@ -88,47 +91,14 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        // In UserController.cs
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(
-            [FromRoute] Guid id,
-            [FromBody] UpdateUserCommand command
-        )
+        public async Task<IActionResult> UpdateUser(string id, [FromBody] UpdateUserCommand command)
         {
-            Log.Information("Attempting to update user with ID: {UserId}", id);
-
-            if (!ModelState.IsValid)
-            {
-                Log.Warning("Invalid model state for user update. ID: {UserId}", id);
-                return BadRequest(ModelState);
-            }
-
-            if (id != command.Id)
-            {
-                Log.Warning(
-                    "ID mismatch between route ({RouteId}) and command ({CommandId})",
-                    id,
-                    command.Id
-                );
-                return BadRequest("ID mismatch between route and command");
-            }
-
-            try
-            {
-                var userUpdated = await _userService.UpdateUserAsync(command);
-                if (userUpdated == null)
-                {
-                    Log.Warning("User not found for update. ID: {UserId}", id);
-                    return NotFound();
-                }
-
-                Log.Information("User successfully updated. ID: {UserId}", id);
-                return Ok(userUpdated);
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "Error updating user. ID: {UserId}", id);
-                return StatusCode(500, "An error occurred while updating the user");
-            }
+            // Implementation that actually saves to database
+            // Make sure to validate and persist changes
+            var result = await _userService.UpdateUserAsync(command);
+            return Ok(result);
         }
 
         [HttpPut("admin/{id}")]

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using ASafariM.Application.Interfaces;
 
 namespace ASafariM.Api
 {
@@ -27,6 +28,9 @@ namespace ASafariM.Api
             services.AddScoped<IGenericRepository<Role>, GenericRepository<Role>>();
             Log.Information("Registered IGenericRepository<Role> with GenericRepository<Role>.");
 
+            services.AddScoped<IGenericRepository<User>, GenericRepository<User>>();
+            Log.Information("Registered IGenericRepository<User> with GenericRepository<User>.");
+
             services.AddScoped<IGenericRepository<MarkdownFile>, GenericRepository<MarkdownFile>>();
             Log.Information(
                 "Registered IGenericRepository<MarkdownFile> with GenericRepository<MarkdownFile>."
@@ -44,6 +48,17 @@ namespace ASafariM.Api
 
             services.AddScoped<ISitemapItemRepository, SitemapItemRepository>();
             Log.Information("Registered ISitemapItemRepository with SitemapItemRepository.");
+
+            // Register Project-related repositories and services
+            services.AddScoped<IProjectRepository, ProjectRepository>();
+            Log.Information("Registered IProjectRepository with ProjectRepository.");
+
+            services.AddScoped<IProjectService, ProjectService>();
+            Log.Information("Registered IProjectService with ProjectService.");
+
+            // Register generic entity services
+            services.AddScoped(typeof(IEntityService<>), typeof(EntityService<>));
+            Log.Information("Registered IEntityService<T> with EntityService<T>.");
 
             // email service
             services.AddScoped<IEmailService, EmailService>();

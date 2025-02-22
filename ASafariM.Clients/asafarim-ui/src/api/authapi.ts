@@ -5,6 +5,7 @@ import { ILoginModel } from '../interfaces/ILoginModel';
 import { IRegisterModel } from '../interfaces/IRegisterModel';
 import { logger } from '@/utils/logger';
 import apiUrls from './getApiUrls';
+import { IUserModelUpdate } from '@/interfaces';
 
 interface ErrorResponse {
   message?: string;
@@ -143,23 +144,22 @@ export const getUserProfile = async (userId: string) => {
 };
 
 // Update user profile by ID
-export const updateUserProfile = async (userId: string, model: IRegisterModel) => {
-  try {
-    logger.info(`Attempting to update user profile for user ID: ${userId}`);
-    const response = await axios.put(`${baseURL}/Users/${userId}`, model);
-    logger.info(`User profile updated successfully, response received: ${JSON.stringify(response.data)}`);
-    return response.data;
-  } catch (error) {
-    const err = error as AxiosError<{ error?: string }>;
-    if (err.message) {
-      logger.error(`Error during user profile update: ${err.message}`);
-      throw err.message;
+export const updateUserProfile = async (user: IUserModelUpdate): Promise<IUserModelUpdate> => {
+    const targetUrl = `/users/${user.id}`; // Use PUT to existing user endpoint
+    
+    try {
+        // Send PUT request instead of POST
+        const response = await api.put(targetUrl, {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            // Include other required fields
+            email: user.email // Add if needed
+        });
+        
+        console.log("Profile update successful:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error updating profile:', error);
+        throw error;
     }
-    if (err.response?.data?.error) {
-      logger.error(`Error during user profile update: ${err.response.data.error}`);
-      throw err.response.data.error;
-    }
-    logger.error(`Error during user profile update: ${JSON.stringify(err.response?.data)}`);
-    throw 'Failed to update user profile.';
-  }  
 };

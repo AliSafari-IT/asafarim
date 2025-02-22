@@ -2,23 +2,28 @@ import { IUser } from "./IUser";
 
 // Create Project Interface
 export interface IProject {
-    id: string;
-    title: string;
-    description: string;
-    startDate: Date;
-    endDate?: Date;
-    isCompleted: boolean;
-    budget?: number;
-    clientId: string;
-    client?: IUser;
-    ownerId: string;
-    owner?: IUser;
-    dateCreated: Date;
-    dateModified: Date;
+  id: string;
+  name: string;
+  description: string;
+  startDate: Date;
+  endDate?: Date;
+  isCompleted: boolean;
+  budget?: number;
+  clientId: string;
+  client?: IUser;
+  ownerId: string;
+  owner?: IUser;
+  dateCreated: Date;
+  dateModified: Date;
+  Visibility?: number; // Keep as numeric value from backend
+  Status?: number;
+  // Frontend presentation
+  visibilityLabel?: string; // Add if needed
+  statusLabel?: string;
 
-    markAsCompleted: () => void;
-    updateProjectDetails: (title: string, description: string, clientId: string,ownerId: string, endDate?: Date, budget?: number) => void;
-    calculateDaysLeft: (startDate: string) => number;
+  markAsCompleted?: () => void; // Add ? to make optional
+  updateProjectDetails?: () => void;
+  calculateDaysLeft: (startDate: string) => number;
 }
 
 export default IProject;

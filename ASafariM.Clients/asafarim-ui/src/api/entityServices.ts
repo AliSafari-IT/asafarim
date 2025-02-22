@@ -9,8 +9,22 @@ interface JwtPayload {
     exp?: number;
 }
 
+const token = JSON.parse(localStorage.getItem('auth') || '{}').token;
+console.log("Retrieved token:", token);
+
 const api = axios.create({
-    baseURL: apiUrls(window.location.hostname)
+    baseURL: apiUrls(window.location.hostname),
+    headers: {
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+    }
+});
+
+api.interceptors.request.use((config) => {
+    const token = JSON.parse(localStorage.getItem('auth') || '{}').token;
+    if (token) {
+        config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
 });
 
 // Add request interceptor to include auth token
@@ -55,35 +69,29 @@ const hasAdminRole = (): boolean => {
 };
 
 const tableExistsInDb = async (tableName: string): Promise<boolean> => {
-    logger.info(`Checking table existence: ${tableName} in ${apiUrls(window.location.hostname)}`);
+    const endpoint = tableName.endsWith('s') ? tableName : `${tableName}s`;
+    logger.info(`Checking table existence: ${endpoint} in ${apiUrls(window.location.hostname)}`);
     try {
-        const response = await api.get(`${tableName}`);
+        const response = await api.get(`/${endpoint}`);
         return response.status === 200;
-    } catch {
+    } catch (error) {
+        logger.error(`Error checking table existence: ${error}`);
         return false;
     }
 }
+
 // CRUD operations for entities from the API
 const fetchEntities = async (entityTableName: string) => {
-    // Validate the entity table name
-    if (!tableExistsInDb(`${entityTableName}`)) {
-        throw new Error(`Entity does not exist: ${entityTableName}`);
-    }
+    // Convert singular to plural for API endpoints
+    const endpoint = entityTableName.endsWith('s') ? entityTableName : `${entityTableName}s`;
+    logger.info(`Fetching entities from endpoint: /${endpoint}`);
+
     try {
-        // Convert singular to plural for API endpoints
-        const endpoint = entityTableName.endsWith('s') ? entityTableName : `${entityTableName}s`;
-        logger.info(`Fetching entities from endpoint: /${endpoint}`);
-
         const response = await api.get(`/${endpoint}`);
-        logger.info(`Response from ${endpoint}: ${JSON.stringify(response.data)}`);
-
-        return {
-            success: true,
-            data: response.data
-        };
+        return response.data;
     } catch (error) {
-        logger.error(`Error fetching ${entityTableName}: ${JSON.stringify(error)}`);
-        throw error;
+        logger.error(`Error fetching entities: ${error}`);
+        throw new Error(`Failed to fetch entities from ${entityTableName}`);
     }
 };
 
@@ -118,31 +126,34 @@ const fetchEntityById = async (entityTableName: string, id: string): Promise<unk
         });
 }
 
+// In your API service (entityServices.ts)
+const fetchProject = async (id: string) => {
+    const response = await api.get(`/projects/${id}`);
+    return {
+        ...response.data,
+        // Map backend properties to frontend interface
+        name: response.data.Name,
+        description: response.data.Description,
+        startDate: new Date(response.data.StartDate),
+        endDate: response.data.EndDate ? new Date(response.data.EndDate) : null
+    };
+};
+
 const addEntity = async (entityTableName: string, data: Record<string, unknown>) => {
-    logger.info(`Initiating addEntity function for table: ${entityTableName} with data: ${JSON.stringify(data)}`);
-
-    // Validate the entity table name
-    if (!await tableExistsInDb(entityTableName)) {
-        logger.error(`Entity table does not exist: ${entityTableName}`);
-        throw new Error(`Entity does not exist: ${entityTableName}`);
-    }
-
-    const url = `/${entityTableName}`;
-    logger.info(`Constructed URL for adding entity: ${url}`);
-
-    const sanitizedData = { ...data, id: undefined };
-    logger.info(`Sanitized data for POST request: ${JSON.stringify(sanitizedData)}`);
-
     try {
-        const response = await api.post(url, sanitizedData);
-        logger.info(`Successfully added entity to ${entityTableName}: ${JSON.stringify(response.data)}`);
+        // Convert singular to plural for API endpoints
+        const endpoint = entityTableName.endsWith('s') ? entityTableName : `${entityTableName}s`;
+        logger.info(`Adding entity to endpoint: /${endpoint}`);
+        logger.info(`Data being sent: ${JSON.stringify(data)}`);
+
+        const response = await api.post(`/${endpoint}`, data);
+        logger.info(`Successfully added entity to ${endpoint}`);
         return response.data;
     } catch (error) {
-        logger.error(`Error adding entity to ${entityTableName}: ${JSON.stringify(error)}`);
-        throw new Error(`Failed to add entity: ${entityTableName}`);
+        logger.error(`Error adding entity to ${entityTableName}: ${error}`);
+        throw error;
     }
 }
-
 
 const updateEntity = async (entityTableName: string, id: string, data: Record<string, unknown>) => {
     try {
@@ -235,6 +246,7 @@ const createEntity = async (entityTableName: string, data: Record<string, unknow
 
 const dashboardServices = {
     fetchEntities, fetchEntityById, addEntity, updateEntity, deleteEntity, createEntity,
+    fetchProject
 }
 
 export default dashboardServices;

@@ -10,7 +10,6 @@ import NotFound from "./components/NotFound";
 import Home from "./pages/Home/HomePage";
 import AkkodisTargetedResume from "./pages/AboutMe/TailoredCV/Akkodis";
 import DelCard from "./components/Containers/Card/DelCard";
-import EditCard from "./components/Containers/Card/EditCard";
 import ProjectHome from "./pages/Project/Index";
 import PostDetail from "./pages/Blog/PostDetail"; 
 import LogoutPage from "./pages/Accountpage/LogoutPage";

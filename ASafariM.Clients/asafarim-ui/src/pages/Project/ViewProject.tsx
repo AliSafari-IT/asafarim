@@ -10,7 +10,7 @@ import Notification from "@/components/Notification/Notification";
 import { Stack } from "@fluentui/react/lib/Stack";
 import { Text } from "@fluentui/react";
 import useAuth from "@/hooks/useAuth";
-import { useTheme, getTheme } from "@fluentui/react";
+import { useTheme } from "@fluentui/react";
 
 const ViewProject: React.FC = () => {
   const navigate = useNavigate();

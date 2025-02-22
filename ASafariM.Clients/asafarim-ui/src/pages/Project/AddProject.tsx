@@ -4,7 +4,6 @@ import { IField } from "@/interfaces/IField";
 import Wrapper from "@/layout/Wrapper/Wrapper";
 import entityServices from "@/api/entityServices";
 import { logger } from "@/utils/logger";
-import useAuth from "@/hooks/useAuth";
 import { jwtDecode } from "jwt-decode";
 
 interface JwtPayload {
@@ -15,7 +14,6 @@ interface JwtPayload {
 }
 
 const AddProject: React.FC = () => {
-  const auth = useAuth();
 
   // Get user ID from JWT token
   const getUserId = () => {

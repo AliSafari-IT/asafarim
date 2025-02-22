@@ -1,5 +1,4 @@
 import { updateUserProfile } from '@/api/authapi';
-import { updateUser } from '@/api/userService';
 import { IUserModelUpdate } from '@/interfaces';
 import { IUserInfo } from '@/interfaces/IUserInfo';
 
@@ -44,6 +43,6 @@ const handleUpdateProfile = async (
     }
 };
 
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+//const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export default handleUpdateProfile;

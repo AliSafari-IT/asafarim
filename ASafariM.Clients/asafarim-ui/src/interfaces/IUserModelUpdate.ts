@@ -5,6 +5,7 @@ export interface IUserModelUpdate {
     email?: string;
     isAdmin?: boolean;
     userName?: string;
+    address?: string;
     bio?: string;
     remark?: string;
     profilePicture?: string;

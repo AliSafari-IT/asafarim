@@ -780,3 +780,18 @@
   color: var(--success);
   font-weight: bold;
 }
+
+.link-primary {
+  color: var(--primary);
+  text-decoration: underline;
+  transition: opacity 0.2s ease;
+}
+
+.link-primary:hover {
+  opacity: 0.8;
+}
+
+.list-inside {
+  list-style-position: inside;
+  padding-left: var(--spacing-medium);
+}

@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using ASafariM.Api;
 using ASafariM.Application;
 using ASafariM.Application.Mappings;
@@ -13,6 +15,7 @@ using ASafariM.Infrastructure.Repositories;
 using ASafariM.Infrastructure.Services;
 using ASafariM.Presentation;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
@@ -20,6 +23,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Serilog;
@@ -53,6 +57,11 @@ try
     Log.Information("Starting up ASafariM API");
 
     var builder = WebApplication.CreateBuilder(args);
+
+    // Add process cleanup hook
+    builder.Services.AddSingleton<IHostApplicationLifetime>(sp =>
+        sp.GetRequiredService<IHostApplicationLifetime>()
+    );
 
     // Add Serilog
     builder.Host.UseSerilog(
@@ -106,16 +115,29 @@ try
     // Configure AutoMapper
     var mapperConfig = new MapperConfiguration(cfg =>
     {
-        cfg.AddMaps(new[] {
-            typeof(UserMappingProfile).Assembly,
-            typeof(AutoMapperProfile).Assembly,
-            typeof(BlogMappingProfile).Assembly,
-            typeof(PreferenceMappingProfile).Assembly
-        });
+        cfg.AddMaps(
+            new[]
+            {
+                typeof(UserMappingProfile).Assembly,
+                typeof(AutoMapperProfile).Assembly,
+                typeof(BlogMappingProfile).Assembly,
+                typeof(PreferenceMappingProfile).Assembly,
+            }
+        );
     });
 
     IMapper mapper = mapperConfig.CreateMapper();
     builder.Services.AddSingleton(mapper);
+
+    // Configure JSON serialization
+    builder
+        .Services.AddControllers()
+        .AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            options.JsonSerializerOptions.DefaultIgnoreCondition =
+                JsonIgnoreCondition.WhenWritingNull;
+        });
 
     // Register application services
     try
@@ -133,18 +155,21 @@ try
     Log.Information("Configuring CORS...");
     builder.Services.AddCors(options =>
     {
-        options.AddPolicy(name: "AllowFrontend", builder =>
-        {
-            builder
-                .WithOrigins(
-                    "http://localhost:3000",
-                    "https://asafarim.com",
-                    "https://www.asafarim.com"
-                )
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials();
-        });
+        options.AddPolicy(
+            name: "AllowFrontend",
+            builder =>
+            {
+                builder
+                    .WithOrigins(
+                        "http://localhost:3000",
+                        "https://asafarim.com",
+                        "https://www.asafarim.com"
+                    )
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials();
+            }
+        );
     });
 
     // Add API Controllers
@@ -171,6 +196,28 @@ try
             }
         );
     });
+
+    // Configure JWT Bearer authentication
+    builder
+        .Services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                // Add your issuer, audience, and signing key here
+                // Issuer = "yourIssuer",
+                // Audience = "yourAudience",
+                // IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("yourSecretKey"))
+            };
+        });
 
     // Build the application
     Log.Information("Building the application...");
@@ -256,10 +303,25 @@ try
     Log.Information("Configuring health check endpoint...");
     app.MapHealthChecks("/health");
 
+    app.Lifetime.ApplicationStopped.Register(() =>
+    {
+        try
+        {
+            var assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            File.SetAttributes(
+                Path.Combine(assemblyPath!, "ASafariM.Presentation.dll"),
+                FileAttributes.Normal
+            );
+        }
+        catch
+        { /* Gracefully handle */
+        }
+    });
+
     // Start the application
     try
     {
-    Log.Information("Starting the application...");
+        Log.Information("Starting the application...");
         await app.RunAsync();
         Log.Information("Application stopped gracefully.");
     }

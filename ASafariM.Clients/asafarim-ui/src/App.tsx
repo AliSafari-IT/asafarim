@@ -50,6 +50,7 @@ import PostsList from "./pages/Blog/PostsList";
 import CreatePost from "./pages/Blog/CreatePost";
 import HealthCheck from "./pages/HealthCheck/HealthCheck";
 import ViewUser from "./pages/User/ViewUser";
+import EditProject from "./pages/Project/EditProject";
 
 // const userUrl = API_URL + '/users';
 
@@ -87,21 +88,52 @@ function App() {
               </PrivateRoute>
             </Suspense>
           } />
+                 <Route path="/projects">
+           {/* Default route for the project home page */}
+           <Route index element={<ProjectHome key={Math.random()} />} />
+         
+           {/* Route for adding a new project */}
+           <Route
+             path="add"
+             element={
+               <Suspense fallback={<div>Loading...</div>}>
+                 <AddProject />
+               </Suspense>
+             }
+           />
+         
+           {/* Route for viewing a specific project */}
+           <Route
+             path=":id"
+             element={
+               <Suspense fallback={<div>Loading...</div>}>
+                 <ViewProject />
+               </Suspense>
+             }
+           />
+         
+           {/* Route for editing a project */}
+           <Route
+             path="edit/:id"
+             element={
+               <Suspense fallback={<div>Loading...</div>}>
+                 <EditProject />
+               </Suspense>
+             }
+           />
+         
+           {/* Route for deleting a project */}
+           <Route
+             path="del/:id"
+             element={
+               <Suspense fallback={<div>Loading...</div>}>
+                 <DelCard />
+               </Suspense>
+             }
+           />
+         </Route>
 
 
-          <Route path="/projects" element={<ProjectHome key={Math.random()} />} />
-          <Route path="/projects/addnew" element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <AddProject />
-            </Suspense>}
-          />
-          <Route path="/projects/:id" element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <ViewProject project={{}} />
-            </Suspense>}
-          />
-          <Route path="/edit-project/:id" element={<EditCard />} />
-          <Route path="/del-project/:id" element={<DelCard />} />
 
           {dropdownItems.map((item) => (
             <React.Fragment key={item.name}>

@@ -5,6 +5,7 @@ import { Edit20Regular, Delete20Regular, Eye20Regular, AppsAddIn24Regular as Add
 import { useNavigate } from "react-router-dom";
 import dashboardServices from "../../api/entityServices";
 import { IProject } from "../../interfaces/IProject";
+import Notification from "@/components/Notification/Notification";
 
 const ProjectHome: React.FC = () => {
     const [loading, setLoading] = useState(false);
@@ -34,9 +35,23 @@ const ProjectHome: React.FC = () => {
         setLoading(true);
         try {
             const response = await dashboardServices.fetchEntities("project");
-            setProjects(response.data);
+            console.log("Raw API response:", response); // Log raw response
+            
+            // Handle direct array response
+            if (Array.isArray(response)) {
+                setProjects(response);
+            } 
+            // Handle wrapped response pattern
+            else if (response?.data && Array.isArray(response.data)) {
+                setProjects(response.data);
+            }
+            else {
+                console.error("Unsupported response format:", response);
+                setError("Server returned unexpected project format");
+            }
         } catch (error) {
-            setError((error as { message: string }).message);
+            console.error("API Error:", error);
+            setError("Failed to load projects. Please try again later.");
         } finally {
             setLoading(false);
         }
@@ -51,7 +66,7 @@ const ProjectHome: React.FC = () => {
     };
 
     const handleEdit = (id: string) => {
-        navigate(`/projects/${id}/edit`);
+        navigate(`/projects/edit/${id}`);
     };
 
     const handleDelete = (id: string) => {
@@ -72,14 +87,14 @@ const ProjectHome: React.FC = () => {
             {loading ? (
                 <p>Loading...</p>
             ) : error ? (
-                <p>{error}</p>
+                <Notification type="error" text={error} />
             ) : (
                 <div className="w-full p-4">
 
                     <table className="w-full shadow-md rounded-lg">
                         <thead className="">
                             <tr>
-                                <th className="p-1 text-left">Project Title</th>
+                                <th className="p-1 text-left">Project Name</th>
                                 <th className="p-1 text-left">Description</th>
                                 <th className="p-1 text-left">Start Date</th>
                                 <th className="p-1 text-center">Days Left</th>
@@ -88,7 +103,7 @@ const ProjectHome: React.FC = () => {
                         <tbody>
                             {projects.map((project: IProject) => (
                                 <tr key={project.id} className="border-b">
-                                    <td className="p-2">{project.title}</td>
+                                    <td className="p-2">{project.name}</td>
                                     <td className="p-2">{project.description}</td>
                                     <td className="p-2 text-center">{new Date(project.startDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</td>
                                     <td className={`p-2 text-center font-bold ${(calculateDaysLeft(project.startDate as unknown as string) !== undefined && calculateDaysLeft(project.startDate as unknown as string) < 0) ? "bg-danger" : (calculateDaysLeft(project.startDate as unknown as string)  && calculateDaysLeft(project.startDate as unknown as string) < 30) ? "bg-warning" : "bg-info"}`} >{calculateDaysLeft(project.startDate as unknown as string) !== undefined ? calculateDaysLeft(project.startDate as unknown as string) : '-'}</td>

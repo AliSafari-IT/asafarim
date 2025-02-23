@@ -27,10 +27,15 @@ update_repo() {
     fi
 }
 
-# Function to check for running processes using files
+# Function to check and stop running processes
 check_processes() {
     cd "$1" || { echo "❌ Error: Directory not found - $1"; exit 1; }
     echo "🔍 Checking for running processes in $1..."
+
+    # First stop the service gracefully
+    echo "Stopping asafarim-api service..."
+    sudo systemctl stop asafarim-api
+    sleep 5  # Give the service time to stop gracefully
 
     # Get the total number of files
     total_files=$(git ls-files | wc -l)
@@ -45,8 +50,14 @@ check_processes() {
             percent=$((processed_files * 100 / total_files))
 
             # Check if the file is in use
-            if [ $(lsof -t "$file" | wc -l) -gt 0 ]; then
-                kill $(lsof -t "$file")
+            if pids=$(lsof -t "$file" 2>/dev/null); then
+                echo "Found process using $file: $pids"
+                for pid in $pids; do
+                    echo "Stopping process $pid"
+                    kill -15 "$pid" 2>/dev/null || true
+                    sleep 1
+                    kill -9 "$pid" 2>/dev/null || true
+                done
             fi
 
             # Update the progress bar
@@ -60,36 +71,71 @@ check_processes() {
 
     echo "] 100% Completed"
     echo "✅ Completed checking for running processes in $1."
+    
+    # Double check no dotnet processes are running
+    if pids=$(pgrep -f "ASafariM.Api.dll"); then
+        echo "Found remaining ASafariM processes: $pids"
+        kill -9 $pids 2>/dev/null || true
+    fi
+    
+    sleep 2  # Give processes time to fully stop
 }
 
-# Step 1: Check for updates in frontend and backend repositories
-update_repo "$FRONTEND_DIR"
+# Step 1: Check for updates in backend repository
+# update_repo "$FRONTEND_DIR"  # Skip frontend for now
 update_repo "$BACKEND_DIR"
 
 # Step 2: Check for running processes using files
 # check_processes "$FRONTEND_DIR"
  check_processes "$BACKEND_DIR"
 
-# Step 3: Deploy frontend
-echo "🚀 Deploying Frontend..."
-cd "$FRONTEND_DIR"
-./deploy_frontend.sh || { echo "❌ Error: Frontend deployment failed!"; exit 1; }
+# Step 3: Deploy frontend (skipped)
+# echo "🚀 Deploying Frontend..."
+ cd "$FRONTEND_DIR"
+ ./deploy_frontend.sh || { echo "❌ Error: Frontend deployment failed!"; exit 1; }
 
 # Step 4: Deploy backend
 echo "🚀 Deploying Backend..."
 cd "$BACKEND_DIR"
+
+# Stop processes and clear any locks
 check_processes "$BACKEND_DIR"
+
+# Deploy the backend
+echo "📦 Running backend deployment..."
+./deploy_backend.sh || { echo "❌ Error: Backend deployment failed!"; exit 1; }
 
 # Step 5: Apply database migrations
 echo "🔄 Applying database migrations..."
 dotnet tool restore || { echo "❌ Error: Failed to restore .NET tools!"; exit 1; }
-cd "$BASE_DIR"
-# yarn migadd || { echo "❌ Error: Migration addition failed!"; exit 1; }
- cd "$BACKEND_DIR" && dotnet ef database update --project ASafariM.Api.csproj || { echo "❌ Error: Database migration failed!"; exit 1; }
+cd "$BACKEND_DIR"
 
-# Step 6: Restart backend service
-echo "🔄 Restarting backend service..."
-systemctl restart asafarim-api || { echo "❌ Error: Failed to restart backend service!"; exit 1; }
+# Run migrations with a timeout
+echo "Running database migrations..."
+timeout 60 dotnet ef database update --project ASafariM.Api.csproj || { 
+    echo "❌ Error: Database migration failed or timed out!"; 
+    exit 1; 
+}
+
+# Step 6: Start backend service
+echo "🔄 Starting backend service..."
+sleep 2  # Give system time to release any file handles
+sudo systemctl daemon-reload
+sudo systemctl start asafarim-api || { 
+    echo "❌ Error: Failed to start backend service!"; 
+    echo "Checking service status..."
+    sudo systemctl status asafarim-api
+    exit 1; 
+}
+
+# Step 7: Verify service is running
+echo "🔍 Verifying service status..."
+sleep 5  # Give the service time to fully start
+if ! systemctl is-active --quiet asafarim-api; then
+    echo "❌ Error: Service failed to start properly!"
+    sudo systemctl status asafarim-api
+    exit 1
+fi
 
 # **Deployment Complete**
 echo

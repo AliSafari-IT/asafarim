@@ -14,7 +14,8 @@ yarn.lock
 # Documentation here: https://yarnpkg.com/features/caching#zero-installs
 appsettings.json
 appsettings.Development.json
-backup/
+backup/**
+
 #!.yarn/cache
 .pnp.*
 

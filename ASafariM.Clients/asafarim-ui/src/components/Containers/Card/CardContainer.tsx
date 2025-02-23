@@ -55,8 +55,8 @@ const CardContainer: React.FC = () => {
     const loadTopics = async () => {
       try {
         const fetchedTopics = await dashboardServices.fetchEntities('topics');
-        console.log('Fetched topics:', fetchedTopics.data);
-        setTopics(fetchedTopics.data);
+        console.log('Fetched topics:', fetchedTopics);
+        setTopics(fetchedTopics);
       } catch (error) {
         console.error('Error fetching topics:', error);
       }
@@ -65,11 +65,11 @@ const CardContainer: React.FC = () => {
     const loadTags = async () => {
       try {
         const fetchedTags = await dashboardServices.fetchEntities('tags');
-        console.log('Fetched tags:', fetchedTags.data);
-        if (Array.isArray(fetchedTags.data)) {
-          setTags(fetchedTags.data);
+        console.log('Fetched tags:', fetchedTags);
+        if (Array.isArray(fetchedTags)) {
+          setTags(fetchedTags);
         } else {
-          console.error('Tags data is not an array:', fetchedTags.data);
+          console.error('Tags data is not an array:', fetchedTags);
         }
       } catch (error) {
         console.error('Error fetching tags:', error);
@@ -204,7 +204,7 @@ const CardContainer: React.FC = () => {
               title={topic.name}
               content={topic.technologyCategory}
               description={topic.description}
-              imgPath="react1.svg"
+              imgPath="./TopicDefaultIcon.svg"
               imgAlt={topic.name}
 
             />

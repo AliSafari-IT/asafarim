@@ -76,7 +76,7 @@ const SitemapPage = () => {
 
   const headerBlock = (
     <header className="w-full text-center bg-gray-800 text-white p-4">
-      <h1 className="text-2xl font-bold">ASafariM Sitemap!</h1>
+      <h1 className="text-2xl font-bold">ASafariM Sitemap</h1>
     </header>
   );
 

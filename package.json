@@ -33,6 +33,7 @@
     "migscript": "dotnet ef database script --project ./ASafariM.Infrastructure/ASafariM.Infrastructure.csproj --startup-project ./ASafariM.Api/ASafariM.Api.csproj --output ./migrations/migration.sql --verbose",
     "test:backend": "dotnet test D:/repos/ASafariM/ASafariM.Test/ASafariM.Test.csproj --logger \"trx;LogFileName=D:/repos/ASafariM/ASafariM.Test/TestResults/test_results.trx\"",
     "test:backend:watch": "cd D:/repos/ASafariM/ASafariM.Test && dotnet watch test --logger \"trx;LogFileName=D:/repos/ASafariM/ASafariM.Test/TestResults/test_results.trx\"",
+    "stop": "npx kill-port 3000",
     "tbw": "yarn test:backend:watch",
     "test:frontend": "vitest run",
     "test": "vitest",

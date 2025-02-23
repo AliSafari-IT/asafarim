@@ -15,11 +15,9 @@ import {
 import { Delete16Regular as IconDelete, Edit16Regular as IconEdit } from "@fluentui/react-icons/fonts";
 import { useNavigate } from "react-router-dom";
 
-const resolveAsset = (asset: string) => {
-  const ASSET_URL =
-    "";
-
-  return `${ASSET_URL}${asset}`;
+const resolveAsset = (asset?: string) => {
+  const ASSET_URL = "/";
+  return `${ASSET_URL}${asset?? "TopicDefaultIcon.svg"}`;
 };
 
 const useStyles = makeStyles({
@@ -74,7 +72,7 @@ interface DashCardProps {
   imgAlt?: string;
   content?: string;
 }
-export const DashCard: React.FC<DashCardProps> = ({ modelName = 'topics', modelId, name, title, description, imgPath = '', imgAlt = 'Image', content }) => {
+export const DashCard: React.FC<DashCardProps> = ({ modelName = 'topics', modelId, name, title, description, imgPath = 'TopicDefaultIcon.svg', imgAlt = 'Image', content }) => {
   const styles = useStyles();
   const navigate = useNavigate();
 

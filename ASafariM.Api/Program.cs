@@ -32,7 +32,7 @@ var logDirectory =
         : "D:/repos/ASafariM/Logs";
 
 Directory.CreateDirectory(logDirectory);
-var logFilePath = Path.Combine(logDirectory, "api", ".log");
+var logFilePath = Path.Combine(logDirectory, ".log");
 
 try
 {

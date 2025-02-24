@@ -1,4 +1,4 @@
-@echo off
+@echo on
 cd /d "%~dp0"
 
 echo [1/5] Terminating existing API processes...

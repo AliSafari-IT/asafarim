@@ -1,8 +1,6 @@
 using System;
 using System.IO;
 using System.Reflection;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using ASafariM.Api;
 using ASafariM.Application;
 using ASafariM.Application.Mappings;
@@ -15,7 +13,6 @@ using ASafariM.Infrastructure.Repositories;
 using ASafariM.Infrastructure.Services;
 using ASafariM.Presentation;
 using AutoMapper;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
@@ -23,45 +20,23 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Serilog;
 using Serilog.Events;
 
-// Configure logging first
+// Configure logging directory
 var logDirectory =
     Environment.GetEnvironmentVariable("ASAFARIM_ENV") == "production"
         ? "/var/www/asafarim/logs"
         : "D:/repos/ASafariM/Logs";
 
 Directory.CreateDirectory(logDirectory);
-var logFilePath = Path.Combine(logDirectory, "api.log");
-
-Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-    .MinimumLevel.Override("System", LogEventLevel.Warning)
-    .MinimumLevel.Information()
-    .WriteTo.Console()
-    .WriteTo.File(
-        logFilePath,
-        rollingInterval: RollingInterval.Hour,
-        retainedFileCountLimit: 24,
-        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}"
-    )
-    .Enrich.FromLogContext()
-    .CreateLogger();
+var logFilePath = Path.Combine(logDirectory, "api", ".log");
 
 try
 {
-    Log.Information("Starting up ASafariM API");
-
     var builder = WebApplication.CreateBuilder(args);
-
-    // Add process cleanup hook
-    builder.Services.AddSingleton<IHostApplicationLifetime>(sp =>
-        sp.GetRequiredService<IHostApplicationLifetime>()
-    );
 
     // Add Serilog
     builder.Host.UseSerilog(
@@ -73,8 +48,8 @@ try
                 .WriteTo.Console()
                 .WriteTo.File(
                     logFilePath,
-                    rollingInterval: RollingInterval.Hour,
-                    retainedFileCountLimit: 24,
+                    rollingInterval: RollingInterval.Day,
+                    retainedFileCountLimit: 2,
                     outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}"
                 )
                 .Enrich.FromLogContext()
@@ -128,16 +103,6 @@ try
 
     IMapper mapper = mapperConfig.CreateMapper();
     builder.Services.AddSingleton(mapper);
-
-    // Configure JSON serialization
-    builder
-        .Services.AddControllers()
-        .AddJsonOptions(options =>
-        {
-            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-            options.JsonSerializerOptions.DefaultIgnoreCondition =
-                JsonIgnoreCondition.WhenWritingNull;
-        });
 
     // Register application services
     try
@@ -196,28 +161,6 @@ try
             }
         );
     });
-
-    // Configure JWT Bearer authentication
-    builder
-        .Services.AddAuthentication(options =>
-        {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
-        .AddJwtBearer(options =>
-        {
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                // Add your issuer, audience, and signing key here
-                // Issuer = "yourIssuer",
-                // Audience = "yourAudience",
-                // IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("yourSecretKey"))
-            };
-        });
 
     // Build the application
     Log.Information("Building the application...");
@@ -302,21 +245,6 @@ try
     // Health check endpoint
     Log.Information("Configuring health check endpoint...");
     app.MapHealthChecks("/health");
-
-    app.Lifetime.ApplicationStopped.Register(() =>
-    {
-        try
-        {
-            var assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            File.SetAttributes(
-                Path.Combine(assemblyPath!, "ASafariM.Presentation.dll"),
-                FileAttributes.Normal
-            );
-        }
-        catch
-        { /* Gracefully handle */
-        }
-    });
 
     // Start the application
     try

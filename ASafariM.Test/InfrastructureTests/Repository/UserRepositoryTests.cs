@@ -21,13 +21,21 @@ namespace ASafariM.Test.InfrastructureTests.Repository
     {
         private UserRepository _userRepository;
         private Mock<ILogger<UserRepository>> _loggerMock;
+        private Mock<IUserRepository> _userRepoMock;
+        private IMapper _mapper;
 
         [TestInitialize]
         public override void Setup()
         {
             base.Setup(); // Call base class initialization first
             _loggerMock = new Mock<ILogger<UserRepository>>();
-            _userRepository = new UserRepository(Context, _loggerMock.Object);
+            _userRepoMock = new Mock<IUserRepository>();
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+            _mapper = mapperConfig.CreateMapper();
+            _userRepository = new UserRepository(_userRepoMock.Object, _mapper, Context, _loggerMock.Object);
         }
 
         [TestCleanup]

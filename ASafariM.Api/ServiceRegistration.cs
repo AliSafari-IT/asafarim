@@ -1,3 +1,4 @@
+using ASafariM.Application.Interfaces;
 using ASafariM.Application.Mappings;
 using ASafariM.Application.Services;
 using ASafariM.Domain.Entities;
@@ -9,7 +10,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
-using ASafariM.Application.Interfaces;
 
 namespace ASafariM.Api
 {

@@ -31,14 +31,14 @@ export default defineConfig({
   define: {
     'process.env': {
       NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-      VITE_API_URL: JSON.stringify('http://localhost:5000'),
+      VITE_API_URL: JSON.stringify('https://localhost:5001'),
     },
   },
   server: {
     port: 3000,
     open: true,
     proxy: {
-      '/api': 'http://localhost:5000', // Proxying backend API requests
+      '/api': 'https://localhost:5001', // Proxying backend API requests
     },
   },
   css: {

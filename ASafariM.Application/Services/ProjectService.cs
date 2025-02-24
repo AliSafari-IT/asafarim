@@ -1,7 +1,7 @@
 using ASafariM.Application.Interfaces;
 using ASafariM.Domain.Entities;
-using ASafariM.Domain.Interfaces;
 using ASafariM.Domain.Enums;
+using ASafariM.Domain.Interfaces;
 using AutoMapper;
 using Serilog;
 
@@ -15,10 +15,11 @@ public class ProjectService : IProjectService
     private readonly ILogger _logger;
 
     public ProjectService(
-        IProjectRepository projectRepository, 
-        IEntityService<User> userService, 
-        IMapper mapper, 
-        ILogger logger)
+        IProjectRepository projectRepository,
+        IEntityService<User> userService,
+        IMapper mapper,
+        ILogger logger
+    )
     {
         _projectRepository = projectRepository;
         _userService = userService;
@@ -110,7 +111,11 @@ public class ProjectService : IProjectService
         }
         catch (Exception ex)
         {
-            _logger.Error(ex, "Error occurred while updating project with ID {ProjectId}", project.Id);
+            _logger.Error(
+                ex,
+                "Error occurred while updating project with ID {ProjectId}",
+                project.Id
+            );
             throw;
         }
     }

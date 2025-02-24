@@ -4,19 +4,19 @@ using ASafariM.Domain.Entities;
 using ASafariM.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace ASafariM.Presentation.Controllers;
 
 [ApiController]
-[Authorize]
 [Route("api/[controller]")]
 public class ProjectsController : ControllerBase
 {
     private readonly IProjectService _projectService;
-    private readonly ILogger _logger;
+    private readonly ILogger<ProjectsController> _logger;
 
-    public ProjectsController(IProjectService projectService, ILogger logger)
+    public ProjectsController(IProjectService projectService, ILogger<ProjectsController> logger)
     {
         _projectService = projectService;
         _logger = logger;
@@ -27,34 +27,39 @@ public class ProjectsController : ControllerBase
     {
         try
         {
+            _logger.LogInformation("Getting all projects");
             var projects = await _projectService.GetAllProjectsAsync();
+            _logger.LogInformation($"Retrieved {projects.Count()} projects");
             return Ok(projects);
         }
         catch (Exception ex)
         {
-            _logger.Error(ex, "Error occurred while fetching projects");
-            return StatusCode(500, "An error occurred while fetching projects");
+            _logger.LogError(ex, "Error getting all projects");
+            return StatusCode(500, "Internal server error");
         }
     }
 
-    [Authorize]
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<Project>> GetProjectById(Guid id)
     {
         try
         {
+            _logger.LogInformation($"Getting project with id: {id}");
             var project = await _projectService.GetProjectByIdAsync(id);
+
             if (project == null)
             {
+                _logger.LogWarning($"Project with id {id} not found");
                 return NotFound($"Project with ID {id} not found");
             }
-            _logger.Information("Fetched project with ID {ProjectId} successfully.", id);
+
+            _logger.LogInformation($"Retrieved project: {project.Name}");
             return Ok(project);
         }
         catch (Exception ex)
         {
-            _logger.Error(ex, "Error occurred while fetching project with ID {ProjectId}", id);
-            return StatusCode(500, "An error occurred while fetching the project");
+            _logger.LogError(ex, $"Error getting project with id: {id}");
+            return StatusCode(500, "Internal server error");
         }
     }
 
@@ -63,6 +68,7 @@ public class ProjectsController : ControllerBase
     {
         try
         {
+            _logger.LogInformation("Creating new project");
             var project = new Project
             {
                 Name = projectDto.Name,
@@ -76,6 +82,7 @@ public class ProjectsController : ControllerBase
             };
 
             var createdProject = await _projectService.CreateProjectAsync(project);
+            _logger.LogInformation($"Created project: {createdProject.Name}");
             return CreatedAtAction(
                 nameof(GetProjectById),
                 new { id = createdProject.Id },
@@ -84,8 +91,8 @@ public class ProjectsController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.Error(ex, "Error occurred while creating project");
-            return StatusCode(500, "An error occurred while creating the project");
+            _logger.LogError(ex, "Error creating new project");
+            return StatusCode(500, "Internal server error");
         }
     }
 
@@ -94,6 +101,7 @@ public class ProjectsController : ControllerBase
     {
         try
         {
+            _logger.LogInformation($"Updating project with id: {id}");
             if (id != project.Id)
             {
                 return BadRequest("Project ID mismatch");
@@ -102,14 +110,16 @@ public class ProjectsController : ControllerBase
             var updated = await _projectService.UpdateProjectAsync(project);
             if (!updated)
             {
+                _logger.LogWarning($"Project with id {id} not found");
                 return NotFound($"Project with ID {id} not found");
             }
+            _logger.LogInformation($"Updated project: {project.Name}");
             return NoContent();
         }
         catch (Exception ex)
         {
-            _logger.Error(ex, "Error occurred while updating project with ID {ProjectId}", id);
-            return StatusCode(500, "An error occurred while updating the project");
+            _logger.LogError(ex, $"Error updating project with id: {id}");
+            return StatusCode(500, "Internal server error");
         }
     }
 
@@ -118,17 +128,20 @@ public class ProjectsController : ControllerBase
     {
         try
         {
+            _logger.LogInformation($"Deleting project with id: {id}");
             var deleted = await _projectService.DeleteProjectAsync(id);
             if (!deleted)
             {
+                _logger.LogWarning($"Project with id {id} not found");
                 return NotFound($"Project with ID {id} not found");
             }
+            _logger.LogInformation($"Deleted project with id: {id}");
             return NoContent();
         }
         catch (Exception ex)
         {
-            _logger.Error(ex, "Error occurred while deleting project with ID {ProjectId}", id);
-            return StatusCode(500, "An error occurred while deleting the project");
+            _logger.LogError(ex, $"Error deleting project with id: {id}");
+            return StatusCode(500, "Internal server error");
         }
     }
 }

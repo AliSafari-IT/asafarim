@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using ASafariM.Api;
+using ASafariM.Api.Extensions;
 using ASafariM.Application;
 using ASafariM.Application.Mappings;
 using ASafariM.Application.Services;
@@ -208,7 +209,16 @@ try
         });
     });
 
-    // HTTPS redirection
+    // HTTPS redirection (disabled for local health checks)
+    app.Use(async (context, next) =>
+    {
+        if (!context.Request.Path.StartsWithSegments("/api/health") && !context.Request.IsLocal())
+        {
+            context.Request.Scheme = "https";
+        }
+        await next();
+    });
+
     Log.Information("Configuring HTTPS redirection...");
     app.UseHttpsRedirection();
 
@@ -288,7 +298,7 @@ try
 
     // Health check endpoint
     Log.Information("Configuring health check endpoint...");
-    app.MapHealthChecks("/health");
+    app.MapHealthChecks("/api/health");
 
     // Start the application
     try

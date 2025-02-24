@@ -8,7 +8,7 @@ PUBLISH_DIR="/var/www/asafarim/backend"
 BACKUP_DIR="/var/www/asafarim/backups"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 MAX_RETRIES=3
-HEALTH_CHECK_URL="http://localhost:5001/health"
+HEALTH_CHECK_URL="https://localhost:5001/api/health"
 
 # Clean old backups (keep only the newest one)
 cd "$BACKUP_DIR" && ls -t | tail -n +2 | xargs -r rm -rf
@@ -16,23 +16,30 @@ cd "$BACKUP_DIR" && ls -t | tail -n +2 | xargs -r rm -rf
 # Function to check API health
 check_health() {
     local retries=0
-    while [ $retries -lt 30 ]; do
+    local max_retries=60  # Increased to 60 seconds
+    while [ $retries -lt $max_retries ]; do
         echo "Attempt $((retries + 1)) to check health..."
-        response=$(curl -vk "$HEALTH_CHECK_URL" 2>&1)
-        echo "Health check response:"
-        echo "$response"
+        response=$(curl -sk "$HEALTH_CHECK_URL" 2>&1)
         
-        if echo "$response" | grep -q '"status":"Healthy"'; then
+        if echo "$response" | grep -q '"status":"healthy"'; then
+            echo "✅ Health check passed"
             return 0
         fi
         
-        # Check logs for errors
-        echo "Recent application logs:"
-        sudo journalctl -u asafarim-api -n 20 --no-pager
+        # Only show logs every 5 attempts to reduce noise
+        if [ $((retries % 5)) -eq 0 ]; then
+            echo "Recent application logs:"
+            sudo journalctl -u asafarim-api -n 10 --no-pager
+        fi
         
-        sleep 1
+        # Wait longer between retries as attempts increase
+        sleep_time=$((1 + retries / 10))
+        echo "Waiting ${sleep_time} seconds before next attempt..."
+        sleep $sleep_time
         retries=$((retries + 1))
     done
+    
+    echo "❌ Health check failed after $max_retries attempts"
     return 1
 }
 

@@ -21,6 +21,8 @@
     "api:build": "dotnet build ./ASafariM.Api/ASafariM.Api.csproj",
     "api:run": "dotnet run --project ./ASafariM.Api/ASafariM.Api.csproj",
     "backend": "yarn clean && yarn restore && yarn build && yarn api",
+    "deploy_backend": "cd ./ASafariM.Api && ./deploy_backend.sh",
+    "deploy_frontend": "cd  ./ASafariM.Clients && ./deploy_frontend.sh",
     "dev": "concurrently \"yarn workspace asafarim-api start\" \"yarn workspace asafarim-ui start\"",
     "app": "concurrently \"yarn backend\" \"yarn ui\"",
     "start": "concurrently \"yarn backend\" \"yarn ui\"",

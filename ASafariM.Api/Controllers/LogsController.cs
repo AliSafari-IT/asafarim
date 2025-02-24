@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/logs")]
 public class LogsController : ControllerBase
 {
     private readonly ILogger<LogsController> _logger;

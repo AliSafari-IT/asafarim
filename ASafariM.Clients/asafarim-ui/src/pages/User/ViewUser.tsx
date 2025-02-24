@@ -6,7 +6,7 @@ import Wrapper from '../../layout/Wrapper/Wrapper';
 import Footer from '../../layout/Footer/Footer';
 import Header from '@/layout/Header/Header';
 import { logger } from '@/utils/logger';
-import { IRole } from '@/interfaces';
+import { IApiResponse, IRole, IUserRole } from '@/interfaces';
 
 const ViewUser: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -20,26 +20,53 @@ const ViewUser: React.FC = () => {
     const fetchData = async () => {
       if (!id) return;
       try {
-        // Fetch all roles first to get the mapping
-        const allRoles = await getRoles();
-        const rolesMap = allRoles.reduce((acc: { [key: string]: string }, role: IRole) => {
+        // Fetch user first since we need it to check if it exists
+        const userResponse = await getUserById(id);
+        console.log('User response:', userResponse);
+        // For single user, the response is the direct object
+        const userData = userResponse;
+        console.log('Processed user data:', userData);
+        
+        if (!userData || !userData.id) {
+          throw new Error('User not found');
+        }
+
+        if (userData.dateOfBirth) {
+          userData.dateOfBirth = new Date(userData.dateOfBirth)
+            .toISOString()
+            .split('T')[0];
+        }
+        setUser(userData);
+
+        // Fetch all roles to get the mapping
+        const rolesResponse = await getRoles();
+        console.log('Roles response:', rolesResponse);
+        const apiResponse = rolesResponse as IApiResponse<IRole>;
+        const rolesArray = apiResponse.$values || apiResponse.value || rolesResponse;
+        if (!Array.isArray(rolesArray)) {
+          console.error('Invalid roles data format:', rolesResponse);
+          throw new Error('Invalid roles data format');
+        }
+        
+        const rolesMap = rolesArray.reduce((acc: { [key: string]: string }, role: IRole) => {
           acc[role.id] = role.name;
           return acc;
         }, {});
         setRoleNames(rolesMap);
 
-        // Fetch user and their roles
-        const fetchedUser = await getUserById(id);
-        if (fetchedUser.dateOfBirth) {
-          fetchedUser.dateOfBirth = new Date(fetchedUser.dateOfBirth)
-            .toISOString()
-            .split('T')[0];
+        // Fetch user roles
+        const rolesResponse2 = await getRolesByUserId(id);
+        console.log('User roles response:', rolesResponse2);
+        const apiResponse2 = rolesResponse2 as IApiResponse<IUserRole>;
+        const userRolesArray = apiResponse2.$values || apiResponse2.value || rolesResponse2;
+        if (!Array.isArray(userRolesArray)) {
+          console.error('Invalid user roles data format:', rolesResponse2);
+          throw new Error('Invalid user roles data format');
         }
-
-        const roles = await getRolesByUserId(id);
-        setUserRoles(roles?.map((role) => role.roleId) || []);
-        setUser(fetchedUser);
+        
+        setUserRoles(userRolesArray.map((role) => role.roleId) || []);
       } catch (err) {
+        console.error('Error details:', err);
         logger.error(`Failed to fetch user or roles: ${err}`);
         setError('Failed to load user data.');
       }

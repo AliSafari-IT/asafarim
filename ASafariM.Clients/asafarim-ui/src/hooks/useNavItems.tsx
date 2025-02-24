@@ -129,12 +129,14 @@ const dashboardDD: IMenuItem = {
   icon: <IconDashboard />,
   subMenu: [
     {
-      id: 'system-health-status',
-      name: 'system-health-status',
+      id: 'system-health',
+      name: 'system-health',
       title: 'System Health Status',
       label: 'System Health Status',
-      to: '/health-ui',
+      to: '/health',
       icon: <IconDashboard />,
+      style: {},
+      className: 'system-health'
     },
     {
       id: 'user-dashboard',
@@ -143,6 +145,18 @@ const dashboardDD: IMenuItem = {
       label: 'Dashboard',
       to: '/dashboard',
       icon: <IconDashboard />,
+      style: {},
+      className: 'user-dashboard'
+    },
+    {
+      id: 'projects',
+      name: 'projects',
+      title: 'Projects',
+      label: 'Projects',
+      to: '/projects',
+      icon: <IconProject />,
+      style: {},
+      className: 'projects'
     },
     {
       id: 'users',

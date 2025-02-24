@@ -153,6 +153,16 @@ try
     Log.Information("Configuring API Controllers...");
     builder
         .Services.AddControllers()
+        .AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.ReferenceHandler = System
+                .Text
+                .Json
+                .Serialization
+                .ReferenceHandler
+                .Preserve;
+            options.JsonSerializerOptions.MaxDepth = 64; // Increase max depth if needed
+        })
         .AddApplicationPart(
             typeof(ASafariM.Presentation.Controllers.MarkdownFilesController).Assembly
         )

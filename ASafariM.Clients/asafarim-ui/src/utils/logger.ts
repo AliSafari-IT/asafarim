@@ -3,33 +3,44 @@ import { apiConfig } from "@/config/api";
 
 // src/utils/logger.ts
 const logToServer = async (message: string, level: string = "info") => {
-  console.log("BASE_API_URL:", apiConfig.baseURL);
+    // Skip server logging in development mode
+    if (apiConfig.isDevelopment) {
+        console.log(`[${level.toUpperCase()}] ${message}`);
+        return;
+    }
 
-  const api = axios.create({
-    baseURL: apiConfig.baseURL,
-  });
-
-  try {
-    await api.post("/logs", {
-      message,
-      level,
-    });
-  } catch (error) {
-    console.error("Failed to log message:", error);
-  }
+    try {
+        await axios.post(`${apiConfig.baseURL}/logs`, {
+            message,
+            level,
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        // Only log server errors to console in production
+        console.error("Failed to send log to server:", error);
+    }
 };
 
 export const logger = {
-  info: (message: string) => {
-    console.log(message);
-    logToServer(message, "info");
-  },
-  warn: (message: string) => {
-    console.warn(message);
-    logToServer(message, "warn");
-  },
-  error: (message: string) => {
-    console.error(message);
-    logToServer(message, "error");
-  }
+    info: (message: string) => {
+        if (apiConfig.isDevelopment) {
+            console.log(`[INFO] ${message}`);
+        } else {
+            logToServer(message, "info");
+        }
+    },
+    warn: (message: string) => {
+        if (apiConfig.isDevelopment) {
+            console.warn(`[WARN] ${message}`);
+        } else {
+            logToServer(message, "warn");
+        }
+    },
+    error: (message: string) => {
+        if (apiConfig.isDevelopment) {
+            console.error(`[ERROR] ${message}`);
+        } else {
+            logToServer(message, "error");
+        }
+    }
 };

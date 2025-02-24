@@ -94,34 +94,32 @@ const AddProject: React.FC = () => {
             }
 
             const projectData = {
-              Name: formData.get("name"),
-              Description: formData.get("description"),
-              StartDate: formData.get("startdate"),
-              EndDate: formData.get("enddate"),
-              Budget: Number(formData.get("budget")),
-              Visibility: Number(formData.get("visibility")),
-              Status: Number(formData.get("status")),
+              Name: formData.get("name")?.toString() || '',
+              Description: formData.get("description")?.toString() || '',
+              StartDate: new Date(formData.get("startdate")?.toString() || '').toISOString(),
+              EndDate: formData.get("enddate") 
+                ? new Date(formData.get("enddate")?.toString() || '').toISOString()
+                : new Date(0).toISOString(),
+              Budget: parseFloat(formData.get("budget")?.toString() || '0'),
+              Visibility: parseInt(formData.get("visibility")?.toString() || '0', 10),
+              Status: parseInt(formData.get("status")?.toString() || '0', 10),
               OwnerId: userId
             };
 
-            console.log("Project data being sent:", projectData);
+            logger.info("Sending project data: " + JSON.stringify(projectData));
             const result = await entityServices.addEntity(
               "project",
               projectData
             );
 
             if (result) {
-              logger.info(
-                "Project created successfully:" + JSON.stringify(result)
-              );
-              window.history.back();
+              logger.info("Project created successfully: " + JSON.stringify(result));
+              window.location.href = "/projects";
             } else {
-              const error = "Failed to create project";
-              logger.error(error);
-              throw new Error(error);
+              throw new Error("Failed to create project - no result returned");
             }
           } catch (error) {
-            logger.error("Error creating project:" + error);
+            logger.error("Error creating project: " + error);
             throw error;
           }
         }}

@@ -37,15 +37,19 @@ const ProjectHome: React.FC = () => {
         setError(null);
         try {
             const data = await dashboardServices.fetchEntities("project");
-            logger.info("Projects data received:" + JSON.stringify(data));
+            logger.info("Projects data received: " + JSON.stringify(data));
+            
             if (Array.isArray(data)) {
                 setProjects(data);
+                if (data.length === 0) {
+                    logger.info("No projects found in the response");
+                }
             } else {
-                logger.error("Invalid data format received:" + JSON.stringify(data));
+                logger.error("Invalid data format received: " + JSON.stringify(data));
                 setError("Invalid data format received from server");
             }
         } catch (err) {
-            logger.error("Error fetching projects:" + JSON.stringify(err));
+            logger.error("Error fetching projects: " + JSON.stringify(err));
             setError("Failed to load projects. Please try again later.");
         } finally {
             setLoading(false);
@@ -64,9 +68,18 @@ const ProjectHome: React.FC = () => {
         navigate(`/projects/edit/${id}`);
     };
 
-    const handleDelete = (id: string) => {
+    const handleDelete = async (id: string) => {
         if (window.confirm("Are you sure you want to delete this project?")) {
-            console.log(`Delete project with id: ${id}`);
+            try {
+                logger.info(`Attempting to delete project with id: ${id}`);
+                await dashboardServices.deleteEntity("project", id);
+                logger.info(`Successfully deleted project with id: ${id}`);
+                // Refresh the projects list
+                fetchProjects();
+            } catch (error) {
+                logger.error(`Failed to delete project: ${error}`);
+                // You might want to show an error notification here
+            }
         }
     };
 
@@ -127,15 +140,23 @@ const ProjectHome: React.FC = () => {
                                 <tr key={project.id} className="border-t">
                                     <td className="p-2">{project.name}</td>
                                     <td className="p-2">{project.description}</td>
-                                    <td className="p-2">{new Date(project.startDate).toLocaleDateString()}</td>
+                                    <td className="p-2">
+                                        {project.startDate 
+                                            ? new Date(project.startDate).toLocaleDateString()
+                                            : 'Not set'}
+                                    </td>
                                     <td className={`p-2 text-center font-bold ${
-                                        calculateDaysLeft(new Date(project.startDate)) < 0 
-                                            ? "bg-danger" 
-                                            : calculateDaysLeft(new Date(project.startDate)) < 30 
-                                                ? "bg-warning" 
-                                                : "bg-info"
+                                        project.startDate 
+                                            ? calculateDaysLeft(new Date(project.startDate)) < 0 
+                                                ? "bg-danger" 
+                                                : calculateDaysLeft(new Date(project.startDate)) < 30 
+                                                    ? "bg-warning" 
+                                                    : "bg-info"
+                                            : "bg-info"
                                     }`}>
-                                        {calculateDaysLeft(new Date(project.startDate))}
+                                        {project.startDate 
+                                            ? calculateDaysLeft(new Date(project.startDate))
+                                            : 'Not set'}
                                     </td>
                                     <td className="p-2 text-center">
                                         <Tooltip content="View Project" relationship="label">

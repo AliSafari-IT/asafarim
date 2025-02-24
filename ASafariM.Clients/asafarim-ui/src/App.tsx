@@ -335,7 +335,7 @@ function App() {
           <Route path="/sitemap-items/add" element={<AddSitemapItemForm />} />
           <Route path="/sitemap-items/edit/:id" element={<EditSitemapItemForm />} />
           <Route path="/sitemap-items/delete/:id" element={<DeleteForm entity="sitemapitems"  />} />
-          <Route path="/health-ui" element={<HealthCheck />} />
+          <Route path="/health" element={<HealthCheck />} />
           <Route path="/access-denied" element={<AccessDenied />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

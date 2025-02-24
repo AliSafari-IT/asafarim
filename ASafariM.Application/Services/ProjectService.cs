@@ -3,6 +3,7 @@ using ASafariM.Domain.Entities;
 using ASafariM.Domain.Enums;
 using ASafariM.Domain.Interfaces;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 namespace ASafariM.Application.Services;
@@ -57,6 +58,8 @@ public class ProjectService : IProjectService
     {
         try
         {
+            _logger.Information("Creating new project: {@Project}", project);
+
             // Set creation date and generate ID if not provided
             project.CreatedAt = DateTime.UtcNow;
             if (project.Id == Guid.Empty)
@@ -65,11 +68,14 @@ public class ProjectService : IProjectService
             }
 
             // Ensure Owner exists
+            _logger.Information("Checking if owner exists: {OwnerId}", project.OwnerId);
             var owner = await _userService.GetByIdAsync(project.OwnerId);
             if (owner == null)
             {
+                _logger.Error("User with ID {OwnerId} not found", project.OwnerId);
                 throw new InvalidOperationException($"User with ID {project.OwnerId} not found");
             }
+            _logger.Information("Owner found: {Owner}", owner);
 
             // Don't set the navigation property to avoid circular references
             // Just verify the owner exists
@@ -85,7 +91,9 @@ public class ProjectService : IProjectService
                 project.Visibility = VisibilityEnum.Private;
             }
 
+            _logger.Information("Adding project to repository: {@Project}", project);
             await _projectRepository.AddAsync(project);
+            _logger.Information("Project created successfully: {ProjectId}", project.Id);
             return project;
         }
         catch (Exception ex)

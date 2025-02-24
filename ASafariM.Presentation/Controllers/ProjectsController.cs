@@ -91,8 +91,8 @@ public class ProjectsController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error creating new project");
-            return StatusCode(500, "Internal server error");
+            _logger.LogError(ex, "Error creating new project: {Message}", ex.ToString());
+            return StatusCode(500, new { error = ex.Message, details = ex.ToString() });
         }
     }
 

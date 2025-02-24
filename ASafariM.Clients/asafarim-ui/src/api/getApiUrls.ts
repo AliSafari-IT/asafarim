@@ -10,7 +10,8 @@ const apiUrls = (host: string) => {
         case 'www.asafarim.com':
             return 'https://asafarim.com/api';
         default:
-            return `https://localhost:${import.meta.env.VITE_API_HTTPS_PORT}/api`;
+            // Always use HTTP for local development
+            return `http://localhost:${import.meta.env.VITE_API_PORT}/api`;
     }
 };
 

@@ -43,8 +43,8 @@ const AddProject: React.FC = () => {
       type: "textarea",
       placeholder: "Enter project description",
     },
-    { name: "startDate", label: "Start Date", type: "date", required: true },
-    { name: "endDate", label: "End Date", type: "date" },
+    { name: "startdate", label: "Start Date", type: "date", required: true },
+    { name: "enddate", label: "End Date", type: "date" },
     {
       name: "budget",
       label: "Budget",
@@ -57,9 +57,9 @@ const AddProject: React.FC = () => {
       type: "select",
       required: true,
       options: [
-        { value: "Public", label: "Public" },
-        { value: "MembersOnly", label: "Members Only" },
-        { value: "Private", label: "Private" },
+        { value: "0", label: "Public" },
+        { value: "1", label: "Members Only" },
+        { value: "2", label: "Private" },
       ],
     },
     {
@@ -68,11 +68,11 @@ const AddProject: React.FC = () => {
       type: "select",
       required: true,
       options: [
-        { value: "InProgress", label: "In Progress" },
-        { value: "Completed", label: "Completed" },
-        { value: "Cancelled", label: "Cancelled" },
-        { value: "Paused", label: "Paused" },
-        { value: "Extended", label: "Extended" },
+        { value: "0", label: "In Progress" },
+        { value: "1", label: "Completed" },
+        { value: "2", label: "Cancelled" },
+        { value: "3", label: "Paused" },
+        { value: "4", label: "Extended" },
       ],
     },
   ];
@@ -95,21 +95,18 @@ const AddProject: React.FC = () => {
 
             const projectData = {
               Name: formData.get("name"),
-              Description: formData.get("description") || "",
-              StartDate: formData.get("startDate"),
-              EndDate: formData.get("endDate") || formData.get("startDate"), // Default to startDate if not provided
-              Budget: formData.get("budget") ? Number(formData.get("budget")) : 0,
-              Visibility: formData.get("visibility") === "Private" ? 2 : formData.get("visibility") === "MembersOnly" ? 1 : 0,
-              Status: formData.get("status") === "InProgress" ? 0 : 
-                     formData.get("status") === "Completed" ? 1 : 
-                     formData.get("status") === "Cancelled" ? 2 :
-                     formData.get("status") === "Paused" ? 3 : 4,
+              Description: formData.get("description"),
+              StartDate: formData.get("startdate"),
+              EndDate: formData.get("enddate"),
+              Budget: Number(formData.get("budget")),
+              Visibility: Number(formData.get("visibility")),
+              Status: Number(formData.get("status")),
               OwnerId: userId
             };
 
             console.log("Project data being sent:", projectData);
             const result = await entityServices.addEntity(
-              "projects",
+              "project",
               projectData
             );
 

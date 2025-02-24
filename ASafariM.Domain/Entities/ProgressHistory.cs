@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using ASafariM.Domain.Enums;
 
 namespace ASafariM.Domain.Entities
 {

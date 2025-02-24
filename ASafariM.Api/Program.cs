@@ -134,7 +134,12 @@ try
                 builder
                     .WithOrigins(
                         "http://localhost:3000",
+                        "https://localhost:3000",
+                        "http://localhost:5000",
+                        "http://localhost:5000",
+                        "http://asafarim.com",
                         "https://asafarim.com",
+                        "http://www.asafarim.com",
                         "https://www.asafarim.com"
                     )
                     .AllowAnyMethod()
@@ -150,7 +155,8 @@ try
         .Services.AddControllers()
         .AddApplicationPart(
             typeof(ASafariM.Presentation.Controllers.MarkdownFilesController).Assembly
-        );
+        )
+        .AddApplicationPart(typeof(ASafariM.Presentation.Controllers.ProjectsController).Assembly);
 
     builder.Services.AddEndpointsApiExplorer();
 
@@ -210,19 +216,26 @@ try
     });
 
     // HTTPS redirection (disabled for local health checks)
-    app.Use(async (context, next) =>
-    {
-        if (!context.Request.Path.StartsWithSegments("/api/health") && !context.Request.IsLocal())
+    app.Use(
+        async (context, next) =>
         {
-            context.Request.Scheme = "https";
+            if (
+                !context.Request.Path.StartsWithSegments("/api/health")
+                && !context.Request.IsLocal()
+            )
+            {
+                context.Request.Scheme = "https";
+            }
+            await next();
         }
-        await next();
-    });
+    );
 
-    Log.Information("Configuring HTTPS redirection...");
-    app.UseHttpsRedirection();
+    // Configure HTTPS redirection only in production
+    if (!app.Environment.IsDevelopment())
+    {
+        app.UseHttpsRedirection();
+    }
 
-    // Routing
     Log.Information("Configuring routing...");
     app.UseRouting();
 

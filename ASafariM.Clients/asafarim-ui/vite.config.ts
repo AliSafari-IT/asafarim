@@ -5,7 +5,6 @@ import vitePluginMd from 'vite-plugin-md';
 import path from 'path';
 import md from 'vite-plugin-md';
 
-
 // https://vite.dev/config/
 export default defineConfig({
   optimizeDeps: {
@@ -31,15 +30,19 @@ export default defineConfig({
   define: {
     'process.env': {
       NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-      VITE_API_URL: JSON.stringify('https://localhost:5001'),
+      VITE_API_URL: JSON.stringify('http://localhost:5000'),
     },
   },
   server: {
     port: 3000,
     open: true,
     proxy: {
-      '/api': 'https://localhost:5001', // Proxying backend API requests
-    },
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '/api')
+      }
+    }
   },
   css: {
     preprocessorOptions: {

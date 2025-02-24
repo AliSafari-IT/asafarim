@@ -8,7 +8,7 @@ PUBLISH_DIR="/var/www/asafarim/backend"
 BACKUP_DIR="/var/www/asafarim/backups"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 MAX_RETRIES=3
-HEALTH_CHECK_URL="https://localhost:5001/api/health"
+HEALTH_CHECK_URL="http://localhost:5000/api/health"
 
 # Clean old backups (keep only the newest one)
 cd "$BACKUP_DIR" && ls -t | tail -n +2 | xargs -r rm -rf

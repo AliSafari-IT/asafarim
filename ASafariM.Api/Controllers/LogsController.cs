@@ -1,6 +1,9 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -9,6 +12,8 @@ using Microsoft.Extensions.Logging;
 public class LogsController : ControllerBase
 {
     private readonly ILogger<LogsController> _logger;
+    private const int DefaultPageSize = 1000; // Number of lines per page
+    private const int MaxPageSize = 5000;
 
     public LogsController(ILogger<LogsController> logger)
     {
@@ -16,50 +21,79 @@ public class LogsController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult GetLogs()
+    public async Task<IActionResult> GetLogs(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = DefaultPageSize
+    )
     {
         try
         {
-            // Specify the log directory path
+            pageSize = Math.Min(pageSize, MaxPageSize);
             string logDirectoryPath =
                 Environment.GetEnvironmentVariable("ASAFARIM_ENV") == "production"
                     ? "/var/www/asafarim/logs"
                     : "D:/repos/ASafariM/Logs";
 
-            // Log the directory path
-            _logger.LogInformation("Log directory path: {LogDirectoryPath}", logDirectoryPath);
-
-            // Get the log file matching the pattern
             var logFiles = Directory
-                .GetFiles(logDirectoryPath, "api*.log")
+                .GetFiles(logDirectoryPath, "*.log")
                 .OrderByDescending(f => f)
-                .ToArray(); // Most recent files first
+                .ToArray();
 
-            if (logFiles.Length == 0)
+            if (!logFiles.Any())
             {
                 _logger.LogWarning(
-                    "No log files found matching the pattern 'api*.log' in directory: {LogDirectoryPath}",
+                    "No log files found in directory: {LogDirectoryPath}",
                     logDirectoryPath
                 );
-                return NotFound("Log file not found.");
+                return NotFound("No log files found.");
             }
 
-            // Combine all log files
-            var combinedLogs = new StringBuilder();
-            foreach (var logFile in logFiles)
-            {
-                // Log the file path
-                _logger.LogInformation("Reading log file: {LogFilePath}", logFile);
+            Response.ContentType = "text/plain";
+            Response.Headers.Add("X-Total-Files", logFiles.Length.ToString());
 
-                // Read and append the log file content
-                string content = System.IO.File.ReadAllText(logFile, Encoding.UTF8);
-                combinedLogs.AppendLine($"=== Log File: {Path.GetFileName(logFile)} ===");
-                combinedLogs.AppendLine(content);
-                combinedLogs.AppendLine();
-            }
+            // Stream the response
+            return new FileCallbackResult(
+                "text/plain",
+                async (stream, _) =>
+                {
+                    var writer = new StreamWriter(stream, Encoding.UTF8);
+                    foreach (var logFile in logFiles)
+                    {
+                        await writer.WriteLineAsync(
+                            $"=== Log File: {Path.GetFileName(logFile)} ==="
+                        );
 
-            // Return the combined log content as plain text
-            return Content(combinedLogs.ToString(), "text/plain", Encoding.UTF8);
+                        using var fileStream = new FileStream(
+                            logFile,
+                            FileMode.Open,
+                            FileAccess.Read,
+                            FileShare.ReadWrite
+                        );
+                        using var reader = new StreamReader(fileStream, Encoding.UTF8);
+
+                        string line;
+                        var currentLine = 0;
+                        var startLine = (page - 1) * pageSize;
+                        var endLine = page * pageSize;
+
+                        while ((line = await reader.ReadLineAsync()) != null)
+                        {
+                            if (currentLine >= startLine && currentLine < endLine)
+                            {
+                                await writer.WriteLineAsync(line);
+                            }
+                            else if (currentLine >= endLine)
+                            {
+                                break;
+                            }
+                            currentLine++;
+                        }
+
+                        await writer.WriteLineAsync();
+                        await writer.FlushAsync();
+                    }
+                }
+            );
         }
         catch (Exception ex)
         {
@@ -69,7 +103,7 @@ public class LogsController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult PostLog([FromBody] LogMessage message)
+    public async Task<IActionResult> PostLog([FromBody] LogMessage message)
     {
         if (message == null || string.IsNullOrEmpty(message.Message))
         {
@@ -98,4 +132,24 @@ public class LogMessage
 {
     public string Message { get; set; }
     public string Level { get; set; }
+}
+
+// Custom FileCallbackResult for streaming response
+public class FileCallbackResult : FileResult
+{
+    private readonly Func<Stream, ActionContext, Task> _callback;
+
+    public FileCallbackResult(string contentType, Func<Stream, ActionContext, Task> callback)
+        : base(contentType)
+    {
+        _callback = callback;
+    }
+
+    public override async Task ExecuteResultAsync(ActionContext context)
+    {
+        var response = context.HttpContext.Response;
+        response.ContentType = ContentType;
+
+        await _callback(response.Body, context);
+    }
 }

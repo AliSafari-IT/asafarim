@@ -14,6 +14,7 @@
     "clean": "dotnet clean --project ./ASafariM.Api.csproj",
     "ui": "cd .. && yarn workspace asafarim-ui start",
     "api": "cd .. && yarn workspace asafarim-api start",
+    "co": "cd .. && yarn run co",
     "dev": "concurrently \"yarn api\" \"yarn ui\""
   }
 }

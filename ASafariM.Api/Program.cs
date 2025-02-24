@@ -23,6 +23,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Serilog;
+using Serilog.Context;
 using Serilog.Events;
 
 // Configure logging directory
@@ -45,11 +46,16 @@ try
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .MinimumLevel.Override("System", LogEventLevel.Warning)
                 .MinimumLevel.Information()
-                .WriteTo.Console()
+                .WriteTo.Console(
+                    restrictedToMinimumLevel: LogEventLevel.Information,
+                    outputTemplate: "[{Level:u3}] {Message:lj}{NewLine}{Exception}"
+                )
                 .WriteTo.File(
                     logFilePath,
                     rollingInterval: RollingInterval.Day,
                     retainedFileCountLimit: 2,
+                    buffered: true,
+                    flushToDiskInterval: TimeSpan.FromSeconds(1),
                     outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}"
                 )
                 .Enrich.FromLogContext()
@@ -227,18 +233,56 @@ try
     Log.Information("Configuring static files...");
     app.UseStaticFiles();
 
-    // Request logging middleware
+    // Request logging middleware - Optimized version
     Log.Information("Configuring request logging middleware...");
     app.Use(
         async (context, next) =>
         {
-            Log.Information(
-                "Request: {Method} {Path} → {ContentType}",
-                context.Request.Method,
-                context.Request.Path,
-                context.Request.ContentType
-            );
-            await next();
+            // Only log non-static file requests
+            if (!context.Request.Path.StartsWithSegments("/static"))
+            {
+                using var _ = LogContext.PushProperty("RequestId", context.TraceIdentifier);
+                Log.Information(
+                    "HTTP {RequestMethod} {RequestPath} started",
+                    context.Request.Method,
+                    context.Request.Path
+                );
+
+                var sw = System.Diagnostics.Stopwatch.StartNew();
+                try
+                {
+                    await next();
+                    sw.Stop();
+
+                    // Only log completion for non-successful responses or slow requests
+                    if (context.Response.StatusCode >= 400 || sw.ElapsedMilliseconds > 500)
+                    {
+                        Log.Information(
+                            "HTTP {RequestMethod} {RequestPath} completed in {Elapsed:0.0}ms with {StatusCode}",
+                            context.Request.Method,
+                            context.Request.Path,
+                            sw.ElapsedMilliseconds,
+                            context.Response.StatusCode
+                        );
+                    }
+                }
+                catch (Exception ex)
+                {
+                    sw.Stop();
+                    Log.Error(
+                        ex,
+                        "HTTP {RequestMethod} {RequestPath} failed in {Elapsed:0.0}ms",
+                        context.Request.Method,
+                        context.Request.Path,
+                        sw.ElapsedMilliseconds
+                    );
+                    throw;
+                }
+            }
+            else
+            {
+                await next();
+            }
         }
     );
 

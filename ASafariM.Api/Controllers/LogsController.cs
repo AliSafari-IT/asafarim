@@ -21,20 +21,26 @@ public class LogsController : ControllerBase
         try
         {
             // Specify the log directory path
-            string logDirectoryPath = Environment.GetEnvironmentVariable("ASAFARIM_ENV") == "production"
-                ? "/var/www/asafarim/logs"
-                : "D:/repos/ASafariM/Logs";
+            string logDirectoryPath =
+                Environment.GetEnvironmentVariable("ASAFARIM_ENV") == "production"
+                    ? "/var/www/asafarim/logs"
+                    : "D:/repos/ASafariM/Logs";
 
             // Log the directory path
             _logger.LogInformation("Log directory path: {LogDirectoryPath}", logDirectoryPath);
 
             // Get the log file matching the pattern
-            var logFiles = Directory.GetFiles(logDirectoryPath, "api*.log")
-                                  .OrderByDescending(f => f).ToArray(); // Most recent files first
+            var logFiles = Directory
+                .GetFiles(logDirectoryPath, "api*.log")
+                .OrderByDescending(f => f)
+                .ToArray(); // Most recent files first
 
             if (logFiles.Length == 0)
             {
-                _logger.LogWarning("No log files found matching the pattern 'api*.log' in directory: {LogDirectoryPath}", logDirectoryPath);
+                _logger.LogWarning(
+                    "No log files found matching the pattern 'api*.log' in directory: {LogDirectoryPath}",
+                    logDirectoryPath
+                );
                 return NotFound("Log file not found.");
             }
 
@@ -72,10 +78,12 @@ public class LogsController : ControllerBase
 
         try
         {
-            _logger.LogInformation("Received log message: {Message} with level {Level}", 
-                message.Message, 
-                message.Level ?? "INFO");
-            
+            _logger.LogInformation(
+                "Received log message: {Message} with level {Level}",
+                message.Message,
+                message.Level ?? "INFO"
+            );
+
             return Ok(new { message = "Log received successfully" });
         }
         catch (Exception ex)

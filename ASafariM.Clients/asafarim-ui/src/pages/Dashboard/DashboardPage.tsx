@@ -113,6 +113,30 @@ const Dashboard: React.FC = () => {
             Get in Touch
           </button>
         </Link>
+
+        <Link href="/changelogs">
+          <button
+            className="
+              px-5 py-3 
+              font-bold 
+              rounded-md 
+              shadow-md 
+              transition 
+              duration-300 
+              transform 
+              bg-[var(--info)] 
+              text-[var(--text-inverted)] 
+              hover:bg-[var(--info-dark)] 
+              hover:scale-105
+              focus:outline-none 
+              focus:ring-2 
+              focus:ring-[var(--accent)]
+            "
+          >
+            View Changelogs
+          </button>
+        </Link>
+        
       </div>
     </Wrapper>
   );

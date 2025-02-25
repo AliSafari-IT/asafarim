@@ -46,7 +46,7 @@ const Navbar: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
           logoPath={'/logoT.svg'}
           to="/"
           className="brand-asafarim"
-          brandName="ASafariM"
+          brandName="ASafariM (Demo)"
         />
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}

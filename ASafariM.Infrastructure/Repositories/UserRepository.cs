@@ -14,10 +14,12 @@ namespace ASafariM.Infrastructure.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly AppDbContext _dbContext;
+        private readonly ILogger<UserRepository> _logger;
 
-        public UserRepository(AppDbContext dbContext)
+        public UserRepository(AppDbContext dbContext, ILogger<UserRepository> logger)
         {
             _dbContext = dbContext;
+            _logger = logger;
         }
 
         public async Task<User?> GetUserByEmailAsync(string email)
@@ -36,6 +38,12 @@ namespace ASafariM.Infrastructure.Repositories
         {
             Log.Information("Getting user by ID: {UserId}", userId);
             return await _dbContext.Users.FindAsync(userId);
+        }
+
+        public async Task<User?> GetUserByPhoneNumberAsync(string phoneNumber)
+        {
+            Log.Information("Getting user by phone number: {PhoneNumber}", phoneNumber);
+            return await _dbContext.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
         }
 
         public async Task<List<User>> GetAllUsersAsync(bool includeSoftDeleted = false)

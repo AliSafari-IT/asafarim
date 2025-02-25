@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "scripts/bash_files/taskkill.bat; cd .. && dotnet watch run --project ASafariM.Api/ASafariM.Api.csproj",
+    "start": "bash scripts/bash_files/taskkill.sh; cd .. && dotnet watch run --project ASafariM.Api/ASafariM.Api.csproj",
     "run": "dotnet run --project ./ASafariM.Api.csproj",
     "restore": "dotnet restore --project ./ASafariM.Api.csproj",
     "build": "dotnet build --project ./ASafariM.Api.csproj",
@@ -13,7 +13,7 @@
     "publish": "dotnet publish --project ./ASafariM.Api.csproj",
     "clean": "dotnet clean --project ./ASafariM.Api.csproj",
     "ui": "cd .. && yarn workspace asafarim-ui start",
-    "api": "bash scripts/bash_files/taskkill.sh; cd .. && dotnet watch run --project ASafariM.Api/ASafariM.Api.csproj",
+    "api": "yarn start",
     "api_force": "taskkill /F /IM ASafariM.Api.exe 2>nul; cd .. && dotnet watch run --project ASafariM.Api/ASafariM.Api.csproj",
     "api_bat": "scripts/bash_files/taskkill.bat; cd .. && dotnet watch run --project ASafariM.Api/ASafariM.Api.csproj",
     "co": "cd .. && yarn run co",

@@ -1,17 +1,17 @@
 /* Google Fonts */
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
-@import url('https://fonts.cdnfonts.com/css/segoe-ui-4');
+@import url("https://fonts.cdnfonts.com/css/segoe-ui-4");
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Madimi+One&family=Poetsen+One&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Rubik+Maps&family=Rubik+Scribble&family=Ubuntu+Sans+Mono:ital,wght@0,400..700;1,400..700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Madimi+One&family=Poetsen+One&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik+Maps&family=Rubik+Scribble&family=Ubuntu+Sans+Mono:ital,wght@0,400..700;1,400..700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Madimi+One&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Poetsen+One&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik+Maps&family=Rubik+Scribble&family=Ubuntu+Sans+Mono:ital,wght@0,400..700;1,400..700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Madimi+One&family=Poetsen+One&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Rubik+Maps&family=Rubik+Scribble&family=Ubuntu+Sans+Mono:ital,wght@0,400..700;1,400..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Madimi+One&family=Poetsen+One&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik+Maps&family=Rubik+Scribble&family=Ubuntu+Sans+Mono:ital,wght@0,400..700;1,400..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Madimi+One&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Poetsen+One&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik+Maps&family=Rubik+Scribble&family=Ubuntu+Sans+Mono:ital,wght@0,400..700;1,400..700&display=swap");
 
-@import './styles/theme-variables.css';
-@import './styles/sitemap-page.css';
-@import './styles/custom.css';
+@import "./styles/theme-variables.css";
+@import "./styles/sitemap-page.css";
+@import "./styles/custom.css";
 
 @tailwind base;
 @tailwind components;
@@ -52,7 +52,6 @@
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 8px 12px rgba(0, 0, 0, 0.15);
   --shadow-xl: 0 16px 24px rgba(0, 0, 0, 0.2);
-
 }
 
 @layer components {
@@ -407,7 +406,6 @@
   border-radius: 4px;
 }
 
-
 .prose pre code {
   @apply p-0 border-0 bg-transparent;
   overflow-x: auto;
@@ -464,7 +462,7 @@
 }
 
 .changelog-title::after {
-  content: '';
+  content: "";
   @apply absolute bottom-0 left-0 w-24 h-1 bg-info transform transition-all duration-300 ease-in-out;
   border-radius: 4px;
 }
@@ -653,7 +651,6 @@
   }
 }
 
-
 /* navbar */
 .navbar {
   @apply sticky top-0 z-50 flex flex-wrap items-center justify-between px-4 py-2 lg:py-0;
@@ -727,7 +724,7 @@
 
 /* Responsive behavior for navbar items */
 @media (max-width: 1024px) {
-  .navbar-tree-container>div {
+  .navbar-tree-container > div {
     width: 100%;
   }
 
@@ -742,7 +739,8 @@
   background-color: var(--bg-primary);
   border: 1px solid var(--border-primary);
   border-radius: 0.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
   z-index: 999;
 }
 
@@ -752,7 +750,7 @@
 }
 
 .left-container {
-  @apply flex items-center space-x-4 mr-2 flex-shrink-0
+  @apply flex items-center space-x-4 mr-2 flex-shrink-0;
 }
 
 .right-container {
@@ -794,4 +792,35 @@
 .list-inside {
   list-style-position: inside;
   padding-left: var(--spacing-medium);
+}
+
+.animate-pulse1 {
+  animation: pulse1 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-pulse1 {
+  animation: pulse1 3s ease-in-out infinite;
+  background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+  background-size: 200% 200%;
+  border-radius: 8px;
+  padding: 10px 20px;
+  color: var(--text-inverted);
+}
+
+@keyframes pulse1 {
+  0% {
+    background-position: 0% 50%;
+    transform: rotate(0deg);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    background-position: 100% 50%;
+    transform: rotate(5deg);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  }
+  100% {
+    background-position: 0% 50%;
+    transform: rotate(0deg);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
 }

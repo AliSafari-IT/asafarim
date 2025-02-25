@@ -795,11 +795,7 @@
 }
 
 .animate-pulse1 {
-  animation: pulse1 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-.animate-pulse1 {
-  animation: pulse1 3s ease-in-out infinite;
+  animation: pulse1 3s ease-in-out 3;
   background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
   background-size: 200% 200%;
   border-radius: 8px;

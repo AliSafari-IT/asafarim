@@ -245,6 +245,16 @@ try
     // Configure HTTPS redirection only in production
     if (!app.Environment.IsDevelopment())
     {
+        app.Use(
+            async (context, next) =>
+            {
+                if (!context.Request.IsLocal())
+                {
+                    context.Request.Scheme = "https";
+                }
+                await next();
+            }
+        );
         app.UseHttpsRedirection();
     }
 

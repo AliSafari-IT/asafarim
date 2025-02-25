@@ -1,7 +1,6 @@
 import { getUserProfile, updateUserProfile } from "@/api/authapi";
 import { IUserModelUpdate } from "@/interfaces";
 import { IUserInfo } from "@/interfaces/IUserInfo";
-import { delay } from "lodash";
 
 const handleUpdateProfile = async (
   authenticatedUser: IUserInfo,

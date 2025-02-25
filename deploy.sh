@@ -137,6 +137,30 @@ if ! systemctl is-active --quiet asafarim-api; then
     exit 1
 fi
 
+# Step 8: Health Check
+echo "🏥 Performing health check..."
+HEALTH_CHECK_URL="http://localhost:5000/api/health"
+MAX_RETRIES=60
+retries=0
+
+while [ $retries -lt $MAX_RETRIES ]; do
+    response=$(curl -sk "$HEALTH_CHECK_URL" 2>&1)
+    
+    if echo "$response" | grep -q '"status":"healthy"'; then
+        echo "✅ Health check passed"
+        break
+    fi
+    
+    sleep_time=$((1 + retries / 10))
+    echo "Waiting ${sleep_time} seconds before next attempt..."
+    sleep $sleep_time
+    retries=$((retries + 1))
+done
+
+if [ $retries -eq $MAX_RETRIES ]; then
+    echo "❌ Health check failed after $MAX_RETRIES attempts"
+    exit 1
+fi
 # **Deployment Complete**
 echo
 echo " ✅  Deployment completed successfully!  ✅"

@@ -311,6 +311,8 @@ namespace ASafariM.Infrastructure.Services
                 }
                 user.Email = command.Email ?? user.Email;
                 user.UserName = command.UserName ?? user.UserName;
+                user.FirstName = command.FirstName ?? user.FirstName;
+                user.LastName = command.LastName ?? user.LastName;
                 user.Biography = command.Biography ?? user.Biography;
                 user.ProfilePicture = command.ProfilePicture ?? user.ProfilePicture;
                 user.DateOfBirth = command.DateOfBirth ?? user.DateOfBirth;
@@ -341,6 +343,8 @@ namespace ASafariM.Infrastructure.Services
                 }
                 user.Email = command.Email ?? user.Email;
                 user.UserName = command.UserName ?? user.UserName;
+                user.FirstName = command.FirstName ?? user.FirstName;
+                user.LastName = command.LastName ?? user.LastName;
                 user.Biography = command.Biography ?? user.Biography;
                 user.ProfilePicture = command.ProfilePicture ?? user.ProfilePicture;
                 user.DateOfBirth = command.DateOfBirth ?? user.DateOfBirth;

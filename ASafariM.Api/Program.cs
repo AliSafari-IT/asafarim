@@ -33,9 +33,11 @@ var logDirectory =
         ? "/var/www/asafarim/logs"
         : "D:/repos/ASafariM/Logs";
 
+Console.WriteLine($"Log Directory: {logDirectory}"); // Debugging line
 Directory.CreateDirectory(logDirectory);
-var logFilePath = Path.Combine(logDirectory, ".log");
-
+var logFilePath = Path.Combine(logDirectory, "api_.log");
+Console.WriteLine($"Log File Path: {logFilePath}"); // Debugging line
+var line = new string('-', 100);
 try
 {
     var builder = WebApplication.CreateBuilder(args);
@@ -136,7 +138,7 @@ try
                         "http://localhost:3000",
                         "https://localhost:3000",
                         "http://localhost:5000",
-                        "http://localhost:5000",
+                        "https://localhost:5001",
                         "http://asafarim.com",
                         "https://asafarim.com",
                         "http://www.asafarim.com",
@@ -327,6 +329,7 @@ try
     try
     {
         Log.Information("Starting the application...");
+        Log.Information("{line}", line);
         await app.RunAsync();
         Log.Information("Application stopped gracefully.");
     }

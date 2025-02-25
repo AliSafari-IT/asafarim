@@ -8,8 +8,11 @@
   "scripts": {
     "co": "git add . && python .github/scripts/generate_commit_message.py && git push",
     "clean": "find ./ASafariM.* -name '*.csproj' -exec dotnet clean {} \\;",
+    "clean_dev": "powershell -File ./dotnet-commands.ps1 clean",
     "restore": "find ./ASafariM.* -name '*.csproj' -exec dotnet restore {} \\;",
+    "restore_dev": "powershell -File ./dotnet-commands.ps1 restore",
     "build": "find ./ASafariM.* -name '*.csproj' -exec dotnet build {} \\;",
+    "build_dev": "powershell -File ./dotnet-commands.ps1 build",
     "ui": "yarn workspace asafarim-ui start",
     "docs": "yarn workspace asafarim-docs start",
     "ui:build": "yarn workspace asafarim-ui build",

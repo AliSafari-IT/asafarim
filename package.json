@@ -23,6 +23,7 @@
     "api:build": "yarn clean && yarn restore && yarn build && dotnet build ./ASafariM.Api/ASafariM.Api.csproj",
     "api:run": "dotnet run --project ./ASafariM.Api/ASafariM.Api.csproj",
     "backend": "yarn clean && yarn restore && yarn build && yarn api",
+    "backend:build": "yarn clean && yarn restore && yarn build",
     "deploy_backend": "bash ./scripts/deploy/deploy_backend_dev.sh",
     "deploy_frontend": "bash ./scripts/deploy/deploy_frontend_dev.sh",
     "deploy": "yarn deploy_backend && yarn deploy_frontend",

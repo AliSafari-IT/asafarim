@@ -1,16 +1,21 @@
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 using ASafariM.Application.DTOs;
 using ASafariM.Application.Interfaces;
 using ASafariM.Domain.Entities;
 using ASafariM.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace ASafariM.Presentation.Controllers;
 
-[ApiController]
 [Route("api/[controller]")]
+[ApiController]
 public class ProjectsController : ControllerBase
 {
     private readonly IProjectService _projectService;
@@ -63,12 +68,24 @@ public class ProjectsController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Creates a new project
+    /// </summary>
+    /// <param name="projectDto">Project creation data</param>
+    /// <returns>Newly created project</returns>
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<Project>> CreateProject([FromBody] CreateProjectDto projectDto)
     {
         try
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             _logger.LogInformation("Creating new project");
+
             var project = new Project
             {
                 Name = projectDto.Name,
@@ -83,16 +100,27 @@ public class ProjectsController : ControllerBase
 
             var createdProject = await _projectService.CreateProjectAsync(project);
             _logger.LogInformation($"Created project: {createdProject.Name}");
+
             return CreatedAtAction(
                 nameof(GetProjectById),
                 new { id = createdProject.Id },
                 createdProject
             );
         }
+        catch (ValidationException ex)
+        {
+            _logger.LogWarning(ex, "Validation error creating project");
+            return BadRequest(ex.Message);
+        }
+        catch (DbUpdateException ex)
+        {
+            _logger.LogError(ex, "Database error creating project");
+            return StatusCode(500, "Database error");
+        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error creating new project: {Message}", ex.ToString());
-            return StatusCode(500, new { error = ex.Message, details = ex.ToString() });
+            _logger.LogError(ex, "Error creating new project");
+            return StatusCode(500, "Internal server error");
         }
     }
 

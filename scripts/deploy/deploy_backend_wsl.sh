@@ -2,7 +2,7 @@
 
 # Set Variables
 SERVER_IP="141.136.42.239"
-LOCAL_BACKEND_DIR="D:/repos/ASafariM/ASafariM.Api/bin/Release/net9.0"
+LOCAL_BACKEND_DIR="/mnt/d/repos/ASafariM/ASafariM.Api/bin/Release/net9.0"
 REMOTE_BACKEND_DIR="/var/www/asafarim/backend"
 REMOTE_BACKUP_DIR="/var/www/asafarim/backups"
 SERVICE_NAME="asafarim-api"
@@ -27,14 +27,14 @@ ssh root@$SERVER_IP "sudo systemctl stop $SERVICE_NAME" || { log "ERROR" "❌ Fa
 log "INFO" "📦 Creating backup of the current deployment..."
 ssh root@$SERVER_IP "mkdir -p $REMOTE_BACKUP_DIR && cp -r $REMOTE_BACKEND_DIR $REMOTE_BACKUP_DIR/backend_$TIMESTAMP"
 
-# Step 3: Build the backend on the local machine
+# Step 3: Build the backend on the local machine (Windows)
 log "INFO" "⚙️ Building backend on local machine..."
-cd "$(cygpath -u "D:/repos/ASafariM/ASafariM.Api")" || { log "ERROR" "❌ Local backend directory not found!"; exit 1; }
+cd "/mnt/d/repos/ASafariM/ASafariM.Api" || { log "ERROR" "❌ Local backend directory not found!"; exit 1; }
 dotnet clean && dotnet restore && dotnet build -c Release || { log "ERROR" "❌ Build failed!"; exit 1; }
 
 # Step 4: Copy the new build to the server
 log "INFO" "🚛 Deploying new backend files to the server..."
-scp -r "$LOCAL_BACKEND_DIR"/* root@$SERVER_IP:$REMOTE_BACKEND_DIR || { log "ERROR" "❌ Failed to copy files!"; exit 1; }
+scp -r $LOCAL_BACKEND_DIR/* root@$SERVER_IP:$REMOTE_BACKEND_DIR || { log "ERROR" "❌ Failed to copy files!"; exit 1; }
 
 # Step 5: Set correct permissions on the server
 log "INFO" "🔑 Setting correct file permissions..."

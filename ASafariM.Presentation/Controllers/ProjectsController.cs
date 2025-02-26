@@ -32,7 +32,9 @@ public class ProjectsController : ControllerBase
     {
         try
         {
+            _logger.LogInformation("Fetching all projects");
             var projects = await _projectService.GetAllProjectsAsync();
+            _logger.LogInformation($"Successfully retrieved {projects.Count()} projects");
             return Ok(projects);
         }
         catch (Exception ex)

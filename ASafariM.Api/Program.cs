@@ -28,10 +28,12 @@ using Serilog.Context;
 using Serilog.Events;
 
 // Configure logging directory
+DotNetEnv.Env.Load();
+var environment = Environment.GetEnvironmentVariable("ASAFARIM_ENV");
+Console.WriteLine($"ASAFARIM_ENV: {environment}");
+
 var logDirectory =
-    Environment.GetEnvironmentVariable("ASAFARIM_ENV") == "production"
-        ? "/var/www/asafarim/logs"
-        : "D:/repos/ASafariM/Logs";
+    environment == "production" ? "/var/www/asafarim/logs" : "D:/repos/ASafariM/Logs";
 
 Console.WriteLine($"Log Directory: {logDirectory}"); // Debugging line
 Directory.CreateDirectory(logDirectory);
@@ -226,6 +228,10 @@ try
             }
         });
     });
+
+    // Health check endpoint
+    Log.Information("Configuring health check endpoint...");
+    app.MapHealthChecks("/api/health");
 
     // HTTPS redirection (disabled for local health checks)
     app.Use(

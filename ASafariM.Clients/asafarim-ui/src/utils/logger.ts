@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { apiConfig } from "@/config/api";
 
 // src/utils/logger.ts
@@ -17,7 +17,7 @@ const logToServer = async (message: string, level: string = "info") => {
         });
     } catch (error) {
         // Only log server errors to console in production
-        console.error("Failed to send log to server:", error);
+        console.error("Failed to send log to server:", (error as AxiosError).message);
     }
 };
 

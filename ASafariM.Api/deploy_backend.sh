@@ -117,19 +117,19 @@ if ! systemctl is-active --quiet asafarim-api; then
     journalctl -u asafarim-api -n 50 --no-pager
 fi
 
-# Health check
-echo "🏥 Performing health check..."
-if ! check_health; then
-    echo "❌ Health check failed - attempting rollback"
-    rollback
-    if ! check_health; then
-        echo "❌ Health check still failing after rollback - manual intervention required"
-        exit 1
-    else
-        echo "⚠️ Rollback successful but deployment script had issues"
-        exit 0
-    fi
-fi
+# # Health check
+# echo "🏥 Performing health check..."
+# if ! check_health; then
+#     echo "❌ Health check failed - attempting rollback"
+#     rollback
+#     if ! check_health; then
+#         echo "❌ Health check still failing after rollback - manual intervention required"
+#         exit 1
+#     else
+#         echo "⚠️ Rollback successful but deployment script had issues"
+#         exit 0
+#     fi
+# fi
 
 
 

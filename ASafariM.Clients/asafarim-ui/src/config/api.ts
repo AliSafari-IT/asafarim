@@ -1,8 +1,12 @@
 const getApiConfig = () => {
-    const isDevelopment = import.meta.env.VITE_ENVIRONMENT === "development";
-    
+    const isDevelopment = import.meta.env.VITE_ENVIRONMENT === 'development';
+
+    const BASE_URL = isDevelopment ? 'http://localhost:5000' : 'https://asafarim.com';
+    const API_URL = `${BASE_URL}/api`;
+    console.log('api.ts API_URL:', API_URL);
+
     return {
-        baseURL: isDevelopment ? '/api' : 'https://asafarim.com/api',
+        baseURL: API_URL,
         isDevelopment
     };
 };

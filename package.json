@@ -20,7 +20,7 @@
     "docs:serve": "yarn workspace asafarim-docs serve",
     "ui:serve": "yarn workspace asafarim-ui serve",
     "api": "yarn workspace asafarim-api start",
-    "api:build": "yarn clean && yarn restore && yarn build && dotnet build ./ASafariM.Api/ASafariM.Api.csproj",
+    "api:build": "yarn clean && yarn restore && yarn build && dotnet build -c Release ./ASafariM.Api/ASafariM.Api.csproj",
     "api:run": "dotnet run --project ./ASafariM.Api/ASafariM.Api.csproj",
     "backend": "yarn clean && yarn restore && yarn build && yarn api",
     "backend:build": "yarn clean && yarn restore && yarn build",

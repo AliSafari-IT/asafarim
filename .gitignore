@@ -15,7 +15,7 @@ yarn.lock
 appsettings.json
 appsettings.Development.json
 backups/**
-
+.env
 #!.yarn/cache
 .pnp.*
 

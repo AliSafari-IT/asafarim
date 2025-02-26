@@ -9,7 +9,7 @@ echo "🚀 Starting Full Deployment..."
 
 # Function to check if a git pull is needed
 update_repo() {
-    cd "$1" || { echo "❌ Error: Directory not found - $1"; exit 1; }
+    cd "$1" || cd $BASE_DIR || { echo "❌ Error: Directory not found - $1"; exit 1; }
 
     # Check if there are updates on remote
     echo "🔄 Checking for updates in $1..."

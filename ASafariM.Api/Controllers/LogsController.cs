@@ -1,14 +1,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 [ApiController]
-[Route("api/logs")]
+[Route("api/[controller]")]
 public class LogsController : ControllerBase
 {
     private readonly ILogger<LogsController> _logger;
@@ -133,8 +132,8 @@ public class LogsController : ControllerBase
 
 public class LogMessage
 {
-    public string Message { get; set; }
-    public string Level { get; set; }
+    public string? Message { get; set; }
+    public string? Level { get; set; }
 }
 
 // Custom FileCallbackResult for streaming response

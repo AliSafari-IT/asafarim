@@ -8,7 +8,7 @@ PUBLISH_DIR="/var/www/asafarim/backend"
 BACKUP_DIR="/var/www/asafarim/backups"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 MAX_RETRIES=3
-HEALTH_CHECK_URL="http://localhost:5000/api/health"
+HEALTH_CHECK_URL="https://asafarim.com/api/health"
 
 # Clean old backups (keep only the newest one)
 cd "$BACKUP_DIR" && ls -t | tail -n +2 | xargs -r rm -rf
@@ -16,7 +16,7 @@ cd "$BACKUP_DIR" && ls -t | tail -n +2 | xargs -r rm -rf
 # Function to check API health
 check_health() {
     local retries=0
-    local max_retries=60  # Increased to 60 seconds
+    local max_retries=20  # Increased to 60 seconds
     while [ $retries -lt $max_retries ]; do
         echo "Attempt $((retries + 1)) to check health..."
         response=$(curl -sk "$HEALTH_CHECK_URL" 2>&1)

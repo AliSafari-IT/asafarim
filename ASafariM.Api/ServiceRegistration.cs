@@ -77,6 +77,14 @@ namespace ASafariM.Api
             services.AddScoped<JwtTokenService>();
             Log.Information("Registered JwtTokenService.");
 
+            services.AddScoped<IProjectService, ProjectService>();
+            services.AddScoped<
+                ASafariM.Application.Interfaces.IEntityService<Project>,
+                ProjectService
+            >();
+            Log.Information("Registered IProjectService with ProjectService.");
+            Log.Information("Registered IEntityService<Project> with ProjectService.");
+
             // Register AutoMapper profiles
             services.AddAutoMapper(typeof(UserMappingProfile).Assembly);
             Log.Information("Registered AutoMapper profiles.");

@@ -1,7 +1,7 @@
 using ASafariM.Application.CommandModels;
 using ASafariM.Application.DTOs;
 
-namespace ASafariM.Application.Services
+namespace ASafariM.Application.Interfaces
 {
     public interface IAuthService
     {

@@ -1,6 +1,8 @@
 using System;
 using System.Net;
 using System.Text;
+using ASafariM.Application.CommandModels;
+using ASafariM.Application.Interfaces;
 using ASafariM.Application.Services;
 using MailKit.Net.Smtp;
 using MailKit.Security;
@@ -45,7 +47,8 @@ namespace ASafariM.Infrastructure.Services
 
                 var userBuilder = new BodyBuilder
                 {
-                    HtmlBody = $@"
+                    HtmlBody =
+                        $@"
 <!DOCTYPE html>
 <html lang='en'>
 <head>
@@ -85,7 +88,8 @@ namespace ASafariM.Infrastructure.Services
 
                 var adminBuilder = new BodyBuilder
                 {
-                    HtmlBody = $@"
+                    HtmlBody =
+                        $@"
 <!DOCTYPE html>
 <html lang='en'>
 <head>

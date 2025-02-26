@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using ASafariM.Application.CommandModels;
 using ASafariM.Application.DTOs;
-using ASafariM.Application.Services;
+using ASafariM.Application.Interfaces;
 using ASafariM.Domain.Entities;
 using ASafariM.Domain.Enums;
 using ASafariM.Domain.Interfaces;

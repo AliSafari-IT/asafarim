@@ -22,6 +22,6 @@ namespace ASafariM.Application.DTOs
         public bool IsPublished { get; set; }
         public DateTime? PublishedDate { get; set; }
         public ICollection<SitemapItemDto> Children { get; set; }
-        public ICollection<TopicDto> Topics { get; set; }
+        public List<string>? Topics { get; set; }
     }
 }

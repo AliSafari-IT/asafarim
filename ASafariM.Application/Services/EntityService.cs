@@ -1,9 +1,12 @@
+using ASafariM.Application.Interfaces;
+using ASafariM.Domain.Entities;
 using ASafariM.Domain.Interfaces;
 using Serilog;
 
 namespace ASafariM.Application.Services
 {
-    public class EntityService<T> : IEntityService<T> where T : class
+    public class EntityService<T> : IEntityService<T>
+        where T : class
     {
         private readonly IGenericRepository<T> _repository;
         private readonly ILogger _logger;
@@ -54,17 +57,17 @@ namespace ASafariM.Application.Services
             }
         }
 
-        public async Task<T> UpdateAsync(T entity)
+        public async Task UpdateAsync(T entity)
         {
             try
             {
-                await _repository.UpdateAsync(entity);
-                return entity;
+                await _repository.UpdateAsync(entity); // Assuming your repository has an UpdateAsync method
+                _logger.Information($"Updated entity of type {typeof(T).Name} successfully.");
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Error occurred while updating entity");
-                throw;
+                _logger.Error(ex, $"Error occurred while updating entity of type {typeof(T).Name}");
+                throw; // Rethrow or handle as needed
             }
         }
 

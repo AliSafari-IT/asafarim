@@ -1,4 +1,4 @@
-namespace ASafariM.Application.Services
+namespace ASafariM.Application.Interfaces
 {
     public interface IUserPreferenceService
     {

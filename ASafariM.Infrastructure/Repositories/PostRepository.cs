@@ -32,9 +32,10 @@ namespace ASafariM.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Post> GetByIdAsync(Guid id)
+        public async Task<Post?> GetByIdAsync(Guid id)
         {
-            return await _context.Posts.FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted);
+            var post = await _context.Posts.FindAsync(id);
+            return post;
         }
 
         public async Task<Post> GetBySlugAsync(string slug)

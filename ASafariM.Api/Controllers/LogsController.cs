@@ -15,6 +15,9 @@ public class LogsController : ControllerBase
     private const int DefaultPageSize = 1000; // Number of lines per page
     private const int MaxPageSize = 5000;
 
+    public string Message { get; set; } = string.Empty;
+    public string Level { get; set; } = string.Empty;
+
     public LogsController(ILogger<LogsController> logger)
     {
         _logger = logger;
@@ -49,7 +52,7 @@ public class LogsController : ControllerBase
             }
 
             Response.ContentType = "text/plain";
-            Response.Headers.Add("X-Total-Files", logFiles.Length.ToString());
+            Response.Headers["X-Total-Files"] = logFiles.Length.ToString();
 
             // Stream the response
             return new FileCallbackResult(

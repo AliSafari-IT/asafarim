@@ -5,12 +5,12 @@ using ASafariM.Application.DTOs;
 using ASafariM.Application.Interfaces;
 using ASafariM.Domain.Entities;
 using ASafariM.Domain.Enums;
+using ASafariM.Domain.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Serilog;
 
 namespace ASafariM.Presentation.Controllers;
 
@@ -32,14 +32,12 @@ public class ProjectsController : ControllerBase
     {
         try
         {
-            _logger.LogInformation("Getting all projects");
             var projects = await _projectService.GetAllProjectsAsync();
-            _logger.LogInformation($"Retrieved {projects.Count()} projects");
             return Ok(projects);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error getting all projects");
+            _logger.LogError(ex, "Error getting projects");
             return StatusCode(500, "Internal server error");
         }
     }

@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using ASafariM.Application.Interfaces;
 using Serilog;
 
 namespace ASafariM.Infrastructure.Services

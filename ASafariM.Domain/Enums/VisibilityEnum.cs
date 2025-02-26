@@ -5,5 +5,6 @@ namespace ASafariM.Domain.Enums
         Public = 0,
         MembersOnly = 1,
         Private = 2,
+        TeamOnly = 3,
     }
 }

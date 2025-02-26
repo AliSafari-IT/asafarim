@@ -20,13 +20,19 @@ show_menu() {
 
 # Function to execute the selected action
 execute_action() {
+    # Change to the root directory first
+    cd "$(dirname "$0")/../../"
+    
     case $1 in
     1)
         echo "Adding a new migration..."
-        dotnet ef migrations add --project ./ASafariM.Infrastructure/ASafariM.Infrastructure.csproj --startup-project ./ASafariM.Api/ASafariM.Api.csproj --verbose
+        read -p "Enter migration name: " migration_name
+        dotnet ef migrations add $migration_name \
+            --project "$(pwd)/ASafariM.Infrastructure/ASafariM.Infrastructure.csproj" \
+            --startup-project "$(pwd)/ASafariM.Api/ASafariM.Api.csproj" \
+            --verbose
         ;;
-    2)
-        echo "Updating database (Development)..."
+    2)        echo "Updating database (Development)..."
         dotnet ef database update --project ./ASafariM.Infrastructure/ASafariM.Infrastructure.csproj --startup-project ./ASafariM.Api/ASafariM.Api.csproj --verbose
         ;;
     3)

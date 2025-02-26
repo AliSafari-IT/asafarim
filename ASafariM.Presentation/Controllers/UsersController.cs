@@ -1,6 +1,7 @@
 using ASafariM.Application.CommandModels;
 using ASafariM.Application.DTOs;
-using ASafariM.Application.Services;
+using ASafariM.Application.Interfaces;
+using ASafariM.Domain.Entities;
 using ASafariM.Domain.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -284,7 +285,12 @@ namespace ASafariM.Presentation.Controllers
                 return StatusCode(500, "An error occurred while changing the password");
             }
         }
-
+        /// <summary>
+        /// Check availability
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="email"></param>
+        /// <returns></returns>
         [HttpGet("check-availability/validate")]
         public async Task<ActionResult<object>> CheckAvailability(
             [FromQuery] string? username = null,

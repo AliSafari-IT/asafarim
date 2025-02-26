@@ -1,5 +1,6 @@
 using System.Security.Cryptography; // System.Security.Cryptography
 using ASafariM.Application.CommandModels; // Command models
+using ASafariM.Application.Interfaces;
 using ASafariM.Application.Services;
 using ASafariM.Application.Utils;
 using ASafariM.Domain.Entities;

@@ -2,7 +2,7 @@ using ASafariM.Application.CommandModels;
 using ASafariM.Application.DTOs;
 using ASafariM.Domain.Entities;
 
-namespace ASafariM.Application.Services
+namespace ASafariM.Application.Interfaces
 {
     public interface IUserService
     {

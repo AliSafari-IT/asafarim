@@ -50,14 +50,13 @@ ssh root@$SERVER_IP "sudo systemctl restart $SERVICE_NAME" || { log "ERROR" "❌
 
 # Step 8: Check API health status
 log "INFO" "🌍 Checking API health..."
-HEALTH_RESPONSE=$(ssh root@$SERVER_IP "curl -s $REMOTE_HEALTH_CHECK_URL")
+HEALTH_RESPONSE=$(ssh root@$SERVER_IP "sudo systemctl daemon-reload && sudo systemctl restart $SERVICE_NAME && sudo systemctl status $SERVICE_NAME && curl -s $REMOTE_HEALTH_CHECK_URL")
 
 if echo "$HEALTH_RESPONSE" | grep -q '"status":"healthy"'; then
     log "INFO" "✅ Backend is running successfully!"
 else
     log "ERROR" "❌ Backend health check failed! Rolling back..."
-    ssh root@$SERVER_IP "rm -rf $REMOTE_BACKEND_DIR && cp -r $REMOTE_BACKUP_DIR/backend_$TIMESTAMP $REMOTE_BACKEND_DIR && sudo systemctl restart $SERVICE_NAME"
+   #  ssh root@$SERVER_IP "rm -rf $REMOTE_BACKEND_DIR && cp -r $REMOTE_BACKUP_DIR/backend_$TIMESTAMP $REMOTE_BACKEND_DIR && sudo systemctl restart $SERVICE_NAME"
     exit 1
 fi
-
 log "INFO" "✅ Deployment completed successfully!"

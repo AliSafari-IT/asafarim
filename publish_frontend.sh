@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Ensure the deployment directory exists
+sudo mkdir -p /var/www/asafarim.com/public_html
+
 # Clean and install asafarim-ui working directory
 if [ -d /var/www/asafarim.com/public_html ]; then
     echo "Cleaning public_html directory..."
@@ -20,6 +23,13 @@ cd /var/www/asafarim/ASafariM.Clients/asafarim-ui
 sudo cp -r dist/* /var/www/asafarim.com/public_html/
 sudo chown -R www-data:www-data /var/www/asafarim.com/public_html
 sudo chmod -R 755 /var/www/asafarim.com/public_html
+
+# Create a backup of the current deployment
+echo "Creating backup..."
+BACKUP_DIR="/var/www/asafarim/backups/frontends"
+sudo mkdir -p "$BACKUP_DIR"
+BACKUP_FILE="asafarim-ui_backup_$(date +%Y%m%d_%H%M%S).tar.gz"
+sudo tar -czvf "$BACKUP_DIR/$BACKUP_FILE" -C /var/www/asafarim.com/public_html .
 
 # Restart nginx
 echo "Restarting nginx..."

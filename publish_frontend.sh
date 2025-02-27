@@ -5,6 +5,7 @@ if [ -d /var/www/asafarim.com/public_html ]; then
 fi
 
 cd /var/www/asafarim/ASafariM.Clients/asafarim-ui
+yarn clean
 yarn install
 yarn build
 sudo cp -r dist/* /var/www/asafarim.com/public_html/

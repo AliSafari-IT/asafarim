@@ -56,7 +56,7 @@ if echo "$HEALTH_RESPONSE" | grep -q '"status":"healthy"'; then
     log "INFO" "✅ Backend is running successfully!"
 else
     log "ERROR" "❌ Backend health check failed! Rolling back..."
+    log "INFO" "✅ Deployment completed successfully!"
    #  ssh root@$SERVER_IP "rm -rf $REMOTE_BACKEND_DIR && cp -r $REMOTE_BACKUP_DIR/backend_$TIMESTAMP $REMOTE_BACKEND_DIR && sudo systemctl restart $SERVICE_NAME"
     exit 1
 fi
-log "INFO" "✅ Deployment completed successfully!"

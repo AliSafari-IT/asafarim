@@ -285,6 +285,7 @@ namespace ASafariM.Presentation.Controllers
                 return StatusCode(500, "An error occurred while changing the password");
             }
         }
+
         /// <summary>
         /// Check availability
         /// </summary>

@@ -26,10 +26,11 @@ sudo chmod -R 755 /var/www/asafarim.com/public_html
 
 # Create a backup of the current deployment
 echo "Creating backup..."
+CURRENT_DIR="/var/www/asafarim.com/public_html"
 BACKUP_DIR="/var/www/asafarim/backups/frontends"
 sudo mkdir -p "$BACKUP_DIR"
 BACKUP_FILE="asafarim-ui_backup_$(date +%Y%m%d_%H%M%S).tar.gz"
-sudo tar -czvf "$BACKUP_DIR/$BACKUP_FILE" -C /var/www/asafarim.com/public_html .
+sudo tar -czvf "$BACKUP_DIR/$BACKUP_FILE" -C "$CURRENT_DIR" .
 
 # Restart nginx
 echo "Restarting nginx..."

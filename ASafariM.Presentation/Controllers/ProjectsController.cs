@@ -73,11 +73,11 @@ public class ProjectsController : ControllerBase
     /// </summary>
     /// <param name="projectDto">Project creation data</param>
     /// <returns>Newly created project</returns>
-    [HttpPost]
+    [HttpPost("projects")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<Project>> CreateProject([FromBody] CreateProjectDto projectDto)
+    public async Task<ActionResult<Project>> CreateProject([FromBody] Project projectDto)
     {
         try
         {

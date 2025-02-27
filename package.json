@@ -30,6 +30,7 @@
     "dev": "concurrently \"yarn workspace asafarim-api start\" \"yarn workspace asafarim-ui start\"",
     "app": "concurrently \"yarn backend\" \"yarn ui\"",
     "start": "concurrently \"yarn backend\" \"yarn ui\"",
+    "remote:publish": "cd /var/www/asafarim/ASafariM.Api && dotnet publish -c Release -o /var/www/asafarim/backend",
     "mig": "bash ./scripts/bash_files/dotnet-ef.sh",
     "mig_dev": "powershell -File ./scripts/bash_files/dotnet-ef.ps1",
     "test:backend": "dotnet test D:/repos/ASafariM/ASafariM.Test/ASafariM.Test.csproj --logger \"trx;LogFileName=D:/repos/ASafariM/ASafariM.Test/TestResults/test_results.trx\"",

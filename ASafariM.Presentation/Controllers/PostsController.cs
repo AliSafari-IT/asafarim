@@ -16,7 +16,6 @@ using Serilog;
 
 namespace ASafariM.Presentation.Controllers
 {
-
     [ApiController]
     [Route("api/[controller]")]
     public class PostsController : ControllerBase

@@ -132,15 +132,13 @@
   border-bottom: 1px solid var(--border-primary);
 }
 
-.health-check__card {
-  :is(p) {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 0;
-    border-bottom: 1px dashed var(--border-primary);
-    margin: 0;
-  }
+.health-check__card :is(p) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed var(--border-primary);
+  margin: 0;
 }
 
 .health-check__card p:last-child {

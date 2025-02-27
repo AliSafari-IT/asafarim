@@ -4,9 +4,11 @@ export const plugins = {
   "autoprefixer": {},
   "postcss-nesting": {}, // Enables CSS nesting
   "postcss-preset-env": {
-    stage: 1,
+    stage: 3,
     features: {
-      "nesting-rules": true
+      "nesting-rules": true,
+      "custom-properties": true,
+      "media-query-ranges": true
     }
   }
 };

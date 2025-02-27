@@ -8,7 +8,7 @@ PROJECTS=(
 )
 
 for proj in "${PROJECTS[@]}"; do
-  if ! dotnet $1 $proj; then
+  if ! dotnet $1 $proj --verbose; then
     echo "Failed to execute 'dotnet $1 $proj'"
     exit 1
   fi

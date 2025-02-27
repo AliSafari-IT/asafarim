@@ -21,7 +21,7 @@ backups/**
 
 # Ignore node_modules for React
 node_modules/
-launchSettings.json
+Properties/launchSettings.json
 deploy/
 deploy/**
 # Ignore build output for React

@@ -12,10 +12,10 @@ fi
 # Clean and install root working directory and asafarim-ui
 echo "Cleaning and installing dependencies..."
 cd /var/www/asafarim
-yarn clean --verbose
-yarn install --verbose
-yarn run ui:reinstall --verbose
-yarn run ui:build --verbose
+yarn clean
+yarn install
+yarn run ui:reinstall
+yarn run ui:build
 
 # Build asafarim-ui working directory
 echo "Building and deploying asafarim-ui..."

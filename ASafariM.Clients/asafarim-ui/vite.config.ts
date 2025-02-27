@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import { configDefaults, defineConfig as defineVitest } from 'vitest/config';
+import { configDefaults, defineConfig as defineVitestConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import vitePluginMd from 'vite-plugin-md';
 import path from 'path';
@@ -16,7 +16,7 @@ export default defineConfig({
     vitePluginMd({
       markdownItOptions: {
         html: true,
-      },      
+      },
     }),
     md()
   ],
@@ -28,10 +28,7 @@ export default defineConfig({
     },
   },
   define: {
-    'process.env': {
-      NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-      VITE_API_URL: JSON.stringify('http://localhost:5000'),
-    },
+    'process.env.VITE_API_URL': JSON.stringify(process.env.VITE_API_URL || 'http://localhost:5000'),
   },
   server: {
     port: 3000,
@@ -40,7 +37,6 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:5000',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '/api')
       }
     }
   },
@@ -78,7 +74,7 @@ export default defineConfig({
   },
 });
 
-export const vitestConfig = defineVitest({
+export const vitestConfig = defineVitestConfig({
   test: {
     environment: 'jsdom',
     globals: true,

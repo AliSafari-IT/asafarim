@@ -1,27 +1,20 @@
-import { defineConfig, PluginOption } from 'vite';
-import { configDefaults, defineConfig as defineVitestConfig } from 'vitest/config';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
 import vitePluginMd from 'vite-plugin-md';
+import { visualizer } from 'rollup-plugin-visualizer';
 import path from 'path';
 import md from 'vite-plugin-md';
-import { visualizer } from 'rollup-plugin-visualizer';
+import react from '@vitejs/plugin-react';
+import { PluginOption } from 'vite';
 
-// https://vite.dev/config/
 export default defineConfig({
   optimizeDeps: {
     include: ['d3', 'react', 'react-dom'],
     exclude: ['@fluentui/tokens'],
   },
   plugins: [
-    visualizer({
-      open: true,
-    }) as PluginOption,
+    visualizer({ open: true }) as PluginOption,
     react(),
-    vitePluginMd({
-      markdownItOptions: {
-        html: true,
-      },
-    }),
+    vitePluginMd({ markdownItOptions: { html: true } }),
     md()
   ],
   resolve: {
@@ -32,23 +25,23 @@ export default defineConfig({
     },
   },
   define: {
-    'process.env.VITE_API_URL': JSON.stringify(process.env.VITE_API_URL || 'http://localhost:5000'),
+    'import.meta.env.VITE_API_URL': JSON.stringify(process.env.VITE_API_URL || 'http://localhost:5000'),
   },
   server: {
     port: 3000,
     open: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: process.env.VITE_API_URL || 'http://localhost:5000',
         changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, '/api'),
       }
     }
   },
   css: {
     preprocessorOptions: {
-      scss: {
-        quietDeps: true
-      }
+      scss: { quietDeps: true }
     },
     postcss: './postcss.config.cjs',
   },
@@ -61,12 +54,7 @@ export default defineConfig({
       output: {
         manualChunks: {
           'd3': ['d3'],
-          'vendor': [
-            'react',
-            'react-dom',
-            '@fluentui/react-components',
-            '@fluentui/react'
-          ]
+          'vendor': ['react', 'react-dom', '@fluentui/react-components', '@fluentui/react']
         },
       },
     },
@@ -75,17 +63,5 @@ export default defineConfig({
       transformMixedEsModules: true
     },
     chunkSizeWarningLimit: 2000,
-  },
-});
-
-export const vitestConfig = defineVitestConfig({
-  test: {
-    environment: 'jsdom',
-    globals: true,
-    setupFiles: './tests/setupTests.js',
-    exclude: [...configDefaults.exclude],
-    coverage: {
-      reporter: ['text', 'json', 'html'],
-    },
   },
 });

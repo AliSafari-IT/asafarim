@@ -1,9 +1,10 @@
-import { defineConfig } from 'vite';
+import { defineConfig, PluginOption } from 'vite';
 import { configDefaults, defineConfig as defineVitestConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import vitePluginMd from 'vite-plugin-md';
 import path from 'path';
 import md from 'vite-plugin-md';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -12,6 +13,9 @@ export default defineConfig({
     exclude: ['@fluentui/tokens'],
   },
   plugins: [
+    visualizer({
+      open: true,
+    }) as PluginOption,
     react(),
     vitePluginMd({
       markdownItOptions: {

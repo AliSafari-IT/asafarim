@@ -11,3 +11,8 @@ yarn build
 sudo cp -r dist/* /var/www/asafarim.com/public_html/
 sudo chown -R www-data:www-data /var/www/asafarim.com/public_html
 sudo chmod -R 755 /var/www/asafarim.com/public_html
+
+# restart nginx
+sudo systemctl restart nginx
+# check if nginx is running
+sudo systemctl status nginx

@@ -627,7 +627,7 @@
   table {
     @apply w-full my-6 border-collapse;
   }
-  
+
   table th {
     @apply px-4 py-3 text-left font-semibold;
     background-color: var(--markdown-table-header-bg);

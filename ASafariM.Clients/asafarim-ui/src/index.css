@@ -351,8 +351,7 @@
   @apply text-2xl;
 }
 
-.prose :is(p, ul, ol) {
-  @apply text-lg leading-relaxed mb-6;
+.prose :is(p) {
   color: var(--markdown-text);
 }
 
@@ -581,7 +580,7 @@
     color: var(--markdown-header-text);
   }
 
-  p {
+  :is(p) {
     color: var(--markdown-text);
   }
 

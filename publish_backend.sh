@@ -3,6 +3,8 @@
 # Clean deployment directory
 sudo rm -rf /var/www/asafarim/backend/*
 
+cd /var/www/asafarim
+yarn backend:build
 # Build and publish backend
 cd /var/www/asafarim/ASafariM.Api
 dotnet publish -c Release -o /var/www/asafarim/backend

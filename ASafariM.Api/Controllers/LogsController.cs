@@ -58,7 +58,7 @@ public class LogsController : ControllerBase
                 "text/plain",
                 async (stream, _) =>
                 {
-                    var writer = new StreamWriter(stream, Encoding.UTF8);
+                    using var writer = new StreamWriter(stream, Encoding.UTF8);
                     foreach (var logFile in logFiles)
                     {
                         await writer.WriteLineAsync(

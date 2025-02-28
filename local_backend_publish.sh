@@ -1,7 +1,5 @@
 #!/bin/bash
 
-SERVER_IP="141.136.42.239"
-SERVER_LOGIN="root"
 LOCAL_BACKEND_DIR="D:/repos/ASafariM/ASafariM.Api"
 LOCAL_DEPLOY_DIR="D:/repos/ASafariM/ASafariM.Api/deploy"
 REMOTE_DEPLOY_DIR="/var/www/asafarim/backend"
@@ -39,21 +37,21 @@ dotnet publish "$LOCAL_BACKEND_DIR/ASafariM.Api.csproj" --configuration Release 
 
 # Create deploy directory if not exists on the remote server
 echo "📁 Ensuring deployment directory exists..."
-ssh "$SERVER_LOGIN@$SERVER_IP" "mkdir -p $REMOTE_DEPLOY_DIR && sudo chown -R www-data:www-data $REMOTE_DEPLOY_DIR" || {
+ssh asafarim "mkdir -p $REMOTE_DEPLOY_DIR && sudo chown -R www-data:www-data $REMOTE_DEPLOY_DIR" || {
     echo "❌ Error: Failed to create deploy directory!"
     exit 1
 }
 
 # Create a backup of the current deployment
 echo "📦 Creating backup..."
-ssh "$SERVER_LOGIN@$SERVER_IP" "mkdir -p $REMOTE_BACKEND_BACKUP_DIR && chmod -R 755 $REMOTE_BACKEND_BACKUP_DIR && cp -r $REMOTE_DEPLOY_DIR/* $REMOTE_BACKEND_BACKUP_DIR" || {
+ssh asafarim "mkdir -p $REMOTE_BACKEND_BACKUP_DIR && chmod -R 755 $REMOTE_BACKEND_BACKUP_DIR && cp -r $REMOTE_DEPLOY_DIR/* $REMOTE_BACKEND_BACKUP_DIR" || {
     echo "❌ Error: Failed to create backup!"
     exit 1
 }
 
 # First stop the service gracefully
 echo "Stopping asafarim-api service..."
-ssh "$SERVER_LOGIN@$SERVER_IP" "sudo systemctl stop asafarim-api.service" || {
+ssh asafarim "sudo systemctl stop asafarim-api.service" || {
     echo "❌ Error: Failed to stop service!"
     exit 1
 }
@@ -63,17 +61,17 @@ if [ ! -d "$LOCAL_DEPLOY_DIR" ]; then
     echo "❌ Error: Local deploy directory not found - $LOCAL_DEPLOY_DIR"
     exit 1
 fi
-scp -r "$LOCAL_DEPLOY_DIR" "$SERVER_LOGIN@$SERVER_IP:$REMOTE_DEPLOY_DIR" || {
+scp -r "$LOCAL_DEPLOY_DIR" asafarim:"$REMOTE_DEPLOY_DIR" || {
     echo "❌ Error: Failed to copy files to remote server!"
     exit 1
 }
 
 # Copy locally published backend to remote server
 echo "🚀 Building and publishing backend..."
-if scp -r "$LOCAL_DEPLOY_DIR" "$SERVER_LOGIN@$SERVER_IP:$REMOTE_DEPLOY_DIR"; then
+if scp -r "$LOCAL_DEPLOY_DIR" asafarim:"$REMOTE_DEPLOY_DIR"; then
     echo "✅ Backend published successfully!"
     echo "🔄 Restarting asafarim-api service..."
-    ssh "$SERVER_LOGIN@$SERVER_IP" "sudo systemctl restart asafarim-api.service" || {
+    ssh asafarim "sudo systemctl restart asafarim-api.service" || {
         echo "❌ Error: Failed to restart service!"
         exit 1
     }
@@ -82,12 +80,12 @@ else
     echo "❌ Error: Failed to build and publish backend!"
     echo "🔃 Restoring previous deployment..."
     # remove deploy directory
-    ssh "$SERVER_LOGIN@$SERVER_IP" "rm -rf $REMOTE_DEPLOY_DIR" || {
+    ssh asafarim "rm -rf $REMOTE_DEPLOY_DIR" || {
         echo "❌ Error: Failed to remove deploy directory!"
         exit 1
     }
     # Restore previous deployment
-    ssh "$SERVER_LOGIN@$SERVER_IP" "cp -r $REMOTE_BACKEND_BACKUP_DIR/* $REMOTE_DEPLOY_DIR && rm -rf $REMOTE_BACKEND_BACKUP_DIR" || {
+    ssh asafarim "cp -r $REMOTE_BACKEND_BACKUP_DIR/* $REMOTE_DEPLOY_DIR && rm -rf $REMOTE_BACKEND_BACKUP_DIR" || {
         echo "❌ Error: Failed to restore previous deployment!"
         exit 1
     }

@@ -51,6 +51,7 @@ export default defineConfig({
     emptyOutDir: true,
     sourcemap: true,
     rollupOptions: {
+      external: ['@emailjs/browser', '@fluentui/tokens', '@fluentui/react-icons'],
       output: {
         manualChunks: {
           'd3': ['d3'],

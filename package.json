@@ -27,6 +27,10 @@
     "deploy_backend": "bash ./scripts/deploy/deploy_backend_dev.sh",
     "deploy_frontend": "bash ./scripts/deploy/deploy_frontend_dev.sh",
     "deploy": "yarn deploy_backend && yarn deploy_frontend",
+    "publish:frontend": "bash ./local_frontend_publish.sh",
+    "publish:backend": "bash ./local_backend_publish.sh",
+    "publish:all": "yarn publish:backend && yarn publish:frontend",
+    "publish": "node scripts/deploy/publish.js",
     "dev": "concurrently \"yarn workspace asafarim-api start\" \"yarn workspace asafarim-ui start\"",
     "app": "concurrently \"yarn backend\" \"yarn ui\"",
     "start": "concurrently \"yarn backend\" \"yarn ui\"",
@@ -72,6 +76,7 @@
     "@types/react-syntax-highlighter": "^15.5.13",
     "@vitest/ui": "^1.3.1",
     "concurrently": "^9.1.2",
+    "esbuild": "^0.25.0",
     "react-test-renderer": "18.2.0",
     "vite": "~5.0.0",
     "vitest": "^1.3.1"

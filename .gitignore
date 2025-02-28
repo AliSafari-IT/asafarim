@@ -14,6 +14,8 @@ yarn.lock
 # Documentation here: https://yarnpkg.com/features/caching#zero-installs
 appsettings.json
 appsettings.Development.json
+appsettings.Production.json
+launchSettings.json
 backups/**
 .env
 #!.yarn/cache
@@ -21,7 +23,9 @@ backups/**
 
 # Ignore node_modules for React
 node_modules/
-
+Properties/launchSettings.json
+deploy/
+deploy/**
 # Ignore build output for React
 build/
 dist/
@@ -115,3 +119,8 @@ log-*.txt
 
 yarn.lock
 yarn.lock
+
+ASafariM.Clients/asafarim-ui/stats.html
+ASafariM.Clients/asafarim-ui/stats.html
+ASafariM.Clients/asafarim-ui/stats.html
+ASafariM.Clients/asafarim-ui/stats.html

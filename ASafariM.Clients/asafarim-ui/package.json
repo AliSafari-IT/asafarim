@@ -50,6 +50,7 @@
     "d3": "^7.9.0",
     "d3-cloud": "^1.2.7",
     "docx": "^9.0.2",
+    "esbuild": "^0.25.0",
     "file-saver": "^2.0.5",
     "html-to-image": "^1.11.11",
     "html2canvas": "^1.4.1",
@@ -77,6 +78,7 @@
     "terser": "^5.38.1",
     "tinycolor2": "^1.6.0",
     "tsparticles": "^3.7.1",
+    "uglify-js": "^3.19.3",
     "uuid": "^11.0.3",
     "vite-plugin-md": "^0.21.5"
   },
@@ -101,6 +103,7 @@
     "@types/react-icons": "^3.0.0",
     "@types/react-test-renderer": "^18",
     "@types/tinycolor2": "^1",
+    "@types/uglify-js": "^3",
     "@types/uuid": "^10.0.0",
     "@vitejs/plugin-react": "^4.3.4",
     "concurrently": "^9.1.0",

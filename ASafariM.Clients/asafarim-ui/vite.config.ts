@@ -9,7 +9,7 @@ import { PluginOption } from 'vite';
 export default defineConfig({
   optimizeDeps: {
     include: ['d3', 'react', 'react-dom'],
-    exclude: ['@fluentui/tokens'],
+    exclude: ['@fluentui/tokens', '@fluentui/react-icons'],
   },
   plugins: [
     visualizer({ open: true }) as PluginOption,

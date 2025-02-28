@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = process.env.REACT_APP_API_URL;
+const url = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 const isDevelopment = import.meta.env.VITE_ENVIRONMENT === 'development';
 const BASE_URL = isDevelopment ? 'http://localhost:5000' : 'https://asafarim.com';
 

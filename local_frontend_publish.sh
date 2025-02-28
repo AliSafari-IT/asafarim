@@ -1,7 +1,5 @@
 #!/bin/bash
 
-SERVER_IP="141.136.42.239"
-SERVER_LOGIN="root"
 LOCAL_FRONTEND_DIR="D:/repos/ASafariM/ASafariM.Clients/asafarim-ui"
 LOCAL_DEPLOY_DIR="D:/repos/ASafariM/ASafariM.Clients/asafarim-ui/dist"
 REMOTE_DEPLOY_DIR="/var/www/asafarim.com/public_html"
@@ -47,28 +45,28 @@ yarn build || {
 
 # Create deploy directory if not exists on the remote server
 echo "📁 Ensuring deployment directory exists..."
-ssh "$SERVER_LOGIN@$SERVER_IP" "mkdir -p $REMOTE_DEPLOY_DIR && sudo chown -R www-data:www-data $REMOTE_DEPLOY_DIR" || {
+ssh asafarim "mkdir -p $REMOTE_DEPLOY_DIR && sudo chown -R www-data:www-data $REMOTE_DEPLOY_DIR" || {
     echo "❌ Error: Failed to create deploy directory!"
     exit 1
 }
 
 # Create a backup of the current deployment
 echo "📦 Creating backup..."
-ssh "$SERVER_LOGIN@$SERVER_IP" "mkdir -p $REMOTE_FRONTEND_BACKUP_DIR && chmod -R 755 $REMOTE_FRONTEND_BACKUP_DIR && cp -r $REMOTE_DEPLOY_DIR/* $REMOTE_FRONTEND_BACKUP_DIR" || {
+ssh asafarim "mkdir -p $REMOTE_FRONTEND_BACKUP_DIR && chmod -R 755 $REMOTE_FRONTEND_BACKUP_DIR && cp -r $REMOTE_DEPLOY_DIR/* $REMOTE_FRONTEND_BACKUP_DIR" || {
     echo "❌ Error: Failed to create backup!"
     exit 1
 }
 
 # Copying local deploy directory to server
 echo "📁 Copying local deploy directory to server..."
-scp -r "$LOCAL_DEPLOY_DIR/*" "$SERVER_LOGIN@$SERVER_IP:$REMOTE_DEPLOY_DIR" || {
+scp -r "$LOCAL_DEPLOY_DIR/*" asafarim:"$REMOTE_DEPLOY_DIR" || {
     echo "❌ Error: Failed to copy local deploy directory to server!"
     if [ ! -d "$LOCAL_DEPLOY_DIR" ]; then
         echo "❌ Error: Local deploy directory not found - $LOCAL_DEPLOY_DIR"
     fi
     # Restore previous deployment
     echo "🔃 Restoring previous deployment..."
-    ssh "$SERVER_LOGIN@$SERVER_IP" "cp -r $REMOTE_FRONTEND_BACKUP_DIR/* $REMOTE_DEPLOY_DIR && rm -rf $REMOTE_FRONTEND_BACKUP_DIR" || {
+    ssh asafarim "cp -r $REMOTE_FRONTEND_BACKUP_DIR/* $REMOTE_DEPLOY_DIR && rm -rf $REMOTE_FRONTEND_BACKUP_DIR" || {
         echo "❌ Error: Failed to restore previous deployment!"
         exit 1
     }
@@ -78,7 +76,7 @@ scp -r "$LOCAL_DEPLOY_DIR/*" "$SERVER_LOGIN@$SERVER_IP:$REMOTE_DEPLOY_DIR" || {
 
 # Restart Nginx
 echo "🔄 Restarting Nginx..."
-ssh "$SERVER_LOGIN@$SERVER_IP" 'systemctl restart nginx' || {
+ssh asafarim 'systemctl restart nginx' || {
     echo "❌ Error: Failed to restart Nginx!"
     exit 1
 }

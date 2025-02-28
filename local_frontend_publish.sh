@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SERVER_IP="141.136.42.239"
+SERVER_LOGIN="root"
 LOCAL_FRONTEND_DIR="D:/repos/ASafariM/ASafariM.Clients/asafarim-ui"
 LOCAL_DEPLOY_DIR="D:/repos/ASafariM/ASafariM.Clients/asafarim-ui/dist"
 REMOTE_DEPLOY_DIR="/var/www/asafarim.com/public_html"
@@ -59,7 +61,7 @@ ssh asafarim "mkdir -p $REMOTE_FRONTEND_BACKUP_DIR && chmod -R 755 $REMOTE_FRONT
 
 # Copying local deploy directory to server
 echo "📁 Copying local deploy directory to server..."
-scp -r "$LOCAL_DEPLOY_DIR/*" asafarim:"$REMOTE_DEPLOY_DIR" || {
+scp -r "$LOCAL_DEPLOY_DIR/." "asafarim:$REMOTE_DEPLOY_DIR" || {
     echo "❌ Error: Failed to copy local deploy directory to server!"
     if [ ! -d "$LOCAL_DEPLOY_DIR" ]; then
         echo "❌ Error: Local deploy directory not found - $LOCAL_DEPLOY_DIR"

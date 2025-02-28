@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SERVER_IP="141.136.42.239"
+SERVER_LOGIN="root"
 LOCAL_BACKEND_DIR="D:/repos/ASafariM/ASafariM.Api"
 LOCAL_DEPLOY_DIR="D:/repos/ASafariM/ASafariM.Api/deploy"
 REMOTE_DEPLOY_DIR="/var/www/asafarim/backend"
@@ -61,14 +63,14 @@ if [ ! -d "$LOCAL_DEPLOY_DIR" ]; then
     echo "❌ Error: Local deploy directory not found - $LOCAL_DEPLOY_DIR"
     exit 1
 fi
-scp -r "$LOCAL_DEPLOY_DIR" asafarim:"$REMOTE_DEPLOY_DIR" || {
+scp -r "$LOCAL_DEPLOY_DIR" "asafarim:$REMOTE_DEPLOY_DIR" || {
     echo "❌ Error: Failed to copy files to remote server!"
     exit 1
 }
 
 # Copy locally published backend to remote server
 echo "🚀 Building and publishing backend..."
-if scp -r "$LOCAL_DEPLOY_DIR" asafarim:"$REMOTE_DEPLOY_DIR"; then
+if scp -r "$LOCAL_DEPLOY_DIR" "asafarim:$REMOTE_DEPLOY_DIR"; then
     echo "✅ Backend published successfully!"
     echo "🔄 Restarting asafarim-api service..."
     ssh asafarim "sudo systemctl restart asafarim-api.service" || {

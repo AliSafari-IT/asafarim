@@ -34,7 +34,7 @@
     "start": "concurrently \"yarn backend\" \"yarn ui\"",
     "publish:frontend": "bash ./local_frontend_publish.sh",
     "publish:backend": "bash ./local_backend_publish.sh",
-    "publish": "yarn publish:backend && yarn publish:frontend",
+    "publish": "node scripts/deploy/publish.js",
     "remote:publish:backend": "/var/www/asafarim/publish_backend.sh",
     "remote:publish:frontend": "/var/www/asafarim/publish_frontend.sh",
     "remote:deploy": "yarn remote:publish:backend && yarn remote:publish:frontend",

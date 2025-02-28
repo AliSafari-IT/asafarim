@@ -34,12 +34,12 @@ const useStyles = makeStyles({
         fontSize: "16px",
     },
     submitButton: {
-        width: "100%",
-        backgroundColor: "var(--button-primary)",
-        color: "var(--button-primary-text)",
-        "&:hover": {
-            backgroundColor: "var(--button-primary-hover)",
-        },
+      width: "100%",
+      backgroundColor: "var(--button-primary)",
+      color: "var(--button-primary-text)",
+    },
+    submitButtonHover: {
+      backgroundColor: "var(--button-primary-hover)",
     },
 });
 
@@ -159,7 +159,7 @@ const EditTopicForm: FC = () => {
                                 />
                             </>
                         )}
-                        <PrimaryButton type="submit" className={classes.submitButton}>Update Topic</PrimaryButton>
+                        <PrimaryButton type="submit" className={`${classes.submitButton} hover:${classes.submitButtonHover}`}>Update Topic</PrimaryButton>
                     </Stack>
                 </form>
             </Stack>

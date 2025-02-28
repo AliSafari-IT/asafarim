@@ -1,31 +1,36 @@
 #create-post {
-    width: 100%;
-  #create-blog-post-form {
-    padding: 1rem;
-    border: 1px solid var(--border-primary);    
-    border-radius: 3px;
-    background-color: var(--bg-primary);
-    box-shadow: var(--shadow-sm);
-    transition: all 0.3s ease;
-    &:hover {
-      background-color: var(--bg-secondary);
-    }
+  width: 100%;
+}
 
-    :is(.ms-label, .ms-Checkbox-text) {
-      font-size: 1.0rem;
-      font-weight: 400;
-      color: var(--text-primary);
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      transition: all 0.3s ease;
-      &:hover {
-        color: var(--primary);
-      }
-    }
+#create-blog-post-form {
+  padding: 1rem;
+  border: 1px solid var(--border-primary);
+  border-radius: 3px;
+  background-color: var(--bg-primary);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+}
 
-    .ms-label {
-      border: olivedrab;
-    }
-  }
+#create-blog-post-form:hover {
+  background-color: var(--bg-secondary);
+}
+
+#create-blog-post-form .ms-label,
+#create-blog-post-form .ms-Checkbox-text {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.3s ease;
+}
+
+#create-blog-post-form .ms-label:hover,
+#create-blog-post-form .ms-Checkbox-text:hover {
+  color: var(--primary);
+}
+
+#create-blog-post-form .ms-label {
+  border: olivedrab;
 }

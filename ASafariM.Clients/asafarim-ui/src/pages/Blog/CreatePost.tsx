@@ -52,9 +52,10 @@ const useStyles = makeStyles({
     width: '100%',
     backgroundColor: 'var(--button-primary)',
     color: 'var(--button-primary-text)',
-    '&:hover': {
-      backgroundColor: 'var(--button-primary-hover)'
-    }
+  },
+  
+  submitButtonHover: {
+    backgroundColor: 'var(--button-primary-hover)',
   },
 });
 
@@ -377,9 +378,9 @@ const CreatePost: React.FC = () => {
             <PrimaryButton
               text={isPublished ? '🚀 Publish Now' : '💾 Save as Draft'}
               type="submit"
-              className="px-8 py-3 text-lg font-semibold tracking-wide 
+              className= {`${classes.submitButton} hover:${classes.submitButtonHover} px-8 py-3 text-lg font-semibold tracking-wide 
                          shadow-md bg-gradient-to-r from-blue-500 to-indigo-600 
-                         text-white rounded-lg hover:opacity-90 transition-all duration-200"
+                         text-white rounded-lg hover:opacity-90 transition-all duration-200`}
             />
           </div>
         </form>

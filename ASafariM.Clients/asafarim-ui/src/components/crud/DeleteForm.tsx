@@ -24,20 +24,22 @@ const useStyles = makeStyles({
         maxWidth: '300px',
     },
     deleteButton: {
-        backgroundColor: tokens.colorPaletteRedBackground3,
-        color: tokens.colorNeutralForegroundOnBrand,
-        ...shorthands.border('none'),
-        ...shorthands.padding('10px', '20px'),
-        ...shorthands.borderRadius('4px'),
-        cursor: 'pointer',
-        transition: 'background-color 0.2s',
-        '&:hover': {
-            backgroundColor: tokens.colorPaletteRedBackground3,
-        },
-        '&:disabled': {
-            backgroundColor: tokens.colorNeutralBackgroundDisabled,
-            cursor: 'not-allowed',
-        },
+      backgroundColor: tokens.colorPaletteRedBackground3,
+      color: tokens.colorNeutralForegroundOnBrand,
+      ...shorthands.border('none'),
+      ...shorthands.padding('10px', '20px'),
+      ...shorthands.borderRadius('4px'),
+      cursor: 'pointer',
+      transition: 'background-color 0.2s',
+    },
+    
+    deleteButtonHover: {
+      backgroundColor: tokens.colorPaletteRedBackground3,
+    },
+    
+    deleteButtonDisabled: {
+      backgroundColor: tokens.colorNeutralBackgroundDisabled,
+      cursor: 'not-allowed',
     },
 });
 
@@ -110,11 +112,16 @@ const DeleteForm: React.FC<DeleteFormProps> = ({ entity }) => {
                     )}
 
                     <Button
-                        className={mergeClasses(classes.formField, classes.deleteButton)}
-                        onClick={handleDelete}
-                        disabled={loading || !showConfirmation}
+                      className={mergeClasses(
+                        classes.formField,
+                        classes.deleteButton,
+                        !loading && showConfirmation && classes.deleteButtonHover,
+                        (loading || !showConfirmation) && classes.deleteButtonDisabled
+                      )}
+                      onClick={handleDelete}
+                      disabled={loading || !showConfirmation}
                     >
-                        {loading ? 'Deleting...' : 'Delete'}
+                      {loading ? 'Deleting...' : 'Delete'}
                     </Button>
                 </div>
             </FluentProvider>

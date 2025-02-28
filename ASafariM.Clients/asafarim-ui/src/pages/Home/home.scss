@@ -2,60 +2,67 @@
     E:\asm-fs\apps\frontends\asafarim-client\src\pages\Home\home.scss
 */
 .home-panels {
-    display: flex;
-    height: 100vh;
-    .container {
-      display: flex;
-      flex: 1;
-      justify-content: space-between;
-    }
-    .left-panel {
-      padding: 10px;
-      overflow-y: auto;
-    }
-    .right-panel {
-      padding: 20px;
-      flex-grow: 1;
-      overflow-y: auto;
-    }
-    .link-item {
-      padding: 10px;
-      border-bottom: 1px solid #ddd;
-      cursor: pointer;
-      &.active {
-        background-color: #d3d3d3;
-      }
-    }
-    .link-contents {
-      padding: 10px;
-    }
-    .content-link {
-      background-color: #4CAF50;
-      padding: 5px 10px;
-      border: none;
-      cursor: pointer;
-      text-align: center;
-      border-radius: 5px;
-      &:hover {
-        background-color: #45a049;
-      }
-    }
+  display: flex;
+  height: 100vh;
+}
 
-    @media screen and (max-width: 768px) {
-      .left-panel {
-        min-width: 75px;
-        font-size: smaller;
-      }
-      
-    }
+.home-panels .container {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.home-panels .left-panel {
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.home-panels .right-panel {
+  padding: 20px;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.home-panels .link-item {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.home-panels .link-item.active {
+  background-color: #d3d3d3;
+}
+
+.home-panels .link-contents {
+  padding: 10px;
+}
+
+.home-panels .content-link {
+  background-color: #4CAF50;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 5px;
+}
+
+.home-panels .content-link:hover {
+  background-color: #45a049;
+}
+
+@media screen and (max-width: 768px) {
+  .home-panels .left-panel {
+    min-width: 75px;
+    font-size: smaller;
   }
+}
 
 /* Add any additional custom styles here that can't be handled by Tailwind */
-.prose {
-  :is(h2, p) {
-    @apply text-base text-gray-700 dark:text-gray-300;
-  }
-  :is(h2) {
-    @apply text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100;
-  }
+.prose h2,
+.prose p {
+  @apply text-base text-gray-700 dark:text-gray-300;
+}
+
+.prose h2 {
+  @apply text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100;
 }

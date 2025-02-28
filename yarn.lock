@@ -6364,7 +6364,6 @@ __metadata:
     cssnano: "npm:^7.0.6"
     d3: "npm:^7.9.0"
     d3-cloud: "npm:^1.2.7"
-    dart-sass: "npm:^1.25.0"
     docx: "npm:^9.0.2"
     eslint: "npm:^9.11.1"
     eslint-plugin-react-hooks: "npm:^5.1.0-rc.0"
@@ -7066,25 +7065,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chokidar@npm:>=2.0.0 <4.0.0, chokidar@npm:^3.3.0, chokidar@npm:^3.6.0":
-  version: 3.6.0
-  resolution: "chokidar@npm:3.6.0"
-  dependencies:
-    anymatch: "npm:~3.1.2"
-    braces: "npm:~3.0.2"
-    fsevents: "npm:~2.3.2"
-    glob-parent: "npm:~5.1.2"
-    is-binary-path: "npm:~2.1.0"
-    is-glob: "npm:~4.0.1"
-    normalize-path: "npm:~3.0.0"
-    readdirp: "npm:~3.6.0"
-  dependenciesMeta:
-    fsevents:
-      optional: true
-  checksum: 10c0/8361dcd013f2ddbe260eacb1f3cb2f2c6f2b0ad118708a343a5ed8158941a39cb8fb1d272e0f389712e74ee90ce8ba864eece9e0e62b9705cb468a2f6d917462
-  languageName: node
-  linkType: hard
-
 "chokidar@npm:^2.0.4":
   version: 2.1.8
   resolution: "chokidar@npm:2.1.8"
@@ -7105,6 +7085,25 @@ __metadata:
     fsevents:
       optional: true
   checksum: 10c0/5631cc00080224f9482cf5418dcbea111aec02fa8d81a8cfe37e47b9cf36089e071de52d503647e3a821a01426a40adc926ba899f657af86a51b8f8d4eef12a7
+  languageName: node
+  linkType: hard
+
+"chokidar@npm:^3.3.0, chokidar@npm:^3.6.0":
+  version: 3.6.0
+  resolution: "chokidar@npm:3.6.0"
+  dependencies:
+    anymatch: "npm:~3.1.2"
+    braces: "npm:~3.0.2"
+    fsevents: "npm:~2.3.2"
+    glob-parent: "npm:~5.1.2"
+    is-binary-path: "npm:~2.1.0"
+    is-glob: "npm:~4.0.1"
+    normalize-path: "npm:~3.0.0"
+    readdirp: "npm:~3.6.0"
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  checksum: 10c0/8361dcd013f2ddbe260eacb1f3cb2f2c6f2b0ad118708a343a5ed8158941a39cb8fb1d272e0f389712e74ee90ce8ba864eece9e0e62b9705cb468a2f6d917462
   languageName: node
   linkType: hard
 
@@ -7925,17 +7924,6 @@ __metadata:
     d3-transition: "npm:3"
     d3-zoom: "npm:3"
   checksum: 10c0/3dd9c08c73cfaa69c70c49e603c85e049c3904664d9c79a1a52a0f52795828a1ff23592dc9a7b2257e711d68a615472a13103c212032f38e016d609796e087e8
-  languageName: node
-  linkType: hard
-
-"dart-sass@npm:^1.25.0":
-  version: 1.25.0
-  resolution: "dart-sass@npm:1.25.0"
-  dependencies:
-    chokidar: "npm:>=2.0.0 <4.0.0"
-  bin:
-    dart-sass: sass.js
-  checksum: 10c0/68dd143422da9611ca34575f7f217ca94cb9ba95673e107162f4b02485fec98d2325837362319a12d23874d13e3ed64ac29581eab6403d7ea6d9da328a5c79fe
   languageName: node
   linkType: hard
 

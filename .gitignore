@@ -14,6 +14,8 @@ yarn.lock
 # Documentation here: https://yarnpkg.com/features/caching#zero-installs
 appsettings.json
 appsettings.Development.json
+appsettings.Production.json
+launchSettings.json
 backups/**
 .env
 #!.yarn/cache
@@ -117,4 +119,4 @@ log-*.txt
 
 yarn.lock
 yarn.lock
-ASafariM.Api/Properties/launchSettings.json
+

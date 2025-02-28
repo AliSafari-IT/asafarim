@@ -1,14 +1,12 @@
-export const plugins = {
-  "postcss-import": {},
-  "tailwindcss": {},
-  "autoprefixer": {},
-  "postcss-nesting": {}, // Enables CSS nesting
-  "postcss-preset-env": {
-    stage: 3,
+export const plugins = [
+  require('postcss-import'),
+  require('tailwindcss'),
+  require('autoprefixer'),
+  require('postcss-nested'), // Ensures proper nesting support
+  require('postcss-preset-env')({
+    stage: 1,
     features: {
-      "nesting-rules": true,
-      "custom-properties": true,
-      "media-query-ranges": true
-    }
-  }
-};
+      'nesting-rules': true, // Enables modern CSS nesting
+    },
+  }),
+];

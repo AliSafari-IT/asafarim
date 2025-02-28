@@ -61,7 +61,7 @@ ssh "$SERVER_LOGIN@$SERVER_IP" "mkdir -p $REMOTE_FRONTEND_BACKUP_DIR && chmod -R
 
 # Copying local deploy directory to server
 echo "📁 Copying local deploy directory to server..."
-scp -r "$LOCAL_DEPLOY_DIR" "$SERVER_LOGIN@$SERVER_IP:$REMOTE_DEPLOY_DIR" || {
+scp -r "$LOCAL_DEPLOY_DIR/*" "$SERVER_LOGIN@$SERVER_IP:$REMOTE_DEPLOY_DIR" || {
     echo "❌ Error: Failed to copy local deploy directory to server!"
     if [ ! -d "$LOCAL_DEPLOY_DIR" ]; then
         echo "❌ Error: Local deploy directory not found - $LOCAL_DEPLOY_DIR"

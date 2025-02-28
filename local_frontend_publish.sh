@@ -1,6 +1,10 @@
 #!/bin/bash
 
+<<<<<<< HEAD
 SERVER_IP="141.136.42.239"
+=======
+SERVER_IP="141.136.42.239" 
+>>>>>>> 13455c2 (chore(deployment): add deployment scripts for backend and frontend)
 SERVER_LOGIN="root"
 LOCAL_FRONTEND_DIR="D:/repos/ASafariM/ASafariM.Clients/asafarim-ui"
 LOCAL_DEPLOY_DIR="D:/repos/ASafariM/ASafariM.Clients/asafarim-ui/dist"

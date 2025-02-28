@@ -1,34 +1,88 @@
-SERVER_IP="141.136.42.239"
-LOCAL_FRONTEND_DIR="D:/repos/ASafariM/ASafariM.Clients/asafarim-ui"
-REMOTE_DEPLOY_DIR="/var/www/asafarim.com/public_html"
+#!/bin/bash
 
-cd "$LOCAL_FRONTEND_DIR" || { echo "❌ Error: Directory not found - $LOCAL_FRONTEND_DIR"; exit 1; }
+SERVER_IP="141.136.42.239"
+SERVER_LOGIN="root"
+LOCAL_FRONTEND_DIR="D:/repos/ASafariM/ASafariM.Clients/asafarim-ui"
+LOCAL_DEPLOY_DIR="D:/repos/ASafariM/ASafariM.Clients/asafarim-ui/dist"
+REMOTE_DEPLOY_DIR="/var/www/asafarim.com/public_html"
+REMOTE_BACKUPS_DIR="/var/www/asafarim/backups"
+TIMESTAMP=$(date +%Y%m%d%H%M%S)
+REMOTE_FRONTEND_BACKUP_DIR="$REMOTE_BACKUPS_DIR/frontend_$TIMESTAMP"
+
+# Step 1: Navigate to frontend project
+cd "$LOCAL_FRONTEND_DIR" || {
+    echo "❌ Error: Directory not found - $LOCAL_FRONTEND_DIR"
+    exit 1
+}
 echo "current directory: $(pwd)"
 
-# Step 2: Install dependencies
-echo "📦 Installing dependencies..."
-yarn cache clean && rm -rf node_modules && rm -rf .yarn/cache && yarn install || { echo "❌ Error: Failed to install dependencies!"; exit 1; }
+# check if local dirs exists
+if [ ! -d "$LOCAL_FRONTEND_DIR" ]; then
+    echo "❌ Error: Directory not found - $LOCAL_FRONTEND_DIR"
+    exit 1
+fi
+echo "current directory: $(pwd)"
 
-# Step 3: Build the frontend
-echo "⚙️ Building frontend..."
-yarn build || { echo "❌ Error: Build failed!"; exit 1; }
+# remove local deploy directory
+echo "📁 if exists, remove local deploy directory..."
+# check if exists
+if [ -d "$LOCAL_DEPLOY_DIR" ]; then
+    rm -rf "$LOCAL_DEPLOY_DIR"
+fi
+# create new one
+mkdir -p "$LOCAL_DEPLOY_DIR" && sudo chown -R www-data:www-data "$LOCAL_DEPLOY_DIR"
 
-# Step 4: Chown the deploy directory exists
+# navigate to frontend project
+cd "$LOCAL_FRONTEND_DIR" || {
+    echo "❌ Error: Directory not found - $LOCAL_FRONTEND_DIR"
+    exit 1
+}
+
+# make a clean build
+echo "🚀 Building frontend..."
+yarn build || {
+    echo "❌ Error: Build failed!"
+    exit 1
+}
+
+# Create deploy directory if not exists on the remote server
 echo "📁 Ensuring deployment directory exists..."
-ssh "$SERVER_IP" "mkdir -p $REMOTE_DEPLOY_DIR && sudo chown -R www-data:www-data $REMOTE_DEPLOY_DIR"
+ssh "$SERVER_LOGIN@$SERVER_IP" "mkdir -p $REMOTE_DEPLOY_DIR && sudo chown -R www-data:www-data $REMOTE_DEPLOY_DIR" || {
+    echo "❌ Error: Failed to create deploy directory!"
+    exit 1
+}
 
-# Step 5: Copy the frontend build files (not the dist folder itself)
-echo "🚀 Copying frontend build files..."
-scp -r "$LOCAL_FRONTEND_DIR/dist/" root@"$SERVER_IP":"$REMOTE_DEPLOY_DIR"
+# Create a backup of the current deployment
+echo "📦 Creating backup..."
+ssh "$SERVER_LOGIN@$SERVER_IP" "mkdir -p $REMOTE_FRONTEND_BACKUP_DIR && chmod -R 755 $REMOTE_FRONTEND_BACKUP_DIR && cp -r $REMOTE_DEPLOY_DIR/* $REMOTE_FRONTEND_BACKUP_DIR" || {
+    echo "❌ Error: Failed to create backup!"
+    exit 1
+}
 
-# Step 6: Set correct permissions
-echo "🔑 Setting correct file permissions..."
-ssh "$SERVER_IP" "chown -R www-data:www-data $REMOTE_DEPLOY_DIR && chmod -R 755 $REMOTE_DEPLOY_DIR"
+# Copying local deploy directory to server
+echo "📁 Copying local deploy directory to server..."
+scp -r "$LOCAL_DEPLOY_DIR" "$SERVER_LOGIN@$SERVER_IP:$REMOTE_DEPLOY_DIR" || {
+    echo "❌ Error: Failed to copy local deploy directory to server!"
+    if [ ! -d "$LOCAL_DEPLOY_DIR" ]; then
+        echo "❌ Error: Local deploy directory not found - $LOCAL_DEPLOY_DIR"
+    fi
+    # Restore previous deployment
+    echo "🔃 Restoring previous deployment..."
+    ssh "$SERVER_LOGIN@$SERVER_IP" "cp -r $REMOTE_FRONTEND_BACKUP_DIR/* $REMOTE_DEPLOY_DIR && rm -rf $REMOTE_FRONTEND_BACKUP_DIR" || {
+        echo "❌ Error: Failed to restore previous deployment!"
+        exit 1
+    }
+    echo "✅ Restore completed successfully!"
+    exit 1
+}
 
-# Step 7: Restart Nginx
+# Restart Nginx
 echo "🔄 Restarting Nginx..."
-ssh "$SERVER_IP" 'systemctl restart nginx' || { echo "❌ Error: Failed to restart Nginx!"; exit 1; }
+ssh "$SERVER_LOGIN@$SERVER_IP" 'systemctl restart nginx' || {
+    echo "❌ Error: Failed to restart Nginx!"
+    exit 1
+}
 
-# Step 8: Deployment Complete
+# Deployment Complete
 echo "✅ Deployment completed successfully!"
 echo "🌍 Visit https://asafarim.com to check the frontend."

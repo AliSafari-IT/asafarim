@@ -43,7 +43,7 @@ export default defineConfig({
     preprocessorOptions: {
       scss: { quietDeps: true }
     },
-    postcss: './postcss.config.cjs',
+    postcss: './postcss.config.js',
   },
   assetsInclude: ['**/*.md'],
   build: {

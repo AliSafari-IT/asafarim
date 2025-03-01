@@ -37,27 +37,15 @@ namespace ASafariM.Presentation.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<Project>>> GetProjects()
         {
-            try
+            var projects = await _projectService.GetAllProjectsAsync();
+            if (projects == null || !projects.Any())
             {
-                _logger.LogInformation("Fetching all projects...");
-                var projects = await _projectService.GetAllProjectsAsync();
-
-                if (!projects.Any())
-                {
-                    _logger.LogWarning("No projects found.");
-                    return NotFound("No projects available.");
-                }
-
-                _logger.LogInformation($"Successfully retrieved {projects.Count()} projects.");
-                return Ok(projects);
+                return NotFound("No projects found");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error retrieving projects.");
-                return StatusCode(500, "An internal error occurred.");
-            }
+            return Ok(projects);
         }
 
         /// <summary>

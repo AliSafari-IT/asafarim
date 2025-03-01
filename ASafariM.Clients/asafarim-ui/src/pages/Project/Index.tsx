@@ -14,6 +14,7 @@ const ProjectHome: React.FC = () => {
     const [projects, setProjects] = useState<IProject[]>([]);
     const navigate = useNavigate();
 
+
     const headerBlock = (
         <header className="w-full text-center mx-auto m-0 flex justify-between items-center">
             <Toolbar aria-label="Project Toolbar" className="mt-4">
@@ -36,7 +37,7 @@ const ProjectHome: React.FC = () => {
         setLoading(true);
         setError(null);
         try {
-            const data = await dashboardServices.fetchEntities("project");
+            const data = await dashboardServices.fetchEntities("projects");
             logger.info("Projects data received: " + JSON.stringify(data));
             
             if (Array.isArray(data)) {

@@ -9,8 +9,12 @@ const logToServer = async (message: string, level: string = "info") => {
         return;
     }
 
+    const apiBaseUrl = `${apiConfig.baseURL}/logs`;
+
+    console.log(`[${apiBaseUrl}]: ${message}`);
+
     try {
-        await axios.post(`${apiConfig.baseURL}/logs`, {
+        await axios.post(`${apiBaseUrl}`, {
             message,
             level,
             timestamp: new Date().toISOString()

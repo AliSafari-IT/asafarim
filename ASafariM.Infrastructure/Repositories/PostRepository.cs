@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ASafariM.Domain.Entities;
+using ASafariM.Domain.Exceptions;
 using ASafariM.Domain.Interfaces;
 using ASafariM.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -32,17 +33,18 @@ namespace ASafariM.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Post?> GetByIdAsync(Guid id)
+        public async Task<Post> GetByIdAsync(Guid id)
         {
             var post = await _context.Posts.FindAsync(id);
-            return post;
+            return post ?? throw new NotFoundException($"Post with ID {id} not found");
         }
 
         public async Task<Post> GetBySlugAsync(string slug)
         {
-            return await _context
+            var post = await _context
                 .Posts.Where(p => p.Slug == slug && !p.IsDeleted)
                 .FirstOrDefaultAsync(p => p.Slug == slug && !p.IsDeleted);
+            return post ?? throw new NotFoundException($"Post with slug {slug} not found");
         }
 
         public async Task<IEnumerable<Post>> GetByTopicIdAsync(Guid topicId)

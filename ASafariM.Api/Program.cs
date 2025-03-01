@@ -2,18 +2,11 @@ using System;
 using System.IO;
 using System.Reflection;
 using ASafariM.Api;
-using ASafariM.Api.Extensions;
 using ASafariM.Application;
 using ASafariM.Application.Mappings;
-using ASafariM.Application.Services;
-using ASafariM.Domain.Entities;
-using ASafariM.Domain.Interfaces;
 using ASafariM.Infrastructure;
 using ASafariM.Infrastructure.Persistence;
-using ASafariM.Infrastructure.Repositories;
-using ASafariM.Infrastructure.Services;
 using ASafariM.Presentation;
-using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
@@ -22,57 +15,56 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Serilog;
 using Serilog.Context;
 using Serilog.Events;
 
-// Configure logging directory
+// Load Environment Variables
 DotNetEnv.Env.Load();
-var environment = Environment.GetEnvironmentVariable("ASAFARIM_ENV");
+var environment = Environment.GetEnvironmentVariable("ASAFARIM_ENV") ?? "development";
 Console.WriteLine($"ASAFARIM_ENV: {environment}");
 
+// Setup Logging Directory
 var logDirectory =
     environment == "production" ? "/var/www/asafarim/logs" : "D:/repos/ASafariM/Logs";
-
-Console.WriteLine($"Log Directory: {logDirectory}"); // Debugging line
+Console.WriteLine($"Log Directory: {logDirectory}");
 Directory.CreateDirectory(logDirectory);
 var logFilePath = Path.Combine(logDirectory, "api_.log");
-Console.WriteLine($"Log File Path: {logFilePath}"); // Debugging line
-var line = new string('-', 100);
+Console.WriteLine($"Log File Path: {logFilePath}");
+
 try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    // Add Serilog
+    // Configure Kestrel (Enable HTTP/HTTPS)
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        options.ListenAnyIP(5000);
+        options.ListenAnyIP(5001, listenOptions => listenOptions.UseHttps());
+    });
+
+    // Setup Serilog Logging
     builder.Host.UseSerilog(
         (context, services, configuration) =>
             configuration
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-                .MinimumLevel.Override("System", LogEventLevel.Warning)
                 .MinimumLevel.Information()
-                .WriteTo.Console(
-                    restrictedToMinimumLevel: LogEventLevel.Information,
-                    outputTemplate: "[{Level:u3}] {Message:lj}{NewLine}{Exception}"
-                )
+                .WriteTo.Console(outputTemplate: "[{Level:u3}] {Message:lj}{NewLine}{Exception}")
                 .WriteTo.File(
                     logFilePath,
                     rollingInterval: RollingInterval.Day,
-                    retainedFileCountLimit: 2,
-                    buffered: true,
-                    flushToDiskInterval: TimeSpan.FromSeconds(1),
-                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}"
+                    retainedFileCountLimit: 5
                 )
                 .Enrich.FromLogContext()
     );
 
-    // Register ILogger
+    // Register Serilog
     builder.Services.AddSingleton(Log.Logger);
 
-    // Add basic services
+    // Add Health Checks
     builder.Services.AddHealthChecks();
 
-    // Configure DbContext with validation
+    // Configure Database Connection
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     if (string.IsNullOrEmpty(connectionString))
     {
@@ -81,70 +73,33 @@ try
 
     builder.Services.AddDbContext<AppDbContext>(options =>
     {
-        options
-            .UseMySql(
-                connectionString,
-                new MySqlServerVersion(new Version(8, 0, 31)),
-                mySqlOptions =>
-                {
-                    mySqlOptions.EnableRetryOnFailure(
-                        maxRetryCount: 5,
-                        maxRetryDelay: TimeSpan.FromSeconds(30),
-                        errorNumbersToAdd: null
-                    );
-                }
-            )
-            .EnableSensitiveDataLogging()
-            .EnableDetailedErrors();
-    });
-
-    // Configure AutoMapper
-    var mapperConfig = new MapperConfiguration(cfg =>
-    {
-        cfg.AddMaps(
-            new[]
-            {
-                typeof(UserMappingProfile).Assembly,
-                typeof(AutoMapperProfile).Assembly,
-                typeof(BlogMappingProfile).Assembly,
-                typeof(PreferenceMappingProfile).Assembly,
-            }
+        options.UseMySql(
+            connectionString,
+            new MySqlServerVersion(new Version(8, 0, 31)),
+            mySqlOptions => mySqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), null)
         );
     });
 
-    IMapper mapper = mapperConfig.CreateMapper();
-    builder.Services.AddSingleton(mapper);
+    // Register AutoMapper
+    builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-    // Register application services
-    try
-    {
-        ServiceRegistration.RegisterServices(builder);
-        Log.Information("Services registered successfully");
-    }
-    catch (Exception ex)
-    {
-        Log.Error(ex, "Service registration failed");
-        throw;
-    }
+    // Register Services & Repositories
+    ServiceRegistration.RegisterServices(builder);
+    Log.Information("Services registered successfully");
 
-    // Configure CORS
-    Log.Information("Configuring CORS...");
+    // Configure CORS (Ensures Frontend Can Access API)
     builder.Services.AddCors(options =>
     {
         options.AddPolicy(
-            name: "AllowFrontend",
-            builder =>
+            "AllowFrontend",
+            policy =>
             {
-                builder
+                policy
                     .WithOrigins(
                         "http://localhost:3000",
                         "https://localhost:3000",
-                        "http://localhost:5000",
-                        "https://localhost:5001",
                         "http://asafarim.com",
-                        "https://asafarim.com",
-                        "http://www.asafarim.com",
-                        "https://www.asafarim.com"
+                        "https://asafarim.com"
                     )
                     .AllowAnyMethod()
                     .AllowAnyHeader()
@@ -153,8 +108,7 @@ try
         );
     });
 
-    // Add API Controllers
-    Log.Information("Configuring API Controllers...");
+    // Register Controllers
     builder
         .Services.AddControllers()
         .AddJsonOptions(options =>
@@ -165,17 +119,12 @@ try
                 .Serialization
                 .ReferenceHandler
                 .Preserve;
-            options.JsonSerializerOptions.MaxDepth = 64; // Increase max depth if needed
+            options.JsonSerializerOptions.MaxDepth = 64;
         })
-        .AddApplicationPart(
-            typeof(ASafariM.Presentation.Controllers.MarkdownFilesController).Assembly
-        )
         .AddApplicationPart(typeof(ASafariM.Presentation.Controllers.ProjectsController).Assembly);
 
+    // Enable Swagger
     builder.Services.AddEndpointsApiExplorer();
-
-    // Configure Swagger
-    Log.Information("Configuring Swagger...");
     builder.Services.AddSwaggerGen(c =>
     {
         c.SwaggerDoc(
@@ -189,24 +138,17 @@ try
         );
     });
 
-    // Build the application
-    Log.Information("Building the application...");
+    // Build the Application
     var app = builder.Build();
 
-    // Configure the HTTP request pipeline
-    Log.Information("Configuring the HTTP request pipeline...");
+    // Enable Swagger for Development
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
-        app.UseSwaggerUI(c =>
-        {
-            c.SwaggerEndpoint("/swagger/v1/swagger.json", "ASafariM API V1");
-            c.RoutePrefix = "swagger";
-        });
+        app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ASafariM API V1"));
     }
 
-    // Global error handling
-    Log.Information("Configuring global error handling...");
+    // Global Error Handling Middleware
     app.UseExceptionHandler(errorApp =>
     {
         errorApp.Run(async context =>
@@ -229,138 +171,38 @@ try
         });
     });
 
-    // Health check endpoint
-    Log.Information("Configuring health check endpoint...");
+    // Health Check Endpoint
     app.MapHealthChecks("/api/health");
 
-    // HTTPS redirection (disabled for local health checks)
-    app.Use(
-        async (context, next) =>
-        {
-            if (
-                !context.Request.Path.StartsWithSegments("/api/health")
-                && !context.Request.IsLocal()
-            )
-            {
-                context.Request.Scheme = "https";
-            }
-            await next();
-        }
-    );
-
-    // Configure HTTPS redirection only in production
+    // Apply HTTPS Redirection (Only in Production)
     if (!app.Environment.IsDevelopment())
     {
-        app.Use(
-            async (context, next) =>
-            {
-                if (!context.Request.IsLocal())
-                {
-                    context.Request.Scheme = "https";
-                }
-                await next();
-            }
-        );
         app.UseHttpsRedirection();
     }
 
-    Log.Information("Configuring routing...");
+    // Enable Routing
     app.UseRouting();
 
-    // CORS - Must be after UseRouting and before UseAuthentication
-    Log.Information("Configuring CORS...");
+    // Apply CORS
     app.UseCors("AllowFrontend");
 
-    // Authentication & Authorization
-    Log.Information("Configuring authentication...");
+    // Enable Authentication & Authorization
     app.UseAuthentication();
     app.UseAuthorization();
 
     // Map Controllers
-    Log.Information("Mapping controller endpoints...");
     app.MapControllers();
 
-    // Static files
-    Log.Information("Configuring static files...");
+    // Enable Static Files
     app.UseStaticFiles();
 
-    // Request logging middleware - Optimized version
-    Log.Information("Configuring request logging middleware...");
-    app.Use(
-        async (context, next) =>
-        {
-            // Only log non-static file requests
-            if (!context.Request.Path.StartsWithSegments("/static"))
-            {
-                using var _ = LogContext.PushProperty("RequestId", context.TraceIdentifier);
-                Log.Information(
-                    "HTTP {RequestMethod} {RequestPath} started",
-                    context.Request.Method,
-                    context.Request.Path
-                );
-
-                var sw = System.Diagnostics.Stopwatch.StartNew();
-                try
-                {
-                    await next();
-                    sw.Stop();
-
-                    // Only log completion for non-successful responses or slow requests
-                    if (context.Response.StatusCode >= 400 || sw.ElapsedMilliseconds > 500)
-                    {
-                        Log.Information(
-                            "HTTP {RequestMethod} {RequestPath} completed in {Elapsed:0.0}ms with {StatusCode}",
-                            context.Request.Method,
-                            context.Request.Path,
-                            sw.ElapsedMilliseconds,
-                            context.Response.StatusCode
-                        );
-                    }
-                }
-                catch (Exception ex)
-                {
-                    sw.Stop();
-                    Log.Error(
-                        ex,
-                        "HTTP {RequestMethod} {RequestPath} failed in {Elapsed:0.0}ms",
-                        context.Request.Method,
-                        context.Request.Path,
-                        sw.ElapsedMilliseconds
-                    );
-                    throw;
-                }
-            }
-            else
-            {
-                await next();
-            }
-        }
-    );
-
-    // Health check endpoint
-    Log.Information("Configuring health check endpoint...");
-    app.MapHealthChecks("/api/health");
-
-    // Start the application
-    try
-    {
-        Log.Information("Starting the application...");
-        Log.Information("{line}", line);
-        await app.RunAsync();
-        Log.Information("Application stopped gracefully.");
-    }
-    catch (Exception ex)
-    {
-        Log.Fatal(ex, "Application crashed after startup.");
-    }
+    // Start the Application
+    Log.Information("Starting the application...");
+    await app.RunAsync();
 }
 catch (Exception ex)
 {
     Log.Fatal(ex, "Application terminated unexpectedly");
-    if (ex.InnerException != null)
-    {
-        Log.Fatal(ex.InnerException, "Inner exception details");
-    }
     throw;
 }
 finally

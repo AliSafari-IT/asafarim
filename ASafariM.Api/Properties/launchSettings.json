@@ -2,11 +2,7 @@
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:26796",
-      "sslPort": 0
-    }
+    "anonymousAuthentication": true
   },
   "profiles": {
     "ASafariM.Api": {
@@ -14,29 +10,21 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
-        "ASAFARIM_ENV": "development",
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASAFARIM_ENV": "production",
+        "ASPNETCORE_ENVIRONMENT": "Production",
+        "ASPNETCORE_URLS": "http://0.0.0.0:5000"
       }
     },
     "ASafariM": {
       "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
       "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
-        "ASAFARIM_ENV": "development",
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASAFARIM_ENV": "production",
+        "ASPNETCORE_ENVIRONMENT": "Production",
+        "ASPNETCORE_URLS": "http://0.0.0.0:5000"
       }
     }
   }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ASafariM.Application.DTOs;
 using ASafariM.Application.Interfaces;
 using ASafariM.Domain.Entities;
 using ASafariM.Domain.Enums;
@@ -121,29 +122,42 @@ namespace ASafariM.Infrastructure.Services
             }
         }
 
-        // Updates an existing project.
-        public async Task<bool> UpdateProjectAsync(Project project)
+        public async Task<bool> UpdateProjectAsync(Guid id, ProjectUpdateDto projectDto)
         {
             try
             {
-                var existingProject = await _projectRepository.GetByIdAsync(project.Id);
+                var existingProject = await _projectRepository.GetByIdAsync(id);
                 if (existingProject == null)
                 {
-                    throw new NotFoundException($"Project with ID {project.Id} not found");
+                    throw new NotFoundException($"Project with ID {id} not found");
                 }
 
-                project.UpdatedAt = DateTime.UtcNow;
-                await _projectRepository.UpdateAsync(project);
-                _logger.LogInformation("Project updated successfully: {ProjectId}", project.Id);
+                // Update properties only if provided
+                if (!string.IsNullOrEmpty(projectDto.Name))
+                    existingProject.Name = projectDto.Name;
+                if (!string.IsNullOrEmpty(projectDto.Description))
+                    existingProject.Description = projectDto.Description;
+                if (projectDto.StartDate.HasValue)
+                    existingProject.StartDate = projectDto.StartDate.Value;
+                if (projectDto.EndDate.HasValue)
+                    existingProject.EndDate = projectDto.EndDate.Value;
+                if (projectDto.Budget.HasValue)
+                    existingProject.Budget = projectDto.Budget.Value;
+                if (projectDto.Status.HasValue)
+                    existingProject.Status = (StatusEnum)projectDto.Status.Value;
+                if (projectDto.Visibility.HasValue)
+                    existingProject.Visibility = (VisibilityEnum)projectDto.Visibility.Value;
+
+                existingProject.UpdatedAt = DateTime.UtcNow;
+
+                await _projectRepository.UpdateAsync(existingProject);
+                _logger.LogInformation("Project updated successfully: {ProjectId}", id);
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error occurred while updating project with ID {project.Id}");
-                throw new ProjectServiceException(
-                    $"Error updating project with ID {project.Id}",
-                    ex
-                );
+                _logger.LogError(ex, $"Error updating project with ID {id}");
+                throw new ProjectServiceException($"Error updating project with ID {id}", ex);
             }
         }
 
@@ -191,8 +205,19 @@ namespace ASafariM.Infrastructure.Services
 
         async Task IEntityService<Project>.UpdateAsync(Project entity)
         {
-            // Call your existing method and ignore the boolean result.
-            await UpdateProjectAsync(entity);
+            await UpdateProjectAsync(
+                entity.Id,
+                new ProjectUpdateDto
+                {
+                    Name = entity.Name,
+                    Description = entity.Description,
+                    StartDate = entity.StartDate,
+                    EndDate = entity.EndDate,
+                    Budget = entity.Budget,
+                    Status = (int)entity.Status,
+                    Visibility = (int)entity.Visibility,
+                }
+            );
         }
 
         async Task IEntityService<Project>.DeleteAsync(Guid id)

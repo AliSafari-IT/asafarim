@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Serilog;
+
+namespace ASafariM.Presentation.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -105,28 +108,15 @@ public class LogsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> PostLog([FromBody] LogMessage message)
+    public IActionResult PostLog([FromBody] LogMessage message)
     {
         if (message == null || string.IsNullOrEmpty(message.Message))
         {
             return BadRequest("Log message cannot be empty");
         }
 
-        try
-        {
-            _logger.LogInformation(
-                "Received log message: {Message} with level {Level}",
-                message.Message,
-                message.Level ?? "INFO"
-            );
-
-            return Ok(new { message = "Log received successfully" });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error processing log message");
-            return StatusCode(500, new { error = "Failed to process log message" });
-        }
+        _logger.LogInformation("[{Level}] {Message}", message.Level ?? "INFO", message.Message);
+        return Ok(new { message = "Log received successfully" });
     }
 }
 

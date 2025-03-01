@@ -40,7 +40,7 @@
     "mig_dev": "powershell -File ./scripts/bash_files/dotnet-ef.ps1",
     "test:backend": "dotnet test D:/repos/ASafariM/ASafariM.Test/ASafariM.Test.csproj --logger \"trx;LogFileName=D:/repos/ASafariM/ASafariM.Test/TestResults/test_results.trx\"",
     "test:backend:watch": "cd D:/repos/ASafariM/ASafariM.Test && dotnet watch test --logger \"trx;LogFileName=D:/repos/ASafariM/ASafariM.Test/TestResults/test_results.trx\"",
-    "stop": "npx kill-port 3000",
+    "stop": "npx kill-port 3000 && npx kill-port 5000",
     "tbw": "yarn test:backend:watch",
     "test:frontend": "vitest run",
     "test": "vitest",

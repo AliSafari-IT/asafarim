@@ -14,7 +14,6 @@ const ProjectHome: React.FC = () => {
     const [projects, setProjects] = useState<IProject[]>([]);
     const navigate = useNavigate();
 
-
     const headerBlock = (
         <header className="w-full text-center mx-auto m-0 flex justify-between items-center">
             <Toolbar aria-label="Project Toolbar" className="mt-4">

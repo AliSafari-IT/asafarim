@@ -23,9 +23,12 @@ backups/**
 
 # Ignore node_modules for React
 node_modules/
-Properties/launchSettings.json
+Properties/launchSettings.*.json
+launchSettings.*.json
+
 deploy/
 deploy/**
+
 # Ignore build output for React
 build/
 dist/
@@ -124,3 +127,6 @@ ASafariM.Clients/asafarim-ui/stats.html
 ASafariM.Clients/asafarim-ui/stats.html
 ASafariM.Clients/asafarim-ui/stats.html
 ASafariM.Clients/asafarim-ui/stats.html
+ASafariM.Api/Properties/launchSettings.Development.json
+ASafariM.Api/Properties/launchSettings.production.json
+ASafariM.Api/Properties/launchSettings.json

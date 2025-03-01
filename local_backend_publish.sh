@@ -44,9 +44,16 @@ ssh asafarim "mkdir -p $REMOTE_DEPLOY_DIR && sudo chown -R www-data:www-data $RE
     exit 1
 }
 
-# Create a backup of the current deployment
-echo "📦 Creating backup..."
-ssh asafarim "mkdir -p $REMOTE_BACKEND_BACKUP_DIR && chmod -R 755 $REMOTE_BACKEND_BACKUP_DIR && cp -r $REMOTE_DEPLOY_DIR/* $REMOTE_BACKEND_BACKUP_DIR" || {
+# Create a backup of the current deployment on the remote server & Remove all other backups except the latest one
+echo "📦 Creating backend backup..."
+ssh asafarim "
+    mkdir -p $REMOTE_BACKEND_BACKUP_DIR && 
+    chmod -R 755 $REMOTE_BACKEND_BACKUP_DIR && 
+    cp -r $REMOTE_DEPLOY_DIR/* $REMOTE_BACKEND_BACKUP_DIR && 
+    echo '✅ Backup created successfully!' && 
+    # Remove all other backups that start with 'backend_'
+    find $REMOTE_BACKEND_BACKUP_DIR -mindepth 1 -type d -name 'backend_*' -exec rm -rf {} +
+" || {
     echo "❌ Error: Failed to create backup!"
     exit 1
 }

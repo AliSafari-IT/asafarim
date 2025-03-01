@@ -31,36 +31,43 @@ const LoginPage = () => {
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     logger.info('Login button clicked');
-
+  
     if (!email || !password) {
       setError('Email and password are required');
       return;
     }
-
+  
     setError(null);
     setLoading(true);
-    logger.info('Calling login API with email:' + email);
-
+    logger.info('Calling login API with email: ' + email);
+  
     try {
       const auth = await login({ email, password });
       logger.info('Login API call successful');
-      
+  
       // Check if the user account is deleted
       if (auth.user?.isDeleted) {
         logger.info('Attempted login to deleted account');
         setShowDeletedMessage(true);
         return;
       }
-
+  
       if (auth.token) {
-        localStorage.setItem('auth', JSON.stringify(auth));
+        // Save the authenticated user and token properly
+        const authData = {
+          authenticatedUser: auth.user, // Store user details
+          token: auth.token,
+        };
+        localStorage.setItem('auth', JSON.stringify(authData));
+        window.dispatchEvent(new Event('authStateChange')); // Notify other components
+        console.log('Auth data stored:', authData);
         const returnTo = localStorage.getItem('returnTo') || '/';
         localStorage.removeItem('returnTo');
         navigate(returnTo);
       }
     } catch (err: unknown) {
       logger.error('Login error: ' + JSON.stringify(err, null, 2));
-
+  
       if (isAxiosError(err)) {
         if (err.response) {
           const { status, data } = err.response;
@@ -86,6 +93,7 @@ const LoginPage = () => {
       logger.info('Login process completed. Loading state: ' + loading);
     }
   };
+  
 
   const handleDemoLogin = async (credentials: { email: string; password: string }) => {
     setEmail(credentials.email);

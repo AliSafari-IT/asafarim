@@ -44,6 +44,12 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
+    // Configure Kestrel to listen on any IP and port
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        options.ListenAnyIP(5000);
+    });
+
     // Add Serilog
     builder.Host.UseSerilog(
         (context, services, configuration) =>
@@ -368,3 +374,5 @@ finally
     Log.Information("Shutting down application");
     Log.CloseAndFlush();
 }
+
+Log.Information("{line}", line);

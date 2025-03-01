@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SERVER_IP="141.136.42.239"
+SERVER_IP="141.136.42.239" 
 SERVER_LOGIN="root"
 LOCAL_FRONTEND_DIR="D:/repos/ASafariM/ASafariM.Clients/asafarim-ui"
 LOCAL_DEPLOY_DIR="D:/repos/ASafariM/ASafariM.Clients/asafarim-ui/dist"
@@ -52,9 +52,15 @@ ssh asafarim "mkdir -p $REMOTE_DEPLOY_DIR && sudo chown -R www-data:www-data $RE
     exit 1
 }
 
-# Create a backup of the current deployment
+# Create a backup of the current deployment on the remote server & Remove all other backups except the latest one
 echo "📦 Creating backup..."
-ssh asafarim "mkdir -p $REMOTE_FRONTEND_BACKUP_DIR && chmod -R 755 $REMOTE_FRONTEND_BACKUP_DIR && cp -r $REMOTE_DEPLOY_DIR/* $REMOTE_FRONTEND_BACKUP_DIR" || {
+ssh asafarim "
+    mkdir -p $REMOTE_FRONTEND_BACKUP_DIR && 
+    chmod -R 755 $REMOTE_FRONTEND_BACKUP_DIR && 
+    cp -r $REMOTE_DEPLOY_DIR/* $REMOTE_FRONTEND_BACKUP_DIR && 
+    # Remove all other backups that start with 'frontend_'
+    find $REMOTE_FRONTEND_BACKUP_DIR -mindepth 1 -type d -name 'frontend_*' -exec rm -rf {} +
+" || {
     echo "❌ Error: Failed to create backup!"
     exit 1
 }

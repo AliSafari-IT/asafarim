@@ -7,6 +7,7 @@ using ASafariM.Application.Mappings;
 using ASafariM.Infrastructure;
 using ASafariM.Infrastructure.Persistence;
 using ASafariM.Presentation;
+using ASafariM.Presentation.Controllers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
@@ -91,13 +92,17 @@ try
     builder.Services.AddCors(options =>
     {
         options.AddPolicy(
-            "AllowFrontend",
+            "AllowAll",
             policy =>
             {
                 policy
                     .WithOrigins(
                         "http://localhost:3000",
                         "https://localhost:3000",
+                        "http://localhost:5000",
+                        "https://localhost:5001",
+                        "http://www.asafarim.com",
+                        "https://www.asafarim.com",
                         "http://asafarim.com",
                         "https://asafarim.com"
                     )
@@ -111,6 +116,8 @@ try
     // Register Controllers
     builder
         .Services.AddControllers()
+        .AddApplicationPart(typeof(ProjectsController).Assembly)
+        .AddApplicationPart(typeof(LogsController).Assembly)
         .AddJsonOptions(options =>
         {
             options.JsonSerializerOptions.ReferenceHandler = System
@@ -120,8 +127,7 @@ try
                 .ReferenceHandler
                 .Preserve;
             options.JsonSerializerOptions.MaxDepth = 64;
-        })
-        .AddApplicationPart(typeof(ASafariM.Presentation.Controllers.ProjectsController).Assembly);
+        });
 
     // Enable Swagger
     builder.Services.AddEndpointsApiExplorer();
@@ -184,7 +190,7 @@ try
     app.UseRouting();
 
     // Apply CORS
-    app.UseCors("AllowFrontend");
+    app.UseCors("AllowAll");
 
     // Enable Authentication & Authorization
     app.UseAuthentication();

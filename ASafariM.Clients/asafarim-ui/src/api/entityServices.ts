@@ -8,12 +8,18 @@ interface JwtPayload {
   exp?: number;
 }
 
+// Get auth token
+const token = localStorage.getItem('auth') ? JSON.parse(localStorage.getItem('auth')!).token : null;
+
 const api = axios.create({
   baseURL: apiConfig.baseURL,
   headers: {
     "Content-Type": "application/json",
   },
 });
+if (token) {
+  api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+}
 
 // Add request interceptor to include auth token
 api.interceptors.request.use(
@@ -109,6 +115,7 @@ const fetchEntities = async (entityTableName: string) => {
         return data.value;
       }
     }
+
     return [];
   } catch (error) {
     logger.error(`Error fetching ${entityTableName}s: ${error}`);

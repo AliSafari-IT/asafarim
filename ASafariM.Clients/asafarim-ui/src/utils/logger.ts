@@ -4,12 +4,15 @@ import { apiConfig } from "@/config/api";
 // src/utils/logger.ts
 const logToServer = async (message: string, level: string = "info") => {
     // Skip server logging in development mode
-    if (apiConfig.isDevelopment) {
+    const apiIsInDevelopment = apiConfig?.isDevelopment || false;
+    const apiBaseUrl = `${apiConfig.baseURL}/logs`;
+    console.log('logToServer: apiBaseUrl in production:', apiBaseUrl + " in development: "+apiIsInDevelopment);
+
+    if (apiIsInDevelopment) {
         console.log(`[${level.toUpperCase()}] ${message}`);
         return;
     }
 
-    const apiBaseUrl = `${apiConfig.baseURL}/logs`;
 
     console.log(`[${apiBaseUrl}]: ${message}`);
 
@@ -26,6 +29,7 @@ const logToServer = async (message: string, level: string = "info") => {
 };
 
 export const logger = {
+    
     info: (message: string) => {
         if (apiConfig.isDevelopment) {
             console.log(`[INFO] ${message}`);

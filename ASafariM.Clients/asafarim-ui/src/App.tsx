@@ -59,7 +59,7 @@ function App() {
   const mds = getAllMdFiles();
 
   useEffect(() => {
-    if (!authenticated || authenticatedUser.isDeleted) {
+    if (!authenticated || authenticatedUser?.isDeleted) {
       console.log('User is not authenticated or deleted');
     }
   }, [authenticated, authenticatedUser]);

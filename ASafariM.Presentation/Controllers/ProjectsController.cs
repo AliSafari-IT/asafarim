@@ -13,8 +13,8 @@ using Microsoft.Extensions.Logging;
 
 namespace ASafariM.Presentation.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("api/projects")]
     public class ProjectsController : ControllerBase
     {
         private readonly IProjectService _projectService;
@@ -37,15 +37,23 @@ namespace ASafariM.Presentation.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpGet]
         public async Task<ActionResult<IEnumerable<Project>>> GetProjects()
         {
-            var projects = await _projectService.GetAllProjectsAsync();
-            if (projects == null || !projects.Any())
+            try
             {
-                return NotFound("No projects found");
+                var projects = await _projectService.GetAllProjectsAsync();
+                if (projects == null || !projects.Any())
+                {
+                    _logger.LogWarning("No projects found");
+                    return NotFound("No projects found");
+                }
+                return Ok(projects);
             }
-            return Ok(projects);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving projects");
+                return StatusCode(500, "An internal error occurred.");
+            }
         }
 
         /// <summary>

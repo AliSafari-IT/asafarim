@@ -1,6 +1,6 @@
 # Implementing Data-Driven UI
 
-Date 31-12-2024
+Date: 2024-12-31
 
 ## What is Data-Driven UI
 

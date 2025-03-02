@@ -1,9 +1,10 @@
 {
   "name": "asafarim",
-  "packageManager": "yarn@4.6.0",
+  "packageManager": "yarn@4.7.0",
   "repository": "https://github.com/AliSafari-IT/asafarim.git",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "author": "Ali Safari <asafarim@gmail.com>",
   "scripts": {
     "co": "git add . && python .github/scripts/generate_commit_message.py && git push",
@@ -14,14 +15,13 @@
     "build": "bash ./scripts/bash_files/dotnet-commands.sh build",
     "build_dev": "powershell -File ./scripts/bash_files/dotnet-commands.ps1 build",
     "ui": "yarn workspace asafarim-ui start",
-    "ui:reinstall": "yarn workspace asafarim-ui reinstall",
-    "ui:clean": "yarn workspace asafarim-ui clean",
     "ui:build": "yarn workspace asafarim-ui build",
     "ui:rebuild": "yarn workspace asafarim-ui rebuild",
-    "ui:serve": "yarn workspace asafarim-ui serve",
+    "ui:reinstall": "yarn workspace asafarim-ui reinstall",
     "docs:build": "yarn workspace asafarim-docs build",
     "docs:serve": "yarn workspace asafarim-docs serve",
-    "api": "yarn workspace asafarim-api start",
+    "ui:serve": "yarn workspace asafarim-ui serve",
+    "api": "yarn prepare:dev && yarn workspace asafarim-api start",
     "api:build": "yarn clean && yarn restore && yarn build && dotnet build -c Release ./ASafariM.Api/ASafariM.Api.csproj",
     "api:run": "dotnet run --project ./ASafariM.Api/ASafariM.Api.csproj",
     "backend": "yarn clean && yarn restore && yarn build && yarn api",
@@ -39,8 +39,8 @@
     "publish:all": "yarn prepare:env && yarn publish:backend && yarn publish:frontend",
     "app": "concurrently \"yarn backend\" \"yarn ui\"",
     "start": "concurrently \"yarn backend\" \"yarn ui\"",
-    "remote:publish:backend": "/var/www/asafarim/publish_backend.sh",
-    "remote:publish:frontend": "/var/www/asafarim/publish_frontend.sh",
+    "remote:publish:backend": "sudo rm -rf /var/www/asafarim/backend/* && cd /var/www/asafarim/ASafariM.Api && dotnet publish -c Release -o /var/www/asafarim/backend && sudo chown -R www-data:www-data /var/www/asafarim/backend && sudo chmod -R 755 /var/www/asafarim/backend && sudo systemctl restart asafarim-api",
+    "remote:publish:frontend": "sudo rm -rf /var/www/asafarim.com/public_html/* && cd /var/www/asafarim/ASafariM.Clients/asafarim-ui && yarn install && yarn build && sudo cp -r dist/* /var/www/asafarim.com/public_html/ && sudo chown -R www-data:www-data /var/www/asafarim.com/public_html && sudo chmod -R 755 /var/www/asafarim.com/public_html",
     "remote:deploy": "yarn remote:publish:backend && yarn remote:publish:frontend",
     "mig": "bash ./scripts/bash_files/dotnet-ef.sh",
     "mig_dev": "powershell -File ./scripts/bash_files/dotnet-ef.ps1",
@@ -61,16 +61,7 @@
     "ASafariM.Clients/asafarim-ui"
   ],
   "dependencies": {
-    "@heroicons/react": "^2.2.0",
-    "@material-tailwind/react": "^2.1.10",
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
-    "axios": "^1.7.7",
-    "jest": "^29.7.0",
-    "lodash": "^4.17.21",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "react-syntax-highlighter": "^15.6.1"
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@fluentui/react": "^8.121.11",

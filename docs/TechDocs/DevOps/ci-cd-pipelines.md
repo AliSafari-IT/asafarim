@@ -1,4 +1,5 @@
 # CI/CD Pipelines
+
 Date: 2024-11-30
 
 Continuous Integration (CI) and Continuous Deployment (CD) are the backbone of modern software development. CI/CD pipelines automate the process of integrating code changes, running tests, and deploying applications, ensuring faster and more reliable software delivery.

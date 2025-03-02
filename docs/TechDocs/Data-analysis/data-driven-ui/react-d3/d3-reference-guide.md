@@ -1,4 +1,5 @@
 # D3 Cheat Sheet
+
 Date: 2025-01-05
 
 A quick reference guide to commonly used D3 snippets.

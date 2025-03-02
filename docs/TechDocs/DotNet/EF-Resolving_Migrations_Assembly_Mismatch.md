@@ -1,4 +1,5 @@
 # Resolving Migrations Assembly Mismatch in .NET Core with EF
+
 Date: 2023-08-31
 
 

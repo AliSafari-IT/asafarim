@@ -1,7 +1,8 @@
 import { defineConfig } from 'vite';
-import vitePluginMd from 'vite-plugin-md';
-import { visualizer } from 'rollup-plugin-visualizer';
+import { configDefaults } from 'vitest/config';
 import path from 'path';
+import react from '@vitejs/plugin-react';
+import vitePluginMd from 'vite-plugin-md';
 import md from 'vite-plugin-md';
 import react from '@vitejs/plugin-react';
 import { PluginOption } from 'vite';
@@ -9,12 +10,15 @@ import { PluginOption } from 'vite';
 export default defineConfig({
   optimizeDeps: {
     include: ['d3', 'react', 'react-dom'],
-    exclude: ['@fluentui/tokens', '@fluentui/react-icons'],
+    exclude: ['@fluentui/tokens'],
   },
   plugins: [
-    visualizer({ open: true }) as PluginOption,
     react(),
-    vitePluginMd({ markdownItOptions: { html: true } }),
+    vitePluginMd({
+      markdownItOptions: {
+        html: true,
+      },      
+    }),
     md()
   ],
   resolve: {
@@ -25,17 +29,19 @@ export default defineConfig({
     },
   },
   define: {
-    'import.meta.env.VITE_API_URL': JSON.stringify(process.env.VITE_API_URL || 'http://localhost:5000'),
+    'process.env': {
+      NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+      VITE_API_URL: JSON.stringify('http://localhost:5000'),
+    },
   },
   server: {
     port: 3000,
     open: true,
     proxy: {
       '/api': {
-        target: process.env.VITE_API_URL || 'http://localhost:5000',
+        target: 'http://localhost:5000',
         changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api/, '/api'),
+        rewrite: (path) => path.replace(/^\/api/, '/api')
       }
     }
   },
@@ -51,11 +57,15 @@ export default defineConfig({
     emptyOutDir: true,
     sourcemap: true,
     rollupOptions: {
-      external: ['@emailjs/browser', '@fluentui/tokens', '@fluentui/react-icons'],
       output: {
         manualChunks: {
           'd3': ['d3'],
-          'vendor': ['react', 'react-dom', '@fluentui/react-components', '@fluentui/react']
+          'vendor': [
+            'react',
+            'react-dom',
+            '@fluentui/react-components',
+            '@fluentui/react'
+          ]
         },
       },
     },
@@ -65,4 +75,13 @@ export default defineConfig({
     },
     chunkSizeWarningLimit: 2000,
   },
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: './tests/setupTests.js',
+    exclude: [...configDefaults.exclude],
+    coverage: {
+      reporter: ['text', 'json', 'html'],
+    },
+  }
 });

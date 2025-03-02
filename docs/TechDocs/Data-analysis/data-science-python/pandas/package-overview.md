@@ -1,5 +1,7 @@
 # Pandas Package Overview
 
+Date: 2024-11-21
+
 Hey there! Let’s talk about **pandas**—a super handy Python package that makes working with data a breeze. If you’ve ever dealt with “relational” or “labeled” data, you’ll love how pandas helps you handle it easily and intuitively.
 
 Pandas is like your best friend for data analysis in Python. It’s designed to be the go-to tool for practical, real-world data manipulation. Whether you're cleaning up messy data, analyzing trends, or just trying to make sense of numbers, pandas has got your back!

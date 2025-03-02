@@ -1,7 +1,7 @@
 // src/layout/Navbar/components/AsmLogo.tsx
 
 import React from "react";
-import logo from './logoT.svg'; // Ensure the path is correct
+import logo from '@/assets/logoT.svg'; // Use the alias without the dot
 
 interface BrandProps {
   logoPath?: string;

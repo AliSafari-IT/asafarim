@@ -1,6 +1,6 @@
 # Use React typescript and D3.js to create a Data-Driven UI
 
-Date 31-12-2024
+Date: 2024-12-31
 
 ## Introduction
 

@@ -13,6 +13,7 @@
 @import "./styles/sitemap-page.css";
 @import "./styles/custom.css";
 
+/* Tailwind directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -377,12 +378,19 @@
 }
 
 .prose :is(ul, ol) {
-  @apply list-disc list-inside mb-6 space-y-2;
+  @apply list-disc list-inside mb-6;
 }
 
-.prose :is(li) {
-  @apply text-lg leading-relaxed;
+.prose :is(ul li, ol li) {
+  display: list-item; /* Ensures list items are correctly formatted */
+  list-style-position: inside; /* Prevents unwanted new lines */
+  margin-left: 1rem; /* Adds proper indentation */
 }
+
+.prose :is(ul li::marker, ol li::marker) {
+  color: var(--teams-purple); /* Customizes bullet color */
+}
+
 
 /* Code block styling */
 .prose :is(pre) {

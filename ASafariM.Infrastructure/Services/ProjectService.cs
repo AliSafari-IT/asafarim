@@ -36,12 +36,14 @@ namespace ASafariM.Infrastructure.Services
         {
             try
             {
+                _logger.LogInformation("Fetching projects from the database.");
                 var projects = await _projectRepository.GetAllAsync();
                 if (projects == null || !projects.Any())
                 {
                     _logger.LogWarning("No projects found");
                     return Enumerable.Empty<Project>();
                 }
+                _logger.LogInformation($"Retrieved {projects.Count()} projects.");
                 return projects;
             }
             catch (Exception ex)

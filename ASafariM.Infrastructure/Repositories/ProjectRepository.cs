@@ -21,9 +21,7 @@ public class ProjectRepository : IProjectRepository
     {
         try
         {
-            return await _context.Projects
-                .Include(p => p.ProjectMembers)
-                .ToListAsync();
+            return await _context.Projects.Include(p => p.ProjectMembers).ToListAsync();
         }
         catch (Exception ex)
         {
@@ -36,8 +34,8 @@ public class ProjectRepository : IProjectRepository
     {
         try
         {
-            return await _context.Projects
-                .Include(p => p.ProjectMembers)
+            return await _context
+                .Projects.Include(p => p.ProjectMembers)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
         catch (Exception ex)
@@ -71,7 +69,11 @@ public class ProjectRepository : IProjectRepository
         }
         catch (Exception ex)
         {
-            _logger.Error(ex, "Error occurred while updating project with ID {ProjectId}", project.Id);
+            _logger.Error(
+                ex,
+                "Error occurred while updating project with ID {ProjectId}",
+                project.Id
+            );
             throw;
         }
     }

@@ -3,10 +3,10 @@ import Wrapper from "../../layout/Wrapper/Wrapper";
 import { Button, Toolbar, Tooltip } from "@fluentui/react-components";
 import { Edit20Regular, Delete20Regular, Eye20Regular, AppsAddIn24Regular as AddNewIcon } from "@fluentui/react-icons";
 import { useNavigate } from "react-router-dom";
-import dashboardServices from "../../api/entityServices";
 import { IProject } from "../../interfaces/IProject";
 import Notification from "@/components/Notification/Notification";
 import { logger } from "@/utils/logger";
+import dashboardServices from "@/api/entityServices";
 
 const ProjectHome: React.FC = () => {
     const [loading, setLoading] = useState(false);
@@ -72,13 +72,11 @@ const ProjectHome: React.FC = () => {
         if (window.confirm("Are you sure you want to delete this project?")) {
             try {
                 logger.info(`Attempting to delete project with id: ${id}`);
-                await dashboardServices.deleteEntity("project", id);
+                await dashboardServices.deleteEntity("projects", id);
                 logger.info(`Successfully deleted project with id: ${id}`);
-                // Refresh the projects list
                 fetchProjects();
             } catch (error) {
                 logger.error(`Failed to delete project: ${error}`);
-                // You might want to show an error notification here
             }
         }
     };

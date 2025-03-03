@@ -46,7 +46,18 @@ namespace ASafariM.Presentation.Controllers
         {
             try
             {
-                var projects = await _projectService.GetAllProjectsAsync();
+                _logger.LogInformation("Fetching projects from the database.");
+                try
+                {
+                    var projects = await _projectService.GetAllProjectsAsync();
+                    _logger.LogInformation($"Retrieved {projects.Count()} projects.");
+                    return Ok(projects);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error retrieving projects");
+                    return StatusCode(500, "An internal error occurred.");
+                }
                 if (projects == null || !projects.Any())
                 {
                     _logger.LogWarning("No projects found");

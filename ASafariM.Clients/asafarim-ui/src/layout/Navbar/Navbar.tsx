@@ -43,7 +43,7 @@ const Navbar: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
     <nav className="navbar">
       <div className="flex items-center justify-between w-full lg:w-auto">
         <Brand
-          logoPath={'/logoT.svg'}
+          // logoPath={'/logoT.svg'}
           to="/"
           className="brand-asafarim"
           brandName="ASafariM (Demo)"

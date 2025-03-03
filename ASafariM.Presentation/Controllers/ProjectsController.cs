@@ -7,12 +7,17 @@ using ASafariM.Application.DTOs;
 using ASafariM.Application.Interfaces;
 using ASafariM.Domain.Entities;
 using ASafariM.Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace ASafariM.Presentation.Controllers
 {
+    /// <summary>
+    /// Controller for managing projects
+    /// </summary>
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProjectsController : ControllerBase

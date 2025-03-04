@@ -36,7 +36,7 @@ const ProjectHome: React.FC = () => {
         setLoading(true);
         setError(null);
         try {
-            const data = await dashboardServices.fetchEntities("projects");
+            const data = await dashboardServices.fetchProjects();
             logger.info("Projects data received: " + JSON.stringify(data));
             
             if (Array.isArray(data)) {

@@ -17,7 +17,6 @@ namespace ASafariM.Presentation.Controllers
     /// <summary>
     /// Controller for managing projects
     /// </summary>
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProjectsController : ControllerBase
@@ -35,40 +34,20 @@ namespace ASafariM.Presentation.Controllers
             _logger.LogInformation("ProjectsController initialized.");
         }
 
-        /// <summary>
-        /// Retrieves all projects
-        /// </summary>
-        /// <returns>List of projects</returns>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<Project>>> GetProjects()
         {
             try
             {
-                _logger.LogInformation("Fetching projects from the database.");
-                try
-                {
-                    var projects = await _projectService.GetAllProjectsAsync();
-                    _logger.LogInformation($"Retrieved {projects.Count()} projects.");
-                    return Ok(projects);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error retrieving projects");
-                    return StatusCode(500, "An internal error occurred.");
-                }
-                if (projects == null || !projects.Any())
-                {
-                    _logger.LogWarning("No projects found");
-                    return NotFound("No projects found");
-                }
+                _logger.LogInformation("Fetching projects via API.");
+                var projects = await _projectService.GetAllProjectsAsync();
+                _logger.LogInformation($"Returning {projects.Count()} projects.");
                 return Ok(projects);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error retrieving projects");
-                return StatusCode(500, "An internal error occurred.");
+                _logger.LogError(ex, "Failed to fetch projects.");
+                return StatusCode(500, "Failed to load projects. Please try again later.");
             }
         }
 

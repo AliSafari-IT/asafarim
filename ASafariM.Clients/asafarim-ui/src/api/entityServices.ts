@@ -123,6 +123,37 @@ const fetchEntities = async (entityTableName: string) => {
   }
 };
 
+const fetchProjects = async () => {
+  const endpoint = "projects";
+  try {
+    const response = await api.get(`/${endpoint}`);
+    logger.info(`Raw API response for ${endpoint}: ${JSON.stringify(response.data)}`);
+    // Handle both array and object responses
+    const data = response.data;
+    if (Array.isArray(data)) {
+      return data;
+    } else if (data && typeof data === 'object') {
+      // If it's a single object, wrap it in an array
+      if (data.id) {
+        return [data];
+      }
+      // If it's a collection with $values property (common in .NET)
+      if (data.$values) {
+        return data.$values;
+      }
+      // If it has a value property
+      if (data.value) {
+        return data.value;
+      }
+    }
+
+    return [];
+  } catch (error) {
+    logger.error(`Error fetching projects: ${error}`);
+    throw error;
+  }
+};
+
 const fetchEntityById = async (entityTableName: string, id: string) => {
   const endpoint = entityTableName.endsWith("s")
     ? entityTableName
@@ -192,6 +223,7 @@ const dashboardServices = {
   deleteEntity,
   hasAdminRole,
   tableExistsInDb,
+  fetchProjects
 };
 
 export default dashboardServices;

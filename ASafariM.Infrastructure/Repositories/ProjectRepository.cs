@@ -19,15 +19,7 @@ public class ProjectRepository : IProjectRepository
 
     public async Task<IEnumerable<Project>> GetAllAsync()
     {
-        try
-        {
-            return await _context.Projects.Include(p => p.ProjectMembers).ToListAsync();
-        }
-        catch (Exception ex)
-        {
-            _logger.Error(ex, "Error occurred while fetching all projects");
-            throw;
-        }
+        return await _context.Projects.Include(p => p.ProjectMembers).ToListAsync();
     }
 
     public async Task<Project?> GetByIdAsync(Guid id)

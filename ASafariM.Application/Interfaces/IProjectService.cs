@@ -1,13 +1,11 @@
-using ASafariM.Application.DTOs;
 using ASafariM.Domain.Entities;
+using ASafariM.Domain.Interfaces;
 
 namespace ASafariM.Application.Interfaces;
 
-public interface IProjectService
+public interface IProjectService : IEntityService<Project>
 {
-    Task<IEnumerable<Project>> GetAllProjectsAsync();
-    Task<Project?> GetProjectByIdAsync(Guid id);
-    Task<Project> CreateProjectAsync(Project project);
-    Task<bool> UpdateProjectAsync(Guid id, ProjectUpdateDto projectDto);
-    Task<bool> DeleteProjectAsync(Guid id);
+    Task<Project> GetByIdWithMembersAsync(Guid id);
+    Task<Project[]> GetAllWithMembersAsync();
+    Task<Project[]> GetByIdsAsync(IEnumerable<Guid> ids);
 }

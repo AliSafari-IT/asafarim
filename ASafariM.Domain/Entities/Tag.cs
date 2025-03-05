@@ -1,27 +1,32 @@
-using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using ASafariM.Domain.Common;
+using ASafariM.Domain.Entities.PostRelationships;
 
 namespace ASafariM.Domain.Entities
 {
-    public class Tag
+    public class Tag : BaseEntity
     {
-        [Key]
-        public Guid Id { get; set; }
-
         [Required]
         [StringLength(255)]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         public string? Description { get; set; }
+
+        [StringLength(255)]
         public string? Slug { get; set; }
 
-        public DateTime CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
-
-        // If you want bidirectional navigation:
-        public Post[]? Posts { get; set; } = new Post[] { };
+        // Many-to-Many Relationship with Posts
         public ICollection<PostTag> PostTags { get; set; } = new List<PostTag>();
 
+        /// <summary>
+        /// Generates a slug from the name if not provided.
+        /// </summary>
+        public void GenerateSlug()
+        {
+            if (string.IsNullOrWhiteSpace(Slug) && !string.IsNullOrWhiteSpace(Name))
+            {
+                Slug = Name.ToLower().Replace(" ", "-").Replace("--", "-");
+            }
+        }
     }
 }

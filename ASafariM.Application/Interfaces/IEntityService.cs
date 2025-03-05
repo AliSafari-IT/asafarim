@@ -11,4 +11,5 @@ public interface IEntityService<T>
     Task<T> CreateAsync(T entity);
     Task UpdateAsync(T entity);
     Task DeleteAsync(Guid id);
+    Task<T[]> DeleteManyAsync(IEnumerable<Guid> ids);
 }

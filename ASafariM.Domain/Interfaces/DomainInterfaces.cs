@@ -65,7 +65,7 @@ namespace ASafariM.Domain.Interfaces
 
     public interface IHasPhoneNumber
     {
-        string? PhoneNumber { get; set; }
+        string PhoneNumber { get; set; }
         bool? PhoneNumberConfirmed { get; set; }
     }
 }

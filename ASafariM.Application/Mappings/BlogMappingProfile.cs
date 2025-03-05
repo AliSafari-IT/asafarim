@@ -51,7 +51,15 @@ namespace ASafariM.Application.Mappings
                 .ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.Comments))
                 .ForMember(dest => dest.Attachments, opt => opt.MapFrom(src => src.Attachments))
                 .ForMember(dest => dest.Links, opt => opt.MapFrom(src => src.Links))
-                .ForMember(dest => dest.RelatedPosts, opt => opt.MapFrom(src => src.RelatedPosts));
+                .ForMember(
+                    dest => dest.RelatedPosts,
+                    opt => opt.MapFrom(src => src.PostRelatedPosts.Select(prp => prp.RelatedPost))
+                );
+
+            // User mappings
+            CreateMap<CreateUserCommand, User>();
+            CreateMap<UpdateUserCommand, User>();
+            CreateMap<UpdateUserByAdminCommand, User>();
         }
     }
 }

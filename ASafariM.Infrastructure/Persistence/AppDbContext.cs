@@ -1,5 +1,6 @@
 using ASafariM.Application.Utils;
 using ASafariM.Domain.Entities;
+using ASafariM.Domain.Entities.PostRelationships;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -37,6 +38,8 @@ public class AppDbContext : DbContext
 
     // Project-related sets
     public DbSet<Project> Projects { get; set; }
+    public DbSet<Assignment> Assignments { get; set; }
+    public DbSet<Initiative> Initiatives { get; set; }
     public DbSet<ProjectMember> ProjectMembers { get; set; }
     public DbSet<ProgressHistory> ProgressHistories { get; set; }
 
@@ -80,6 +83,22 @@ public class AppDbContext : DbContext
             entity.HasMany(s => s.Topics).WithMany();
         });
 
+        modelBuilder.Entity<PostTopic>().HasKey(pt => new { pt.PostId, pt.TopicId });
+
+        modelBuilder
+            .Entity<PostTopic>()
+            .HasOne(pt => pt.Post)
+            .WithMany(p => p.PostTopics)
+            .HasForeignKey(pt => pt.PostId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder
+            .Entity<PostTopic>()
+            .HasOne(pt => pt.Topic)
+            .WithMany(t => t.PostTopics)
+            .HasForeignKey(pt => pt.TopicId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         modelBuilder.Entity<Topic>().HasIndex(t => t.Slug).IsUnique();
         modelBuilder.Entity<Tag>().HasIndex(t => t.Slug).IsUnique();
         // Configure User entity
@@ -90,7 +109,10 @@ public class AppDbContext : DbContext
             entity.Property(u => u.LastName).HasMaxLength(50).IsRequired();
             entity.Property(u => u.Email).HasMaxLength(100).IsRequired();
             entity.Property(u => u.PasswordHash).IsRequired();
+            entity.Property(u => u.RefreshToken).HasMaxLength(255).IsRequired(false);
+            entity.Property(u => u.RefreshTokenExpiration).IsRequired(false);
             entity.Property(u => u.LastLogin).HasColumnType("datetime(6)").IsRequired(false);
+            entity.Property(u => u.IsLoggedIn).HasDefaultValue(false);
             entity.Property(u => u.NormalizedUserName).HasMaxLength(50);
             entity.Property(u => u.SecurityStamp).IsRequired();
             entity.Property(u => u.ConcurrencyStamp).IsRequired();
@@ -160,6 +182,22 @@ public class AppDbContext : DbContext
                 .HasForeignKey(p => p.AuthorId) // Assuming Post has a foreign key property AuthorId
                 .OnDelete(DeleteBehavior.Restrict); // Adjust delete behavior as needed
         });
+
+        modelBuilder.Entity<PostRelatedPost>().HasKey(prp => new { prp.PostId, prp.RelatedPostId }); // Composite key for the many-to-many relationship
+
+        modelBuilder
+            .Entity<PostRelatedPost>()
+            .HasOne(prp => prp.Post)
+            .WithMany(p => p.PostRelatedPosts)
+            .HasForeignKey(prp => prp.PostId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder
+            .Entity<PostRelatedPost>()
+            .HasOne(prp => prp.RelatedPost)
+            .WithMany()
+            .HasForeignKey(prp => prp.RelatedPostId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         // Configure User Preference entities
         modelBuilder
@@ -494,9 +532,10 @@ public class AppDbContext : DbContext
                     IsDeleted = false,
                     DeletedBy = null,
                     DeletedAt = null,
-                });
+                }
+            );
 
-      // add a user seed for Email: 'user@example.com' and Password: 'User+123456/'
+        // add a user seed for Email: 'user@example.com' and Password: 'User+123456/'
         modelBuilder
             .Entity<User>()
             .HasData(
@@ -536,7 +575,8 @@ public class AppDbContext : DbContext
                     IsDeleted = false,
                     DeletedBy = null,
                     DeletedAt = null,
-                });
+                }
+            );
 
         var userIds = UserUtilities.GenerateUserIdsFromBaseGuid(userId, 50);
         int i = 0;
@@ -970,41 +1010,46 @@ public class AppDbContext : DbContext
                     Description = "Test Tag description 4",
                 }
             );
+        var topicId = Guid.Parse("1fa85f64-5717-4562-b3fc-2c963f66afa6");
 
-        // Seed Topic
         modelBuilder
             .Entity<Topic>()
             .HasData(
-                new Topic
+                new Topic(
+                    name: "Test Topic name",
+                    slug: "test-topic-slug",
+                    description: "Test Topic description"
+                )
                 {
-                    Id = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
-                    Name = "Test Topic name",
-                    Slug = "test-topic-slug",
-                    Description = "Test Topic description",
-                },
-                new Topic
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Test Topic name 2",
-                    Slug = "test-topic-slug-2",
-                    Description = "Test Topic description 2",
-                    ParentTopicId = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
-                },
-                new Topic
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Test Topic name 3",
-                    Slug = "test-topic-slug-3",
-                    Description = "Test Topic description 3",
+                    Id = topicId,
                     ParentTopicId = null,
                 },
-                new Topic
+                new Topic(
+                    name: "Test Topic name 2",
+                    slug: "test-topic-slug-2",
+                    description: "Test Topic description 2"
+                )
                 {
                     Id = Guid.NewGuid(),
-                    Name = "Test Topic name 4",
-                    Slug = "test-topic-slug-4",
-                    Description = "Test Topic description 4",
-                    ParentTopicId = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
+                    ParentTopicId = topicId,
+                },
+                new Topic(
+                    name: "Test Topic name 3",
+                    slug: "test-topic-slug-3",
+                    description: "Test Topic description 3"
+                )
+                {
+                    Id = Guid.NewGuid(),
+                    ParentTopicId = null,
+                },
+                new Topic(
+                    name: "Test Topic name 4",
+                    slug: "test-topic-slug-4",
+                    description: "Test Topic description 4"
+                )
+                {
+                    Id = Guid.NewGuid(),
+                    ParentTopicId = topicId,
                 }
             );
 

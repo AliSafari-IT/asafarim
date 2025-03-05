@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ASafariM.Application.CommandModels;
 using ASafariM.Application.DTOs;
+using ASafariM.Application.Interfaces;
 using ASafariM.Application.Services;
 using ASafariM.Presentation.Controllers;
 using AutoMapper;
@@ -28,11 +29,7 @@ namespace ASafariM.Test.PresentationTests.Controllers
             _userServiceMock = new Mock<IUserService>();
             _loggerMock = new Mock<ILogger<UsersController>>();
             _mapperMock = new Mock<IMapper>();
-            _controller = new UsersController(
-                _userServiceMock.Object,
-                _loggerMock.Object,
-                _mapperMock.Object
-            );
+            _controller = new UsersController(_userServiceMock.Object, _mapperMock.Object);
         }
 
         [TestCleanup]
@@ -48,10 +45,10 @@ namespace ASafariM.Test.PresentationTests.Controllers
             // Arrange
             var users = new List<UserDto>
             {
-                new UserDto { Id = Guid.NewGuid(), UserName = "user1" },
-                new UserDto { Id = Guid.NewGuid(), UserName = "user2" },
+                new UserDto { Id = Guid.NewGuid(), Email = "user1@example.com" },
+                new UserDto { Id = Guid.NewGuid(), Email = "user2@example.com" },
             };
-            _userServiceMock.Setup(s => s.GetAllUsersAsync()).ReturnsAsync(users);
+            _userServiceMock.Setup(s => s.GetAllUsersAsync(false)).ReturnsAsync(users); // Explicitly specify the argument
 
             // Act
             var result = await _controller.GetAllUsers();

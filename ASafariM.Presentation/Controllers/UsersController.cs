@@ -208,8 +208,8 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<UserDto>> GetUserById([FromRoute] Guid id)
+        [HttpGet("{id:guid}")]
+        public async Task<ActionResult<UserDto>> GetUserById(Guid id)
         {
             Log.Information("Attempting to get user by ID: {UserId}", id);
 
@@ -228,7 +228,7 @@ namespace ASafariM.Presentation.Controllers
             catch (Exception ex)
             {
                 Log.Error(ex, "Error getting user by ID. ID: {UserId}", id);
-                return StatusCode(500, "An error occurred while getting the user");
+                return StatusCode(500, "An error occurred while getting the user: " + ex.Message);
             }
         }
 

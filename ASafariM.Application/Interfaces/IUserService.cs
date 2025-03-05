@@ -37,5 +37,8 @@ namespace ASafariM.Application.Interfaces
         Task<IEnumerable<UserDto>> SearchUsersAsync(string? username, string? email);
         Task<IEnumerable<UserRoleDto>> GetRolesByUserId(string userId);
         Task<bool> RequestAccountReactivationAsync(RequestAccountReactivationCommand command);
+        // GetByIdAsync
+        Task<UserDto?> GetByIdAsync(Guid userId);
+        Task RevokeUserTokenAsync(Guid userId);
     }
 }

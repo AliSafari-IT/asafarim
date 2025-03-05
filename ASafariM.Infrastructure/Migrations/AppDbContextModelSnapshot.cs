@@ -50,6 +50,64 @@ namespace ASafariM.Infrastructure.Migrations
                     b.ToTable("AccessibilityPreferences");
                 });
 
+            modelBuilder.Entity("ASafariM.Domain.Entities.Assignment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Assignee")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DeletedMessage")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("DueDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Assignments");
+                });
+
             modelBuilder.Entity("ASafariM.Domain.Entities.Attachment", b =>
                 {
                     b.Property<Guid>("Id")
@@ -67,13 +125,16 @@ namespace ASafariM.Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("DeletedBy")
-                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DeletedMessage")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
                     b.Property<string>("FileName")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<bool>("IsActive")
@@ -81,6 +142,9 @@ namespace ASafariM.Infrastructure.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<Guid?>("PostId")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Size")
                         .HasColumnType("longtext");
@@ -92,13 +156,15 @@ namespace ASafariM.Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Url")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PostId");
 
                     b.ToTable("Attachment");
                 });
@@ -109,10 +175,39 @@ namespace ASafariM.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DeletedMessage")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
@@ -137,7 +232,6 @@ namespace ASafariM.Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("DeletedBy")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("DeletedMessage")
@@ -149,17 +243,27 @@ namespace ASafariM.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<Guid?>("ParentCommentId")
+                        .HasColumnType("char(36)");
+
                     b.Property<string>("Text")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ParentCommentId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Comment");
                 });
@@ -221,7 +325,7 @@ namespace ASafariM.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("dde8c486-12e6-4fca-87a0-8b31bcf70050"),
+                            Id = new Guid("2fd30469-a260-408d-b12c-ad5b4dcc4c99"),
                             Capital = "Brussels",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = true,
@@ -233,7 +337,7 @@ namespace ASafariM.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("3efb797e-9e62-4e86-b05e-5037e461be9f"),
+                            Id = new Guid("f82be211-d963-4345-a6a9-41911764be6a"),
                             Capital = "Paris",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = true,
@@ -245,7 +349,7 @@ namespace ASafariM.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("121391ed-b992-4768-93b3-87bb2ca7c29a"),
+                            Id = new Guid("755c4c3a-d6b6-49e1-9a88-d41997e93dc4"),
                             Capital = "Berlin",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = true,
@@ -257,7 +361,7 @@ namespace ASafariM.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("52752fd1-6850-4d46-b396-ac94a79a5380"),
+                            Id = new Guid("7761667e-f5da-4d8a-922e-6edde8a57922"),
                             Capital = "Amsterdam",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = true,
@@ -269,7 +373,7 @@ namespace ASafariM.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("03d56106-5458-4634-a9ac-2b63c98d21f4"),
+                            Id = new Guid("73c2795b-5ff4-48c8-aeb6-0c7dfdc394a6"),
                             Capital = "London",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = true,
@@ -281,7 +385,7 @@ namespace ASafariM.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("299a1453-669e-4db8-b882-0335598784a8"),
+                            Id = new Guid("4c24fbde-c8cf-46be-ae37-b8cef62181a3"),
                             Capital = "Rome",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = true,
@@ -293,7 +397,7 @@ namespace ASafariM.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("338857c7-aca1-42a4-994c-6ecd87c8e772"),
+                            Id = new Guid("a0d0f4f1-00ff-4884-abb6-7f630373e99d"),
                             Capital = "Madrid",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = true,
@@ -305,7 +409,7 @@ namespace ASafariM.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("8219507a-dc5a-4a02-b8c0-ba7ad1d1e835"),
+                            Id = new Guid("ad40d064-d94d-4181-8eb7-20a65ae7090f"),
                             Capital = "Bern",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = true,
@@ -317,7 +421,7 @@ namespace ASafariM.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("b3bd33d2-150d-4b9d-bff0-dc257ba3f079"),
+                            Id = new Guid("4416080f-b075-4b72-b7a0-9d00a30bf28b"),
                             Capital = "Vienna",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = true,
@@ -329,7 +433,7 @@ namespace ASafariM.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("1e73e38a-4295-4e6e-b756-6d6a658f937e"),
+                            Id = new Guid("cb561671-80b3-45af-b821-328524fca94e"),
                             Capital = "Luxembourg",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = true,
@@ -384,9 +488,9 @@ namespace ASafariM.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("8b4e227b-1136-4b13-b83d-1655311188d2"),
+                            Id = new Guid("defb7812-ba6b-4422-8d49-35fb63ab1ed7"),
                             Code = "EUR",
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 582, DateTimeKind.Utc).AddTicks(2686),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 805, DateTimeKind.Utc).AddTicks(3478),
                             DecimalPlaces = 2,
                             IsActive = true,
                             Name = "Euro",
@@ -394,9 +498,9 @@ namespace ASafariM.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("815b2eef-ed9c-4acc-a7bb-5a8aab2ad3da"),
+                            Id = new Guid("c4603961-1c1d-4bb9-85e3-d270e7355fb7"),
                             Code = "USD",
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 582, DateTimeKind.Utc).AddTicks(3644),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 805, DateTimeKind.Utc).AddTicks(5241),
                             DecimalPlaces = 2,
                             IsActive = true,
                             Name = "US Dollar",
@@ -404,9 +508,9 @@ namespace ASafariM.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("b44d5f45-4546-4f46-b964-8307b31cfcfc"),
+                            Id = new Guid("b92f1bd1-65b8-4ac2-96b0-4b203d9d05ba"),
                             Code = "GBP",
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 582, DateTimeKind.Utc).AddTicks(3675),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 805, DateTimeKind.Utc).AddTicks(5250),
                             DecimalPlaces = 2,
                             IsActive = true,
                             Name = "British Pound",
@@ -414,9 +518,9 @@ namespace ASafariM.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("796fad72-78ac-44bb-a3e1-2f4f3a5299b3"),
+                            Id = new Guid("c6cb1892-35fb-4b8a-b986-f84a628b073f"),
                             Code = "CHF",
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 582, DateTimeKind.Utc).AddTicks(3682),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 805, DateTimeKind.Utc).AddTicks(5253),
                             DecimalPlaces = 2,
                             IsActive = true,
                             Name = "Swiss Franc",
@@ -432,6 +536,19 @@ namespace ASafariM.Infrastructure.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DeletedMessage")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
@@ -454,8 +571,14 @@ namespace ASafariM.Infrastructure.Migrations
                     b.Property<bool>("IsDefault")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -467,43 +590,51 @@ namespace ASafariM.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("9550dee8-5d36-42ec-8407-ed59508a6a53"),
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 582, DateTimeKind.Utc).AddTicks(968),
+                            Id = new Guid("6fb08530-f03b-4214-bacf-1784e9b95fbe"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 805, DateTimeKind.Utc).AddTicks(1254),
+                            CreatedBy = "System",
                             DisplayName = "Belgian/European Date Format",
                             Example = "31/12/2024",
                             Format = "dd/MM/yyyy",
                             IsActive = true,
-                            IsDefault = false
+                            IsDefault = false,
+                            IsDeleted = false
                         },
                         new
                         {
-                            Id = new Guid("fc4b405a-5579-4877-8e22-cee84044b62d"),
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 582, DateTimeKind.Utc).AddTicks(1982),
+                            Id = new Guid("d7f1ba6a-1d47-49cf-9ed9-de0251f29a51"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 805, DateTimeKind.Utc).AddTicks(2526),
+                            CreatedBy = "System",
                             DisplayName = "Belgian Date Format (Dot)",
                             Example = "31.12.2024",
                             Format = "dd.MM.yyyy",
                             IsActive = true,
-                            IsDefault = false
+                            IsDefault = false,
+                            IsDeleted = false
                         },
                         new
                         {
-                            Id = new Guid("1d4dce87-947e-4483-ae34-8ff1729b276e"),
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 582, DateTimeKind.Utc).AddTicks(1988),
+                            Id = new Guid("2f289fab-746e-49ab-a656-88fba8eb74b7"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 805, DateTimeKind.Utc).AddTicks(2532),
+                            CreatedBy = "System",
                             DisplayName = "US Date Format",
                             Example = "12/31/2024",
                             Format = "MM/dd/yyyy",
                             IsActive = true,
-                            IsDefault = false
+                            IsDefault = false,
+                            IsDeleted = false
                         },
                         new
                         {
-                            Id = new Guid("0014142f-aa02-479b-bed1-410b7275b9c9"),
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 582, DateTimeKind.Utc).AddTicks(1991),
+                            Id = new Guid("e699923b-a85c-4aa5-aed1-92b8f008a5f1"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 805, DateTimeKind.Utc).AddTicks(2541),
+                            CreatedBy = "System",
                             DisplayName = "ISO Date Format",
                             Example = "2024-12-31",
                             Format = "yyyy-MM-dd",
                             IsActive = true,
-                            IsDefault = false
+                            IsDefault = false,
+                            IsDeleted = false
                         });
                 });
 
@@ -515,6 +646,19 @@ namespace ASafariM.Infrastructure.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DeletedMessage")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Description")
                         .HasMaxLength(255)
@@ -529,6 +673,9 @@ namespace ASafariM.Infrastructure.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsDefault")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<int>("MaxSizeInMB")
@@ -553,6 +700,9 @@ namespace ASafariM.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("longtext");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Extension")
@@ -566,12 +716,14 @@ namespace ASafariM.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("5524fb23-d494-4511-961e-b9088806138b"),
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 581, DateTimeKind.Utc).AddTicks(6919),
+                            Id = new Guid("f4e35ca4-930e-425a-a62b-b59300410ddd"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 804, DateTimeKind.Utc).AddTicks(4305),
+                            CreatedBy = "System",
                             Description = "Simple text document format",
                             Extension = ".txt",
                             IsActive = true,
                             IsDefault = false,
+                            IsDeleted = false,
                             MaxSizeInMB = 10,
                             MimeType = "text/plain",
                             Name = "Plain Text",
@@ -580,12 +732,14 @@ namespace ASafariM.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("5cb67213-fdcf-4719-a897-5147401d75c8"),
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 581, DateTimeKind.Utc).AddTicks(8053),
+                            Id = new Guid("8cb0063d-0f48-4d10-b6bc-89818edb7feb"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 804, DateTimeKind.Utc).AddTicks(6893),
+                            CreatedBy = "System",
                             Description = "TypeScript source code file",
                             Extension = ".ts",
                             IsActive = true,
                             IsDefault = false,
+                            IsDeleted = false,
                             MaxSizeInMB = 10,
                             MimeType = "application/typescript",
                             Name = "TypeScript",
@@ -594,12 +748,14 @@ namespace ASafariM.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("16589182-3c84-4c2e-9af8-ee4f33a3022d"),
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 581, DateTimeKind.Utc).AddTicks(8059),
+                            Id = new Guid("26a6ef15-51ef-4ee5-95ea-5dd2d978ebe0"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 804, DateTimeKind.Utc).AddTicks(6909),
+                            CreatedBy = "System",
                             Description = "TypeScript React component file",
                             Extension = ".tsx",
                             IsActive = true,
                             IsDefault = false,
+                            IsDeleted = false,
                             MaxSizeInMB = 10,
                             MimeType = "application/typescript+react",
                             Name = "TypeScript React",
@@ -608,12 +764,14 @@ namespace ASafariM.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("64f25bd2-e453-4d41-a8ba-95d1b3fdd4f8"),
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 581, DateTimeKind.Utc).AddTicks(8061),
+                            Id = new Guid("ada9e2ec-87ff-4800-af43-d01d3910504b"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 804, DateTimeKind.Utc).AddTicks(6912),
+                            CreatedBy = "System",
                             Description = "JavaScript source code file",
                             Extension = ".js",
                             IsActive = true,
                             IsDefault = false,
+                            IsDeleted = false,
                             MaxSizeInMB = 10,
                             MimeType = "application/javascript",
                             Name = "JavaScript",
@@ -622,12 +780,14 @@ namespace ASafariM.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("d8ee0a7a-ceb9-4810-a9eb-7706007d468b"),
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 581, DateTimeKind.Utc).AddTicks(8063),
+                            Id = new Guid("3e6f0285-f526-4c0d-a3f1-6471f0e185eb"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 804, DateTimeKind.Utc).AddTicks(6915),
+                            CreatedBy = "System",
                             Description = "JavaScript Object Notation data file",
                             Extension = ".json",
                             IsActive = true,
                             IsDefault = false,
+                            IsDeleted = false,
                             MaxSizeInMB = 10,
                             MimeType = "application/json",
                             Name = "JSON",
@@ -636,12 +796,14 @@ namespace ASafariM.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("55a26735-9e42-4a43-ae18-83aac29d8543"),
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 581, DateTimeKind.Utc).AddTicks(8065),
+                            Id = new Guid("1559f988-2183-4ad8-a3e0-bcedddb04bcc"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 804, DateTimeKind.Utc).AddTicks(6918),
+                            CreatedBy = "System",
                             Description = "Markdown text format",
                             Extension = ".md",
                             IsActive = true,
                             IsDefault = false,
+                            IsDeleted = false,
                             MaxSizeInMB = 10,
                             MimeType = "text/markdown",
                             Name = "Markdown",
@@ -662,11 +824,30 @@ namespace ASafariM.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<Guid>("CurrencyId")
                         .HasColumnType("char(36)");
 
                     b.Property<Guid>("DateFormatId")
                         .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DeletedMessage")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -677,6 +858,9 @@ namespace ASafariM.Infrastructure.Migrations
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Value")
                         .IsRequired()
@@ -693,6 +877,63 @@ namespace ASafariM.Infrastructure.Migrations
                     b.HasIndex("TimeZoneId");
 
                     b.ToTable("GeographicalPreferences");
+                });
+
+            modelBuilder.Entity("ASafariM.Domain.Entities.Initiative", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DeletedMessage")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.PrimitiveCollection<string>("GoalItems")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.PrimitiveCollection<string>("TeamMembers")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Initiatives");
                 });
 
             modelBuilder.Entity("ASafariM.Domain.Entities.LanguagePreference", b =>
@@ -734,7 +975,9 @@ namespace ASafariM.Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("DeletedBy")
-                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DeletedMessage")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Description")
@@ -747,16 +990,17 @@ namespace ASafariM.Infrastructure.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Url")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
@@ -783,6 +1027,21 @@ namespace ASafariM.Infrastructure.Migrations
 
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DeletedMessage")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<Guid?>("ParentMdFileId")
                         .HasColumnType("char(36)");
@@ -836,8 +1095,36 @@ namespace ASafariM.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DeletedMessage")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<Guid>("MarkdownFileId")
                         .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -1009,8 +1296,8 @@ namespace ASafariM.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("6193ac30-14b2-4c4d-be56-442ae714a47a"),
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 581, DateTimeKind.Utc).AddTicks(8992),
+                            Id = new Guid("7255e35e-ca20-44dd-ba22-36cb282cf850"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 804, DateTimeKind.Utc).AddTicks(8375),
                             EnableInfiniteScroll = false,
                             IsActive = true,
                             IsDefault = false,
@@ -1047,12 +1334,16 @@ namespace ASafariM.Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("CreatedBy")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("DeletedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DeletedMessage")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Description")
@@ -1081,9 +1372,6 @@ namespace ASafariM.Infrastructure.Migrations
 
                     b.Property<string>("MetaDescription")
                         .HasColumnType("longtext");
-
-                    b.Property<Guid?>("PostId")
-                        .HasColumnType("char(36)");
 
                     b.Property<DateTime?>("PublishedDate")
                         .HasColumnType("datetime(6)");
@@ -1129,19 +1417,23 @@ namespace ASafariM.Infrastructure.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.HasIndex("PostId");
-
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("ASafariM.Domain.Entities.PostAttachment", b =>
+            modelBuilder.Entity("ASafariM.Domain.Entities.PostRelationships.PostAttachment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<DateTime>("AttachedAt")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<Guid>("AttachmentId")
                         .HasColumnType("char(36)");
+
+                    b.Property<bool>("IsPrimary")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<Guid>("PostId")
                         .HasColumnType("char(36)");
@@ -1155,14 +1447,20 @@ namespace ASafariM.Infrastructure.Migrations
                     b.ToTable("PostAttachment");
                 });
 
-            modelBuilder.Entity("ASafariM.Domain.Entities.PostCategory", b =>
+            modelBuilder.Entity("ASafariM.Domain.Entities.PostRelationships.PostCategory", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<DateTime>("AssignedAt")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("char(36)");
+
+                    b.Property<bool>("IsPrimary")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<Guid>("PostId")
                         .HasColumnType("char(36)");
@@ -1176,7 +1474,7 @@ namespace ASafariM.Infrastructure.Migrations
                     b.ToTable("PostCategory");
                 });
 
-            modelBuilder.Entity("ASafariM.Domain.Entities.PostCollaborator", b =>
+            modelBuilder.Entity("ASafariM.Domain.Entities.PostRelationships.PostCollaborator", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1200,21 +1498,17 @@ namespace ASafariM.Infrastructure.Migrations
                     b.ToTable("PostCollaborator");
                 });
 
-            modelBuilder.Entity("ASafariM.Domain.Entities.PostComment", b =>
+            modelBuilder.Entity("ASafariM.Domain.Entities.PostRelationships.PostComment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<string>("Comment")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<Guid>("CommentId")
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("CommentedAt")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<Guid>("CommenterId")
-                        .HasColumnType("char(36)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
@@ -1224,14 +1518,14 @@ namespace ASafariM.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CommenterId");
+                    b.HasIndex("CommentId");
 
                     b.HasIndex("PostId");
 
                     b.ToTable("PostComment");
                 });
 
-            modelBuilder.Entity("ASafariM.Domain.Entities.PostLink", b =>
+            modelBuilder.Entity("ASafariM.Domain.Entities.PostRelationships.PostLink", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1239,6 +1533,9 @@ namespace ASafariM.Infrastructure.Migrations
 
                     b.Property<Guid>("LinkId")
                         .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("LinkedAt")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<Guid>("PostId")
                         .HasColumnType("char(36)");
@@ -1252,23 +1549,22 @@ namespace ASafariM.Infrastructure.Migrations
                     b.ToTable("PostLink");
                 });
 
-            modelBuilder.Entity("ASafariM.Domain.Entities.PostRelatedPost", b =>
+            modelBuilder.Entity("ASafariM.Domain.Entities.PostRelationships.PostRelatedPost", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
                     b.Property<Guid>("PostId")
                         .HasColumnType("char(36)");
 
-                    b.HasKey("Id");
+                    b.Property<Guid>("RelatedPostId")
+                        .HasColumnType("char(36)");
 
-                    b.HasIndex("PostId");
+                    b.HasKey("PostId", "RelatedPostId");
+
+                    b.HasIndex("RelatedPostId");
 
                     b.ToTable("PostRelatedPost");
                 });
 
-            modelBuilder.Entity("ASafariM.Domain.Entities.PostTag", b =>
+            modelBuilder.Entity("ASafariM.Domain.Entities.PostRelationships.PostTag", b =>
                 {
                     b.Property<Guid>("PostId")
                         .HasColumnType("char(36)");
@@ -1276,11 +1572,60 @@ namespace ASafariM.Infrastructure.Migrations
                     b.Property<Guid>("TagId")
                         .HasColumnType("char(36)");
 
+                    b.Property<Guid>("Id")
+                        .HasColumnType("char(36)");
+
                     b.HasKey("PostId", "TagId");
 
                     b.HasIndex("TagId");
 
                     b.ToTable("PostTags");
+                });
+
+            modelBuilder.Entity("ASafariM.Domain.Entities.PostTopic", b =>
+                {
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("TopicId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DeletedMessage")
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("char(36)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("PostId", "TopicId");
+
+                    b.HasIndex("TopicId");
+
+                    b.ToTable("PostTopic");
                 });
 
             modelBuilder.Entity("ASafariM.Domain.Entities.PrivacyPreference", b =>
@@ -1298,7 +1643,26 @@ namespace ASafariM.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DeletedMessage")
+                        .HasColumnType("longtext");
+
                     b.Property<bool>("EnableTwoFactorAuthentication")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsProfilePublic")
@@ -1306,6 +1670,9 @@ namespace ASafariM.Infrastructure.Migrations
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -1336,15 +1703,31 @@ namespace ASafariM.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("char(36)");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<int>("CurrentStatus")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DeletedMessage")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("MitigationPlan")
                         .HasMaxLength(1000)
@@ -1390,8 +1773,8 @@ namespace ASafariM.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("char(36)");
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -1416,8 +1799,33 @@ namespace ASafariM.Infrastructure.Migrations
                     b.Property<double?>("Budget")
                         .HasColumnType("double");
 
+                    b.Property<DateTime?>("CancelledAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("CancelledBy")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("CompletedBy")
+                        .HasColumnType("char(36)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DeletedMessage")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -1427,35 +1835,26 @@ namespace ASafariM.Infrastructure.Migrations
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<bool>("IsCancelled")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<DateTime?>("IsCancelledAt")
+                    b.Property<DateTime?>("ExtendedUntil")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<Guid?>("IsCancelledby")
-                        .HasColumnType("char(36)");
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsCancelled")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<DateTime?>("IsCompletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid?>("IsCompletedBy")
-                        .HasColumnType("char(36)");
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsExtended")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<DateTime?>("IsExtendedTo")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<bool>("IsPaused")
                         .HasColumnType("tinyint(1)");
-
-                    b.Property<DateTime?>("IsPausedTo")
-                        .HasColumnType("datetime(6)");
 
                     b.Property<Guid?>("MarkdownFileId")
                         .HasColumnType("char(36)");
@@ -1468,6 +1867,9 @@ namespace ASafariM.Infrastructure.Migrations
                     b.Property<Guid>("OwnerId")
                         .HasColumnType("char(36)");
 
+                    b.Property<DateTime?>("PausedUntil")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<double?>("RemainingBudget")
                         .HasColumnType("double");
 
@@ -1479,6 +1881,9 @@ namespace ASafariM.Infrastructure.Migrations
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("longtext");
 
                     b.Property<Guid?>("UserId")
                         .HasColumnType("char(36)");
@@ -1504,11 +1909,39 @@ namespace ASafariM.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DeletedMessage")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<Guid>("ProjectId")
                         .HasColumnType("char(36)");
 
                     b.Property<int>("ProjectMemberType")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("longtext");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("char(36)");
@@ -1531,12 +1964,28 @@ namespace ASafariM.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("char(36)");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DeletedMessage")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Description")
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -1546,8 +1995,8 @@ namespace ASafariM.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("char(36)");
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -1556,50 +2005,62 @@ namespace ASafariM.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("413bbb51-64b3-4c52-8c91-667606c2aba4"),
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 581, DateTimeKind.Utc).AddTicks(4824),
-                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Id = new Guid("140838c8-5068-4ed4-92e8-99db5112a72a"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 804, DateTimeKind.Utc).AddTicks(241),
+                            CreatedBy = "System",
                             Description = "Admin role has full administrative privileges, except for application management.",
+                            IsActive = true,
+                            IsDeleted = false,
                             Name = "Admin"
                         },
                         new
                         {
-                            Id = new Guid("3475bb84-3db4-4030-8895-cdd6b764938b"),
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 581, DateTimeKind.Utc).AddTicks(5873),
-                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Id = new Guid("28b57485-a1da-4c45-9f3d-174dd45c9e0a"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 804, DateTimeKind.Utc).AddTicks(1924),
+                            CreatedBy = "System",
                             Description = "Manages user interactions and content moderation. They can create and manage their own tasks, projects, and content, and can edit other public articles than their own.",
+                            IsActive = true,
+                            IsDeleted = false,
                             Name = "Moderator"
                         },
                         new
                         {
-                            Id = new Guid("29a914f5-0d34-4aca-a2af-2a8d1090e12b"),
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 581, DateTimeKind.Utc).AddTicks(5879),
-                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Id = new Guid("b246cf74-a6ad-44f1-bc5f-98cf82530985"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 804, DateTimeKind.Utc).AddTicks(1929),
+                            CreatedBy = "System",
                             Description = "User role with limited privileges. A user can create and manage their own tasks, projects, and content, and cannot edit other public articles than their own.",
+                            IsActive = true,
+                            IsDeleted = false,
                             Name = "User"
                         },
                         new
                         {
-                            Id = new Guid("bbbf5bb9-deec-4f2a-b705-861e5123ea5e"),
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 581, DateTimeKind.Utc).AddTicks(5881),
-                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Id = new Guid("01d51ca9-4ee1-49c8-bb50-5c8adac72c67"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 804, DateTimeKind.Utc).AddTicks(1933),
+                            CreatedBy = "System",
                             Description = "Guest role is the least privileged role. They can only view public articles.",
+                            IsActive = true,
+                            IsDeleted = false,
                             Name = "Guest"
                         },
                         new
                         {
-                            Id = new Guid("1f410b04-92a2-4e72-97e5-f02ec4b0039f"),
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 581, DateTimeKind.Utc).AddTicks(5890),
-                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Id = new Guid("12e1f938-b239-4f1d-9573-710e0264a8fa"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 804, DateTimeKind.Utc).AddTicks(1946),
+                            CreatedBy = "System",
                             Description = "Focuses on content creation and management without full administrative privileges. They can create and manage their own articles, but cannot edit other public articles than their own.",
+                            IsActive = true,
+                            IsDeleted = false,
                             Name = "Editor"
                         },
                         new
                         {
-                            Id = new Guid("3bebe8c9-adcf-47cb-8c87-3a4ee7e9ceeb"),
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 581, DateTimeKind.Utc).AddTicks(5892),
-                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Id = new Guid("b1a0db22-e7d2-4004-bcfa-35c73274f92f"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 804, DateTimeKind.Utc).AddTicks(1950),
+                            CreatedBy = "System",
                             Description = "Has full control over the application and can manage all aspects.",
+                            IsActive = true,
+                            IsDeleted = false,
                             Name = "SuperAdmin"
                         });
                 });
@@ -1747,24 +2208,57 @@ namespace ASafariM.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<Guid?>("CommentId")
+                        .HasColumnType("char(36)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DeletedMessage")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
+                    b.Property<Guid?>("PostId")
+                        .HasColumnType("char(36)");
+
                     b.Property<string>("Slug")
+                        .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("longtext");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("PostId");
 
                     b.HasIndex("Slug")
                         .IsUnique();
@@ -1774,33 +2268,45 @@ namespace ASafariM.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("01920b21-024d-4c6b-96f2-91235baf8a33"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Id = new Guid("fc723927-5c70-4e97-a6d2-bbbe357515b1"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 806, DateTimeKind.Utc).AddTicks(3266),
+                            CreatedBy = "System",
                             Description = "Test Tag description",
+                            IsActive = true,
+                            IsDeleted = false,
                             Name = "Test Tag name",
                             Slug = "test-tag-slug"
                         },
                         new
                         {
-                            Id = new Guid("07679d34-90b3-4d50-9848-3c2b96a6c1ec"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Id = new Guid("128118ce-cacd-49ac-9f55-caf2d42dadad"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 806, DateTimeKind.Utc).AddTicks(4391),
+                            CreatedBy = "System",
                             Description = "Test Tag description 2",
+                            IsActive = true,
+                            IsDeleted = false,
                             Name = "Test Tag name 2",
                             Slug = "test-tag-slug-2"
                         },
                         new
                         {
-                            Id = new Guid("73f7bac7-2c73-4869-b782-32a7f0979879"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Id = new Guid("f63a4e39-4a5c-45e5-95d5-dbf266adc41b"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 806, DateTimeKind.Utc).AddTicks(4401),
+                            CreatedBy = "System",
                             Description = "Test Tag description 3",
+                            IsActive = true,
+                            IsDeleted = false,
                             Name = "Test Tag name 3",
                             Slug = "test-tag-slug-3"
                         },
                         new
                         {
-                            Id = new Guid("1fee52c8-5ed1-4218-aa16-a92f6d4ee17c"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Id = new Guid("abb7dadc-8390-485d-85f8-be01e90bd955"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 806, DateTimeKind.Utc).AddTicks(4405),
+                            CreatedBy = "System",
                             Description = "Test Tag description 4",
+                            IsActive = true,
+                            IsDeleted = false,
                             Name = "Test Tag name 4",
                             Slug = "test-tag-slug-4"
                         });
@@ -1941,8 +2447,8 @@ namespace ASafariM.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("ac5cff22-6ec5-46a7-86c5-f782ba2a47fa"),
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 582, DateTimeKind.Utc).AddTicks(4380),
+                            Id = new Guid("f8a229ba-1382-47ab-b8ce-acbe70974fa2"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 805, DateTimeKind.Utc).AddTicks(6202),
                             DstOffset = "+02:00",
                             IsActive = true,
                             Name = "CET",
@@ -1952,8 +2458,8 @@ namespace ASafariM.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("2988f9fb-364a-4aae-928f-7ed10e181422"),
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 582, DateTimeKind.Utc).AddTicks(5539),
+                            Id = new Guid("93cfbe30-3864-49ae-9d97-3c1342f5030e"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 805, DateTimeKind.Utc).AddTicks(7671),
                             DstOffset = "+02:00",
                             IsActive = true,
                             Name = "CEST",
@@ -1963,8 +2469,8 @@ namespace ASafariM.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("037a08e2-1b3c-42aa-9865-4ebebb77cf8e"),
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 582, DateTimeKind.Utc).AddTicks(5544),
+                            Id = new Guid("1e242dd0-2988-47ef-b06f-0201dfed3242"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 805, DateTimeKind.Utc).AddTicks(7678),
                             DstOffset = "+02:00",
                             IsActive = true,
                             Name = "UTC",
@@ -1974,8 +2480,8 @@ namespace ASafariM.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("39b77345-c09e-4982-98d3-f6dc9ea26ecf"),
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 582, DateTimeKind.Utc).AddTicks(5546),
+                            Id = new Guid("779c1164-4076-43e7-b1fc-e3980575b1cf"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 805, DateTimeKind.Utc).AddTicks(7687),
                             DstOffset = "+01:00",
                             IsActive = true,
                             Name = "WET",
@@ -1985,8 +2491,8 @@ namespace ASafariM.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("5f6d88c8-c02b-419d-b4c3-b57e8d8915ef"),
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 582, DateTimeKind.Utc).AddTicks(5548),
+                            Id = new Guid("68eff3da-209b-4e43-8832-cae8b9e1c880"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 805, DateTimeKind.Utc).AddTicks(7689),
                             DstOffset = "+03:00",
                             IsActive = true,
                             Name = "EET",
@@ -2005,11 +2511,27 @@ namespace ASafariM.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("char(36)");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DeletedMessage")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -2020,13 +2542,14 @@ namespace ASafariM.Infrastructure.Migrations
                         .HasColumnType("char(36)");
 
                     b.Property<string>("Slug")
+                        .IsRequired()
                         .HasColumnType("varchar(255)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("char(36)");
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -2040,40 +2563,48 @@ namespace ASafariM.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 583, DateTimeKind.Utc).AddTicks(1695),
-                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Id = new Guid("1fa85f64-5717-4562-b3fc-2c963f66afa6"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 806, DateTimeKind.Utc).AddTicks(7103),
+                            CreatedBy = "System",
                             Description = "Test Topic description",
+                            IsActive = true,
+                            IsDeleted = false,
                             Name = "Test Topic name",
                             Slug = "test-topic-slug"
                         },
                         new
                         {
-                            Id = new Guid("0e7c8fb9-ec48-4db2-a935-01b1fff7a35c"),
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 583, DateTimeKind.Utc).AddTicks(2805),
-                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Id = new Guid("8b0b01d4-3a12-498a-8dbb-ec59d86e2be4"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 806, DateTimeKind.Utc).AddTicks(8780),
+                            CreatedBy = "System",
                             Description = "Test Topic description 2",
+                            IsActive = true,
+                            IsDeleted = false,
                             Name = "Test Topic name 2",
-                            ParentTopicId = new Guid("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
+                            ParentTopicId = new Guid("1fa85f64-5717-4562-b3fc-2c963f66afa6"),
                             Slug = "test-topic-slug-2"
                         },
                         new
                         {
-                            Id = new Guid("ca75b08f-c5fa-48e5-bc55-fb60642bed4a"),
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 583, DateTimeKind.Utc).AddTicks(3076),
-                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Id = new Guid("52eb2e81-426b-4585-9344-d0fade047f45"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 806, DateTimeKind.Utc).AddTicks(8794),
+                            CreatedBy = "System",
                             Description = "Test Topic description 3",
+                            IsActive = true,
+                            IsDeleted = false,
                             Name = "Test Topic name 3",
                             Slug = "test-topic-slug-3"
                         },
                         new
                         {
-                            Id = new Guid("e1ffebc9-e2ab-4fbc-9af0-6f5a1929418d"),
-                            CreatedAt = new DateTime(2025, 2, 26, 8, 46, 55, 583, DateTimeKind.Utc).AddTicks(3082),
-                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Id = new Guid("8fe1281d-f4c9-45de-bd4a-0c20f4ce1543"),
+                            CreatedAt = new DateTime(2025, 3, 5, 13, 48, 57, 806, DateTimeKind.Utc).AddTicks(8797),
+                            CreatedBy = "System",
                             Description = "Test Topic description 4",
+                            IsActive = true,
+                            IsDeleted = false,
                             Name = "Test Topic name 4",
-                            ParentTopicId = new Guid("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
+                            ParentTopicId = new Guid("1fa85f64-5717-4562-b3fc-2c963f66afa6"),
                             Slug = "test-topic-slug-4"
                         });
                 });
@@ -2115,7 +2646,7 @@ namespace ASafariM.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
-                    b.Property<bool?>("EmailConfirmed")
+                    b.Property<bool>("EmailConfirmed")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<int>("FailedLoginAttempts")
@@ -2156,6 +2687,11 @@ namespace ASafariM.Infrastructure.Migrations
                     b.Property<bool>("IsLockedOut")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<bool>("IsLoggedIn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false);
+
                     b.Property<bool>("IsModerator")
                         .HasColumnType("tinyint(1)");
 
@@ -2188,7 +2724,7 @@ namespace ASafariM.Infrastructure.Migrations
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<DateTime?>("LockoutEnd")
+                    b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
@@ -2216,9 +2752,10 @@ namespace ASafariM.Infrastructure.Migrations
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<bool?>("PhoneNumberConfirmed")
+                    b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<Guid?>("PostId")
@@ -2233,11 +2770,21 @@ namespace ASafariM.Infrastructure.Migrations
                     b.Property<DateTime?>("ReactivationRequestedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("RefreshToken")
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime?>("RefreshTokenExpiration")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("SecurityStamp")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<bool?>("TwoFactorEnabled")
+                    b.Property<string>("Token")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -2293,6 +2840,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -2304,7 +2852,7 @@ namespace ASafariM.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "DEMO_ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "DEMO_ADMIN",
-                            PasswordHash = "FbJXQ7XOvSrmQeqm0VkXF0NNDCozdx5693yLqqhF1G8qXhWVuEs2Vly9CiLTAW7G",
+                            PasswordHash = "dgk64OinRYFYWE7J8BO9r9X7Ztoet36AAVKumisFmnVGbzQyeICAq3hbykvgv01p",
                             PhoneNumber = "+123456789",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
@@ -2334,6 +2882,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -2345,7 +2894,7 @@ namespace ASafariM.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "DEMO_USER@EXAMPLE.COM",
                             NormalizedUserName = "DEMO_USER",
-                            PasswordHash = "2eglRDK78LC4haZrynmOc1dmaf5RooOP+eFO6GcS1/YXWjvZDGS9xkqSy2DuIx46",
+                            PasswordHash = "1WShZQnZ9stw/xJRITPECc8Sv64ZPv/QdBSemssp/afRd40LYg0Pnee2Ok38Mdxs",
                             PhoneNumber = "+1234567890",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
@@ -2375,6 +2924,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -2386,7 +2936,7 @@ namespace ASafariM.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ASAFARIM.IT@GMAIL.COM",
                             NormalizedUserName = "DELETED_USER",
-                            PasswordHash = "jO0au6lVKdVs10F8s5J7DYvHcjD/LXI1LCHyHMa1Aozh8T5GS5WZaYlu1pbGVNM6",
+                            PasswordHash = "rIrP5mO9ND1bJUIzix7Otb4b/UtyaDFt3UmPIab/9DRM7EBnREI9ONfkIR7aGjHw",
                             PhoneNumber = "+1234567890",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
@@ -2400,11 +2950,11 @@ namespace ASafariM.Infrastructure.Migrations
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fb5"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_1_8414@example.com",
+                            ConcurrencyStamp = "user_1_d3eb@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1975, 2, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_1_8414@example.com",
+                            Email = "user_1_d3eb@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 1",
@@ -2416,6 +2966,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -2425,27 +2976,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_1_8414@EXAMPLE.COM",
-                            NormalizedUserName = "USER_1_8414",
-                            PasswordHash = "diJWpmmujBhDQ6o0IFohPJLPvQStz1ESqDxDlSwQWhl3PuAtJV2JiDUoRUzA8FlW",
+                            NormalizedEmail = "USER_1_D3EB@EXAMPLE.COM",
+                            NormalizedUserName = "USER_1_D3EB",
+                            PasswordHash = "yLPmvjyv8YmZafNsfQKI2QYbb+ZmpmkptsXCC7KjuInjiyr4W87d/UPd+ItyPeEC",
                             PhoneNumber = "+123456781",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_1_8414@example.com",
+                            SecurityStamp = "user_1_d3eb@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_1_8414"
+                            UserName = "user_1_d3eb"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fb6"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_2_225b@example.com",
+                            ConcurrencyStamp = "user_2_026c@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1975, 3, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_2_225b@example.com",
+                            Email = "user_2_026c@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 2",
@@ -2457,6 +3008,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -2466,27 +3018,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_2_225B@EXAMPLE.COM",
-                            NormalizedUserName = "USER_2_225B",
-                            PasswordHash = "7iuGKLN/XkzcMJTqc+Kr1n2X3AzybNRYhtaKkRdK19OpM37x9rlR4adMJlH0fK0E",
+                            NormalizedEmail = "USER_2_026C@EXAMPLE.COM",
+                            NormalizedUserName = "USER_2_026C",
+                            PasswordHash = "MdaS7dMyZEKpTB8vath8o6OedK4LIMKH/gWWFu8jhOHj5R3c3qdnoPzsZUY2H3D+",
                             PhoneNumber = "+123456782",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_2_225b@example.com",
+                            SecurityStamp = "user_2_026c@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_2_225b"
+                            UserName = "user_2_026c"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fb7"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_3_e36f@example.com",
+                            ConcurrencyStamp = "user_3_bb67@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1975, 4, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_3_e36f@example.com",
+                            Email = "user_3_bb67@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 3",
@@ -2498,6 +3050,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -2507,27 +3060,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_3_E36F@EXAMPLE.COM",
-                            NormalizedUserName = "USER_3_E36F",
-                            PasswordHash = "KJvTzFbx56ib2mjMLOboRONhcR7sguyJOaKd21DDtfEDR7j7UYO997PMNYFiE7qq",
+                            NormalizedEmail = "USER_3_BB67@EXAMPLE.COM",
+                            NormalizedUserName = "USER_3_BB67",
+                            PasswordHash = "APv5uclXw3AiXNj4AjYbIJWKXrJK9AZSQNNR1ivOWgaXRQtZV2mBBjcWzc9VOE/L",
                             PhoneNumber = "+123456783",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_3_e36f@example.com",
+                            SecurityStamp = "user_3_bb67@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_3_e36f"
+                            UserName = "user_3_bb67"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fb8"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_4_3b3b@example.com",
+                            ConcurrencyStamp = "user_4_1b90@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1975, 5, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_4_3b3b@example.com",
+                            Email = "user_4_1b90@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 4",
@@ -2539,6 +3092,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -2548,27 +3102,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_4_3B3B@EXAMPLE.COM",
-                            NormalizedUserName = "USER_4_3B3B",
-                            PasswordHash = "IhXbUmddQDJMnS74+tSAtObBL59q2SNDcXd/gupqFg75fQ8mRF3MV5DTZS/d+HBk",
+                            NormalizedEmail = "USER_4_1B90@EXAMPLE.COM",
+                            NormalizedUserName = "USER_4_1B90",
+                            PasswordHash = "ej/+Aj2amur1pTDD/Koiho1Klt7fyijX8zGygdPYBnq9LjLKwXFbKVsizpb/Yelh",
                             PhoneNumber = "+123456784",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_4_3b3b@example.com",
+                            SecurityStamp = "user_4_1b90@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_4_3b3b"
+                            UserName = "user_4_1b90"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fb9"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_5_dd11@example.com",
+                            ConcurrencyStamp = "user_5_718d@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1975, 6, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_5_dd11@example.com",
+                            Email = "user_5_718d@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 5",
@@ -2580,6 +3134,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -2589,27 +3144,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_5_DD11@EXAMPLE.COM",
-                            NormalizedUserName = "USER_5_DD11",
-                            PasswordHash = "Cu65hyp/K7eKppJjHfm9/+8n1SX56KhC+Jmen7dv3Tgv1STwQE4KDE8XIOiFZDIH",
+                            NormalizedEmail = "USER_5_718D@EXAMPLE.COM",
+                            NormalizedUserName = "USER_5_718D",
+                            PasswordHash = "BDCQHTOphaLNrxUiyNRw62khygCXysg7X1Ur/QOUAdiBoGMjDJxtwnHhLadMEJl9",
                             PhoneNumber = "+123456785",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_5_dd11@example.com",
+                            SecurityStamp = "user_5_718d@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_5_dd11"
+                            UserName = "user_5_718d"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fba"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_6_239d@example.com",
+                            ConcurrencyStamp = "user_6_62f4@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1975, 7, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_6_239d@example.com",
+                            Email = "user_6_62f4@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 6",
@@ -2621,6 +3176,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -2630,27 +3186,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_6_239D@EXAMPLE.COM",
-                            NormalizedUserName = "USER_6_239D",
-                            PasswordHash = "3JzCXyP/wTAuSYsZ0EqYpXGKoLfLmjO1YT7lIQvi73wPa269Rj+djogp5D8d3wcF",
+                            NormalizedEmail = "USER_6_62F4@EXAMPLE.COM",
+                            NormalizedUserName = "USER_6_62F4",
+                            PasswordHash = "v5gjZHE6mCQn06sGrWKcWZLDRw/Aj1/YYDUB5od5qqVkGhNTVULDyvDPEoaR1ZkX",
                             PhoneNumber = "+123456786",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_6_239d@example.com",
+                            SecurityStamp = "user_6_62f4@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_6_239d"
+                            UserName = "user_6_62f4"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fbb"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_7_1c66@example.com",
+                            ConcurrencyStamp = "user_7_9ba4@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1975, 8, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_7_1c66@example.com",
+                            Email = "user_7_9ba4@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 7",
@@ -2662,6 +3218,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -2671,27 +3228,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_7_1C66@EXAMPLE.COM",
-                            NormalizedUserName = "USER_7_1C66",
-                            PasswordHash = "FsatcwSSJ3ZKCZIigQSja1HHgtIeEqSNphfBOYbCAiJM2xxTGKDOBwRoeH0Fgonl",
+                            NormalizedEmail = "USER_7_9BA4@EXAMPLE.COM",
+                            NormalizedUserName = "USER_7_9BA4",
+                            PasswordHash = "cMEiPuOJ5Xhn0OHKKAy+v24xSgo295LMvy/Y1pOFOTJJZTi4jmT2rd26cSQLryji",
                             PhoneNumber = "+123456787",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_7_1c66@example.com",
+                            SecurityStamp = "user_7_9ba4@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_7_1c66"
+                            UserName = "user_7_9ba4"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fbc"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_8_0c79@example.com",
+                            ConcurrencyStamp = "user_8_88f8@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1975, 9, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_8_0c79@example.com",
+                            Email = "user_8_88f8@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 8",
@@ -2703,6 +3260,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -2712,27 +3270,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_8_0C79@EXAMPLE.COM",
-                            NormalizedUserName = "USER_8_0C79",
-                            PasswordHash = "V949JdTxn2rA+0pCrXB95NwOjcZdyd3kXZECihHG40ulPGOBEmGqMuFZolYJ/N8z",
+                            NormalizedEmail = "USER_8_88F8@EXAMPLE.COM",
+                            NormalizedUserName = "USER_8_88F8",
+                            PasswordHash = "0WinHzx1iIwU3orZqSTB19dH887QBowOn2ikOvQMXRR49nQUmqm4ak1DFEx3vHX1",
                             PhoneNumber = "+123456788",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_8_0c79@example.com",
+                            SecurityStamp = "user_8_88f8@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_8_0c79"
+                            UserName = "user_8_88f8"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fbd"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_9_b29b@example.com",
+                            ConcurrencyStamp = "user_9_f52a@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1975, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_9_b29b@example.com",
+                            Email = "user_9_f52a@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 9",
@@ -2744,6 +3302,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -2753,27 +3312,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_9_B29B@EXAMPLE.COM",
-                            NormalizedUserName = "USER_9_B29B",
-                            PasswordHash = "Yjnz2CwNKX7CRtDTQDSVsSxag+EcMREMhWjfA8UBFG+2vEBW7umVf9Ca7QekxwBR",
+                            NormalizedEmail = "USER_9_F52A@EXAMPLE.COM",
+                            NormalizedUserName = "USER_9_F52A",
+                            PasswordHash = "IV9qmS6Q8K+Jd/F3jNCVHy3fqVtjTraX/qzyPyq4DBm846jcPWPmv7kB+iFFPbMi",
                             PhoneNumber = "+123456789",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_9_b29b@example.com",
+                            SecurityStamp = "user_9_f52a@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_9_b29b"
+                            UserName = "user_9_f52a"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fbe"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_10_9d1e@example.com",
+                            ConcurrencyStamp = "user_10_7c80@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1975, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_10_9d1e@example.com",
+                            Email = "user_10_7c80@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 10",
@@ -2785,6 +3344,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -2794,27 +3354,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_10_9D1E@EXAMPLE.COM",
-                            NormalizedUserName = "USER_10_9D1E",
-                            PasswordHash = "G8t3+A4TYHzCth+T1es4Ly6+cEloOjiu5crR4gnBRR5IoK4AEzKj6A7kom85c25b",
+                            NormalizedEmail = "USER_10_7C80@EXAMPLE.COM",
+                            NormalizedUserName = "USER_10_7C80",
+                            PasswordHash = "/XluS8nXkIzTvQzyC6JYqLuZpubs9YpGpqeSiizE6bVdnGhT+KggToH99+xJpMXP",
                             PhoneNumber = "+1234567810",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_10_9d1e@example.com",
+                            SecurityStamp = "user_10_7c80@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_10_9d1e"
+                            UserName = "user_10_7c80"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fbf"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_11_f125@example.com",
+                            ConcurrencyStamp = "user_11_a17e@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1975, 12, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_11_f125@example.com",
+                            Email = "user_11_a17e@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 11",
@@ -2826,6 +3386,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -2835,27 +3396,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_11_F125@EXAMPLE.COM",
-                            NormalizedUserName = "USER_11_F125",
-                            PasswordHash = "qR/EkuzQcJ2ertSsHyszxbDgArgu6THnfd7HSvQGjwVodNLcrG8fRDZ2cDahbHEt",
+                            NormalizedEmail = "USER_11_A17E@EXAMPLE.COM",
+                            NormalizedUserName = "USER_11_A17E",
+                            PasswordHash = "hFKNAtwcqMUTpFn7DcbiiSHmQRUiHkHuAgEYk291EFnG61oUc+c4EhxRI9H5/c1+",
                             PhoneNumber = "+1234567811",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_11_f125@example.com",
+                            SecurityStamp = "user_11_a17e@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_11_f125"
+                            UserName = "user_11_a17e"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fc0"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_12_7be9@example.com",
+                            ConcurrencyStamp = "user_12_606b@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1976, 1, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_12_7be9@example.com",
+                            Email = "user_12_606b@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 12",
@@ -2867,6 +3428,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -2876,27 +3438,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_12_7BE9@EXAMPLE.COM",
-                            NormalizedUserName = "USER_12_7BE9",
-                            PasswordHash = "DAx6BgDq5167rYcNqH1rHqE1DRi2Su3EtIZeuiu4uA7WlQnpHhPk8nSGzunEmF4P",
+                            NormalizedEmail = "USER_12_606B@EXAMPLE.COM",
+                            NormalizedUserName = "USER_12_606B",
+                            PasswordHash = "PMEVYXTyf+XJ55efK6eCq3zIyDz+lkh40PIARJUqxNAZJqzd3wDvkInI5iKrwevh",
                             PhoneNumber = "+1234567812",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_12_7be9@example.com",
+                            SecurityStamp = "user_12_606b@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_12_7be9"
+                            UserName = "user_12_606b"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fc1"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_13_3417@example.com",
+                            ConcurrencyStamp = "user_13_2e6f@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1976, 2, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_13_3417@example.com",
+                            Email = "user_13_2e6f@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 13",
@@ -2908,6 +3470,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -2917,27 +3480,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_13_3417@EXAMPLE.COM",
-                            NormalizedUserName = "USER_13_3417",
-                            PasswordHash = "AKbkBBhCP30oRHZcR38mOEao31Ol7O5qiWICmTTTJOeddag8D99ot7A5z1QZ76Y6",
+                            NormalizedEmail = "USER_13_2E6F@EXAMPLE.COM",
+                            NormalizedUserName = "USER_13_2E6F",
+                            PasswordHash = "Of+czZdxCwSHcjno0+gWex1EkxF+e/lHikHm4GaRfK6hUiNTPCrFkXvYdg8CxBPm",
                             PhoneNumber = "+1234567813",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_13_3417@example.com",
+                            SecurityStamp = "user_13_2e6f@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_13_3417"
+                            UserName = "user_13_2e6f"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fc2"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_14_e999@example.com",
+                            ConcurrencyStamp = "user_14_9d45@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1976, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_14_e999@example.com",
+                            Email = "user_14_9d45@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 14",
@@ -2949,6 +3512,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -2958,27 +3522,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_14_E999@EXAMPLE.COM",
-                            NormalizedUserName = "USER_14_E999",
-                            PasswordHash = "IHLMJYJoLXyRRkfeBVbs31O2A4sr7oiUmsooq0EZmmcSSr6cBYqv2bJDpmndcCys",
+                            NormalizedEmail = "USER_14_9D45@EXAMPLE.COM",
+                            NormalizedUserName = "USER_14_9D45",
+                            PasswordHash = "kygnJTh3adic/4ja+ZpJGSWx/cpxDDtO5lqMmL+mo1Hoar4ZdjoVdEXylZelTu54",
                             PhoneNumber = "+1234567814",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_14_e999@example.com",
+                            SecurityStamp = "user_14_9d45@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_14_e999"
+                            UserName = "user_14_9d45"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fc3"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_15_afcb@example.com",
+                            ConcurrencyStamp = "user_15_4b03@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1976, 4, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_15_afcb@example.com",
+                            Email = "user_15_4b03@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 15",
@@ -2990,6 +3554,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -2999,27 +3564,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_15_AFCB@EXAMPLE.COM",
-                            NormalizedUserName = "USER_15_AFCB",
-                            PasswordHash = "8YXtfsjM+27sZ2ixS3Hi1o6+zG0DBMxSFk+hL6aNm4HG5IKCLn73N7jCZNr4EMEb",
+                            NormalizedEmail = "USER_15_4B03@EXAMPLE.COM",
+                            NormalizedUserName = "USER_15_4B03",
+                            PasswordHash = "yqcLlRTQXn1cMA5yOxkf7zzY9hVWZ1ENgXOonTjzaeQS2+OZtVA+b0OppZeWEfMQ",
                             PhoneNumber = "+1234567815",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_15_afcb@example.com",
+                            SecurityStamp = "user_15_4b03@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_15_afcb"
+                            UserName = "user_15_4b03"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fc4"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_16_a028@example.com",
+                            ConcurrencyStamp = "user_16_40fc@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1976, 5, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_16_a028@example.com",
+                            Email = "user_16_40fc@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 16",
@@ -3031,6 +3596,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -3040,27 +3606,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_16_A028@EXAMPLE.COM",
-                            NormalizedUserName = "USER_16_A028",
-                            PasswordHash = "nDmmpwqE0vGKW2JNtIe0SMn4Ac32LcDEHbB3yvilTDZpNdpE5zBa284FKXh+B21g",
+                            NormalizedEmail = "USER_16_40FC@EXAMPLE.COM",
+                            NormalizedUserName = "USER_16_40FC",
+                            PasswordHash = "bJdnELcUrr/TNGo5/xr9kHPyKdMTA2uRDTmJezXmyU1YN2EkvjOfnbHfv8obmHcl",
                             PhoneNumber = "+1234567816",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_16_a028@example.com",
+                            SecurityStamp = "user_16_40fc@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_16_a028"
+                            UserName = "user_16_40fc"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fc5"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_17_575a@example.com",
+                            ConcurrencyStamp = "user_17_b13b@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1976, 6, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_17_575a@example.com",
+                            Email = "user_17_b13b@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 17",
@@ -3072,6 +3638,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -3081,27 +3648,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_17_575A@EXAMPLE.COM",
-                            NormalizedUserName = "USER_17_575A",
-                            PasswordHash = "wro25MbdSugpXG/EHCwTpN4BBzhDwGQ8Y7BAKGHXuQ5ZLl/uztwpvGde6k3oK+xI",
+                            NormalizedEmail = "USER_17_B13B@EXAMPLE.COM",
+                            NormalizedUserName = "USER_17_B13B",
+                            PasswordHash = "av/PBUEQ6SiwSZtB6zTJERtnHgq6AmlWNwnRpy0yEzE5bOrGeCD0XsB9jOWtrP9y",
                             PhoneNumber = "+1234567817",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_17_575a@example.com",
+                            SecurityStamp = "user_17_b13b@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_17_575a"
+                            UserName = "user_17_b13b"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fc6"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_18_e474@example.com",
+                            ConcurrencyStamp = "user_18_2ef4@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1976, 7, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_18_e474@example.com",
+                            Email = "user_18_2ef4@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 18",
@@ -3113,6 +3680,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -3122,27 +3690,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_18_E474@EXAMPLE.COM",
-                            NormalizedUserName = "USER_18_E474",
-                            PasswordHash = "vLl4vilrSpnf/6GFHMz7vzBKeUr/ZwvwWj4hH3fJHVHvV6YR4S1R4kKPyLY9SKQB",
+                            NormalizedEmail = "USER_18_2EF4@EXAMPLE.COM",
+                            NormalizedUserName = "USER_18_2EF4",
+                            PasswordHash = "/XBuwTSkuaPxRWr8JWpaLTfRXtagMadD4JpKOX4Ro1s1RKwElo116CW27nQowGDD",
                             PhoneNumber = "+1234567818",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_18_e474@example.com",
+                            SecurityStamp = "user_18_2ef4@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_18_e474"
+                            UserName = "user_18_2ef4"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fc7"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_19_6100@example.com",
+                            ConcurrencyStamp = "user_19_5e25@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1976, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_19_6100@example.com",
+                            Email = "user_19_5e25@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 19",
@@ -3154,6 +3722,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -3163,27 +3732,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_19_6100@EXAMPLE.COM",
-                            NormalizedUserName = "USER_19_6100",
-                            PasswordHash = "2gK20OJS8p6KS8m7pvG5Nz3VGgmXySdX8jCTWyn3pqyE7ao/M5580vNPl4FuOpip",
+                            NormalizedEmail = "USER_19_5E25@EXAMPLE.COM",
+                            NormalizedUserName = "USER_19_5E25",
+                            PasswordHash = "TziUxf8d3tP6+UacldQvlLd38AogQn/pGroMocFPh+slkJBO8QFZTq1BXGZzV6pn",
                             PhoneNumber = "+1234567819",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_19_6100@example.com",
+                            SecurityStamp = "user_19_5e25@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_19_6100"
+                            UserName = "user_19_5e25"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fc8"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_20_098a@example.com",
+                            ConcurrencyStamp = "user_20_62f7@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1976, 9, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_20_098a@example.com",
+                            Email = "user_20_62f7@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 20",
@@ -3195,6 +3764,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -3204,27 +3774,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_20_098A@EXAMPLE.COM",
-                            NormalizedUserName = "USER_20_098A",
-                            PasswordHash = "6V11c1T3FDZZ4sSdvEuWMBDzOllXNDxxnWUiRWr9+MFRt1GvZlIw12+yGwLpcG3o",
+                            NormalizedEmail = "USER_20_62F7@EXAMPLE.COM",
+                            NormalizedUserName = "USER_20_62F7",
+                            PasswordHash = "Je9RizBB8DoGTyKitFmwG6N2QAByH7bA1Nd7w+43uc1tTagEVhlwY6Rjj7vRrvyb",
                             PhoneNumber = "+1234567820",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_20_098a@example.com",
+                            SecurityStamp = "user_20_62f7@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_20_098a"
+                            UserName = "user_20_62f7"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fc9"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_21_fb9d@example.com",
+                            ConcurrencyStamp = "user_21_d326@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1976, 10, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_21_fb9d@example.com",
+                            Email = "user_21_d326@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 21",
@@ -3236,6 +3806,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -3245,27 +3816,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_21_FB9D@EXAMPLE.COM",
-                            NormalizedUserName = "USER_21_FB9D",
-                            PasswordHash = "JvnX8PDnRt59+sV16aJ0CF4U68490PhtWQQt1auUnFRdo9lJnz0/Z8G4tn8HS4RZ",
+                            NormalizedEmail = "USER_21_D326@EXAMPLE.COM",
+                            NormalizedUserName = "USER_21_D326",
+                            PasswordHash = "DBS/+OLVQSy2T2u8Ep+wkfdCGYM30gLMojMTZ8mJoQ9WghSjkoLOrUy4HXiMLPDA",
                             PhoneNumber = "+1234567821",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_21_fb9d@example.com",
+                            SecurityStamp = "user_21_d326@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_21_fb9d"
+                            UserName = "user_21_d326"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fca"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_22_82f4@example.com",
+                            ConcurrencyStamp = "user_22_864e@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1976, 11, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_22_82f4@example.com",
+                            Email = "user_22_864e@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 22",
@@ -3277,6 +3848,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -3286,27 +3858,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_22_82F4@EXAMPLE.COM",
-                            NormalizedUserName = "USER_22_82F4",
-                            PasswordHash = "OTcNlqVBgrJLQ1x/kSUbhheqJy5Ngz4MdHQFggcVEdXP2IqDavfZJ1P2CIhm0dzN",
+                            NormalizedEmail = "USER_22_864E@EXAMPLE.COM",
+                            NormalizedUserName = "USER_22_864E",
+                            PasswordHash = "NsjjnWfAGKY0UemAteqG8jPrTF0KkhqyJiITpKBk9Ar0aBKfouJdae+WreEkC/o5",
                             PhoneNumber = "+1234567822",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_22_82f4@example.com",
+                            SecurityStamp = "user_22_864e@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_22_82f4"
+                            UserName = "user_22_864e"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fcb"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_23_fe48@example.com",
+                            ConcurrencyStamp = "user_23_e74d@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1976, 12, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_23_fe48@example.com",
+                            Email = "user_23_e74d@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 23",
@@ -3318,6 +3890,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -3327,27 +3900,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_23_FE48@EXAMPLE.COM",
-                            NormalizedUserName = "USER_23_FE48",
-                            PasswordHash = "rKGZ9FMDsb3Hf0TZUicVdnQLTp1lvK1aCZ5X5djXJ8Fbnd283IZbe1VlsoFzZufU",
+                            NormalizedEmail = "USER_23_E74D@EXAMPLE.COM",
+                            NormalizedUserName = "USER_23_E74D",
+                            PasswordHash = "kqyjjESKBgux8j3fz5ulw/oeheDKasCCp7GvwTnRvD6QrBpEBn3uYDyjd/q01BI+",
                             PhoneNumber = "+1234567823",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_23_fe48@example.com",
+                            SecurityStamp = "user_23_e74d@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_23_fe48"
+                            UserName = "user_23_e74d"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fcc"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_24_6118@example.com",
+                            ConcurrencyStamp = "user_24_6216@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1977, 1, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_24_6118@example.com",
+                            Email = "user_24_6216@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 24",
@@ -3359,6 +3932,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -3368,27 +3942,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_24_6118@EXAMPLE.COM",
-                            NormalizedUserName = "USER_24_6118",
-                            PasswordHash = "TJwaIGhM9R1PYKJFxNvc6ErJt7DVn6+XbMpzeZLohoG4X+9XEJJku0bRtVK+ylNg",
+                            NormalizedEmail = "USER_24_6216@EXAMPLE.COM",
+                            NormalizedUserName = "USER_24_6216",
+                            PasswordHash = "rIWl38bCZVWTBhpCHuO7O+tmwWyiqJy3UXvPqagl57N67j+l7ej0xsflqw8cumEU",
                             PhoneNumber = "+1234567824",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_24_6118@example.com",
+                            SecurityStamp = "user_24_6216@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_24_6118"
+                            UserName = "user_24_6216"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fcd"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_25_fd2c@example.com",
+                            ConcurrencyStamp = "user_25_b8cc@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1977, 2, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_25_fd2c@example.com",
+                            Email = "user_25_b8cc@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 25",
@@ -3400,6 +3974,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -3409,27 +3984,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_25_FD2C@EXAMPLE.COM",
-                            NormalizedUserName = "USER_25_FD2C",
-                            PasswordHash = "0Wp3c0pWjonEIckHuJ3I84B/OXkKbvzQQMZhSp0Nh1yT/UehajrtTTClVot7HEgQ",
+                            NormalizedEmail = "USER_25_B8CC@EXAMPLE.COM",
+                            NormalizedUserName = "USER_25_B8CC",
+                            PasswordHash = "l18CuqY/S1DZB6rZ2zAgYqPEN7HeyXHf2+8JqmP+qOHO4oKen3JU5/rWflwy/qti",
                             PhoneNumber = "+1234567825",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_25_fd2c@example.com",
+                            SecurityStamp = "user_25_b8cc@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_25_fd2c"
+                            UserName = "user_25_b8cc"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fce"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_26_74e2@example.com",
+                            ConcurrencyStamp = "user_26_ed79@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1977, 3, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_26_74e2@example.com",
+                            Email = "user_26_ed79@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 26",
@@ -3441,6 +4016,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -3450,27 +4026,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_26_74E2@EXAMPLE.COM",
-                            NormalizedUserName = "USER_26_74E2",
-                            PasswordHash = "J36yQvRge51D7jdlxX2CkgMFR84QUBt/fc163r9Wz8Y+U3QbwWztVJHdRfYNZa+b",
+                            NormalizedEmail = "USER_26_ED79@EXAMPLE.COM",
+                            NormalizedUserName = "USER_26_ED79",
+                            PasswordHash = "uilSsvyAi+RlTk8jOYXbxlH3y1016scaWadmD9tEXkSpP8iKj5ncYi+pn/GzMk6A",
                             PhoneNumber = "+1234567826",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_26_74e2@example.com",
+                            SecurityStamp = "user_26_ed79@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_26_74e2"
+                            UserName = "user_26_ed79"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fcf"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_27_aced@example.com",
+                            ConcurrencyStamp = "user_27_6448@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1977, 4, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_27_aced@example.com",
+                            Email = "user_27_6448@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 27",
@@ -3482,6 +4058,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -3491,27 +4068,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_27_ACED@EXAMPLE.COM",
-                            NormalizedUserName = "USER_27_ACED",
-                            PasswordHash = "h3j82f7Olc6Ek4rEb6ZnN8oO2HjHAuoE1iilbpYiqtA/W/7Y6LVtZw96nilxHT6r",
+                            NormalizedEmail = "USER_27_6448@EXAMPLE.COM",
+                            NormalizedUserName = "USER_27_6448",
+                            PasswordHash = "sjezEUyiC+98sNX4sfb8ZrZ4CKtN8WPG/4QnaFQtbvza7yfkfkKgNF0yWF4crBG1",
                             PhoneNumber = "+1234567827",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_27_aced@example.com",
+                            SecurityStamp = "user_27_6448@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_27_aced"
+                            UserName = "user_27_6448"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fd0"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_28_9573@example.com",
+                            ConcurrencyStamp = "user_28_b8b4@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1977, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_28_9573@example.com",
+                            Email = "user_28_b8b4@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 28",
@@ -3523,6 +4100,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -3532,27 +4110,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_28_9573@EXAMPLE.COM",
-                            NormalizedUserName = "USER_28_9573",
-                            PasswordHash = "q2oE7AL95cz8e43fjNkSvJy8LPt+4Y8h5hCGce59rlg0fjQ/VrM11qkYXMdQlLNg",
+                            NormalizedEmail = "USER_28_B8B4@EXAMPLE.COM",
+                            NormalizedUserName = "USER_28_B8B4",
+                            PasswordHash = "KPMSx7acjQZVMBGl23gd+VnMzFXBZuGilN1qP4RYmLhQQrJzR8IbR0UKCTFbDMtB",
                             PhoneNumber = "+1234567828",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_28_9573@example.com",
+                            SecurityStamp = "user_28_b8b4@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_28_9573"
+                            UserName = "user_28_b8b4"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fd1"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_29_8b86@example.com",
+                            ConcurrencyStamp = "user_29_92eb@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1977, 6, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_29_8b86@example.com",
+                            Email = "user_29_92eb@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 29",
@@ -3564,6 +4142,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -3573,27 +4152,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_29_8B86@EXAMPLE.COM",
-                            NormalizedUserName = "USER_29_8B86",
-                            PasswordHash = "I7YsYm0E07mC7bLTWHfIdHifofVsLH95EyBzFC7zShBzJttw0EGUHyIvaWb3IxpR",
+                            NormalizedEmail = "USER_29_92EB@EXAMPLE.COM",
+                            NormalizedUserName = "USER_29_92EB",
+                            PasswordHash = "V/z3ETjAmrsba++JorzvlUePI5Zc33wdRlfmKqta0hNZaXD1nttxx4KmZP0D8dvT",
                             PhoneNumber = "+1234567829",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_29_8b86@example.com",
+                            SecurityStamp = "user_29_92eb@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_29_8b86"
+                            UserName = "user_29_92eb"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fd2"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_30_d639@example.com",
+                            ConcurrencyStamp = "user_30_8391@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1977, 7, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_30_d639@example.com",
+                            Email = "user_30_8391@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 30",
@@ -3605,6 +4184,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -3614,27 +4194,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_30_D639@EXAMPLE.COM",
-                            NormalizedUserName = "USER_30_D639",
-                            PasswordHash = "hlNxifdC24rQlvyeDD96XI8jk2TQ7m1PVajniPLzH0i6wgYaLT8VjcFf4iPM18q9",
+                            NormalizedEmail = "USER_30_8391@EXAMPLE.COM",
+                            NormalizedUserName = "USER_30_8391",
+                            PasswordHash = "YnL418eGNWy1pFnZ2HTb0QnYpfImqfUCXjKw8Cr8x70USqdjWgXJWPLfXzG5HWc9",
                             PhoneNumber = "+1234567830",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_30_d639@example.com",
+                            SecurityStamp = "user_30_8391@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_30_d639"
+                            UserName = "user_30_8391"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fd3"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_31_3e53@example.com",
+                            ConcurrencyStamp = "user_31_754f@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1977, 8, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_31_3e53@example.com",
+                            Email = "user_31_754f@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 31",
@@ -3646,6 +4226,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -3655,27 +4236,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_31_3E53@EXAMPLE.COM",
-                            NormalizedUserName = "USER_31_3E53",
-                            PasswordHash = "z8CoIuKMpWyoFBjtrHOGKbaK3UnMbdu+/sWa3lDuUHaw6Uj1Xh1pMo23adxNNFB6",
+                            NormalizedEmail = "USER_31_754F@EXAMPLE.COM",
+                            NormalizedUserName = "USER_31_754F",
+                            PasswordHash = "A1/P4zgtmN5pNzOGj7Jkq4YN4eEAqYV2oDMJzwoteKF1Dj7iBfmOs0DL6sLNyqu0",
                             PhoneNumber = "+1234567831",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_31_3e53@example.com",
+                            SecurityStamp = "user_31_754f@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_31_3e53"
+                            UserName = "user_31_754f"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fd4"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_32_4114@example.com",
+                            ConcurrencyStamp = "user_32_6899@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1977, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_32_4114@example.com",
+                            Email = "user_32_6899@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 32",
@@ -3687,6 +4268,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -3696,27 +4278,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_32_4114@EXAMPLE.COM",
-                            NormalizedUserName = "USER_32_4114",
-                            PasswordHash = "568jXMRIO6/4indsJJUg4jN1STEAhmldI0cQ9Y/VqeOTPW3VjzHiasQfXjE0mTRi",
+                            NormalizedEmail = "USER_32_6899@EXAMPLE.COM",
+                            NormalizedUserName = "USER_32_6899",
+                            PasswordHash = "yVYJXmVMvvWXA+zN+sJDEVRBnKaP1Q9Hvfsaby+GpJZkcEz7M+kpxjdQEoh752Ce",
                             PhoneNumber = "+1234567832",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_32_4114@example.com",
+                            SecurityStamp = "user_32_6899@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_32_4114"
+                            UserName = "user_32_6899"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fd5"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_33_4f7c@example.com",
+                            ConcurrencyStamp = "user_33_612e@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1977, 10, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_33_4f7c@example.com",
+                            Email = "user_33_612e@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 33",
@@ -3728,6 +4310,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -3737,27 +4320,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_33_4F7C@EXAMPLE.COM",
-                            NormalizedUserName = "USER_33_4F7C",
-                            PasswordHash = "wohaiHIXUlIoeyG5HlpCgxEMjqD0VgyXWFJxGPBiEKmoOWXIMJXxDddURbCd6ugM",
+                            NormalizedEmail = "USER_33_612E@EXAMPLE.COM",
+                            NormalizedUserName = "USER_33_612E",
+                            PasswordHash = "OM+2n+IwoQb8mfmwW/uFrA2+H2MA4znWnpdkUPXsKqDWDkZ7HJE9YjCXuTp+TcWm",
                             PhoneNumber = "+1234567833",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_33_4f7c@example.com",
+                            SecurityStamp = "user_33_612e@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_33_4f7c"
+                            UserName = "user_33_612e"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fd6"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_34_7587@example.com",
+                            ConcurrencyStamp = "user_34_b6ce@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1977, 11, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_34_7587@example.com",
+                            Email = "user_34_b6ce@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 34",
@@ -3769,6 +4352,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -3778,27 +4362,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_34_7587@EXAMPLE.COM",
-                            NormalizedUserName = "USER_34_7587",
-                            PasswordHash = "fqvf5gLLFMTnDU2fRsK1trFy9mJVbPtGQd4i5cKkeuLavODm7yIk5KEkfoOSUewS",
+                            NormalizedEmail = "USER_34_B6CE@EXAMPLE.COM",
+                            NormalizedUserName = "USER_34_B6CE",
+                            PasswordHash = "kDwbk6Ll1NBdAo7zWidOOnIDoT1zn2eibJo0YuruC3HrpuyVrkwr87y2hiyI37HE",
                             PhoneNumber = "+1234567834",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_34_7587@example.com",
+                            SecurityStamp = "user_34_b6ce@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_34_7587"
+                            UserName = "user_34_b6ce"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fd7"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_35_57f9@example.com",
+                            ConcurrencyStamp = "user_35_2e33@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1977, 12, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_35_57f9@example.com",
+                            Email = "user_35_2e33@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 35",
@@ -3810,6 +4394,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -3819,27 +4404,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_35_57F9@EXAMPLE.COM",
-                            NormalizedUserName = "USER_35_57F9",
-                            PasswordHash = "hhFh3mBiDZWmLaPh9UN2k/UqIVxklf3p2L14kDCwOiquGdKn/bB54xL5/4Ma5SkO",
+                            NormalizedEmail = "USER_35_2E33@EXAMPLE.COM",
+                            NormalizedUserName = "USER_35_2E33",
+                            PasswordHash = "XT1BlmsbRiCz86zzqVuZVrl67JwsGTEdmHqUYkv9K9+aKohRlq2+Q+OzwxqZSMb9",
                             PhoneNumber = "+1234567835",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_35_57f9@example.com",
+                            SecurityStamp = "user_35_2e33@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_35_57f9"
+                            UserName = "user_35_2e33"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fd8"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_36_bf10@example.com",
+                            ConcurrencyStamp = "user_36_0ee7@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1978, 1, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_36_bf10@example.com",
+                            Email = "user_36_0ee7@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 36",
@@ -3851,6 +4436,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -3860,27 +4446,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_36_BF10@EXAMPLE.COM",
-                            NormalizedUserName = "USER_36_BF10",
-                            PasswordHash = "EMnZgFJ2wJ1gcX9xG3KNNidWyzhXQq4qYB4W2X8qFBo9Z/GdDicE3mPKjZIOuxZJ",
+                            NormalizedEmail = "USER_36_0EE7@EXAMPLE.COM",
+                            NormalizedUserName = "USER_36_0EE7",
+                            PasswordHash = "jEzWRqyFbl3a46VaeBuO9Zzv5ipijNCuZZyukOqXfl2Myl5AZ5Vn1PnLIITEPPNY",
                             PhoneNumber = "+1234567836",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_36_bf10@example.com",
+                            SecurityStamp = "user_36_0ee7@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_36_bf10"
+                            UserName = "user_36_0ee7"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fd9"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_37_713d@example.com",
+                            ConcurrencyStamp = "user_37_39d3@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1978, 2, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_37_713d@example.com",
+                            Email = "user_37_39d3@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 37",
@@ -3892,6 +4478,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -3901,27 +4488,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_37_713D@EXAMPLE.COM",
-                            NormalizedUserName = "USER_37_713D",
-                            PasswordHash = "PQB8Wzxq2UgPQDXdc4UBzKXQdsAgtMM6net3Fx8krmxunx7lsiY7A65O8I0ZBWZN",
+                            NormalizedEmail = "USER_37_39D3@EXAMPLE.COM",
+                            NormalizedUserName = "USER_37_39D3",
+                            PasswordHash = "AdRbVXW7fbn+o+1RCR5c57/4QFZ9oXA2DV/7AhgO5+5JdYxavlNZ33Y2An8g9F9q",
                             PhoneNumber = "+1234567837",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_37_713d@example.com",
+                            SecurityStamp = "user_37_39d3@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_37_713d"
+                            UserName = "user_37_39d3"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fda"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_38_abd4@example.com",
+                            ConcurrencyStamp = "user_38_8247@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1978, 3, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_38_abd4@example.com",
+                            Email = "user_38_8247@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 38",
@@ -3933,6 +4520,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -3942,27 +4530,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_38_ABD4@EXAMPLE.COM",
-                            NormalizedUserName = "USER_38_ABD4",
-                            PasswordHash = "FTG36Tz6RZfb9klFPcKJLnLdaqoJbs02qOdBnx6WB4Px47WG0mS8hoDA6tIg8Uaa",
+                            NormalizedEmail = "USER_38_8247@EXAMPLE.COM",
+                            NormalizedUserName = "USER_38_8247",
+                            PasswordHash = "hF2Q+BqHqz6ReRGfMfIiPxfHL6V9uqh7aIZWExwkqZfzV82z+iLMJABxpK28A5wR",
                             PhoneNumber = "+1234567838",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_38_abd4@example.com",
+                            SecurityStamp = "user_38_8247@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_38_abd4"
+                            UserName = "user_38_8247"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fdb"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_39_dd7d@example.com",
+                            ConcurrencyStamp = "user_39_7fc9@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1978, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_39_dd7d@example.com",
+                            Email = "user_39_7fc9@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 39",
@@ -3974,6 +4562,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -3983,27 +4572,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_39_DD7D@EXAMPLE.COM",
-                            NormalizedUserName = "USER_39_DD7D",
-                            PasswordHash = "Y+wka8WuAqYWjuuFJY3SWXzmWnya/15DHssX4mGgEo+68x6o1Y741ONt9igBMlYl",
+                            NormalizedEmail = "USER_39_7FC9@EXAMPLE.COM",
+                            NormalizedUserName = "USER_39_7FC9",
+                            PasswordHash = "C1lX5SGNExtY5B8U0Mxc7KfGlQBkaSNqLidY58zMya6qiCFQkUc08JWIYIDwRH9B",
                             PhoneNumber = "+1234567839",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_39_dd7d@example.com",
+                            SecurityStamp = "user_39_7fc9@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_39_dd7d"
+                            UserName = "user_39_7fc9"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fdc"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_40_685d@example.com",
+                            ConcurrencyStamp = "user_40_32c0@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1978, 5, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_40_685d@example.com",
+                            Email = "user_40_32c0@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 40",
@@ -4015,6 +4604,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -4024,27 +4614,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_40_685D@EXAMPLE.COM",
-                            NormalizedUserName = "USER_40_685D",
-                            PasswordHash = "h18KUK1S4S5U5seuLe6RxXJ6YCBtRUs4uH5msZP2QfXi96c/SHY+/5RnAr9Ge9J9",
+                            NormalizedEmail = "USER_40_32C0@EXAMPLE.COM",
+                            NormalizedUserName = "USER_40_32C0",
+                            PasswordHash = "Qj1EVC41AeS2hWMc+4ydBD8vcuW9kHQJCf2D4QaIAq6eX8Yu+uCdHUT4m72QSrXa",
                             PhoneNumber = "+1234567840",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_40_685d@example.com",
+                            SecurityStamp = "user_40_32c0@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_40_685d"
+                            UserName = "user_40_32c0"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fdd"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_41_6ec2@example.com",
+                            ConcurrencyStamp = "user_41_0924@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1978, 6, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_41_6ec2@example.com",
+                            Email = "user_41_0924@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 41",
@@ -4056,6 +4646,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -4065,27 +4656,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_41_6EC2@EXAMPLE.COM",
-                            NormalizedUserName = "USER_41_6EC2",
-                            PasswordHash = "fZGUFBwBjry0GVIgr4UG3rAu5l+TimDEtWqJPY1jT3BhqOzCLTYJvlDCQWfqBAFe",
+                            NormalizedEmail = "USER_41_0924@EXAMPLE.COM",
+                            NormalizedUserName = "USER_41_0924",
+                            PasswordHash = "ebwD2N4rOzegLfz/E9f2m0OIvkS9VRQ2GHdvxJksjxMpvjD5w/3/0z5LGjJTxj2K",
                             PhoneNumber = "+1234567841",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_41_6ec2@example.com",
+                            SecurityStamp = "user_41_0924@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_41_6ec2"
+                            UserName = "user_41_0924"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fde"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_42_d7e9@example.com",
+                            ConcurrencyStamp = "user_42_f128@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1978, 7, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_42_d7e9@example.com",
+                            Email = "user_42_f128@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 42",
@@ -4097,6 +4688,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -4106,27 +4698,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_42_D7E9@EXAMPLE.COM",
-                            NormalizedUserName = "USER_42_D7E9",
-                            PasswordHash = "SGueps9XgbXgE7+JRMwvK4fpziqRiqqmXhg7n3lcENLCHdx+gfo+T6Q/Uw8of6WT",
+                            NormalizedEmail = "USER_42_F128@EXAMPLE.COM",
+                            NormalizedUserName = "USER_42_F128",
+                            PasswordHash = "XmAqDZxMXw7mqxbnTSSgdVwB94sPkzSmuB4jhqnW5eDdAaEwLVL9Ex39TIDtvBvT",
                             PhoneNumber = "+1234567842",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_42_d7e9@example.com",
+                            SecurityStamp = "user_42_f128@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_42_d7e9"
+                            UserName = "user_42_f128"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fdf"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_43_ddb4@example.com",
+                            ConcurrencyStamp = "user_43_10e2@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1978, 8, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_43_ddb4@example.com",
+                            Email = "user_43_10e2@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 43",
@@ -4138,6 +4730,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -4147,27 +4740,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_43_DDB4@EXAMPLE.COM",
-                            NormalizedUserName = "USER_43_DDB4",
-                            PasswordHash = "T7AyP2llSeHusNOSEea5k2uqkRbR6J5XC/jwcxfzdfcO5Otpp7RndSES2IvX9EpJ",
+                            NormalizedEmail = "USER_43_10E2@EXAMPLE.COM",
+                            NormalizedUserName = "USER_43_10E2",
+                            PasswordHash = "nhOmgeU3BIe2iqxOQPeT5m74sAbpU0uei8fXdC8IozAuavUKSPk2UIsU9qfs/SAI",
                             PhoneNumber = "+1234567843",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_43_ddb4@example.com",
+                            SecurityStamp = "user_43_10e2@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_43_ddb4"
+                            UserName = "user_43_10e2"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fe0"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_44_7025@example.com",
+                            ConcurrencyStamp = "user_44_9321@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1978, 9, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_44_7025@example.com",
+                            Email = "user_44_9321@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 44",
@@ -4179,6 +4772,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -4188,27 +4782,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_44_7025@EXAMPLE.COM",
-                            NormalizedUserName = "USER_44_7025",
-                            PasswordHash = "c4kdS9Mt2W5LFtQbDiCs+NUxV4Kd0+Oou2WBZLH/1os9FCZjWpcyVR05/bgOZUjk",
+                            NormalizedEmail = "USER_44_9321@EXAMPLE.COM",
+                            NormalizedUserName = "USER_44_9321",
+                            PasswordHash = "BRHG6dcdxLIANIQkROgnLkripOqHGTCbW64iPP3JkIhZSfs3i+SwcrhBX+WSCPqW",
                             PhoneNumber = "+1234567844",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_44_7025@example.com",
+                            SecurityStamp = "user_44_9321@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_44_7025"
+                            UserName = "user_44_9321"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fe1"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_45_fe9a@example.com",
+                            ConcurrencyStamp = "user_45_ceed@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1978, 10, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_45_fe9a@example.com",
+                            Email = "user_45_ceed@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 45",
@@ -4220,6 +4814,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -4229,27 +4824,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_45_FE9A@EXAMPLE.COM",
-                            NormalizedUserName = "USER_45_FE9A",
-                            PasswordHash = "cuq0drW4773ycBbQb//Jf8JdyKbhGqZbA8BZuT1BvBwcOeZVfnsDod3AJ7ODjgtA",
+                            NormalizedEmail = "USER_45_CEED@EXAMPLE.COM",
+                            NormalizedUserName = "USER_45_CEED",
+                            PasswordHash = "wEdS964UYmBfVGCXi8wXh9K8dSBed5WMyLdqLctZTrgtxQQFqC3okaAptIA4U7V7",
                             PhoneNumber = "+1234567845",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_45_fe9a@example.com",
+                            SecurityStamp = "user_45_ceed@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_45_fe9a"
+                            UserName = "user_45_ceed"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fe2"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_46_4eb8@example.com",
+                            ConcurrencyStamp = "user_46_84b2@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1978, 11, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_46_4eb8@example.com",
+                            Email = "user_46_84b2@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 46",
@@ -4261,6 +4856,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -4270,27 +4866,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_46_4EB8@EXAMPLE.COM",
-                            NormalizedUserName = "USER_46_4EB8",
-                            PasswordHash = "4k5g318JivTJYdP1XEZwZRcHzOMZeSh6+0dFjd0AtFbBN3/16y49KMnrXoZjGtuf",
+                            NormalizedEmail = "USER_46_84B2@EXAMPLE.COM",
+                            NormalizedUserName = "USER_46_84B2",
+                            PasswordHash = "/M3emPcbrblx9Z/t37WxwJ/3AW1uscKchTawmz0SFwOz4GHdnZduV2LtwGibFas7",
                             PhoneNumber = "+1234567846",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_46_4eb8@example.com",
+                            SecurityStamp = "user_46_84b2@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_46_4eb8"
+                            UserName = "user_46_84b2"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fe3"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_47_c723@example.com",
+                            ConcurrencyStamp = "user_47_7ffb@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1978, 12, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_47_c723@example.com",
+                            Email = "user_47_7ffb@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 47",
@@ -4302,6 +4898,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -4311,27 +4908,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_47_C723@EXAMPLE.COM",
-                            NormalizedUserName = "USER_47_C723",
-                            PasswordHash = "8wEPjdUitjS5izbFXNgh586qPWC2CGAmAAEcMYBgG7MpqM15LU6jvb+MgGCLpKzz",
+                            NormalizedEmail = "USER_47_7FFB@EXAMPLE.COM",
+                            NormalizedUserName = "USER_47_7FFB",
+                            PasswordHash = "H9SJjeNkLvCmcjp6crgtLlQTTZJA8+xzzcSLlKtl7o5YidVSAJItHNOrf8Ji8Jo4",
                             PhoneNumber = "+1234567847",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_47_c723@example.com",
+                            SecurityStamp = "user_47_7ffb@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_47_c723"
+                            UserName = "user_47_7ffb"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fe4"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_48_5591@example.com",
+                            ConcurrencyStamp = "user_48_7e72@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1979, 1, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_48_5591@example.com",
+                            Email = "user_48_7e72@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 48",
@@ -4343,6 +4940,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -4352,27 +4950,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_48_5591@EXAMPLE.COM",
-                            NormalizedUserName = "USER_48_5591",
-                            PasswordHash = "iS0G/2ewwIOLl3VkWTDgN62pUPb2JmNVT3mLQ7Ia87B1CS7FwDaBxS2hVfhdBD3/",
+                            NormalizedEmail = "USER_48_7E72@EXAMPLE.COM",
+                            NormalizedUserName = "USER_48_7E72",
+                            PasswordHash = "h4xUBohJ21Gg5filSGwP5YmUf9FVYOBzwGXdLleimdFhhAKBuKv0PmxlTNTHL1kw",
                             PhoneNumber = "+1234567848",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_48_5591@example.com",
+                            SecurityStamp = "user_48_7e72@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_48_5591"
+                            UserName = "user_48_7e72"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fe5"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_49_58b4@example.com",
+                            ConcurrencyStamp = "user_49_3c8e@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1979, 2, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_49_58b4@example.com",
+                            Email = "user_49_3c8e@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 49",
@@ -4384,6 +4982,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -4393,27 +4992,27 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_49_58B4@EXAMPLE.COM",
-                            NormalizedUserName = "USER_49_58B4",
-                            PasswordHash = "H3c9/HTMWmdwmXp5u4aoMSx33WXAcJoFm1DkueXPTJhgG7joR27S3bIwKaYCtx6+",
+                            NormalizedEmail = "USER_49_3C8E@EXAMPLE.COM",
+                            NormalizedUserName = "USER_49_3C8E",
+                            PasswordHash = "cuyoZ3Yh8Mtn/SXKxDsL4h/9/eVgFTLkORtcrld39aoDm4HLEUf029eb7JT7sAGM",
                             PhoneNumber = "+1234567849",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_49_58b4@example.com",
+                            SecurityStamp = "user_49_3c8e@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_49_58b4"
+                            UserName = "user_49_3c8e"
                         },
                         new
                         {
                             Id = new Guid("7fb725c6-3250-b856-604e-69f27e228fe6"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "user_50_23e7@example.com",
+                            ConcurrencyStamp = "user_50_ce00@example.com",
                             CreatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
                             DateOfBirth = new DateTime(1979, 3, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "user_50_23e7@example.com",
+                            Email = "user_50_ce00@example.com",
                             EmailConfirmed = false,
                             FailedLoginAttempts = 0,
                             FirstName = "User 50",
@@ -4425,6 +5024,7 @@ namespace ASafariM.Infrastructure.Migrations
                             IsEditor = false,
                             IsGuest = false,
                             IsLockedOut = false,
+                            IsLoggedIn = false,
                             IsModerator = false,
                             IsPending = false,
                             IsStandardUser = true,
@@ -4434,17 +5034,17 @@ namespace ASafariM.Infrastructure.Migrations
                             LastLogin = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Example",
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER_50_23E7@EXAMPLE.COM",
-                            NormalizedUserName = "USER_50_23E7",
-                            PasswordHash = "HuGq0ZjpjtbZKYvZuucmSOcrM4rjhYcjgfz7RIhVZKzx4bxAr8Pa6G4zJNCJMolN",
+                            NormalizedEmail = "USER_50_CE00@EXAMPLE.COM",
+                            NormalizedUserName = "USER_50_CE00",
+                            PasswordHash = "/4AlCzi1C+ZOToqbeNNotqrAsr0D2mHJn9Kf8sLnBYwvTiHO7uaUvRSgD4SVMsD9",
                             PhoneNumber = "+1234567850",
                             PhoneNumberConfirmed = true,
                             ProfilePicture = "https://asafarim.com/logoT.svg",
-                            SecurityStamp = "user_50_23e7@example.com",
+                            SecurityStamp = "user_50_ce00@example.com",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(2025, 2, 17, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = new Guid("8048da39-cdaf-47a9-9fb1-960d81dd704a"),
-                            UserName = "user_50_23e7"
+                            UserName = "user_50_ce00"
                         });
                 });
 
@@ -4568,21 +5168,6 @@ namespace ASafariM.Infrastructure.Migrations
                     b.ToTable("UserThemePreferences");
                 });
 
-            modelBuilder.Entity("AttachmentPost", b =>
-                {
-                    b.Property<Guid>("AttachmentsId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("PostsId")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("AttachmentsId", "PostsId");
-
-                    b.HasIndex("PostsId");
-
-                    b.ToTable("AttachmentPost");
-                });
-
             modelBuilder.Entity("CategoryPost", b =>
                 {
                     b.Property<Guid>("CategoriesId")
@@ -4628,21 +5213,6 @@ namespace ASafariM.Infrastructure.Migrations
                     b.ToTable("LinkPost");
                 });
 
-            modelBuilder.Entity("PostTag", b =>
-                {
-                    b.Property<Guid>("PostsId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("TagsId")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("PostsId", "TagsId");
-
-                    b.HasIndex("TagsId");
-
-                    b.ToTable("PostTag");
-                });
-
             modelBuilder.Entity("SitemapItemTopic", b =>
                 {
                     b.Property<Guid>("SitemapItemId")
@@ -4656,6 +5226,30 @@ namespace ASafariM.Infrastructure.Migrations
                     b.HasIndex("TopicsId");
 
                     b.ToTable("SitemapItemTopic");
+                });
+
+            modelBuilder.Entity("ASafariM.Domain.Entities.Attachment", b =>
+                {
+                    b.HasOne("ASafariM.Domain.Entities.Post", null)
+                        .WithMany("Attachments")
+                        .HasForeignKey("PostId");
+                });
+
+            modelBuilder.Entity("ASafariM.Domain.Entities.Comment", b =>
+                {
+                    b.HasOne("ASafariM.Domain.Entities.Comment", "ParentComment")
+                        .WithMany("Replies")
+                        .HasForeignKey("ParentCommentId");
+
+                    b.HasOne("ASafariM.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ParentComment");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ASafariM.Domain.Entities.GeographicalPreference", b =>
@@ -4773,31 +5367,29 @@ namespace ASafariM.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ASafariM.Domain.Entities.Post", null)
-                        .WithMany("RelatedPosts")
-                        .HasForeignKey("PostId");
-
                     b.Navigation("Author");
                 });
 
-            modelBuilder.Entity("ASafariM.Domain.Entities.PostAttachment", b =>
+            modelBuilder.Entity("ASafariM.Domain.Entities.PostRelationships.PostAttachment", b =>
                 {
-                    b.HasOne("ASafariM.Domain.Entities.MarkdownFile", "Attachment")
+                    b.HasOne("ASafariM.Domain.Entities.Attachment", "Attachment")
                         .WithMany()
                         .HasForeignKey("AttachmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ASafariM.Domain.Entities.Post", null)
+                    b.HasOne("ASafariM.Domain.Entities.Post", "Post")
                         .WithMany("PostAttachments")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Attachment");
+
+                    b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("ASafariM.Domain.Entities.PostCategory", b =>
+            modelBuilder.Entity("ASafariM.Domain.Entities.PostRelationships.PostCategory", b =>
                 {
                     b.HasOne("ASafariM.Domain.Entities.Category", "Category")
                         .WithMany()
@@ -4805,16 +5397,18 @@ namespace ASafariM.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ASafariM.Domain.Entities.Post", null)
+                    b.HasOne("ASafariM.Domain.Entities.Post", "Post")
                         .WithMany("PostCategories")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Category");
+
+                    b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("ASafariM.Domain.Entities.PostCollaborator", b =>
+            modelBuilder.Entity("ASafariM.Domain.Entities.PostRelationships.PostCollaborator", b =>
                 {
                     b.HasOne("ASafariM.Domain.Entities.User", "Collaborator")
                         .WithMany()
@@ -4822,33 +5416,37 @@ namespace ASafariM.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ASafariM.Domain.Entities.Post", null)
+                    b.HasOne("ASafariM.Domain.Entities.Post", "Post")
                         .WithMany("PostCollaborators")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Collaborator");
+
+                    b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("ASafariM.Domain.Entities.PostComment", b =>
+            modelBuilder.Entity("ASafariM.Domain.Entities.PostRelationships.PostComment", b =>
                 {
-                    b.HasOne("ASafariM.Domain.Entities.User", "Commenter")
+                    b.HasOne("ASafariM.Domain.Entities.Comment", "Comment")
                         .WithMany()
-                        .HasForeignKey("CommenterId")
+                        .HasForeignKey("CommentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ASafariM.Domain.Entities.Post", null)
+                    b.HasOne("ASafariM.Domain.Entities.Post", "Post")
                         .WithMany("PostComments")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Commenter");
+                    b.Navigation("Comment");
+
+                    b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("ASafariM.Domain.Entities.PostLink", b =>
+            modelBuilder.Entity("ASafariM.Domain.Entities.PostRelationships.PostLink", b =>
                 {
                     b.HasOne("ASafariM.Domain.Entities.MarkdownFile", "Link")
                         .WithMany()
@@ -4856,27 +5454,37 @@ namespace ASafariM.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ASafariM.Domain.Entities.Post", null)
+                    b.HasOne("ASafariM.Domain.Entities.Post", "Post")
                         .WithMany("PostLinks")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Link");
+
+                    b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("ASafariM.Domain.Entities.PostRelatedPost", b =>
+            modelBuilder.Entity("ASafariM.Domain.Entities.PostRelationships.PostRelatedPost", b =>
                 {
-                    b.HasOne("ASafariM.Domain.Entities.Post", "RelatedPost")
+                    b.HasOne("ASafariM.Domain.Entities.Post", "Post")
                         .WithMany("PostRelatedPosts")
                         .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("ASafariM.Domain.Entities.Post", "RelatedPost")
+                        .WithMany()
+                        .HasForeignKey("RelatedPostId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Post");
 
                     b.Navigation("RelatedPost");
                 });
 
-            modelBuilder.Entity("ASafariM.Domain.Entities.PostTag", b =>
+            modelBuilder.Entity("ASafariM.Domain.Entities.PostRelationships.PostTag", b =>
                 {
                     b.HasOne("ASafariM.Domain.Entities.Post", "Post")
                         .WithMany("PostTags")
@@ -4893,6 +5501,25 @@ namespace ASafariM.Infrastructure.Migrations
                     b.Navigation("Post");
 
                     b.Navigation("Tag");
+                });
+
+            modelBuilder.Entity("ASafariM.Domain.Entities.PostTopic", b =>
+                {
+                    b.HasOne("ASafariM.Domain.Entities.Post", "Post")
+                        .WithMany("PostTopics")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ASafariM.Domain.Entities.Topic", "Topic")
+                        .WithMany("PostTopics")
+                        .HasForeignKey("TopicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("Topic");
                 });
 
             modelBuilder.Entity("ASafariM.Domain.Entities.ProgressHistory", b =>
@@ -4956,6 +5583,17 @@ namespace ASafariM.Infrastructure.Migrations
                         .HasForeignKey("SitemapItemId");
 
                     b.Navigation("Parent");
+                });
+
+            modelBuilder.Entity("ASafariM.Domain.Entities.Tag", b =>
+                {
+                    b.HasOne("ASafariM.Domain.Entities.Comment", null)
+                        .WithMany("Tags")
+                        .HasForeignKey("CommentId");
+
+                    b.HasOne("ASafariM.Domain.Entities.Post", null)
+                        .WithMany("Tags")
+                        .HasForeignKey("PostId");
                 });
 
             modelBuilder.Entity("ASafariM.Domain.Entities.ThemePreference", b =>
@@ -5137,21 +5775,6 @@ namespace ASafariM.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("AttachmentPost", b =>
-                {
-                    b.HasOne("ASafariM.Domain.Entities.Attachment", null)
-                        .WithMany()
-                        .HasForeignKey("AttachmentsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ASafariM.Domain.Entities.Post", null)
-                        .WithMany()
-                        .HasForeignKey("PostsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("CategoryPost", b =>
                 {
                     b.HasOne("ASafariM.Domain.Entities.Category", null)
@@ -5197,21 +5820,6 @@ namespace ASafariM.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PostTag", b =>
-                {
-                    b.HasOne("ASafariM.Domain.Entities.Post", null)
-                        .WithMany()
-                        .HasForeignKey("PostsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ASafariM.Domain.Entities.Tag", null)
-                        .WithMany()
-                        .HasForeignKey("TagsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("SitemapItemTopic", b =>
                 {
                     b.HasOne("ASafariM.Domain.Entities.SitemapItem", null)
@@ -5225,6 +5833,13 @@ namespace ASafariM.Infrastructure.Migrations
                         .HasForeignKey("TopicsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ASafariM.Domain.Entities.Comment", b =>
+                {
+                    b.Navigation("Replies");
+
+                    b.Navigation("Tags");
                 });
 
             modelBuilder.Entity("ASafariM.Domain.Entities.Country", b =>
@@ -5258,6 +5873,8 @@ namespace ASafariM.Infrastructure.Migrations
 
             modelBuilder.Entity("ASafariM.Domain.Entities.Post", b =>
                 {
+                    b.Navigation("Attachments");
+
                     b.Navigation("Collaborators");
 
                     b.Navigation("PostAttachments");
@@ -5274,7 +5891,9 @@ namespace ASafariM.Infrastructure.Migrations
 
                     b.Navigation("PostTags");
 
-                    b.Navigation("RelatedPosts");
+                    b.Navigation("PostTopics");
+
+                    b.Navigation("Tags");
                 });
 
             modelBuilder.Entity("ASafariM.Domain.Entities.Project", b =>
@@ -5311,6 +5930,8 @@ namespace ASafariM.Infrastructure.Migrations
             modelBuilder.Entity("ASafariM.Domain.Entities.Topic", b =>
                 {
                     b.Navigation("ChildTopics");
+
+                    b.Navigation("PostTopics");
                 });
 
             modelBuilder.Entity("ASafariM.Domain.Entities.User", b =>

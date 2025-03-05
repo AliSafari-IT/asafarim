@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using ASafariM.Application.CommandModels;
 using ASafariM.Application.DTOs;
+using ASafariM.Application.Interfaces;
 using ASafariM.Application.Services;
 using ASafariM.Application.Utils;
 using ASafariM.Domain.Entities;
 using ASafariM.Domain.Interfaces;
+using ASafariM.Infrastructure.Persistence;
 using ASafariM.Infrastructure.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +27,9 @@ namespace ASafariM.Test.InfrastructureTests.Services
         private readonly Mock<ILogger<UserService>> _loggerMock = new Mock<ILogger<UserService>>();
         private readonly Mock<IMapper> _mapperMock = new Mock<IMapper>();
         private readonly Mock<IConfiguration> _configurationMock = new Mock<IConfiguration>();
+        private readonly Mock<IAuthorizationService> _authorizationServiceMock =
+            new Mock<IAuthorizationService>();
+        private readonly Mock<IEmailService> _emailServiceMock = new Mock<IEmailService>();
         private readonly UserService _userService;
 
         public UserServiceTests()
@@ -32,9 +37,11 @@ namespace ASafariM.Test.InfrastructureTests.Services
             _userService = new UserService(
                 _userRepositoryMock.Object,
                 _mapperMock.Object,
-                _configurationMock.Object,
+                Context,
                 _loggerMock.Object,
-                Context
+                _authorizationServiceMock.Object,
+                _configurationMock.Object,
+                _emailServiceMock.Object
             );
         }
 
@@ -82,5 +89,6 @@ namespace ASafariM.Test.InfrastructureTests.Services
             _userRepositoryMock.Verify(repo => repo.DeleteUserAsync(userId), Times.Once);
         }
 
+        
     }
 }

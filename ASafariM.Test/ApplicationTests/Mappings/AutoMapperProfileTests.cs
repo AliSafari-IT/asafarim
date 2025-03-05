@@ -1,25 +1,43 @@
-using System;
-using ASafariM.Application.DTOs;
-using ASafariM.Application.Mappings;
-using ASafariM.Domain.Entities;
-using AutoMapper;
+using ASafariM.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
-namespace ASafariM.Test.ApplicationTests.Mappings
+namespace ASafariM.Test
 {
-    [TestClass]
-    public class AutoMapperProfileTests : TestBase
+    public abstract class TestBase
     {
-        private IMapper _mapper;
+        public AppDbContext Context { get; set; }
+        protected string DatabaseName { get; }
 
-        [TestInitialize]
-        public override void Setup()
+        public TestBase()
         {
-            base.Setup();
-            var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfile>());
-            _mapper = config.CreateMapper();
+            DatabaseName = $"TestDb_{Guid.NewGuid()}"; // Unique database name for each test
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseInMemoryDatabase(databaseName: DatabaseName)
+                .Options;
+            Context = new AppDbContext(options);
         }
 
+        [TestInitialize]
+        public virtual void Initialize()
+        {
+            base.Setup(); // Call base setup if needed
+        }
 
+        [TestCleanup]
+        public virtual void Cleanup()
+        {
+            Context?.Dispose();
+        }
+
+        protected static Mock<AppDbContext> CreateMockContext()
+        {
+            return new Mock<AppDbContext>(
+                new DbContextOptionsBuilder<AppDbContext>()
+                    .UseInMemoryDatabase($"MockDb_{Guid.NewGuid()}")
+                    .Options
+            );
+        }
     }
 }

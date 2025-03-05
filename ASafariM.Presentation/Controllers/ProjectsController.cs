@@ -34,13 +34,14 @@ namespace ASafariM.Presentation.Controllers
             _logger.LogInformation("ProjectsController initialized.");
         }
 
+        // To fetch all projects
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Project>>> GetProjects()
         {
             try
             {
                 _logger.LogInformation("Fetching projects via API.");
-                var projects = await _projectService.GetAllProjectsAsync();
+                var projects = await _projectService.GetAllAsync();
                 _logger.LogInformation($"Returning {projects.Count()} projects.");
                 return Ok(projects);
             }
@@ -63,7 +64,7 @@ namespace ASafariM.Presentation.Controllers
             try
             {
                 _logger.LogInformation($"Retrieving project with ID: {id}");
-                var project = await _projectService.GetProjectByIdAsync(id);
+                var project = await _projectService.GetByIdAsync(id);
 
                 if (project == null)
                 {
@@ -108,19 +109,17 @@ namespace ASafariM.Presentation.Controllers
                 if (!Enum.IsDefined(typeof(StatusEnum), projectDto.Status))
                     return BadRequest("Invalid status value.");
 
-                var project = new Project
+                var project = new Project(name: projectDto.Name, ownerId: projectDto.OwnerId)
                 {
-                    Name = projectDto.Name,
                     Description = projectDto.Description,
                     StartDate = projectDto.StartDate,
                     EndDate = projectDto.EndDate,
                     Budget = (double?)projectDto.Budget,
                     Visibility = (VisibilityEnum)projectDto.Visibility,
                     Status = (StatusEnum)projectDto.Status,
-                    OwnerId = projectDto.OwnerId,
                 };
 
-                var createdProject = await _projectService.CreateProjectAsync(project);
+                var createdProject = await _projectService.CreateAsync(project);
 
                 _logger.LogInformation($"Successfully created project: {createdProject.Name}");
 
@@ -160,19 +159,35 @@ namespace ASafariM.Presentation.Controllers
             {
                 _logger.LogInformation($"Updating project with ID: {id}");
 
-                if (!Enum.IsDefined(typeof(VisibilityEnum), projectDto.Visibility))
-                    return BadRequest("Invalid visibility value.");
+                if (projectDto == null)
+                {
+                    _logger.LogWarning("Received null project update request.");
+                    return BadRequest("Project update data cannot be null.");
+                }
 
-                if (!Enum.IsDefined(typeof(StatusEnum), projectDto.Status))
-                    return BadRequest("Invalid status value.");
-
-                var updated = await _projectService.UpdateProjectAsync(id, projectDto);
-
-                if (!updated)
+                var existingProject = await _projectService.GetByIdAsync(id);
+                if (existingProject == null)
                 {
                     _logger.LogWarning($"Project with ID {id} not found.");
                     return NotFound($"Project with ID {id} does not exist.");
                 }
+
+                // ✅ Map DTO to Entity
+                existingProject.Name = projectDto.Name;
+                existingProject.Description = projectDto.Description;
+                existingProject.StartDate = projectDto.StartDate;
+                existingProject.EndDate = projectDto.EndDate;
+                existingProject.Budget = projectDto.Budget;
+                existingProject.Status = projectDto.Status.HasValue
+                    ? (StatusEnum)projectDto.Status.Value
+                    : existingProject.Status;
+                existingProject.Visibility = projectDto.Visibility.HasValue
+                    ? (VisibilityEnum)projectDto.Visibility.Value
+                    : existingProject.Visibility;
+                existingProject.UpdatedAt = DateTime.UtcNow;
+
+                // ✅ Call UpdateAsync with the correct entity
+                await _projectService.UpdateAsync(existingProject);
 
                 _logger.LogInformation($"Successfully updated project with ID: {id}");
                 return NoContent();
@@ -196,16 +211,18 @@ namespace ASafariM.Presentation.Controllers
             try
             {
                 _logger.LogInformation($"Deleting project with ID: {id}");
-                var deleted = await _projectService.DeleteProjectAsync(id);
 
-                if (!deleted)
+                var project = await _projectService.GetByIdAsync(id);
+                if (project == null)
                 {
                     _logger.LogWarning($"Project with ID {id} not found.");
                     return NotFound($"Project with ID {id} does not exist.");
                 }
 
+                await _projectService.DeleteAsync(id);
+
                 _logger.LogInformation($"Successfully deleted project with ID: {id}");
-                return NoContent();
+                return NoContent(); // ✅ Returns NoContent instead of assigning void to a variable
             }
             catch (Exception ex)
             {

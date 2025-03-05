@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ASafariM.Domain.Entities;
+using ASafariM.Domain.Entities.PostRelationships;
 
 namespace ASafariM.Application.DTOs
 {

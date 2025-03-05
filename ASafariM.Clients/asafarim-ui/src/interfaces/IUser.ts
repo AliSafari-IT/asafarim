@@ -37,11 +37,11 @@ export interface IUser {
     phoneNumber?: string;
     phoneNumberConfirmed?: boolean;
     emailConfirmed?: boolean;
-    roles?: string[];
     remark?: string;
     markdownFiles?: IMarkdownFile[];
     dateJoined?: string;
     lastPasswordChangeDate?: string;
     isOnline?: boolean;
-
+    roles?: string[];
+    isLoggedIn?: boolean;
 }

@@ -1,8 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using ASafariM.Domain.Common;
 
 namespace ASafariM.Domain.Entities
 {
-    public class DateFormat
+    public class DateFormat : BaseEntity
     {
         [Key]
         public Guid Id { get; set; }
@@ -19,15 +20,9 @@ namespace ASafariM.Domain.Entities
         [StringLength(20)]
         public string Example { get; set; } = "31-12-2025"; // Example date in this format
 
-        public bool IsDefault { get; set; }
-
-        public bool IsActive { get; set; } = true;
+        public bool IsDefault { get; set; } = false;
 
         // Navigation properties
         public ICollection<GeographicalPreference> GeographicalPreferences { get; set; } = new List<GeographicalPreference>();
-
-        // Audit fields
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? UpdatedAt { get; set; }
     }
 }

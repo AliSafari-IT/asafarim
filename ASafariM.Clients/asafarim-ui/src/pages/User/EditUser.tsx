@@ -7,7 +7,7 @@ import Footer from '../../layout/Footer/Footer';
 import Header from '@/layout/Header/Header';
 import { debounce } from 'lodash';
 import axios from 'axios';
-import { Dropdown, IDropdownOption } from '@fluentui/react';
+import { Dropdown, IDropdownOption, mergeStyles } from '@fluentui/react';
 import { IApiResponse, IRole, IUserRole } from '@/interfaces';
 import useAuth from '@/hooks/useAuth';
 import { logger } from '@/utils/logger';
@@ -31,31 +31,22 @@ const EditUser: React.FC = () => {
   }, [authenticatedUser]);
 
   const roleOptions = roles.map((role) => ({
-    key: role.id,
-    text: role.name,
+    key: role.id.toString(), // Ensure key is string
+    text: role.name
   }));
 
   const handleRoleChange = (
     _event: React.FormEvent<HTMLDivElement>,
-    option?: IDropdownOption,
-    index?: number
+    option?: IDropdownOption
   ) => {
     if (option && user) {
       setUser((prev) => {
-        // Initialize roles array if it doesn't exist
         const currentRoles = prev?.roles || [];
+        const roleId = option.key.toString(); // Ensure string comparison
 
-        // Convert option.key to string to match IUser interface
-        const roleId = String(option.key);
-
-        // Update roles based on selection
         const updatedRoles = option.selected
-          ? [...currentRoles, roleId] // Add role
-          : currentRoles.filter((id) => id !== roleId); // Remove role
-        logger.info(`Updated roles in user: ${JSON.stringify(updatedRoles)}`);
-        if (index !== undefined) {
-          logger.info(`Index: ${index}`);
-        }
+          ? [...currentRoles, roleId]
+          : currentRoles.filter((id) => id !== roleId);
 
         return {
           ...prev!,
@@ -248,6 +239,26 @@ const EditUser: React.FC = () => {
     }
   };
 
+  const dropdownStyles = mergeStyles({
+    dropdown: {
+      width: '100%',
+      minWidth: 200,
+    },
+    title: {
+      backgroundColor: 'var(--dropdown-bg)',
+      borderColor: 'var(--dropdown-border)',
+      ':hover': {
+        backgroundColor: 'var(--dropdown-hover)',
+      },
+    },
+    caretDown: {
+      color: 'var(--text-primary)',
+    },
+    dropdownItemSelected: {
+      backgroundColor: 'var(--dropdown-hover)',
+    },
+  });
+
   if (!user) return <p>Loading...</p>;
 
   return (
@@ -268,14 +279,20 @@ const EditUser: React.FC = () => {
           <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               {isLoggedInUserAdmin && (
-                <div>
-                  <label>Assign Roles:</label>
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Assign Roles:</label>
                   <Dropdown
                     placeholder="Select roles"
                     multiSelect
                     options={roleOptions}
                     onChange={handleRoleChange}
-                    selectedKeys={user.roles}
+                    selectedKeys={user.roles?.map(r => r.toString()) || []}
+                    styles={{
+                      root: dropdownStyles,
+                      dropdown: {
+                        minWidth: 200,
+                      },
+                    }}
                   />
                 </div>
               )}

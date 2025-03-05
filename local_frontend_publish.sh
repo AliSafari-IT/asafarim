@@ -38,6 +38,18 @@ cd "$LOCAL_FRONTEND_DIR" || {
     exit 1
 }
 
+echo "current directory: $(pwd)"
+echo "📝 Copy .env.production..."
+cp "$LOCAL_FRONTEND_DIR/.env.production" "$LOCAL_FRONTEND_DIR/.env"
+
+# install dependencies
+echo "📦 Installing dependencies..."
+
+yarn cache clean && rm -rf node_modules && rm -rf .yarn/cache && yarn install || {
+    echo "❌ Error: Failed to install dependencies!"
+    exit 1
+}
+
 # make a clean build
 echo "🚀 Building frontend..."
 yarn build || {
@@ -88,6 +100,9 @@ ssh asafarim 'systemctl restart nginx' || {
     echo "❌ Error: Failed to restart Nginx!"
     exit 1
 }
+
+echo "📝 Copy .env.development..."
+cp "$LOCAL_FRONTEND_DIR/.env.development" "$LOCAL_FRONTEND_DIR/.env"
 
 # Deployment Complete
 echo "✅ Deployment completed successfully!"

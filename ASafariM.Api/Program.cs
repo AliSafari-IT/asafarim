@@ -52,14 +52,13 @@ try
     {
         options.ListenAnyIP(5000);
     });
+    builder.Services.AddHttpContextAccessor();
 
     // Configure JWT Authentication
     builder
         .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
         {
-            options.RequireHttpsMetadata = false;
-            options.SaveToken = true;
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
@@ -69,7 +68,7 @@ try
                 ValidIssuer = builder.Configuration["Jwt:Issuer"],
                 ValidAudience = builder.Configuration["Jwt:Audience"],
                 IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])
+                    Convert.FromBase64String(builder.Configuration["Jwt:Key"]!)
                 ),
             };
         });

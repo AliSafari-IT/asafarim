@@ -136,7 +136,9 @@ namespace ASafariM.Presentation.Controllers
                 if (await _topicRepository.HasChildrenAsync(id))
                 {
                     Log.Error("Topic with id {id} has children, cannot delete", id);
-                    return BadRequest("This topic has subtopics and cannot be deleted. Please remove or reassign the subtopics first.");
+                    return BadRequest(
+                        "This topic has subtopics and cannot be deleted. Please remove or reassign the subtopics first."
+                    );
                 }
 
                 await _topicRepository.DeleteAsync(id);
@@ -145,7 +147,12 @@ namespace ASafariM.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "An error occurred while deleting topic with id {id}. Error: {Error}", id, ex.Message);
+                Log.Error(
+                    ex,
+                    "An error occurred while deleting topic with id {id}. Error: {Error}",
+                    id,
+                    ex.Message
+                );
                 return StatusCode(500, $"An error occurred while deleting the topic: {ex.Message}");
             }
         }

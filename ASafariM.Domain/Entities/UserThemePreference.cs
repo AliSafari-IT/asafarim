@@ -9,4 +9,4 @@ namespace ASafariM.Domain.Entities
 
         public ThemePreference ThemePreference { get; set; }
     }
-}   
+}

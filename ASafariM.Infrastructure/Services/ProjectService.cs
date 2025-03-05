@@ -8,219 +8,143 @@ using ASafariM.Domain.Entities;
 using ASafariM.Domain.Enums;
 using ASafariM.Domain.Exceptions;
 using ASafariM.Domain.Interfaces;
+using ASafariM.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace ASafariM.Infrastructure.Services
 {
-    // This implementation of IProjectService provides CRUD operations for Project entities.
-    public class ProjectService : IProjectService, IEntityService<Project>
+    public class ProjectService : IProjectService
     {
-        private readonly IProjectRepository _projectRepository;
-        private readonly ILogger<ProjectService> _logger;
-        private readonly IEntityService<User> _userService;
+        private readonly AppDbContext _dbContext;
+        private readonly IRoleService _roleService;
+        private readonly ICurrentUserService _currentUserService;
+        private readonly IUserService _userService;
 
         public ProjectService(
-            IProjectRepository projectRepository,
-            IEntityService<User> userService,
-            ILogger<ProjectService> logger
+            AppDbContext dbContext,
+            IRoleService roleService,
+            ICurrentUserService currentUserService,
+            IUserService userService
         )
         {
-            _projectRepository = projectRepository;
+            _dbContext = dbContext;
+            _roleService = roleService;
+            _currentUserService = currentUserService;
             _userService = userService;
-            _logger = logger;
         }
 
-        // Retrieves all projects.
-        public async Task<IEnumerable<Project>> GetAllProjectsAsync()
+        public async Task<IEnumerable<Project>> GetAllAsync()
         {
-            try
-            {
-                _logger.LogInformation("Fetching projects from the database.");
-                var projects = await _projectRepository.GetAllAsync();
-                _logger.LogInformation($"Retrieved {projects.Count()} projects.");
-                return projects;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error occurred while fetching all projects");
-                throw new ProjectServiceException("Error fetching projects", ex);
-            }
+            Log.Information("Fetching projects from the database.");
+            return await _dbContext.Projects.ToListAsync();
         }
 
-        // Retrieves a single project by ID. Returns null if not found.
-        public async Task<Project?> GetProjectByIdAsync(Guid id)
+        public async Task<Project> GetByIdAsync(Guid id)
         {
-            try
-            {
-                var project = await _projectRepository.GetByIdAsync(id);
-                if (project == null)
-                {
-                    _logger.LogWarning($"Project with ID {id} not found");
-                    return null;
-                }
-                return project;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Error occurred while fetching project with ID {id}");
-                throw new ProjectServiceException($"Error fetching project with ID {id}", ex);
-            }
-        }
-
-        // Creates a new project.
-        public async Task<Project> CreateProjectAsync(Project project)
-        {
-            try
-            {
-                _logger.LogInformation("Creating new project: {@Project}", project);
-
-                // Set creation date and generate a new ID if needed.
-                project.CreatedAt = DateTime.UtcNow;
-                if (project.Id == Guid.Empty)
-                {
-                    project.Id = Guid.NewGuid();
-                }
-
-                // Verify that the owner exists.
-                _logger.LogInformation("Checking if owner exists: {OwnerId}", project.OwnerId);
-                var owner = await _userService.GetByIdAsync(project.OwnerId);
-                if (owner == null)
-                {
-                    _logger.LogError("User with ID {OwnerId} not found", project.OwnerId);
-                    throw new InvalidOperationException(
-                        $"User with ID {project.OwnerId} not found"
-                    );
-                }
-
-                // Set default values for Status and Visibility if not provided.
-                if (project.Status == 0)
-                {
-                    project.Status = StatusEnum.InProgress;
-                }
-                if (project.Visibility == 0)
-                {
-                    project.Visibility = VisibilityEnum.Private;
-                }
-
-                _logger.LogInformation("Adding project to repository: {@Project}", project);
-                await _projectRepository.AddAsync(project);
-                _logger.LogInformation("Project created successfully: {ProjectId}", project.Id);
-                return project;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(
-                    ex,
-                    "Error occurred while creating project: {ErrorMessage}",
-                    ex.Message
-                );
-                throw new ProjectServiceException("Error creating project", ex);
-            }
-        }
-
-        public async Task<bool> UpdateProjectAsync(Guid id, ProjectUpdateDto projectDto)
-        {
-            try
-            {
-                var existingProject = await _projectRepository.GetByIdAsync(id);
-                if (existingProject == null)
-                {
-                    throw new NotFoundException($"Project with ID {id} not found");
-                }
-
-                // Update properties only if provided
-                if (!string.IsNullOrEmpty(projectDto.Name))
-                    existingProject.Name = projectDto.Name;
-                if (!string.IsNullOrEmpty(projectDto.Description))
-                    existingProject.Description = projectDto.Description;
-                if (projectDto.StartDate.HasValue)
-                    existingProject.StartDate = projectDto.StartDate.Value;
-                if (projectDto.EndDate.HasValue)
-                    existingProject.EndDate = projectDto.EndDate.Value;
-                if (projectDto.Budget.HasValue)
-                    existingProject.Budget = projectDto.Budget.Value;
-                if (projectDto.Status.HasValue)
-                    existingProject.Status = (StatusEnum)projectDto.Status.Value;
-                if (projectDto.Visibility.HasValue)
-                    existingProject.Visibility = (VisibilityEnum)projectDto.Visibility.Value;
-
-                existingProject.UpdatedAt = DateTime.UtcNow;
-
-                await _projectRepository.UpdateAsync(existingProject);
-                _logger.LogInformation("Project updated successfully: {ProjectId}", id);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Error updating project with ID {id}");
-                throw new ProjectServiceException($"Error updating project with ID {id}", ex);
-            }
-        }
-
-        // Deletes a project by its ID.
-        public async Task<bool> DeleteProjectAsync(Guid id)
-        {
-            try
-            {
-                var project = await _projectRepository.GetByIdAsync(id);
-                if (project == null)
-                {
-                    throw new NotFoundException($"Project with ID {id} not found");
-                }
-
-                await _projectRepository.DeleteAsync(id);
-                _logger.LogInformation("Project deleted successfully: {ProjectId}", id);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Error occurred while deleting project with ID {id}");
-                throw new ProjectServiceException($"Error deleting project with ID {id}", ex);
-            }
-        }
-
-        async Task<IEnumerable<Project>> IEntityService<Project>.GetAllAsync()
-        {
-            return await GetAllProjectsAsync();
-        }
-
-        async Task<Project> IEntityService<Project>.GetByIdAsync(Guid id)
-        {
-            var project = await GetProjectByIdAsync(id);
+            var project = await _dbContext.Projects.FindAsync(id);
             if (project == null)
             {
+                Log.Warning($"Project with ID {id} not found");
                 throw new NotFoundException($"Project with ID {id} not found");
             }
             return project;
         }
 
-        async Task<Project> IEntityService<Project>.CreateAsync(Project entity)
+        public async Task<Project> GetByIdWithMembersAsync(Guid id)
         {
-            return await CreateProjectAsync(entity);
+            var project = await _dbContext
+                .Projects.Include(p => p.ProjectMembers)
+                .FirstOrDefaultAsync(p => p.Id == id);
+            if (project == null)
+            {
+                Log.Warning($"Project with ID {id} not found");
+                throw new NotFoundException($"Project with ID {id} not found");
+            }
+            return project;
         }
 
-        async Task IEntityService<Project>.UpdateAsync(Project entity)
+        public async Task<Project[]> GetByIdsAsync(IEnumerable<Guid> ids)
         {
-            await UpdateProjectAsync(
-                entity.Id,
-                new ProjectUpdateDto
-                {
-                    Name = entity.Name,
-                    Description = entity.Description,
-                    StartDate = entity.StartDate,
-                    EndDate = entity.EndDate,
-                    Budget = entity.Budget,
-                    Status = (int)entity.Status,
-                    Visibility = (int)entity.Visibility,
-                }
-            );
+            return await _dbContext.Projects.Where(p => ids.Contains(p.Id)).ToArrayAsync();
         }
 
-        async Task IEntityService<Project>.DeleteAsync(Guid id)
+        public async Task<Project> CreateAsync(Project project)
         {
-            // Call your existing method and ignore the boolean result.
-            await DeleteProjectAsync(id);
+            Log.Information("Creating new project: {@Project}", project);
+            project.CreatedAt = DateTime.UtcNow;
+            project.Id = project.Id == Guid.Empty ? Guid.NewGuid() : project.Id;
+
+            var owner = await _userService.GetByIdAsync(project.OwnerId);
+            if (owner == null)
+            {
+                throw new InvalidOperationException($"User with ID {project.OwnerId} not found");
+            }
+
+            project.Status = project.Status == 0 ? StatusEnum.InProgress : project.Status;
+            project.Visibility =
+                project.Visibility == 0 ? VisibilityEnum.Private : project.Visibility;
+
+            _dbContext.Projects.Add(project);
+            await _dbContext.SaveChangesAsync();
+            Log.Information("Project created successfully: {ProjectId}", project.Id);
+            return project;
+        }
+
+        public async Task UpdateAsync(Project project)
+        {
+            var existingProject = await _dbContext.Projects.FindAsync(project.Id);
+            if (existingProject == null)
+            {
+                throw new NotFoundException($"Project with ID {project.Id} not found");
+            }
+
+            existingProject.Name = project.Name;
+            existingProject.Description = project.Description;
+            existingProject.StartDate = project.StartDate;
+            existingProject.EndDate = project.EndDate;
+            existingProject.Budget = project.Budget;
+            existingProject.Status = project.Status;
+            existingProject.Visibility = project.Visibility;
+            existingProject.UpdatedAt = DateTime.UtcNow;
+
+            _dbContext.Projects.Update(existingProject);
+            await _dbContext.SaveChangesAsync();
+            Log.Information("Project updated successfully: {ProjectId}", project.Id);
+        }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            var project = await _dbContext.Projects.FindAsync(id);
+            if (project == null)
+            {
+                throw new NotFoundException($"Project with ID {id} not found");
+            }
+
+            _dbContext.Projects.Remove(project);
+            await _dbContext.SaveChangesAsync();
+            Log.Information("Project deleted successfully: {ProjectId}", id);
+        }
+
+        public async Task<Project[]> DeleteManyAsync(IEnumerable<Guid> ids)
+        {
+            var projects = await _dbContext.Projects.Where(p => ids.Contains(p.Id)).ToArrayAsync();
+            if (projects.Length == 0)
+            {
+                throw new NotFoundException("One or more projects not found");
+            }
+            _dbContext.Projects.RemoveRange(projects);
+            await _dbContext.SaveChangesAsync();
+            Log.Information("Projects deleted successfully: {ProjectIds}", string.Join(", ", ids));
+            return projects;
+        }
+
+        public async Task<Project[]> GetAllWithMembersAsync()
+        {
+            Log.Information("Fetching all projects with members.");
+            var projects = await _dbContext.Projects.Include(p => p.ProjectMembers).ToArrayAsync();
+            Log.Information("Fetched {ProjectCount} projects with members.", projects.Length);
+            return projects;
         }
     }
 }

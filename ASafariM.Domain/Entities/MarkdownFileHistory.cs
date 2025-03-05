@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using ASafariM.Domain.Common;
 
 namespace ASafariM.Domain.Entities
 {
-    public class MarkdownFileHistory
+    public class MarkdownFileHistory : BaseEntity
     {
         [Key]
         public Guid Id { get; set; }
@@ -14,9 +14,11 @@ namespace ASafariM.Domain.Entities
         [Required]
         public string ContentSnapshot { get; set; } = string.Empty; // Snapshot of the content at the time of the change
 
+        [Required]
         // Possibly store which user made the change
         public Guid ChangedByUserId { get; set; }
 
+        [Required]
         public DateTime ChangedAt { get; set; } = DateTime.UtcNow;
     }
 }

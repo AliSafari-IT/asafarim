@@ -1,12 +1,10 @@
-using ASafariM.Domain.Entities;
+using ASafariM.Domain.Common;
 using ASafariM.Domain.Enums;
 
 namespace ASafariM.Domain.Entities;
 
-public class ProjectMember
+public class ProjectMember : BaseEntity
 {
-    public Guid Id { get; set; }
-
     public Guid ProjectId { get; set; }
     public Project? Project { get; set; }
 

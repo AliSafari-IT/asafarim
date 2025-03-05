@@ -1,40 +1,67 @@
 import { getUserProfile, updateUserProfile } from "@/api/authapi";
-import { IUserModelUpdate } from "@/interfaces";
 import { IUserInfo } from "@/interfaces/IUserInfo";
+import authorizationService from "@/api/authorizationService";
 
 const handleUpdateProfile = async (
   authenticatedUser: IUserInfo,
-  email: string,
   firstName: string,
   lastName: string,
+  email: string,
   setMessage: (message: { type: string; text: string }) => void,
   setLoading: (loading: boolean) => void
 ) => {
-  console.debug("authenticatedUser:", authenticatedUser);
+  console.debug("Authenticated User:", authenticatedUser);
 
-  if (!/\S+@\S+\.\S+/.test(email)) {
-    setMessage({ type: "error", text: "Please enter a valid email address." });
+  // Ensure user object is correctly formatted
+  if (!authenticatedUser || !authenticatedUser.id) {
+    setMessage({ type: "error", text: "Invalid user data." });
     return;
   }
 
   try {
+    setLoading(true);
+
+    // Ensure authorization works
+    const isAuthorized = await authorizationService.authorizeAsync(
+      authenticatedUser,
+      "update_profile"
+    );
+
+    console.debug("Authorization check result:", isAuthorized);
+
+    if (!isAuthorized) {
+      setMessage({
+        type: "error",
+        text: "You are not authorized to update your profile.",
+      });
+      return;
+    }
+
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setMessage({ type: "error", text: "Please enter a valid email address." });
+      return;
+    }
+
     const updatedUser = {
       id: authenticatedUser.id,
       firstName,
       lastName,
       email,
-    } as IUserModelUpdate;
+    };
 
-    await updateUserProfile(updatedUser); // Use new function
-    setMessage({ type: "success", text: "Profile updated successfully! Refreshing..." });
-    // Force a refresh of the user data
-    const userProfile = await getUserProfile(authenticatedUser.id); // Fetch updated user profile
+    await updateUserProfile(updatedUser);
+    setMessage({
+      type: "success",
+      text: "Profile updated successfully! Refreshing...",
+    });
+
+    // Refresh user data
+    const userProfile = await getUserProfile(authenticatedUser.id);
     localStorage.setItem(
       "auth",
       JSON.stringify({ ...authenticatedUser, user: userProfile })
-    ); // Update local storage with new profile
+    );
 
-    // pause for 1 second before updating the auth state
     await new Promise((resolve) => setTimeout(resolve, 2000));
     window.dispatchEvent(new Event("authStateChange"));
   } catch (err) {
@@ -44,7 +71,5 @@ const handleUpdateProfile = async (
     setLoading(false);
   }
 };
-
-//const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export default handleUpdateProfile;

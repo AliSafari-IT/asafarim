@@ -13,6 +13,8 @@ show_menu() {
     echo "7. List All Migrations"
     echo "8. Generate SQL Script"
     echo "9. Display Database Information"
+    echo "10. Build Solution"
+    echo "11. Run Solution"
     echo "0. Exit"
     echo "================================="
     echo -n "Enter your choice: "
@@ -62,6 +64,16 @@ execute_action() {
     9)
         echo "Displaying database information..."
         dotnet ef database info --project ./ASafariM.Infrastructure/ASafariM.Infrastructure.csproj --startup-project ./ASafariM.Api/ASafariM.Api.csproj --verbose
+        ;;
+    10)
+        echo "Building solution..."
+        cd "$(dirname "$0")/../../"
+        yarn backend:build
+        ;;
+    11)
+        echo "Running solution..."
+        cd "$(dirname "$0")/../../"
+        yarn backend:run
         ;;
     0)
         echo "Exiting..."

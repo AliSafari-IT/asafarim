@@ -1,27 +1,87 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using ASafariM.Domain.Common;
 
 namespace ASafariM.Domain.Entities
 {
-    public class Attachment
+    public class Attachment : BaseEntity
     {
-        [Key]
-        public Guid Id { get; set; }
-        public string? Url { get; set; }
-        public string? FileName { get; set; }
+        [Required]
+        public string Url { get; set; }
+
+        [Required]
+        public string FileName { get; set; }
+
         public string? Description { get; set; }
         public string? Type { get; set; }
         public string? Size { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? UpdatedAt { get; set; }
-        public string CreatedBy { get; set; }
-        public string UpdatedBy { get; set; }
-        public bool IsActive { get; set; } = true;
-        public bool IsDeleted { get; set; } = false;
-        public DateTime? DeletedAt { get; set; }
-        public string DeletedBy { get; set; }
-        // If you want bidirectional navigation:
-        public Post[]? Posts { get; set; } = new Post[] { };
- 
+
+        // Constructor (Enforces Required Fields)
+        public Attachment(
+            string url,
+            string fileName,
+            string? description = null,
+            string? type = null,
+            string? size = null
+        )
+        {
+            Url = url ?? throw new ArgumentNullException(nameof(url), "URL cannot be null.");
+            FileName =
+                fileName
+                ?? throw new ArgumentNullException(nameof(fileName), "File name cannot be null.");
+            Description = description;
+            Type = type;
+            Size = size;
+        }
+
+        // Methods
+        public void MarkAsDeleted(string deletedBy)
+        {
+            if (string.IsNullOrWhiteSpace(deletedBy))
+                throw new ArgumentException(
+                    "DeletedBy cannot be null or empty.",
+                    nameof(deletedBy)
+                );
+
+            IsDeleted = true;
+            DeletedAt = DateTime.UtcNow;
+            DeletedBy = deletedBy;
+        }
+
+        public void Restore()
+        {
+            IsDeleted = false;
+            DeletedAt = null;
+            DeletedBy = null;
+        }
+
+        public void UpdateMetadata(string? description, string? type, string? size)
+        {
+            Description = description;
+            Type = type;
+            Size = size;
+            UpdatedAt = DateTime.UtcNow;
+        }
+
+        public void DisplayAttachmentDetails()
+        {
+            Console.WriteLine($"Attachment ID: {Id}");
+            Console.WriteLine($"File Name: {FileName}");
+            Console.WriteLine($"URL: {Url}");
+            Console.WriteLine($"Type: {Type ?? "N/A"}");
+            Console.WriteLine($"Size: {Size ?? "N/A"}");
+            Console.WriteLine($"Description: {Description ?? "N/A"}");
+            Console.WriteLine($"Created By: {CreatedBy}");
+            Console.WriteLine($"Updated By: {UpdatedBy ?? "N/A"}");
+            Console.WriteLine($"Created At: {CreatedAt}");
+            Console.WriteLine($"Updated At: {UpdatedAt?.ToString() ?? "Never"}");
+            Console.WriteLine($"Deleted: {(IsDeleted ? "Yes" : "No")}");
+            if (IsDeleted)
+            {
+                Console.WriteLine($"Deleted By: {DeletedBy ?? "Unknown"}");
+                Console.WriteLine($"Deleted At: {DeletedAt?.ToString() ?? "Unknown"}");
+            }
+        }
     }
 }

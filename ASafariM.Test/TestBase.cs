@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ASafariM.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -10,24 +5,24 @@ using Moq;
 
 namespace ASafariM.Test
 {
-    [TestClass]
     public abstract class TestBase
     {
-        protected AppDbContext Context { get; private set; }
+        public AppDbContext Context { get; set; }
         protected string DatabaseName { get; }
 
-        protected TestBase()
+        public TestBase()
         {
             DatabaseName = $"TestDb_{Guid.NewGuid()}"; // Unique database name for each test
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseInMemoryDatabase(databaseName: DatabaseName)
+                .Options;
+            Context = new AppDbContext(options);
         }
 
         [TestInitialize]
         public virtual void Setup()
         {
-            var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase(DatabaseName)
-                .Options;
-            Context = new AppDbContext(options);
+            // Optional: Initialize Context here if needed
         }
 
         [TestCleanup]

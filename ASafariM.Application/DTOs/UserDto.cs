@@ -38,6 +38,7 @@ namespace ASafariM.Application.DTOs
         public int FailedLoginAttempts { get; set; } = 0;
 
         public bool IsLockedOut { get; set; } = false;
+        public bool IsLoggedIn { get; set; } = false;
 
         [MaxLength(50)]
         public string? PenName { get; set; }

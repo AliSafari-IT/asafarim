@@ -6,7 +6,12 @@ namespace ASafariM.Application.Interfaces
 {
     public interface IRoleService : IEntityService<Role>
     {
-        // Add any additional methods specific to role management here, if needed
-        Task<Role> CreateAsync(Role entity);
+        // GetRoleByIdAsync
+        Task<Role> GetRoleByIdAsync(Guid id);
+
+        // GetRoleByNameAsync
+        Task<Role> GetRoleByNameAsync(string name);
+
+        // Add any other role-related methods here
     }
 }

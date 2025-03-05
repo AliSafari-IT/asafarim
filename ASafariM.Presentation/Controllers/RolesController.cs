@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ASafariM.Application.Interfaces;
 using ASafariM.Domain.Entities;
 using ASafariM.Domain.Enums;
-using ASafariM.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
@@ -18,13 +18,13 @@ namespace ASafariM.Presentation.Controllers
     /// </remarks>
     public class RolesController : Controller
     {
-        private readonly RoleService _roleService;
+        private readonly IRoleService _roleService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RolesController"/> class.
         /// </summary>
         /// <param name="roleService">The service used to manage roles.</param>
-        public RolesController(RoleService roleService)
+        public RolesController(IRoleService roleService)
         {
             _roleService = roleService;
         }
@@ -36,7 +36,7 @@ namespace ASafariM.Presentation.Controllers
             try
             {
                 Log.Information("Fetching all roles");
-                var roles = await _roleService.GetAllRolesAsync();
+                var roles = await _roleService.GetAllAsync();
                 Log.Information("Successfully retrieved {RoleCount} roles", roles?.Count() ?? 0);
                 return Ok(roles);
             }
@@ -66,7 +66,7 @@ namespace ASafariM.Presentation.Controllers
                     return BadRequest("Role ID cannot be empty.");
                 }
 
-                var role = await _roleService.GetRoleByIdAsync(roleId);
+                var role = await _roleService.GetByIdAsync(roleId);
                 if (role == null)
                 {
                     Log.Warning("Role not found with ID: {RoleId}", roleId);

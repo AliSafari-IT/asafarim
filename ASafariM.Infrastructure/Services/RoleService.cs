@@ -86,7 +86,19 @@ namespace ASafariM.Infrastructure.Services
             return role;
         }
 
-        // Add role-specific business logic here
+        public async Task<Role> GetRoleByNameAsync(string name)
+        {
+            Log.Information($"Getting role by name: {name}");
+            var role = await _context.Roles.FirstOrDefaultAsync(r => r.Name == name);
+            if (role == null)
+            {
+                Log.Warning("Role not found by name: {RoleName}", name);
+                return null;
+            }
+            Log.Information("Role retrieved successfully by name: {RoleName}", name);
+            return role;
+        }
+
         public async Task<Role> CreateAsync(Role entity)
         {
             Log.Information("Adding role: {@Role}", entity);

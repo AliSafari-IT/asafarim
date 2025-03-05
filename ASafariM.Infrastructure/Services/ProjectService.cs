@@ -17,20 +17,11 @@ namespace ASafariM.Infrastructure.Services
     public class ProjectService : IProjectService
     {
         private readonly AppDbContext _dbContext;
-        private readonly IRoleService _roleService;
-        private readonly ICurrentUserService _currentUserService;
         private readonly IUserService _userService;
 
-        public ProjectService(
-            AppDbContext dbContext,
-            IRoleService roleService,
-            ICurrentUserService currentUserService,
-            IUserService userService
-        )
+        public ProjectService(AppDbContext dbContext, IUserService userService)
         {
             _dbContext = dbContext;
-            _roleService = roleService;
-            _currentUserService = currentUserService;
             _userService = userService;
         }
 

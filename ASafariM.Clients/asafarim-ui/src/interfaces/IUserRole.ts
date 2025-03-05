@@ -8,3 +8,9 @@ export interface IUserRole {
     roleId: string; // Guid type as a string
     role?: IRoleEnum; // Optional role reference
 }
+
+export interface UserRoleDto {
+    userId: string;
+    roleId: string;
+    roleName: string;
+}

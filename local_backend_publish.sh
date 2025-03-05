@@ -21,8 +21,12 @@ echo "📁 if exists, remove local deploy directory..."
 # check if exists
 if [ -d "$LOCAL_DEPLOY_DIR" ]; then
     rm -rf "$LOCAL_DEPLOY_DIR"
+else
+    echo "❌ Error: Directory not found - $LOCAL_DEPLOY_DIR"
+    exit 1
 fi
-# create new one
+
+# create new deploy directory
 mkdir -p "$LOCAL_DEPLOY_DIR" && sudo chown -R www-data:www-data "$LOCAL_DEPLOY_DIR"
 
 # navigate to backend project
@@ -30,6 +34,13 @@ cd "$LOCAL_BACKEND_DIR" || {
     echo "❌ Error: Directory not found - $LOCAL_BACKEND_DIR"
     exit 1
 }
+
+echo "current directory: $(pwd)"
+echo "Copy .env.production to .env, appsettings.Production.json to appsettings.json, Properties/launchSettings.Production.json to Properties/launchSettings.json"
+cp "$LOCAL_BACKEND_DIR/.env.production" "$LOCAL_BACKEND_DIR/.env"
+cp "$LOCAL_BACKEND_DIR/appsettings.Production.json" "$LOCAL_BACKEND_DIR/appsettings.json"
+cp "$LOCAL_BACKEND_DIR/Properties/launchSettings.Production.json" "$LOCAL_BACKEND_DIR/Properties/launchSettings.json"
+
 # Publish to local deploy directory
 echo "🚀 Publishing backend locally..."
 dotnet publish "$LOCAL_BACKEND_DIR/ASafariM.Api.csproj" --configuration Release --output "$LOCAL_DEPLOY_DIR" || {
@@ -101,5 +112,12 @@ else
     }
     echo "✅ Restore completed successfully!"
 fi
+
+# reset production environment
+echo "🔄 Resetting production environment back to development"
+cp "$LOCAL_BACKEND_DIR/.env.development" "$LOCAL_BACKEND_DIR/.env"
+cp "$LOCAL_BACKEND_DIR/appsettings.Development.json" "$LOCAL_BACKEND_DIR/appsettings.json"
+cp "$LOCAL_BACKEND_DIR/Properties/launchSettings.Development.json" "$LOCAL_BACKEND_DIR/Properties/launchSettings.json"
+echo "✅ Production environment reset successfully!"
 
 echo "🎉 Happy coding!"

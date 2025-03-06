@@ -8,6 +8,7 @@ import react from '@vitejs/plugin-react';
 import { PluginOption } from 'vite';
 
 export default defineConfig({
+  mode: process.env.NODE_ENV,
   optimizeDeps: {
     include: ['d3', 'react', 'react-dom'],
     exclude: ['@fluentui/tokens'],

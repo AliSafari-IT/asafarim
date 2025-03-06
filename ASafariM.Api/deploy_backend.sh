@@ -73,6 +73,12 @@ create_backup() {
     sudo tar -czvf "$BACKUP_DIR/$BACKUP_FILE" -C "$PUBLISH_DIR" .
 }
 
+# Function to handle publish failure
+handle_publish_failure() {
+    echo "⚠️ Failed to publish, rolling back..."
+    sudo tar -xvf "$BACKUP_DIR/$BACKUP_FILE" -C "$PUBLISH_DIR"
+}
+
 echo "⚙️ Building backend..."
 cd "$REPO_DIR" || {
     echo "❌ Error: Repository directory not found!"
@@ -94,13 +100,9 @@ cd "$BACKEND_DIR" || {
 }
 dotnet publish --configuration Release --output "$PUBLISH_DIR" || {
     echo "❌ Error: Publish failed!"
-    # When failed then restore the unzipped BACKUP_FILE 
-    echo "⚠️ Failed to publish, rolling back..."
-    sudo tar -xvf "$BACKUP_DIR/$BACKUP_FILE" -C "$PUBLISH_DIR"
-    goto 10
+    handle_publish_failure
 }
 
-10:
 # Set correct permissions
 echo "🔑 Setting correct permissions..."
 sudo chown -R www-data:www-data "$PUBLISH_DIR"

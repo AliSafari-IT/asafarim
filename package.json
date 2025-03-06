@@ -29,7 +29,7 @@
     "backend:run": "yarn backend",
     "deploy_backend": "bash ./scripts/deploy/deploy_backend_dev.sh",
     "deploy_frontend": "bash ./scripts/deploy/deploy_frontend_dev.sh",
-    "deploy": "yarn deploy_backend && yarn deploy_frontend",
+    "deploy": "bash ./deploy_server_run.sh",
     "publish:frontend": "bash ./local_frontend_publish.sh",
     "publish:backend": "bash ./local_backend_publish.sh",
     "prepare:dev": "cp D:/repos/ASafariM/ASafariM.Api/.env.development D:/repos/ASafariM/ASafariM.Api/.env && cp D:/repos/ASafariM/ASafariM.Api/appsettings.Development.json D:/repos/ASafariM/ASafariM.Api/appsettings.json && cp D:/repos/ASafariM/ASafariM.Api/Properties/launchSettings.development.json D:/repos/ASafariM/ASafariM.Api/Properties/launchSettings.json",

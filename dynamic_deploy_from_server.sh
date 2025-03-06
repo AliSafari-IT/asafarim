@@ -12,6 +12,9 @@ BACKEND_BACKUP_DIR="$REPO_DIR/backups/backends"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 FRONTEND_BACKUP_FILE="asafarim-frontend_backup_${TIMESTAMP}.tar.gz"
 BACKEND_BACKUP_FILE="asafarim-backend_backup_${TIMESTAMP}.tar.gz"
+FRONTEND_BACKUP_PATH="$FRONTEND_BACKUP_DIR/$FRONTEND_BACKUP_FILE"
+BACKEND_BACK_PATH="$BACKEND_BACKUP_DIR/$BACKEND_BACKUP_FILE"
+PUBLISH_DIR="$REPO_DIR/backend"
 SERVICE_NAME="asafarim-api"
 SERVICE_FILE="/tmp/$SERVICE_NAME.service"
 MAX_RETRIES=5
@@ -94,7 +97,7 @@ cd "$FRONTEND_BACKUP_DIR" && ls -t | tail -n +2 | xargs -r rm -rf
 
 # Create a backup of the current deployment
 echo "Creating backup..."
-sudo tar -czvf "$FRONTEND_BACKUP_DIR/$FRONTEND_BACKUP_FILE" -C "$FRONTEND_DEPLOY_DIR" .
+sudo tar -czvf "$FRONTEND_BACKUP_PATH" -C "$FRONTEND_DEPLOY_DIR" .
 
 # Step 1: Navigate to frontend project
 cd "$FRONTEND_DIR" || { echo " Error: Frontend directory not found!"; exit 1; }
@@ -114,7 +117,7 @@ rm -rf "$FRONTEND_DEPLOY_DIR"/*
 # Function to handle move failure
 handle_move_failure() {
     echo " Failed to move files, rolling back..."
-    sudo tar -xvf "$FRONTEND_BACKUP_DIR/$FRONTEND_BACKUP_FILE" -C "$FRONTEND_DEPLOY_DIR"
+    sudo tar -xvf "$FRONTEND_BACKUP_PATH" -C "$FRONTEND_DEPLOY_DIR"
 }
 
 # Step 5: Move new build files
@@ -179,9 +182,9 @@ check_health() {
 # Function for rollback
 rollback() {
     echo " Rolling back deployment..."
-    if [ -d "${BACKEND_BACKUP_DIR}/backup_${TIMESTAMP}" ]; then
+    if [ -d "$BACKEND_BACKUP_PATH" ]; then
         rm -rf "$BACKEND_DEPLOY_DIR"/*
-        cp -r "${BACKEND_BACKUP_DIR}/backup_${TIMESTAMP}"/* "$BACKEND_DEPLOY_DIR"/
+        sudo tar -xvf "$BACKEND_BACKUP_PATH" -C "$BACKEND_DEPLOY_DIR"
         systemctl restart $SERVICE_NAME
         if check_health; then
             echo " Rollback successful"
@@ -199,14 +202,13 @@ rollback() {
 create_backup() {
     # Create a backup of the current deployment
     echo "Creating backup..."
-    BACKUP_FILE="asafarim-backend_backup_$(date +%Y%m%d_%H%M%S).tar.gz"
-    sudo tar -czvf "$BACKEND_BACKUP_DIR/$BACKUP_FILE" -C "$BACKEND_DEPLOY_DIR" .
+    sudo tar -czvf "$BACKEND_BACKUP_PATH" -C "$BACKEND_DEPLOY_DIR" .
 }
 
 # Function to handle publish failure
 handle_publish_failure() {
     echo " Failed to publish, rolling back..."
-    sudo tar -xvf "$BACKEND_BACKUP_DIR/$BACKEND_BACKUP_FILE" -C "$BACKEND_DEPLOY_DIR"
+    sudo tar -xvf "$BACKEND_BACKUP_DIR/$BACKUP_FILE" -C "$BACKEND_DEPLOY_DIR"
 }
 
 # Function to create systemd service file
@@ -300,6 +302,26 @@ dotnet build "$BACKEND_DIR" -c Release || {
     echo " Error: Build failed!"
     exit 1
 }
+
+# Ensure the publish directory is correctly specified
+PUBLISH_DIR="/var/www/asafarim/ASafariM.Api/bin/Release/net9.0"
+mkdir -p "$PUBLISH_DIR"
+
+# Handle port 5000 conflicts
+kill_process_on_port() {
+    local port=$1
+    echo "Checking for processes on port $port..."
+    local pids=$(lsof -ti :$port)
+    if [ -n "$pids" ]; then
+        echo "Killing processes on port $port: $pids"
+        kill -9 $pids
+    else
+        echo "No processes found on port $port."
+    fi
+}
+
+# Kill any processes using port 5000
+kill_process_on_port 5000
 
 # Publish the backend
 echo " Publishing backend..."

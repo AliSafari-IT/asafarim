@@ -10,6 +10,7 @@ PUBLISH_DIR="$REPO_DIR/backend"
 BACKUP_DIR="$REPO_DIR/backups/backends"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 MAX_RETRIES=5
+SERVICE_NAME="asafarim-api"
 HEALTH_CHECK_URL="https://asafarim.com/api/health"
 
 # Clean old backups (keep only the newest one)
@@ -32,7 +33,7 @@ check_health() {
         # Only show logs every 5 attempts to reduce noise
         if [ $((retries % 5)) -eq 0 ]; then
             echo "Recent application logs:"
-            sudo journalctl -u asafarim-api -n 10 --no-pager
+            sudo journalctl -u $SERVICE_NAME -n 10 --no-pager
         fi
 
         # Wait longer between retries as attempts increase
@@ -52,7 +53,7 @@ rollback() {
     if [ -d "${BACKUP_DIR}/backup_${TIMESTAMP}" ]; then
         rm -rf "$PUBLISH_DIR"/*
         cp -r "${BACKUP_DIR}/backup_${TIMESTAMP}"/* "$PUBLISH_DIR"/
-        systemctl restart asafarim-api
+        systemctl restart $SERVICE_NAME
         if check_health; then
             echo " Rollback successful"
         else
@@ -81,7 +82,7 @@ handle_publish_failure() {
 
 # Function to create systemd service file
 create_service_file() {
-    SERVICE_FILE="/tmp/asafarim-api.service"
+    SERVICE_FILE="/tmp/$SERVICE_NAME.service"
     LOG_DIR="/var/log/asafarim"
     sudo mkdir -p "$LOG_DIR"
     sudo chown www-data:www-data "$LOG_DIR"
@@ -145,7 +146,7 @@ echo " Starting Backend Deployment..."
 
 # Stop the service before deployment
 echo "Stopping backend service..."
-sudo systemctl stop asafarim-api
+sudo systemctl stop $SERVICE_NAME
 sleep 5
 # Publish the backend
 echo " Publishing backend..."
@@ -165,12 +166,12 @@ sudo chmod -R 755 "$PUBLISH_DIR"
 
 # Update systemd service
 echo " Updating systemd service..."
-if [ ! -f "/tmp/asafarim-api.service" ]; then
-    echo " The system service file /tmp/asafarim-api.service does not exist. So, creating it..."
+if [ ! -f "/tmp/$SERVICE_NAME.service" ]; then
+    echo " The system service file /tmp/$SERVICE_NAME.service does not exist. So, creating it..."
     echo " Creating systemd service file..."
     create_service_file
 fi
-sudo cp /tmp/asafarim-api.service /etc/systemd/system/
+sudo cp /tmp/$SERVICE_NAME.service /etc/systemd/system/
 sudo systemctl daemon-reload
 
 # Restart the backend service

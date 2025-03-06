@@ -32,11 +32,11 @@ using Serilog.Events;
 
 // Configure logging directory
 DotNetEnv.Env.Load();
-var environment = Environment.GetEnvironmentVariable("ASAFARIM_ENV");
-Console.WriteLine($"ASAFARIM_ENV: {environment}");
+var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+Console.WriteLine($"ASPNETCORE_ENVIRONMENT: {environment}");
 
 var logDirectory =
-    environment == "production" ? "/var/www/asafarim/logs" : "D:/repos/ASafariM/Logs";
+    environment == "Production" ? "/var/www/asafarim/logs" : "D:/repos/ASafariM/Logs";
 
 Console.WriteLine($"Log Directory: {logDirectory}"); // Debugging line
 Directory.CreateDirectory(logDirectory);

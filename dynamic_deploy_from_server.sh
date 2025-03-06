@@ -236,38 +236,47 @@ create_service_file() {
     echo "Created systemd service file at $SERVICE_FILE"
 }
 
-# Enhanced function to check and free port 5000
-free_port_5000() {
-    echo "Checking if port 5000 is in use..."
-    PID=$(sudo lsof -t -i:5000)
-    if [ -n "$PID" ]; then
-        echo "Port 5000 is in use by process $PID, killing it..."
-        sudo kill -9 $PID
-        sleep 5 # Wait for port to be fully released
-        echo "Verifying port is free..."
-        if sudo lsof -i :5000; then
-            echo "Port 5000 is still in use after killing process!"
-            # stop service
-            echo "Stopping backend service..."
-            sudo systemctl stop $SERVICE_NAME
-            sleep 5
-            # check again
+# Aggressive function to check and free port 5000
+ensure_port_5000_free() {
+    local max_attempts=5
+    local attempt=0
+    while [ $attempt -lt $max_attempts ]; do
+        echo "Attempt $((attempt + 1)) to free port 5000..."
+        PID=$(sudo lsof -t -i:5000)
+        if [ -n "$PID" ]; then
+            echo "Port 5000 is in use by process $PID, killing it..."
+            sudo kill -9 $PID
+            sleep 5 # Wait for port to be fully released
+            echo "Verifying port is free..."
             if sudo lsof -i :5000; then
-                echo "Port 5000 is still in use after stopping service!"
-                exit 1
+                echo "Port 5000 is still in use after killing process!"
+                # stop service
+                echo "Stopping backend service..."
+                sudo systemctl stop $SERVICE_NAME
+                sleep 5
+                # check again
+                if sudo lsof -i :5000; then
+                    echo "Port 5000 is still in use after stopping service!"
+                    attempt=$((attempt + 1))
+                else
+                    echo "Port 5000 successfully freed"
+                    return 0
+                fi
             else
                 echo "Port 5000 successfully freed"
+                return 0
             fi
         else
-            echo "Port 5000 successfully freed"
+            echo "Port 5000 is available"
+            return 0
         fi
-    else
-        echo "Port 5000 is available"
-    fi
+    done
+    echo "Failed to free port 5000 after $max_attempts attempts"
+    exit 1
 }
 
 create_backup
-free_port_5000
+ensure_port_5000_free
 
 echo " Building backend..."
 cd "$REPO_DIR" || {

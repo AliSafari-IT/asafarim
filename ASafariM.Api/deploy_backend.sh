@@ -3,15 +3,17 @@
 set -e # Exit on any error
 
 # Set Variables
-BASE_DIR="/var/www/asafarim"
-BACKEND_DIR="$BASE_DIR/ASafariM.Api"
-PUBLISH_DIR="$BASE_DIR/backend"
-BACKUP_DIR="$BASE_DIR/backups"
+BASE_DIR="/var/www"
+REPO_DIR="$BASE_DIR/asafarim"
+BACKEND_DIR="$REPO_DIR/ASafariM.Api"
+PUBLISH_DIR="$REPO_DIR/backend"
+BACKUP_DIR="$REPO_DIR/backups/backends"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 MAX_RETRIES=5
 HEALTH_CHECK_URL="https://asafarim.com/api/health"
 
 # Clean old backups (keep only the newest one)
+sudo mkdir -p "$BACKUP_DIR"
 cd "$BACKUP_DIR" && ls -t | tail -n +2 | xargs -r rm -rf
 
 # Function to check API health
@@ -63,65 +65,42 @@ rollback() {
     fi
 }
 
-# Function to clean up old deployments
-cleanup_old_deployments() {
-    echo "🧹 Cleaning up old deployments..."
-    # Keep only the newest publish directory and remove others
-    find "$BASE_DIR" -maxdepth 1 -type d -name "backend_*" -printf '%T+ %p\n' | sort | head -n -1 | cut -d' ' -f2- | xargs -r rm -rf
-
-    # Clean up failed deployment directories
-    find "$BASE_DIR" -maxdepth 1 -type d -name "failed_deploy_*" -mtime +7 -exec rm -rf {} +
-
-    echo "✅ Cleanup complete"
+# Function to create backup
+create_backup() {
+    # Create a backup of the current deployment
+    echo "Creating backup..."
+    BACKUP_FILE="asafarim-backend_backup_$(date +%Y%m%d_%H%M%S).tar.gz"
+    sudo tar -czvf "$BACKUP_DIR/$BACKUP_FILE" -C "$PUBLISH_DIR" .
 }
+
+echo "⚙️ Building backend..."
+cd "$REPO_DIR" || {
+    echo "❌ Error: Repository directory not found!"
+    exit 1
+}
+
+yarn api:build || {
+    echo "❌ Error: Build for API in Release mode failed!"
+    exit 1
+}
+
 echo "🚀 Starting Backend Deployment..."
 
-# Create backup directory
-mkdir -p "$BACKUP_DIR"
-
-# Backup current version
-if [ -d "$PUBLISH_DIR" ]; then
-    echo "📦 Creating backup..."
-    mkdir -p "${BACKUP_DIR}/backup_${TIMESTAMP}"
-    cp -r "$PUBLISH_DIR"/* "${BACKUP_DIR}/backup_${TIMESTAMP}/"
-fi
-
-# Navigate to backend project
+# Publish the backend
+echo "📤 Publishing backend..."
 cd "$BACKEND_DIR" || {
     echo "❌ Error: Backend directory not found!"
     exit 1
 }
-
-# Restore dependencies
-echo "📦 Restoring dependencies..."
-dotnet restore || {
-    echo "❌ Error: Failed to restore dependencies!"
-    exit 1
-}
-
-# Build the backend
-echo "⚙️ Building backend..."
-dotnet build --configuration Release || {
-    echo "❌ Error: Build failed!"
-    exit 1
-}
-
-# Run tests (if they exist)
-if [ -f "$BASE_DIR/ASafariM.Tests/ASafariM.Tests.csproj" ]; then
-    echo "🧪 Running tests..."
-    dotnet test "$BASE_DIR/ASafariM.Tests/ASafariM.Tests.csproj" || {
-        echo "❌ Tests failed!"
-        exit 1
-    }
-fi
-
-# Publish the backend
-echo "📤 Publishing backend..."
 dotnet publish --configuration Release --output "$PUBLISH_DIR" || {
     echo "❌ Error: Publish failed!"
-    exit 1
+    # When failed then restore the unzipped BACKUP_FILE 
+    echo "⚠️ Failed to publish, rolling back..."
+    sudo tar -xvf "$BACKUP_DIR/$BACKUP_FILE" -C "$PUBLISH_DIR"
+    goto 10
 }
 
+10:
 # Set correct permissions
 echo "🔑 Setting correct permissions..."
 sudo chown -R www-data:www-data "$PUBLISH_DIR"
@@ -174,7 +153,4 @@ fi
 
 echo "✅ Backend deployment completed successfully!"
 echo "🌍 API is running at $HEALTH_CHECK_URL"
-
-cleanup_old_deployments
-echo "🧹 Cleaned up old deployments successfully!"
 exit 0

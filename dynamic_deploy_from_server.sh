@@ -266,6 +266,9 @@ free_port_5000() {
     fi
 }
 
+create_backup
+free_port_5000
+
 echo " Building backend..."
 cd "$REPO_DIR" || {
     echo " Error: Repository directory not found!"
@@ -279,7 +282,6 @@ yarn api:build || {
 
 echo " Starting Backend Deployment..."
 # Build backend
-free_port_5000
 cd "$BACKEND_DIR" || {
     echo " Error: Backend directory not found!"
     exit 1
@@ -290,22 +292,8 @@ echo "Stopping backend service..."
 sudo systemctl stop $SERVICE_NAME
 sleep 5
 
-dotnet clean || {
-    echo " Error: Failed to clean!"
-    exit 1
-}
-dotnet restore || {
-    echo " Error: Failed to restore!"
-    exit 1
-}
-dotnet build "$BACKEND_DIR" -c Release || {
-    echo " Error: Build failed!"
-    exit 1
-}
-
 # Ensure the publish directory is correctly specified
-PUBLISH_DIR="/var/www/asafarim/ASafariM.Api/bin/Release/net9.0"
-mkdir -p "$PUBLISH_DIR"
+sudo mkdir -p "$PUBLISH_DIR"
 
 # Handle port 5000 conflicts
 kill_process_on_port() {
@@ -325,8 +313,6 @@ kill_process_on_port 5000
 
 # Publish the backend
 echo " Publishing backend..."
-# Ensure publish directory exists
-sudo mkdir -p "$PUBLISH_DIR"
 # Run publish with explicit output path
 dotnet publish --configuration Release --output "$PUBLISH_DIR" --verbosity normal || {
     echo " Error: Publish failed!"
@@ -351,6 +337,7 @@ sudo systemctl daemon-reload
 # Restart the backend service
 echo " Restarting backend service..."
 sudo systemctl restart $SERVICE_NAME
+sleep 5
 
 # Wait for service to become ready
 echo " Waiting for backend service to become ready..."
@@ -381,6 +368,8 @@ if ! check_health; then
     rollback
     if ! check_health; then
         echo " Health check still failing after rollback - manual intervention required"
+        echo " Service logs:"
+        journalctl -u $SERVICE_NAME -n 50 --no-pager
         exit 1
     else
         echo " Rollback successful but deployment script had issues"

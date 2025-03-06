@@ -74,7 +74,7 @@ check_processes() {
 }
 
 # Step 1: Check for updates in asafarim repository
-update_repo "$BASE_DIR"
+update_repo "$REPO_DIR"
 
 # Step 2: Check for running processes using files
 # check_processes "$FRONTEND_DIR"

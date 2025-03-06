@@ -79,6 +79,31 @@ handle_publish_failure() {
     sudo tar -xvf "$BACKUP_DIR/$BACKUP_FILE" -C "$PUBLISH_DIR"
 }
 
+# Function to create systemd service file
+create_service_file() {
+    SERVICE_FILE="/tmp/asafarim-api.service"
+    echo "[Unit]" > "$SERVICE_FILE"
+    echo "Description=ASafariM .NET API" >> "$SERVICE_FILE"
+    echo "After=network.target mysql.service" >> "$SERVICE_FILE"
+    echo "" >> "$SERVICE_FILE"
+    echo "[Service]" >> "$SERVICE_FILE"
+    echo "WorkingDirectory=$PUBLISH_DIR" >> "$SERVICE_FILE"
+    echo "ExecStart=/usr/bin/dotnet $PUBLISH_DIR/ASafariM.Api.dll" >> "$SERVICE_FILE"
+    echo "User=www-data" >> "$SERVICE_FILE"
+    echo "Group=www-data" >> "$SERVICE_FILE"
+    echo "Restart=always" >> "$SERVICE_FILE"
+    echo "RestartSec=5" >> "$SERVICE_FILE"
+    echo "Environment=ASPNETCORE_ENVIRONMENT=Production" >> "$SERVICE_FILE"
+    echo "Environment=ASPNETCORE_URLS=http://0.0.0.0:5000" >> "$SERVICE_FILE"
+    echo "NoNewPrivileges=true" >> "$SERVICE_FILE"
+    echo "ProtectSystem=full" >> "$SERVICE_FILE"
+    echo "ProtectHome=true" >> "$SERVICE_FILE"
+    echo "" >> "$SERVICE_FILE"
+    echo "[Install]" >> "$SERVICE_FILE"
+    echo "WantedBy=multi-user.target" >> "$SERVICE_FILE"
+    echo "Created systemd service file at $SERVICE_FILE"
+}
+
 echo "⚙️ Building backend..."
 cd "$REPO_DIR" || {
     echo "❌ Error: Repository directory not found!"
@@ -110,6 +135,11 @@ sudo chmod -R 755 "$PUBLISH_DIR"
 
 # Update systemd service
 echo "⚙️ Updating systemd service..."
+if [ ! -f "/tmp/asafarim-api.service" ]; then
+    echo "❌ The system service file /tmp/asafarim-api.service does not exist. So, creating it..."
+    echo "📋 Creating systemd service file..."
+    create_service_file
+fi
 sudo cp /tmp/asafarim-api.service /etc/systemd/system/
 sudo systemctl daemon-reload
 

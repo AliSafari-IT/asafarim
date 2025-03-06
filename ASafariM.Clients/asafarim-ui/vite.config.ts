@@ -6,6 +6,7 @@ import vitePluginMd from 'vite-plugin-md';
 import md from 'vite-plugin-md';
 // https://vite.dev/config/
 export default defineConfig({
+  mode: process.env.NODE_ENV,
   optimizeDeps: {
     include: ['d3', 'react', 'react-dom'],
     exclude: ['@fluentui/tokens'],

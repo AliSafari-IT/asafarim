@@ -110,16 +110,23 @@ create_service_file() {
     echo "Created systemd service file at $SERVICE_FILE"
 }
 
-# Function to check and free port 5000
+# Enhanced function to check and free port 5000
 free_port_5000() {
-    echo " Checking if port 5000 is in use..."
+    echo "Checking if port 5000 is in use..."
     PID=$(sudo lsof -t -i:5000)
     if [ -n "$PID" ]; then
-        echo " Port 5000 is in use by process $PID, killing it..."
+        echo "Port 5000 is in use by process $PID, killing it..."
         sudo kill -9 $PID
-        sleep 2
+        sleep 5 # Wait for port to be fully released
+        echo "Verifying port is free..."
+        if sudo lsof -i :5000; then
+            echo "Port 5000 is still in use after killing process!"
+            exit 1
+        else
+            echo "Port 5000 successfully freed"
+        fi
     else
-        echo " Port 5000 is available"
+        echo "Port 5000 is available"
     fi
 }
 
@@ -136,6 +143,10 @@ yarn api:build || {
 
 echo " Starting Backend Deployment..."
 
+# Stop the service before deployment
+echo "Stopping backend service..."
+sudo systemctl stop asafarim-api
+sleep 5
 # Publish the backend
 echo " Publishing backend..."
 cd "$BACKEND_DIR" || {
@@ -164,6 +175,8 @@ sudo systemctl daemon-reload
 
 # Restart the backend service
 echo " Restarting backend service..."
+echo "Current network connections on port 5000:"
+sudo netstat -tulpn | grep :5000
 free_port_5000
 sudo systemctl restart asafarim-api
 

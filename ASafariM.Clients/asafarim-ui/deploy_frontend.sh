@@ -36,17 +36,19 @@ mkdir -p "$DEPLOY_DIR"
 echo "🧹 Cleaning old deployment files..."
 rm -rf "$DEPLOY_DIR"/*
 
+# Function to handle move failure
+handle_move_failure() {
+    echo "⚠️ Failed to move files, rolling back..."
+    sudo tar -xvf "$BACKUP_DIR/$BACKUP_FILE" -C "$DEPLOY_DIR"
+}
+
 # Step 5: Move new build files
 echo "🚛 Deploying new build files..."
 mv dist/* "$DEPLOY_DIR"/ || { 
     echo "❌ Error: Moving files failed!"; 
-    # When failed then restore the unzipped BACKUP_FILE 
-    echo "⚠️ Failed to move files, rolling back..."
-    sudo tar -xvf "$BACKUP_DIR/$BACKUP_FILE" -C "$DEPLOY_DIR"
-    goto 10
+    handle_move_failure
  }
 
-10:
 # Step 6: Set correct permissions
 echo "🔑 Setting correct file permissions..."
 chown -R www-data:www-data "$DEPLOY_DIR"

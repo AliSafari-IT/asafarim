@@ -20,10 +20,10 @@ LOG_DIR="/var/log/asafarim"
 
 # Function to check if a git pull is needed
 update_repo() {
-    cd "$1" || { echo "❌ Error: Directory not found - $1"; exit 1; }
+    cd "$1" || { echo " Error: Directory not found - $1"; exit 1; }
     
     # Check if there are updates on remote
-    echo "🔄 Checking for updates in $1..."
+    echo " Checking for updates in $1..."
     CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
     git fetch origin "$CURRENT_BRANCH"
 
@@ -31,17 +31,17 @@ update_repo() {
     REMOTE_COMMIT=$(git rev-parse "origin/$CURRENT_BRANCH")
 
     if [ "$LOCAL_COMMIT" != "$REMOTE_COMMIT" ]; then
-        echo "📥 Updates found! Pulling latest changes..."
-        git pull origin "$CURRENT_BRANCH" || { echo "❌ Error: Git pull failed!"; exit 1; }
+        echo " Updates found! Pulling latest changes..."
+        git pull origin "$CURRENT_BRANCH" || { echo " Error: Git pull failed!"; exit 1; }
     else
-        echo "✅ No updates needed."
+        echo " No updates needed."
     fi
 }
 
 # Function to check for running processes using files
 check_processes() {
-    cd "$1" || { echo "❌ Error: Directory not found - $1"; exit 1; }
-    echo "🔍 Checking for running processes in $1..."
+    cd "$1" || { echo " Error: Directory not found - $1"; exit 1; }
+    echo " Checking for running processes in $1..."
 
     # Get the total number of files
     total_files=$(git ls-files | wc -l)
@@ -70,7 +70,7 @@ check_processes() {
     done
     
     echo "] 100% Completed"
-    echo "✅ Completed checking for running processes in $1."
+    echo " Completed checking for running processes in $1."
 }
 
 # Step 1: Check for updates in asafarim repository
@@ -82,13 +82,13 @@ update_repo "$REPO_DIR"
 
 # *********************************************************************
 # Step 3: Deploy frontend
-echo "🚀 Deploying Frontend..."
+echo " Deploying Frontend..."
 cd "$FRONTEND_DIR"
 
-echo "🚀 Starting Frontend Deployment..."
+echo " Starting Frontend Deployment..."
 
 # Clean old backups (keep only the last newest one)
-echo "🧹 Cleaning old frontend tar-zipped backups except the last one..."
+echo " Cleaning old frontend tar-zipped backups except the last one..."
 sudo mkdir -p "$FRONTEND_BACKUP_DIR"
 cd "$FRONTEND_BACKUP_DIR" && ls -t | tail -n +2 | xargs -r rm -rf
 
@@ -97,49 +97,49 @@ echo "Creating backup..."
 sudo tar -czvf "$FRONTEND_BACKUP_DIR/$FRONTEND_BACKUP_FILE" -C "$FRONTEND_DEPLOY_DIR" .
 
 # Step 1: Navigate to frontend project
-cd "$FRONTEND_DIR" || { echo "❌ Error: Frontend directory not found!"; exit 1; }
+cd "$FRONTEND_DIR" || { echo " Error: Frontend directory not found!"; exit 1; }
 
 # Step 2: Build the frontend
-echo "⚙️ Building frontend..."
-yarn build:npx || { echo "❌ Error: Build failed!"; exit 1; }
+echo " Building frontend..."
+yarn build:npx || { echo " Error: Build failed!"; exit 1; }
 
 # Step 3: Ensure Deployment Directory Exists
-echo "📁 Ensuring deployment directory exists..."
+echo " Ensuring deployment directory exists..."
 mkdir -p "$FRONTEND_DEPLOY_DIR"
 
 # Step 4: Clear old files
-echo "🧹 Cleaning old deployment files..."
+echo " Cleaning old deployment files..."
 rm -rf "$FRONTEND_DEPLOY_DIR"/*
 
 # Function to handle move failure
 handle_move_failure() {
-    echo "⚠️ Failed to move files, rolling back..."
+    echo " Failed to move files, rolling back..."
     sudo tar -xvf "$FRONTEND_BACKUP_DIR/$FRONTEND_BACKUP_FILE" -C "$FRONTEND_DEPLOY_DIR"
 }
 
 # Step 5: Move new build files
-echo "🚛 Deploying new build files..."
+echo " Deploying new build files..."
 mv dist/* "$FRONTEND_DEPLOY_DIR"/ || { 
-    echo "❌ Error: Moving files failed!"; 
+    echo " Error: Moving files failed!"; 
     handle_move_failure
  }
 
 # Step 6: Set correct permissions
-echo "🔑 Setting correct file permissions..."
+echo " Setting correct file permissions..."
 chown -R www-data:www-data "$FRONTEND_DEPLOY_DIR"
 chmod -R 755 "$FRONTEND_DEPLOY_DIR"
 
 # Step 7: Restart Nginx
-echo "🔄 Restarting Nginx..."
-systemctl restart nginx || { echo "❌ Error: Failed to restart Nginx!"; exit 1; }
+echo " Restarting Nginx..."
+systemctl restart nginx || { echo " Error: Failed to restart Nginx!"; exit 1; }
 
 # Step 8: Deployment Complete
-echo "✅ Deployment completed successfully!"
-echo "🌍 Visit https://asafarim.com to check the frontend."
+echo " Deployment completed successfully!"
+echo " Visit https://asafarim.com to check the frontend."
 # *********************************************************************
 # Step 4: Deploy backend
 check_processes "$BACKEND_DEPLOY_DIR"
-echo "🚀 Deploying Backend..."
+echo " Deploying Backend..."
 cd "$BACKEND_DEPLOY_DIR"
 
 # Clean old backups (keep only the newest one)
@@ -303,7 +303,10 @@ dotnet build "$BACKEND_DIR" -c Release || {
 
 # Publish the backend
 echo " Publishing backend..."
-dotnet publish --configuration Release --output "$PUBLISH_DIR" || {
+# Ensure publish directory exists
+sudo mkdir -p "$PUBLISH_DIR"
+# Run publish with explicit output path
+dotnet publish --configuration Release --output "$PUBLISH_DIR" --verbosity normal || {
     echo " Error: Publish failed!"
     handle_publish_failure
 }
@@ -371,15 +374,15 @@ exit 0
 # *********************************************************************
 
 # Step 5: Apply database migrations
-echo "🔄 Applying database migrations..."
-dotnet tool restore || { echo "❌ Error: Failed to restore .NET tools!"; exit 1; }
-cd "$REPO_DIR" || { echo "❌ Error: Repository directory not found!"; exit 1; }
-dotnet ef database update --project ./ASafariM.Infrastructure/ASafariM.Infrastructure.csproj --startup-project ./ASafariM.Api/ASafariM.Api.csproj --verbose || { echo "❌ Error: Database migration failed!"; exit 1; }
+echo " Applying database migrations..."
+dotnet tool restore || { echo " Error: Failed to restore .NET tools!"; exit 1; }
+cd "$REPO_DIR" || { echo " Error: Repository directory not found!"; exit 1; }
+dotnet ef database update --project ./ASafariM.Infrastructure/ASafariM.Infrastructure.csproj --startup-project ./ASafariM.Api/ASafariM.Api.csproj --verbose || { echo " Error: Database migration failed!"; exit 1; }
 
 # Step 6: Restart backend service
-echo "🔄 Restarting backend service..."
-systemctl restart "$SERVICE_NAME" || { echo "❌ Error: Failed to restart backend service!"; exit 1; }
+echo " Restarting backend service..."
+systemctl restart "$SERVICE_NAME" || { echo " Error: Failed to restart backend service!"; exit 1; }
 
 # **Deployment Complete**
 echo
-echo " ✅  Deployment completed successfully!  ✅"
+echo "  Deployment completed successfully!  "

@@ -13,6 +13,26 @@ MAX_RETRIES=5
 SERVICE_NAME="asafarim-api"
 HEALTH_CHECK_URL="https://asafarim.com/api/health"
 
+# Enhanced logging setup
+log_file="/var/www/asafarim/logs/deployment_$(date +%Y%m%d_%H%M%S).log"
+exec > >(tee -a "$log_file") 2>&1
+
+# Monitoring setup
+setup_monitoring() {
+    echo "Setting up monitoring..."
+    # Install monitoring tools if not already installed
+    if ! command -v htop &> /dev/null; then
+        sudo apt-get install -y htop
+    fi
+    if ! command -v netstat &> /dev/null; then
+        sudo apt-get install -y net-tools
+    fi
+    echo "Monitoring tools installed."
+}
+
+# Call monitoring setup
+setup_monitoring
+
 # Clean old backups (keep only the newest one)
 sudo mkdir -p "$BACKUP_DIR"
 cd "$BACKUP_DIR" && ls -t | tail -n +2 | xargs -r rm -rf

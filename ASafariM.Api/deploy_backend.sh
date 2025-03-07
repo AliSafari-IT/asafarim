@@ -168,6 +168,9 @@ echo " Starting Backend Deployment..."
 echo "Stopping backend service..."
 sudo systemctl stop $SERVICE_NAME
 sleep 5
+# Create backup before deployment
+create_backup
+
 # Publish the backend
 echo " Publishing backend..."
 cd "$BACKEND_DIR" || {

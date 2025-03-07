@@ -47,11 +47,18 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    // Configure Kestrel to listen on any IP and port
-    builder.WebHost.ConfigureKestrel(options =>
-    {
-        options.ListenAnyIP(5000);
-    });
+    // // Configure Kestrel to listen on any IP and port
+    // builder.WebHost.ConfigureKestrel(options =>
+    // {
+    //     options.ListenAnyIP(5000);
+    // });
+
+    // // Ensure the API listens on HTTP (not HTTPS)
+    // builder.WebHost.UseKestrel(options =>
+    // {
+    //     options.ListenAnyIP(5000); // Bind to all interfaces
+    // });
+
     builder.Services.AddHttpContextAccessor();
 
     // Configure JWT Authentication
@@ -236,6 +243,22 @@ try
             c.RoutePrefix = "swagger";
         });
     }
+    if (!app.Environment.IsDevelopment())
+    {
+        app.Use(
+            async (context, next) =>
+            {
+                // Allow internal requests to stay on HTTP (needed for Nginx reverse proxy)
+                if (!context.Request.Host.Host.Contains("asafarim.com"))
+                {
+                    context.Request.Scheme = "http";
+                }
+                await next();
+            }
+        );
+
+        // app.UseHttpsRedirection(); // <-- This might be causing the redirect
+    }
 
     // Global error handling
     Log.Information("Configuring global error handling...");
@@ -263,7 +286,8 @@ try
 
     // Health check endpoint
     Log.Information("Configuring health check endpoint...");
-    app.MapHealthChecks("/api/health");
+    app.MapHealthChecks("/health");
+
 
     // HTTPS redirection (disabled for local health checks)
     app.Use(
@@ -279,22 +303,6 @@ try
             await next();
         }
     );
-
-    // Configure HTTPS redirection only in production
-    if (!app.Environment.IsDevelopment())
-    {
-        app.Use(
-            async (context, next) =>
-            {
-                if (!context.Request.IsLocal())
-                {
-                    context.Request.Scheme = "https";
-                }
-                await next();
-            }
-        );
-        app.UseHttpsRedirection();
-    }
 
     Log.Information("Configuring routing...");
     app.UseRouting();

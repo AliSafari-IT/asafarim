@@ -12,6 +12,7 @@ import { ViewSvgIcon } from '@/assets/SvgIcons/ViewSvgIcon';
 import useAuth from '@/hooks/useAuth';
 import axios from 'axios'; // Import axios
 import Notification from '@/components/Notification/Notification';
+import { IApiResponse, IRole, IUserRole } from '@/interfaces';
 
 const UsersList: React.FC = () => {
   const [users, setUsers] = useState<IUser[]>([]);
@@ -28,9 +29,18 @@ const UsersList: React.FC = () => {
       console.log('Fetching users!');
       try {
         console.log('Starting to fetch users...');
-        const users = await getUsers(true); // Include soft-deleted users
-        console.log('Successfully fetched users:', users);
-        setUsers(users);
+        const response = await getUsers(true); // Include soft-deleted users
+        console.log('Successfully fetched users:', response);
+        
+        // Handle the new API response format
+        const apiResponse = response as IApiResponse<IUser>;
+        const usersArray = apiResponse.$values || apiResponse.value || response;
+        if (Array.isArray(usersArray)) {
+          setUsers(usersArray);
+        } else {
+          console.error('Invalid users data format:', response);
+          setError('Invalid data format received from server');
+        }
       } catch (err) {
         console.error('Error in UsersList component:', err);
         if (axios.isAxiosError(err)) {
@@ -49,9 +59,16 @@ const UsersList: React.FC = () => {
 
   const fetchUserRoles = async (userId: string) => {
     try {
-      const roles = await getRolesByUserId(userId);
-      const roleNames = roles.map(role => role.roleId);
-      setUserRoles(prev => ({ ...prev, [userId]: roleNames }));
+      const response = await getRolesByUserId(userId);
+      // Handle the new API response format
+      const apiResponse = response as IApiResponse<IUserRole>;
+      const rolesArray = apiResponse.$values || apiResponse.value || response;
+      if (Array.isArray(rolesArray)) {
+        const roleNames = rolesArray.map(role => role.roleId);
+        setUserRoles(prev => ({ ...prev, [userId]: roleNames }));
+      } else {
+        console.error('Invalid user roles data format:', response);
+      }
     } catch (err) {
       console.error('Error fetching roles for user', userId, err);
     }
@@ -63,20 +80,27 @@ const UsersList: React.FC = () => {
     });
   }, [users]);
 
-  const fetchRoleNames = async () => {
-    try {
-      const roles = await getRoles(); // Assuming getRoles returns all roles with id and name
-      const newRoleNames = roles.reduce((acc, role) => {
-        acc[role.id] = role.name;
-        return acc;
-      }, {} as Record<string, string>);
-      setRoleNamesMap(prev => ({ ...prev, ...newRoleNames }));
-    } catch (err) {
-      console.error('Error fetching role names:', err);
-    }
-  };
-
   useEffect(() => {
+    const fetchRoleNames = async () => {
+      try {
+        const response = await getRoles();
+        // Handle the new API response format
+        const apiResponse = response as IApiResponse<IRole>;
+        const rolesArray = apiResponse.$values || apiResponse.value || response;
+        if (Array.isArray(rolesArray)) {
+          const newRoleNames = rolesArray.reduce((acc, role) => {
+            acc[role.id] = role.name;
+            return acc;
+          }, {} as Record<string, string>);
+          setRoleNamesMap(prev => ({ ...prev, ...newRoleNames }));
+        } else {
+          console.error('Invalid roles data format:', response);
+        }
+      } catch (err) {
+        console.error('Error fetching role names:', err);
+      }
+    };
+
     fetchRoleNames();
   }, [userRoles]);
 

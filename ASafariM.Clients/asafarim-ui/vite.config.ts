@@ -1,13 +1,12 @@
 import { defineConfig } from 'vite';
-import { configDefaults, defineConfig as defineVitest } from 'vitest/config';
+import { configDefaults } from 'vitest/config';
+import path from 'path';
 import react from '@vitejs/plugin-react';
 import vitePluginMd from 'vite-plugin-md';
-import path from 'path';
 import md from 'vite-plugin-md';
-
-
 // https://vite.dev/config/
 export default defineConfig({
+  mode: process.env.NODE_ENV,
   optimizeDeps: {
     include: ['d3', 'react', 'react-dom'],
     exclude: ['@fluentui/tokens'],
@@ -38,16 +37,15 @@ export default defineConfig({
     port: 3000,
     open: true,
     proxy: {
-      '/api': 'http://localhost:5000', // Proxying backend API requests
-    },
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '/api')
+      }
+    }
   },
   css: {
-    preprocessorOptions: {
-      scss: {
-        quietDeps: true
-      }
-    },
-    postcss: './postcss.config.cjs',
+    postcss: './postcss.config.js',
   },
   assetsInclude: ['**/*.md'],
   build: {
@@ -73,9 +71,6 @@ export default defineConfig({
     },
     chunkSizeWarningLimit: 2000,
   },
-});
-
-export const vitestConfig = defineVitest({
   test: {
     environment: 'jsdom',
     globals: true,
@@ -84,5 +79,5 @@ export const vitestConfig = defineVitest({
     coverage: {
       reporter: ['text', 'json', 'html'],
     },
-  },
+  }
 });

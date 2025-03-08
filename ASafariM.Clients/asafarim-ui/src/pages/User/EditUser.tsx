@@ -7,8 +7,8 @@ import Footer from '../../layout/Footer/Footer';
 import Header from '@/layout/Header/Header';
 import { debounce } from 'lodash';
 import axios from 'axios';
-import { Dropdown, IDropdownOption } from '@fluentui/react';
-import { IRole } from '@/interfaces';
+import { Dropdown, IDropdownOption, mergeStyles } from '@fluentui/react';
+import { IApiResponse, IRole, IUserRole } from '@/interfaces';
 import useAuth from '@/hooks/useAuth';
 import { logger } from '@/utils/logger';
 
@@ -31,31 +31,22 @@ const EditUser: React.FC = () => {
   }, [authenticatedUser]);
 
   const roleOptions = roles.map((role) => ({
-    key: role.id,
-    text: role.name,
+    key: role.id.toString(), // Ensure key is string
+    text: role.name
   }));
 
   const handleRoleChange = (
     _event: React.FormEvent<HTMLDivElement>,
-    option?: IDropdownOption,
-    index?: number
+    option?: IDropdownOption
   ) => {
     if (option && user) {
       setUser((prev) => {
-        // Initialize roles array if it doesn't exist
         const currentRoles = prev?.roles || [];
+        const roleId = option.key.toString(); // Ensure string comparison
 
-        // Convert option.key to string to match IUser interface
-        const roleId = String(option.key);
-
-        // Update roles based on selection
         const updatedRoles = option.selected
-          ? [...currentRoles, roleId] // Add role
-          : currentRoles.filter((id) => id !== roleId); // Remove role
-        logger.info(`Updated roles in user: ${JSON.stringify(updatedRoles)}`);
-        if (index !== undefined) {
-          logger.info(`Index: ${index}`);
-        }
+          ? [...currentRoles, roleId]
+          : currentRoles.filter((id) => id !== roleId);
 
         return {
           ...prev!,
@@ -90,19 +81,36 @@ const EditUser: React.FC = () => {
     const fetchUser = async () => {
       if (!id) return;
       try {
-        const fetchedUser = await getUserById(id);
-        if (fetchedUser.dateOfBirth) {
-          fetchedUser.dateOfBirth = new Date(fetchedUser.dateOfBirth)
+        const userResponse = await getUserById(id);
+        console.log('User response:', userResponse);
+        // For single user, response is the direct object
+        const userData = userResponse;
+        
+        if (!userData || !userData.id) {
+          throw new Error('User not found');
+        }
+
+        if (userData.dateOfBirth) {
+          userData.dateOfBirth = new Date(userData.dateOfBirth)
             .toISOString()
             .split('T')[0];
         }
 
         // Get user's roles
-        const userRoles = await getRolesByUserId(id);
-        fetchedUser.roles = userRoles.map(role => role.roleId);
-        logger.info(`Fetched user with roles: ${JSON.stringify(fetchedUser)}`);
-        setUser(fetchedUser);
+        const rolesResponse = await getRolesByUserId(id);
+        console.log('User roles response:', rolesResponse);
+        const apiResponse = rolesResponse as IApiResponse<IUserRole>;
+        const userRolesArray = apiResponse.$values || apiResponse.value || rolesResponse;
+        if (!Array.isArray(userRolesArray)) {
+          console.error('Invalid user roles data format:', rolesResponse);
+          throw new Error('Invalid user roles data format');
+        }
+        
+        userData.roles = userRolesArray.map(role => role.roleId);
+        logger.info(`Fetched user with roles: ${JSON.stringify(userData)}`);
+        setUser(userData);
       } catch (err) {
+        console.error('Error details:', err);
         logger.error(`Failed to fetch user: ${err}`);
         setError('Failed to load user data.');
       }
@@ -110,10 +118,18 @@ const EditUser: React.FC = () => {
 
     const fetchRoles = async () => {
       try {
-        const fetchedRoles = await getRoles();
-        logger.info(`Available roles: ${JSON.stringify(fetchedRoles)}`);
-        setRoles(fetchedRoles);
+        const rolesResponse = await getRoles();
+        console.log('Roles response:', rolesResponse);
+        const apiResponse = rolesResponse as IApiResponse<IRole>;
+        const rolesArray = apiResponse.$values || apiResponse.value || rolesResponse;
+        if (!Array.isArray(rolesArray)) {
+          console.error('Invalid roles data format:', rolesResponse);
+          throw new Error('Invalid roles data format');
+        }
+        logger.info(`Available roles: ${JSON.stringify(rolesArray)}`);
+        setRoles(rolesArray);
       } catch (err) {
+        console.error('Error details:', err);
         logger.error(`Failed to fetch roles: ${err}`);
         setError('Failed to load roles.');
       }
@@ -165,20 +181,35 @@ const EditUser: React.FC = () => {
     try {
       if (!user) return;
 
-      logger.info(`User data: ${JSON.stringify(user)}`);
-      const newRole = user.roles?.[0] || ''; // Assuming the first role is the one to update
-      logger.info(`Role changed to: ${newRole}`);
+      logger.info(`Submitting user data: ${JSON.stringify(user)}`);
+      
       // First, update the user's basic information
       const { roles: currentRoles, ...userWithoutRoles } = user;
-      const updatedUser = await updateUserByAdmin({
+      
+      // Ensure required fields are present
+      const updateData = {
         ...userWithoutRoles,
+        id: user.id,
+        firstName: user.firstName || '',
+        lastName: user.lastName || '',
         dateOfBirth: user.dateOfBirth ? new Date(user.dateOfBirth).toISOString() : undefined,
-        password: user.password ?? "P@ssw0rd+",
-      });
+        // Only include password if it was changed
+        ...(user.password ? { password: user.password } : {})
+      };
+
+      logger.info(`Updating user with data: ${JSON.stringify(updateData)}`);
+      const updatedUser = await updateUserByAdmin(updateData);
+      logger.info(`User update response: ${JSON.stringify(updatedUser)}`);
 
       if (updatedUser) {
         // Get the current roles for comparison
-        const existingRoles = (await getRolesByUserId(user.id)).map(role => role.roleId);
+        const rolesResponse = await getRolesByUserId(user.id);
+        const apiResponse = rolesResponse as IApiResponse<IUserRole>;
+        const userRolesArray = apiResponse.$values || apiResponse.value || rolesResponse;
+        if (!Array.isArray(userRolesArray)) {
+          throw new Error('Invalid user roles data format');
+        }
+        const existingRoles = userRolesArray.map(role => role.roleId);
 
         // Determine which roles to add and remove
         const rolesToAdd = currentRoles?.filter(role => !existingRoles.includes(role)) || [];
@@ -198,15 +229,35 @@ const EditUser: React.FC = () => {
         navigate('/users/view/' + updatedUser.id);
       }
     } catch (error) {
+      console.error('Error updating user:', error);
       logger.error(`Error updating user: ${error}`);
       if (axios.isAxiosError(error)) {
-        logger.error(`Error response: ${JSON.stringify(error.response?.data)}`);
-        setError(error.response?.data?.message || 'Failed to update user. Please try again.');
+        setError(`Failed to update user: ${error.response?.data?.message || error.message}`);
       } else {
-        setError('Failed to update user. Please try again.');
+        setError('An unexpected error occurred while updating the user.');
       }
     }
   };
+
+  const dropdownStyles = mergeStyles({
+    dropdown: {
+      width: '100%',
+      minWidth: 200,
+    },
+    title: {
+      backgroundColor: 'var(--dropdown-bg)',
+      borderColor: 'var(--dropdown-border)',
+      ':hover': {
+        backgroundColor: 'var(--dropdown-hover)',
+      },
+    },
+    caretDown: {
+      color: 'var(--text-primary)',
+    },
+    dropdownItemSelected: {
+      backgroundColor: 'var(--dropdown-hover)',
+    },
+  });
 
   if (!user) return <p>Loading...</p>;
 
@@ -228,14 +279,20 @@ const EditUser: React.FC = () => {
           <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               {isLoggedInUserAdmin && (
-                <div>
-                  <label>Assign Roles:</label>
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Assign Roles:</label>
                   <Dropdown
                     placeholder="Select roles"
                     multiSelect
                     options={roleOptions}
                     onChange={handleRoleChange}
-                    selectedKeys={user.roles}
+                    selectedKeys={user.roles?.map(r => r.toString()) || []}
+                    styles={{
+                      root: dropdownStyles,
+                      dropdown: {
+                        minWidth: 200,
+                      },
+                    }}
                   />
                 </div>
               )}

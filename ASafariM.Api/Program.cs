@@ -1,9 +1,9 @@
 using System;
 using System.IO;
 using System.Reflection;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using System.Text;
 using ASafariM.Api;
+using ASafariM.Api.Extensions;
 using ASafariM.Application;
 using ASafariM.Application.Mappings;
 using ASafariM.Application.Services;
@@ -27,41 +27,61 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Serilog;
+using Serilog.Context;
 using Serilog.Events;
 
-// Configure logging first
+// Configure logging directory
+DotNetEnv.Env.Load();
+var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+Console.WriteLine($"ASPNETCORE_ENVIRONMENT: {environment}");
+
 var logDirectory =
-    Environment.GetEnvironmentVariable("ASAFARIM_ENV") == "production"
-        ? "/var/www/asafarim/logs"
-        : "D:/repos/ASafariM/Logs";
+    environment == "Production" ? "/var/www/asafarim/logs" : "D:/repos/ASafariM/Logs";
 
+Console.WriteLine($"Log Directory: {logDirectory}"); // Debugging line
 Directory.CreateDirectory(logDirectory);
-var logFilePath = Path.Combine(logDirectory, "api.log");
-
-Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-    .MinimumLevel.Override("System", LogEventLevel.Warning)
-    .MinimumLevel.Information()
-    .WriteTo.Console()
-    .WriteTo.File(
-        logFilePath,
-        rollingInterval: RollingInterval.Hour,
-        retainedFileCountLimit: 24,
-        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}"
-    )
-    .Enrich.FromLogContext()
-    .CreateLogger();
-
+var logFilePath = Path.Combine(logDirectory, "api_.log");
+Console.WriteLine($"Log File Path: {logFilePath}"); // Debugging line
+var line = new string('-', 100);
 try
 {
-    Log.Information("Starting up ASafariM API");
-
     var builder = WebApplication.CreateBuilder(args);
 
-    // Add process cleanup hook
-    builder.Services.AddSingleton<IHostApplicationLifetime>(sp =>
-        sp.GetRequiredService<IHostApplicationLifetime>()
-    );
+    // // Configure Kestrel to listen on any IP and port
+    // builder.WebHost.ConfigureKestrel(options =>
+    // {
+    //     options.ListenAnyIP(5000);
+    // });
+
+    // // Ensure the API listens on HTTP (not HTTPS)
+    // builder.WebHost.UseKestrel(options =>
+    // {
+    //     options.ListenAnyIP(5000); // Bind to all interfaces
+    // });
+
+    builder.Services.AddHttpContextAccessor();
+
+    // Configure JWT Authentication
+    builder
+        .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                ValidAudience = builder.Configuration["Jwt:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Convert.FromBase64String(builder.Configuration["Jwt:Key"]!)
+                ),
+            };
+        });
+
+    // Enable authorization
+    builder.Services.AddAuthorization();
 
     // Add Serilog
     builder.Host.UseSerilog(
@@ -70,11 +90,16 @@ try
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .MinimumLevel.Override("System", LogEventLevel.Warning)
                 .MinimumLevel.Information()
-                .WriteTo.Console()
+                .WriteTo.Console(
+                    restrictedToMinimumLevel: LogEventLevel.Information,
+                    outputTemplate: "[{Level:u3}] {Message:lj}{NewLine}{Exception}"
+                )
                 .WriteTo.File(
                     logFilePath,
-                    rollingInterval: RollingInterval.Hour,
-                    retainedFileCountLimit: 24,
+                    rollingInterval: RollingInterval.Day,
+                    retainedFileCountLimit: 2,
+                    buffered: true,
+                    flushToDiskInterval: TimeSpan.FromSeconds(1),
                     outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}"
                 )
                 .Enrich.FromLogContext()
@@ -129,16 +154,6 @@ try
     IMapper mapper = mapperConfig.CreateMapper();
     builder.Services.AddSingleton(mapper);
 
-    // Configure JSON serialization
-    builder
-        .Services.AddControllers()
-        .AddJsonOptions(options =>
-        {
-            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-            options.JsonSerializerOptions.DefaultIgnoreCondition =
-                JsonIgnoreCondition.WhenWritingNull;
-        });
-
     // Register application services
     try
     {
@@ -162,7 +177,12 @@ try
                 builder
                     .WithOrigins(
                         "http://localhost:3000",
+                        "https://localhost:3000",
+                        "http://localhost:5000",
+                        "https://localhost:5001",
+                        "http://asafarim.com",
                         "https://asafarim.com",
+                        "http://www.asafarim.com",
                         "https://www.asafarim.com"
                     )
                     .AllowAnyMethod()
@@ -176,9 +196,20 @@ try
     Log.Information("Configuring API Controllers...");
     builder
         .Services.AddControllers()
+        .AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.ReferenceHandler = System
+                .Text
+                .Json
+                .Serialization
+                .ReferenceHandler
+                .Preserve;
+            options.JsonSerializerOptions.MaxDepth = 64; // Increase max depth if needed
+        })
         .AddApplicationPart(
             typeof(ASafariM.Presentation.Controllers.MarkdownFilesController).Assembly
-        );
+        )
+        .AddApplicationPart(typeof(ASafariM.Presentation.Controllers.ProjectsController).Assembly);
 
     builder.Services.AddEndpointsApiExplorer();
 
@@ -197,28 +228,6 @@ try
         );
     });
 
-    // Configure JWT Bearer authentication
-    builder
-        .Services.AddAuthentication(options =>
-        {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
-        .AddJwtBearer(options =>
-        {
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                // Add your issuer, audience, and signing key here
-                // Issuer = "yourIssuer",
-                // Audience = "yourAudience",
-                // IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("yourSecretKey"))
-            };
-        });
-
     // Build the application
     Log.Information("Building the application...");
     var app = builder.Build();
@@ -233,6 +242,22 @@ try
             c.SwaggerEndpoint("/swagger/v1/swagger.json", "ASafariM API V1");
             c.RoutePrefix = "swagger";
         });
+    }
+    if (!app.Environment.IsDevelopment())
+    {
+        app.Use(
+            async (context, next) =>
+            {
+                // Allow internal requests to stay on HTTP (needed for Nginx reverse proxy)
+                if (!context.Request.Host.Host.Contains("asafarim.com"))
+                {
+                    context.Request.Scheme = "http";
+                }
+                await next();
+            }
+        );
+
+        // app.UseHttpsRedirection(); // <-- This might be causing the redirect
     }
 
     // Global error handling
@@ -259,11 +284,26 @@ try
         });
     });
 
-    // HTTPS redirection
-    Log.Information("Configuring HTTPS redirection...");
-    app.UseHttpsRedirection();
+    // Health check endpoint
+    Log.Information("Configuring health check endpoint...");
+    app.MapHealthChecks("/health");
 
-    // Routing
+
+    // HTTPS redirection (disabled for local health checks)
+    app.Use(
+        async (context, next) =>
+        {
+            if (
+                !context.Request.Path.StartsWithSegments("/api/health")
+                && !context.Request.IsLocal()
+            )
+            {
+                context.Request.Scheme = "https";
+            }
+            await next();
+        }
+    );
+
     Log.Information("Configuring routing...");
     app.UseRouting();
 
@@ -284,44 +324,68 @@ try
     Log.Information("Configuring static files...");
     app.UseStaticFiles();
 
-    // Request logging middleware
+    // Request logging middleware - Optimized version
     Log.Information("Configuring request logging middleware...");
     app.Use(
         async (context, next) =>
         {
-            Log.Information(
-                "Request: {Method} {Path} → {ContentType}",
-                context.Request.Method,
-                context.Request.Path,
-                context.Request.ContentType
-            );
-            await next();
+            // Only log non-static file requests
+            if (!context.Request.Path.StartsWithSegments("/static"))
+            {
+                using var _ = LogContext.PushProperty("RequestId", context.TraceIdentifier);
+                Log.Information(
+                    "HTTP {RequestMethod} {RequestPath} started",
+                    context.Request.Method,
+                    context.Request.Path
+                );
+
+                var sw = System.Diagnostics.Stopwatch.StartNew();
+                try
+                {
+                    await next();
+                    sw.Stop();
+
+                    // Only log completion for non-successful responses or slow requests
+                    if (context.Response.StatusCode >= 400 || sw.ElapsedMilliseconds > 500)
+                    {
+                        Log.Information(
+                            "HTTP {RequestMethod} {RequestPath} completed in {Elapsed:0.0}ms with {StatusCode}",
+                            context.Request.Method,
+                            context.Request.Path,
+                            sw.ElapsedMilliseconds,
+                            context.Response.StatusCode
+                        );
+                    }
+                }
+                catch (Exception ex)
+                {
+                    sw.Stop();
+                    Log.Error(
+                        ex,
+                        "HTTP {RequestMethod} {RequestPath} failed in {Elapsed:0.0}ms",
+                        context.Request.Method,
+                        context.Request.Path,
+                        sw.ElapsedMilliseconds
+                    );
+                    throw;
+                }
+            }
+            else
+            {
+                await next();
+            }
         }
     );
 
     // Health check endpoint
     Log.Information("Configuring health check endpoint...");
-    app.MapHealthChecks("/health");
-
-    app.Lifetime.ApplicationStopped.Register(() =>
-    {
-        try
-        {
-            var assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            File.SetAttributes(
-                Path.Combine(assemblyPath!, "ASafariM.Presentation.dll"),
-                FileAttributes.Normal
-            );
-        }
-        catch
-        { /* Gracefully handle */
-        }
-    });
+    app.MapHealthChecks("/api/health");
 
     // Start the application
     try
     {
         Log.Information("Starting the application...");
+        Log.Information("{line}", line);
         await app.RunAsync();
         Log.Information("Application stopped gracefully.");
     }
@@ -344,3 +408,5 @@ finally
     Log.Information("Shutting down application");
     Log.CloseAndFlush();
 }
+
+Log.Information("{line}", line);

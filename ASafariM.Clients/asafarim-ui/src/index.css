@@ -1,18 +1,19 @@
 /* Google Fonts */
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
-@import url('https://fonts.cdnfonts.com/css/segoe-ui-4');
+@import url("https://fonts.cdnfonts.com/css/segoe-ui-4");
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Madimi+One&family=Poetsen+One&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Rubik+Maps&family=Rubik+Scribble&family=Ubuntu+Sans+Mono:ital,wght@0,400..700;1,400..700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Madimi+One&family=Poetsen+One&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik+Maps&family=Rubik+Scribble&family=Ubuntu+Sans+Mono:ital,wght@0,400..700;1,400..700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Madimi+One&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Poetsen+One&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik+Maps&family=Rubik+Scribble&family=Ubuntu+Sans+Mono:ital,wght@0,400..700;1,400..700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Madimi+One&family=Poetsen+One&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Rubik+Maps&family=Rubik+Scribble&family=Ubuntu+Sans+Mono:ital,wght@0,400..700;1,400..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Madimi+One&family=Poetsen+One&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik+Maps&family=Rubik+Scribble&family=Ubuntu+Sans+Mono:ital,wght@0,400..700;1,400..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Madimi+One&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Poetsen+One&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik+Maps&family=Rubik+Scribble&family=Ubuntu+Sans+Mono:ital,wght@0,400..700;1,400..700&display=swap");
 
-@import './styles/theme-variables.css';
-@import './styles/sitemap-page.css';
-@import './styles/custom.css';
+@import "./styles/theme-variables.css";
+@import "./styles/sitemap-page.css";
+@import "./styles/custom.css";
 
+/* Tailwind directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -52,7 +53,6 @@
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 8px 12px rgba(0, 0, 0, 0.15);
   --shadow-xl: 0 16px 24px rgba(0, 0, 0, 0.2);
-
 }
 
 @layer components {
@@ -328,62 +328,72 @@
   color: var(--markdown-text);
 }
 
-.prose h1 {
-  @apply text-4xl font-extrabold mb-8 pb-4 relative;
+.prose :is(h1, h2, h3, h4, h5, h6) {
+  @apply font-extrabold mb-8 pb-4 relative;
   color: var(--markdown-header-text);
   border-bottom: 2px solid var(--markdown-header-border);
 }
 
-.prose h2 {
-  @apply text-3xl font-bold mt-8 mb-4;
+.prose :is(h1, h2, h3, h4, h5, h6) {
+  @apply font-extrabold mb-8 pb-4 relative;
   color: var(--markdown-header-text);
+  border-bottom: 2px solid var(--markdown-header-border);
 }
 
-.prose h3 {
-  @apply text-2xl font-semibold mt-6 mb-3;
-  color: var(--markdown-header-text);
+.prose :is(h1) {
+  @apply text-4xl;
 }
 
-.prose p {
-  @apply text-lg leading-relaxed mb-6;
+.prose :is(h2) {
+  @apply text-3xl;
+}
+
+.prose :is(h3, h4, h5, h6) {
+  @apply text-2xl;
+}
+
+.prose :is(p) {
   color: var(--markdown-text);
 }
 
-.prose strong {
-  @apply font-bold;
+.prose :is(strong, b) {
+  @apply font-extrabold;
   color: var(--text-primary);
 }
 
-.prose a {
+.prose :is(a) {
   @apply font-medium transition-colors duration-200;
   color: var(--teams-blue);
 }
 
-.prose a:hover {
+.prose :is(a):hover {
   @apply underline;
   color: var(--teams-purple);
 }
 
-.prose blockquote {
+.prose :is(blockquote) {
   @apply pl-4 py-1 my-6 border-l-4;
   background-color: var(--markdown-quote-bg);
   border-color: var(--teams-purple);
 }
 
-.prose ul {
-  @apply list-disc list-inside mb-6 space-y-2;
+.prose :is(ul, ol) {
+  @apply list-disc list-inside mb-6;
 }
 
-.prose ol {
-  @apply list-decimal list-inside mb-6 space-y-2;
+.prose :is(ul li, ol li) {
+  display: list-item; /* Ensures list items are correctly formatted */
+  list-style-position: inside; /* Prevents unwanted new lines */
+  margin-left: 1rem; /* Adds proper indentation */
 }
 
-.prose li {
-  @apply text-lg leading-relaxed;
+.prose :is(ul li::marker, ol li::marker) {
+  color: var(--teams-purple); /* Customizes bullet color */
 }
+
 
 /* Code block styling */
-.prose pre {
+.prose :is(pre) {
   font-family: "Consolas", "Courier New", monospace;
   font-size: 16px; /* Adjust as needed */
   line-height: 1.5; /* Increase for readability */
@@ -398,7 +408,7 @@
   visibility: visible !important;
 }
 
-.prose code {
+.prose :is(code) {
   font-family: "Consolas", "Courier New", monospace;
   font-size: 14px; /* Smaller font for inline code */
   background-color: var(--markdown-code-bg);
@@ -407,8 +417,7 @@
   border-radius: 4px;
 }
 
-
-.prose pre code {
+.prose :is(pre, code) {
   @apply p-0 border-0 bg-transparent;
   overflow-x: auto;
   padding: 1rem;
@@ -418,42 +427,42 @@
   box-shadow: var(--shadow-sm);
 }
 
-.prose table {
+.prose :is(table, th, td) {
   @apply w-full my-6 border-collapse;
 }
 
-.prose table th {
+.prose :is(th, td) {
   @apply px-4 py-3 text-left font-semibold;
   background-color: var(--markdown-table-header-bg);
   border: 1px solid var(--markdown-table-border);
 }
 
-.prose table td {
+.prose :is(table, th, td) {
+  @apply w-full my-6 border-collapse;
+}
+
+.prose :is(th, td) {
   @apply px-4 py-3 border;
   border-color: var(--markdown-table-border);
 }
 
-.prose table tr:nth-child(even) {
+.prose :is(table tr:nth-child(even), thead) {
   background-color: var(--markdown-table-row-bg);
 }
 
-.prose hr {
+.prose :is(hr) {
   @apply my-8 border-t-2;
   border-color: var(--markdown-border);
 }
 
 /* Date styling in changelog */
-.prose time {
+.prose :is(time) {
   @apply block text-sm font-medium mb-8;
   color: var(--text-secondary);
 }
 
 /* List markers */
-.prose ul li::marker {
-  color: var(--teams-purple);
-}
-
-.prose ol li::marker {
+.prose :is(ul li::marker, ol li::marker) {
   color: var(--teams-purple);
 }
 
@@ -464,7 +473,7 @@
 }
 
 .changelog-title::after {
-  content: '';
+  content: "";
   @apply absolute bottom-0 left-0 w-24 h-1 bg-info transform transition-all duration-300 ease-in-out;
   border-radius: 4px;
 }
@@ -547,40 +556,39 @@
 .markdown-body {
   @apply max-w-none p-6 rounded-lg;
 
-  h1 {
+  :is(h1) {
     @apply text-4xl font-extrabold mb-8 pb-4 relative;
     color: var(--markdown-header-text);
     line-height: normal;
     border-bottom: 2px solid var(--markdown-header-border);
   }
 
-  h2 {
+  :is(h2) {
     @apply text-3xl font-bold mt-8 mb-4;
     color: var(--markdown-header-text);
   }
 
-  h3 {
+  :is(h3) {
     @apply text-2xl font-semibold mt-6 mb-3 leading-relaxed;
     color: var(--markdown-header-text);
   }
 
-  h4 {
+  :is(h4) {
     @apply text-xl font-semibold mt-6 mb-3 leading-relaxed;
     color: var(--markdown-header-text);
   }
 
-  h5 {
+  :is(h5) {
     @apply text-lg font-semibold mt-6 mb-3;
     color: var(--markdown-header-text);
   }
 
-  h6 {
+  :is(h6) {
     @apply text-base font-semibold mt-6 mb-3;
     color: var(--markdown-header-text);
   }
 
-  p {
-    @apply leading-relaxed my-6;
+  :is(p) {
     color: var(--markdown-text);
   }
 
@@ -618,7 +626,7 @@
     background-color: var(--markdown-code-bg);
   }
 
-  pre code {
+  pre :is(code) {
     @apply p-0 border-0 bg-transparent;
     color: var(--markdown-code-text);
   }
@@ -652,7 +660,6 @@
     color: var(--text-secondary);
   }
 }
-
 
 /* navbar */
 .navbar {
@@ -727,7 +734,7 @@
 
 /* Responsive behavior for navbar items */
 @media (max-width: 1024px) {
-  .navbar-tree-container>div {
+  .navbar-tree-container > div {
     width: 100%;
   }
 
@@ -742,7 +749,8 @@
   background-color: var(--bg-primary);
   border: 1px solid var(--border-primary);
   border-radius: 0.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
   z-index: 999;
 }
 
@@ -752,7 +760,7 @@
 }
 
 .left-container {
-  @apply flex items-center space-x-4 mr-2 flex-shrink-0
+  @apply flex items-center space-x-4 mr-2 flex-shrink-0;
 }
 
 .right-container {
@@ -794,4 +802,31 @@
 .list-inside {
   list-style-position: inside;
   padding-left: var(--spacing-medium);
+}
+
+.animate-pulse1 {
+  animation: pulse1 3s ease-in-out 3;
+  background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+  background-size: 200% 200%;
+  border-radius: 8px;
+  padding: 10px 20px;
+  color: var(--text-inverted);
+}
+
+@keyframes pulse1 {
+  0% {
+    background-position: 0% 50%;
+    transform: rotate(0deg);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    background-position: 100% 50%;
+    transform: rotate(5deg);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  }
+  100% {
+    background-position: 0% 50%;
+    transform: rotate(0deg);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
 }

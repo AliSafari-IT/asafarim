@@ -10,7 +10,7 @@ import Notification from "@/components/Notification/Notification";
 import { Stack } from "@fluentui/react/lib/Stack";
 import { Text } from "@fluentui/react";
 import useAuth from "@/hooks/useAuth";
-import { useTheme, getTheme } from "@fluentui/react";
+import { useTheme } from "@fluentui/react";
 
 const ViewProject: React.FC = () => {
   const navigate = useNavigate();
@@ -101,7 +101,7 @@ const ViewProject: React.FC = () => {
 
     const fetchProject = async () => {
       try {
-        const response = await dashboardServices.fetchProject(id);
+        const response = await dashboardServices.fetchEntityById("project",id);
         setProject(response);
       } catch (error) {
         console.error("Error fetching project:", error);
@@ -184,9 +184,9 @@ const ViewProject: React.FC = () => {
       case "budget":
         return project.budget?.toLocaleString() || "0";
       case "visibilityLabel":
-        return getVisibilityLabel(project.Visibility ?? 0);
+        return getVisibilityLabel(project.visibility ?? 0);
       case "statusLabel":
-        return getStatusLabel(project.Status ?? 0);
+        return getStatusLabel(project.status ?? 0);
       default:
         return "Information not available";
     }

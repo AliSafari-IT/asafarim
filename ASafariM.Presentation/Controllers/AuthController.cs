@@ -1,5 +1,9 @@
-using System.Security.Cryptography; // System.Security.Cryptography
-using ASafariM.Application.CommandModels; // Command models
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Threading.Tasks;
+using ASafariM.Application.CommandModels;
+using ASafariM.Application.Interfaces;
 using ASafariM.Application.Services;
 using ASafariM.Application.Utils;
 using ASafariM.Domain.Entities;
@@ -8,6 +12,7 @@ using ASafariM.Infrastructure.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
 namespace ASafariM.Presentation.Controllers;
@@ -19,19 +24,115 @@ public class AuthController : ControllerBase
     private readonly IUserRepository? _userRepository;
     private readonly IUserService _userService;
     private readonly JwtTokenService _jwtTokenService;
-    private readonly ILogger<AuthController> _logger;
+    private readonly IAuthorizationService _authorizationService;
+    private readonly ICurrentUserService _currentUserService;
+
+    public class AuthorizeRequest
+    {
+        public Guid UserId { get; set; }
+        public string PolicyName { get; set; }
+    }
 
     public AuthController(
         IUserRepository userRepository,
         JwtTokenService jwtTokenService,
         IUserService userService,
-        ILogger<AuthController> logger
+        IAuthorizationService authorizationService,
+        ICurrentUserService currentUserService
     )
     {
         _userRepository = userRepository;
         _jwtTokenService = jwtTokenService;
         _userService = userService;
-        _logger = logger;
+        _authorizationService = authorizationService;
+        _currentUserService = currentUserService;
+    }
+
+    [HttpGet("current-user")]
+    public async Task<IActionResult> GetCurrentUser()
+    {
+        var userId = _currentUserService.GetCurrentUserId();
+        Log.Information("Attempting to get current user. User ID: {UserId}", userId);
+        if (!userId.HasValue)
+        {
+            Log.Warning("Invalid token. User ID not found.");
+            return Unauthorized(new { message = "Invalid token. User ID not found." });
+        }
+
+        var user = await _userService.GetUserByIdAsync(userId.Value);
+        if (user == null)
+        {
+            Log.Warning("User not found.");
+            return NotFound(new { message = "User not found." });
+        }
+
+        Log.Information("User found. User ID: {UserId}", userId.Value);
+        return Ok(
+            new
+            {
+                user.Id,
+                user.UserName,
+                user.Email,
+                user.ProfilePicture,
+                user.IsAdmin,
+                user.LastLogin,
+            }
+        );
+    }
+
+    [HttpPost("authorize")]
+    public async Task<IActionResult> Authorize([FromBody] AuthorizeRequest request)
+    {
+        try
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            Log.Information("Attempting to authorize user. User ID: {UserId}", userIdClaim);
+            if (
+                string.IsNullOrEmpty(userIdClaim)
+                || !Guid.TryParse(userIdClaim, out var currentUserId)
+            )
+            {
+                Log.Warning("Invalid token: User ID claim is missing.");
+                return Unauthorized(new { message = "Invalid token. User ID not found." });
+            }
+
+            // Log request details
+            Log.Information(
+                $"Authorization request: User {currentUserId}, Policy: {request.PolicyName}"
+            );
+
+            var user = await _userService.GetUserByIdAsync(currentUserId);
+            if (user == null)
+            {
+                Log.Warning($"User {currentUserId} not found.");
+                return NotFound(new { message = "User not found." });
+            }
+
+            // ✅ Debugging policy evaluation
+            var isAuthorized = await _authorizationService.AuthorizeAsync(user, request.PolicyName);
+            if (request.PolicyName == "update_profile")
+            {
+                // Allow users to update their own profile
+                isAuthorized = user.Id == currentUserId;
+            }
+            Log.Information($"Authorization result: {isAuthorized}");
+
+            if (!isAuthorized)
+            {
+                Log.Warning($"User {user.Id} is NOT authorized for policy {request.PolicyName}.");
+                return Forbid();
+            }
+
+            return Ok(new { isAuthorized = true });
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error processing authorization request.");
+            return StatusCode(
+                500,
+                new { message = "An error occurred while processing the request." }
+            );
+        }
     }
 
     [HttpPost("register")]
@@ -144,14 +245,22 @@ public class AuthController : ControllerBase
         user.IsLockedOut = false;
         user.LockoutEnd = null;
         user.LastLogin = DateTime.UtcNow;
+        user.IsLoggedIn = true;
+
+        Log.Information(
+            "Before Saving: IsLoggedIn = {IsLoggedIn} for User ID: {UserId}",
+            user.IsLoggedIn,
+            user.Id
+        );
 
         try
         {
             await _userRepository.UpdateUserAsync(user);
             Log.Information(
-                "Successful login for user ID: {UserId}, Email: {Email}",
+                "Successful login for user ID: {UserId}, Email: {Email}, IsLoggedIn: {IsLoggedIn}",
                 user.Id,
-                command.Email
+                command.Email,
+                user.IsLoggedIn
             );
         }
         catch (Exception ex)
@@ -163,6 +272,13 @@ public class AuthController : ControllerBase
                 command.Email
             );
         }
+
+        Log.Information(
+            "Successful login for user ID: {UserId}, Email: {Email}, IsLoggedIn: {IsLoggedIn}",
+            user.Id,
+            command.Email,
+            user.IsLoggedIn
+        );
 
         var token = _jwtTokenService.GenerateJwtToken(user);
         return Ok(
@@ -178,9 +294,14 @@ public class AuthController : ControllerBase
     [HttpPost("logout")]
     public async Task<IActionResult> Logout()
     {
-        var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
-        Log.Information("User logged out. User ID: {UserId}", userIdClaim ?? "unknown");
-        return Ok("Logout successful");
+        var userId = _currentUserService.GetCurrentUserId();
+        if (!userId.HasValue)
+            return Unauthorized(new { message = "Invalid token. User ID not found." });
+
+        await _userService.RevokeUserTokenAsync(userId.Value);
+
+        Log.Information("User logged out. User ID: {UserId}", userId.Value);
+        return Ok(new { message = "Logout successful" });
     }
 
     [HttpPost("reset-password")]
@@ -244,30 +365,22 @@ public class AuthController : ControllerBase
         var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
         Log.Information("Profile update attempt for user ID: {UserId}", userIdClaim ?? "unknown");
 
-        try
+        if (string.IsNullOrEmpty(userIdClaim))
         {
-            if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out Guid userId))
-            {
-                Log.Warning("Unauthorized profile update attempt - user not authenticated");
-                return Unauthorized("User not authenticated");
-            }
+            Log.Warning("Unauthorized profile update attempt - user not authenticated");
+            return Unauthorized("User not authenticated");
+        }
 
-            command.UserId = userId;
-            await _userService.UpdateProfileAsync(command);
+        var userId = Guid.Parse(userIdClaim);
+        if (command == null)
+        {
+            return BadRequest("Invalid request");
+        }
+        command.UserId = userId;
+        await _userService.UpdateProfileAsync(command);
 
-            Log.Information("Profile successfully updated for user ID: {UserId}", userId);
-            return Ok("Profile updated successfully");
-        }
-        catch (InvalidOperationException ex)
-        {
-            Log.Warning(ex, "Invalid profile update attempt for user ID: {UserId}", userIdClaim);
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex, "Error updating profile for user ID: {UserId}", userIdClaim);
-            return StatusCode(500, "Internal server error");
-        }
+        Log.Information("Profile successfully updated for user ID: {UserId}", userId);
+        return Ok("Profile updated successfully");
     }
 
     // requestAccountReactivation

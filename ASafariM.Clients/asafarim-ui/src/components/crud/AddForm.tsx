@@ -106,6 +106,7 @@ const AddForm: React.FC<AddFormProps> = ({ entityName, fields, submitHandler, on
                 }
             });
 
+            console.log("Form Data to Submit:",formDataToSubmit.entries());
             await submitHandler(formDataToSubmit);
             console.log(`${entityName} added successfully`);
             

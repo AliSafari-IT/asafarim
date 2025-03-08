@@ -139,21 +139,22 @@ namespace ASafariM.Presentation.Controllers
         {
             try
             {
-                var drive = DriveInfo.GetDrives().FirstOrDefault(d => d.IsReady);
-                if (drive != null)
-                {
-                    var diskInfo = new
-                    {
-                        drive.Name,
-                        totalSpace = $"{drive.TotalSize / 1024 / 1024 / 1024} GB",
-                        freeSpace = $"{drive.TotalFreeSpace / 1024 / 1024 / 1024} GB",
-                    };
-                    Log.Debug("Disk space info: {@DiskInfo}", diskInfo);
-                    return diskInfo;
-                }
+                var rootDrive = DriveInfo
+                    .GetDrives()
+                    .FirstOrDefault(d =>
+                        d.IsReady && d.Name == Path.GetPathRoot(Environment.CurrentDirectory)
+                    );
+                if (rootDrive == null)
+                    return "Drive not available";
 
-                Log.Warning("No ready drives found");
-                return "Drive not available";
+                var diskInfo = new
+                {
+                    rootDrive.Name,
+                    totalSpace = $"{rootDrive.TotalSize / 1024 / 1024 / 1024} GB",
+                    freeSpace = $"{rootDrive.TotalFreeSpace / 1024 / 1024 / 1024} GB",
+                };
+                Log.Debug("Disk space info: {@DiskInfo}", diskInfo);
+                return diskInfo;
             }
             catch (Exception ex)
             {

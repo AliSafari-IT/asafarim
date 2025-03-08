@@ -10,3 +10,5 @@ export * from './IUserRole';
 export * from './IUserModel';
 export * from './IUserModelUpdate';
 export * from './IUserChangePasswordUpdate';
+export * from './IApiResponse';
+export * from './IAuthorizationService';

@@ -7,7 +7,18 @@ const ExportData: React.FC<{ currentUserInfo: IUserInfo | null }> = ({ currentUs
     const [isExporting, setIsExporting] = useState(false);
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
-    const { user } = useAuth();
+    const { authenticatedUser, authenticated } = useAuth();
+
+    useEffect(() => {
+        if (authenticated && !authenticatedUser?.isDeleted) {
+            // User is authenticated and not deleted, proceed with export logic
+            console.log('User is eligible to export data');
+        } else {
+            // User is not authenticated or is deleted, show error message
+            setError('You are not eligible to export data.');
+            setIsExporting(false);
+        }
+    }, [authenticated, authenticatedUser]);
 
     useEffect(() => {
         console.log('ExportData Component Mounted');
@@ -15,8 +26,8 @@ const ExportData: React.FC<{ currentUserInfo: IUserInfo | null }> = ({ currentUs
 
     const handleExportData = async () => {
         try {
-            if (!currentUserInfo) {
-                setError('No user data available to export');
+            if (!authenticated || authenticatedUser?.isDeleted) {
+                setError('You are not eligible to export data.');
                 return;
             }
 
@@ -29,7 +40,7 @@ const ExportData: React.FC<{ currentUserInfo: IUserInfo | null }> = ({ currentUs
 
             // Create a timestamp for the filename
             const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-            const filename = `${user?.fullName || 'user'}-data-${timestamp}.json`;
+            const filename = `${currentUserInfo?.fullName || 'user'}-data-${timestamp}.json`;
 
             // Create a download link and trigger the download
             const url = window.URL.createObjectURL(blob);

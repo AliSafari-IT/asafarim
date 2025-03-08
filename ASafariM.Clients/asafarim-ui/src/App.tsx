@@ -10,7 +10,6 @@ import NotFound from "./components/NotFound";
 import Home from "./pages/Home/HomePage";
 import AkkodisTargetedResume from "./pages/AboutMe/TailoredCV/Akkodis";
 import DelCard from "./components/Containers/Card/DelCard";
-import EditCard from "./components/Containers/Card/EditCard";
 import ProjectHome from "./pages/Project/Index";
 import PostDetail from "./pages/Blog/PostDetail"; 
 import LogoutPage from "./pages/Accountpage/LogoutPage";
@@ -60,7 +59,7 @@ function App() {
   const mds = getAllMdFiles();
 
   useEffect(() => {
-    if (!authenticated || authenticatedUser.isDeleted) {
+    if (!authenticated || authenticatedUser?.isDeleted) {
       console.log('User is not authenticated or deleted');
     }
   }, [authenticated, authenticatedUser]);
@@ -336,7 +335,7 @@ function App() {
           <Route path="/sitemap-items/add" element={<AddSitemapItemForm />} />
           <Route path="/sitemap-items/edit/:id" element={<EditSitemapItemForm />} />
           <Route path="/sitemap-items/delete/:id" element={<DeleteForm entity="sitemapitems"  />} />
-          <Route path="/health-ui" element={<HealthCheck />} />
+          <Route path="/health" element={<HealthCheck />} />
           <Route path="/access-denied" element={<AccessDenied />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

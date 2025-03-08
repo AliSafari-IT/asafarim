@@ -1,8 +1,10 @@
 using System.ComponentModel.DataAnnotations;
+using ASafariM.Domain.Common;
+using ASafariM.Domain.Enums;
 
 namespace ASafariM.Domain.Entities
 {
-    public class ProgressHistory
+    public class ProgressHistory : BaseEntity
     {
         [Key]
         public Guid Id { get; set; }
@@ -40,11 +42,5 @@ namespace ASafariM.Domain.Entities
         public string? RiskLevel { get; set; }
         public string? RiskDescription { get; set; }
         public string? MitigationPlan { get; set; }
-
-        // Audit fields
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? UpdatedAt { get; set; }
-        public Guid CreatedBy { get; set; }
-        public Guid? UpdatedBy { get; set; }
     }
 }

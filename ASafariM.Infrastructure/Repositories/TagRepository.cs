@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ASafariM.Domain.Entities;
+using ASafariM.Domain.Exceptions;
 using ASafariM.Domain.Interfaces;
 using ASafariM.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +26,8 @@ namespace ASafariM.Infrastructure.Repositories
 
         public async Task<Tag> GetByIdAsync(Guid id)
         {
-            return await _context.Tags.FirstOrDefaultAsync(t => t.Id == id);
+            var tag = await _context.Tags.FindAsync(id);
+            return tag ?? throw new NotFoundException($"Tag with ID {id} not found");
         }
 
         public async Task<Tag> GetBySlugAsync(string slug)

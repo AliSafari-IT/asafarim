@@ -117,12 +117,12 @@ export const resetPassword = async (email: string, newPassword: string) => {
       throw err.response.data.error;
     }
     logger.error(`Error during password reset: ${JSON.stringify(err.response?.data)}`);
-    throw 'Failed to send password reset request.';
+    throw 'Failed to send password reset request';
   }
 };
 
 // Get user profile by ID
-export const getUserProfile = async (userId: string) => {
+export const getUserProfile = async (userId: string | undefined) => {
   try {
     logger.info(`Attempting to get user profile for user ID: ${userId}`);
     const response = await axios.get(`${baseURL}/Users/${userId}`);
@@ -148,12 +148,19 @@ export const updateUserProfile = async (user: IUserModelUpdate): Promise<IUserMo
     const targetUrl = `/users/${user.id}`; // Use PUT to existing user endpoint
     
     try {
-        // Send PUT request instead of POST
+        // Validate required fields
+        if (!user.id || !user.firstName || !user.lastName) {
+            throw new Error('Missing required fields: id, firstName, and lastName are required');
+        }
+
+        // Send PUT request with all necessary fields
         const response = await api.put(targetUrl, {
+            id: user.id,
             firstName: user.firstName,
             lastName: user.lastName,
-            // Include other required fields
-            email: user.email // Add if needed
+            email: user.email,
+            userName: user.userName,
+            isActive: true // Default to active
         });
         
         console.log("Profile update successful:", response.data);

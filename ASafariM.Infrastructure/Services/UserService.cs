@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ASafariM.Application.CommandModels;
 using ASafariM.Application.DTOs;
+using ASafariM.Application.Interfaces;
 using ASafariM.Application.Services;
 using ASafariM.Application.Utils;
 using ASafariM.Domain.Entities;
@@ -26,26 +27,22 @@ namespace ASafariM.Infrastructure.Services
         private readonly IMapper _mapper;
         private readonly AppDbContext _dbContext;
         private readonly JwtTokenService _jwtTokenService;
-        private readonly ILogger _logger;
-        private readonly IAuthorizationService _authorizationService;
+        private readonly ASafariM.Application.Interfaces.IAuthorizationService _authorizationService;
         private readonly IConfiguration _configuration;
         private readonly IEmailService _emailService;
 
         public UserService(
             IUserRepository userRepository,
             IMapper mapper,
-            AppDbContext dbContext,
-            ILogger logger,
-            IAuthorizationService authorizationService,
+            AppDbContext context,
+            ASafariM.Application.Interfaces.IAuthorizationService authorizationService,
             IConfiguration configuration,
             IEmailService emailService
         )
         {
             _userRepository = userRepository;
             _mapper = mapper;
-            _dbContext = dbContext;
-            _jwtTokenService = new JwtTokenService(configuration);
-            _logger = logger;
+            _dbContext = context;
             _authorizationService = authorizationService;
             _configuration = configuration;
             _emailService = emailService;
@@ -311,6 +308,8 @@ namespace ASafariM.Infrastructure.Services
                 }
                 user.Email = command.Email ?? user.Email;
                 user.UserName = command.UserName ?? user.UserName;
+                user.FirstName = command.FirstName ?? user.FirstName;
+                user.LastName = command.LastName ?? user.LastName;
                 user.Biography = command.Biography ?? user.Biography;
                 user.ProfilePicture = command.ProfilePicture ?? user.ProfilePicture;
                 user.DateOfBirth = command.DateOfBirth ?? user.DateOfBirth;
@@ -341,6 +340,8 @@ namespace ASafariM.Infrastructure.Services
                 }
                 user.Email = command.Email ?? user.Email;
                 user.UserName = command.UserName ?? user.UserName;
+                user.FirstName = command.FirstName ?? user.FirstName;
+                user.LastName = command.LastName ?? user.LastName;
                 user.Biography = command.Biography ?? user.Biography;
                 user.ProfilePicture = command.ProfilePicture ?? user.ProfilePicture;
                 user.DateOfBirth = command.DateOfBirth ?? user.DateOfBirth;
@@ -705,6 +706,10 @@ namespace ASafariM.Infrastructure.Services
             {
                 Log.Information("Fetching roles for user with ID: {UserId}", userId);
                 var userRoles = await _userRepository.GetRolesByUserIdAsync(Guid.Parse(userId));
+                if (userRoles is null || !userRoles.Any())
+                {
+                    return Enumerable.Empty<UserRoleDto>(); // or handle as appropriate
+                }
                 Log.Information(
                     "Found {Count} roles for user with ID: {UserId}",
                     userRoles?.Count() ?? 0,
@@ -897,6 +902,52 @@ namespace ASafariM.Infrastructure.Services
             Log.Information("Reactivation request sent to user with email: {Email}", user.Email);
 
             return true;
+        }
+
+        public async Task RevokeUserTokenAsync(Guid userId)
+        {
+            var user = await _userRepository.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                return;
+            }
+            user.Token = null; // ✅ Clear JWT access token
+            user.RefreshToken = null; // ✅ Clear Refresh Token
+            user.RefreshTokenExpiration = null;
+            await _userRepository.UpdateUserAsync(user);
+            await _userRepository.SaveChangesAsync();
+        }
+
+        public static string GenerateRefreshToken()
+        {
+            var randomBytes = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomBytes);
+            }
+            return Convert.ToBase64String(randomBytes);
+        }
+
+        public async Task RevokeUserRefreshTokenAsync(Guid userId)
+        {
+            var user = await _userRepository.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                return;
+            }
+            user.RefreshToken = null;
+            await _userRepository.UpdateUserAsync(user);
+            await _userRepository.SaveChangesAsync();
+        }
+
+        public async Task<UserDto?> GetByIdAsync(Guid userId)
+        {
+            var user = await _userRepository.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                return null;
+            }
+            return _mapper.Map<UserDto>(user);
         }
     }
 }

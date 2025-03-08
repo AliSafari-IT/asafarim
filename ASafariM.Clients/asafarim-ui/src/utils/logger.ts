@@ -1,23 +1,54 @@
-// src/utils/logger.ts
-const logToServer = async (message: string, level: string = 'info') => {
-    try {
-        const isDevelopment = import.meta.env.VITE_ENVIRONMENT === 'development';
-        const BASE_API_URL = isDevelopment ? 'https://localhost:5001/api' : 'https://asafarim.com/api';
+import axios, { AxiosError } from "axios";
+import { apiConfig } from "@/config/api";
 
-        await fetch(BASE_API_URL + '/logs', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ message, level }),
+// src/utils/logger.ts
+const logToServer = async (message: string, level: string = "info") => {
+    // Skip server logging in development mode
+    const apiIsInDevelopment = apiConfig?.isDevelopment || false;
+    const apiBaseUrl = `${apiConfig.baseURL}/logs`;
+    console.log('logToServer: apiBaseUrl in production:', apiBaseUrl + " in development: "+apiIsInDevelopment);
+
+    if (apiIsInDevelopment) {
+        console.log(`[${level.toUpperCase()}] ${message}`);
+        return;
+    }
+
+
+    console.log(`[${apiBaseUrl}]: ${message}`);
+
+    try {
+        await axios.post(`${apiBaseUrl}`, {
+            message,
+            level,
+            timestamp: new Date().toISOString()
         });
     } catch (error) {
-        console.error('Failed to log message:', error);
+        // Only log server errors to console in production
+        console.error("Failed to send log to server:", (error as AxiosError).message);
     }
 };
 
 export const logger = {
-    info: (message: string) => logToServer(message, 'info'),
-    warn: (message: string) => logToServer(message, 'warn'),
-    error: (message: string) => logToServer(message, 'error')
+    
+    info: (message: string) => {
+        if (apiConfig.isDevelopment) {
+            console.log(`[INFO] ${message}`);
+        } else {
+            logToServer(message, "info");
+        }
+    },
+    warn: (message: string) => {
+        if (apiConfig.isDevelopment) {
+            console.warn(`[WARN] ${message}`);
+        } else {
+            logToServer(message, "warn");
+        }
+    },
+    error: (message: string) => {
+        if (apiConfig.isDevelopment) {
+            console.error(`[ERROR] ${message}`);
+        } else {
+            logToServer(message, "error");
+        }
+    }
 };

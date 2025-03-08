@@ -8,6 +8,7 @@ using ASafariM.Domain.Interfaces;
 using ASafariM.Infrastructure.Persistence;
 using ASafariM.Infrastructure.Repositories;
 using ASafariM.Presentation.Controllers;
+using ASafariM.Test.DomainTests.Persistence;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -21,20 +22,23 @@ namespace ASafariM.Test.InfrastructureTests.Repository
     {
         private UserRepository _userRepository;
         private Mock<ILogger<UserRepository>> _loggerMock;
+        private IMapper _mapper;
 
         [TestInitialize]
         public override void Setup()
         {
-            base.Setup(); // Call base class initialization first
+            base.Setup(); // Call base setup
             _loggerMock = new Mock<ILogger<UserRepository>>();
+            _mapper = new Mapper(
+                new MapperConfiguration(cfg => cfg.AddProfile(new MappingProfile()))
+            );
             _userRepository = new UserRepository(Context, _loggerMock.Object);
         }
 
         [TestCleanup]
         public override void Cleanup()
         {
-            _userRepository = null;
-            base.Cleanup(); // Call base class cleanup last
+            base.Cleanup(); // Call base cleanup
         }
 
         [TestMethod]
@@ -123,6 +127,7 @@ namespace ASafariM.Test.InfrastructureTests.Repository
             Assert.IsNotNull(result, "User should not be null after being added.");
             Assert.AreEqual(user.Id, result.Id);
         }
+
         [TestMethod]
         public async Task GetAllUsersAsync_ShouldReturnAllUsers()
         {
@@ -155,17 +160,20 @@ namespace ASafariM.Test.InfrastructureTests.Repository
             // Arrange
             var user = new User
             {
+                FirstName = "Test",
+                LastName = "User",
+                UserName = "testuser",
+                PasswordHash = "hashedpassword",
                 Email = "test@example.com",
-                ConcurrencyStamp = Guid.NewGuid().ToString(),
-                SecurityStamp = Guid.NewGuid().ToString(),
             };
 
             // Act
             await _userRepository.AddUserAsync(user);
 
             // Assert
-            var result = await _userRepository.GetUserByEmailAsync(user.Email);
-            Assert.IsNotNull(result, "User should not be null after being added.");
+            var addedUser = await Context.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
+            Assert.IsNotNull(addedUser);
+            Assert.AreEqual(user.Email, addedUser.Email);
         }
 
         [TestMethod]

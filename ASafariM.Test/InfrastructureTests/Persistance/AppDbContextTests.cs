@@ -29,11 +29,15 @@ namespace ASafariM.Test.DomainTests.Persistence
             // Arrange
             var user = new User
             {
+                FirstName = "Test",
+                LastName = "User",
+                UserName = "testuser",
+                PasswordHash = "hashedpassword",
                 Email = "test@example.com",
                 ConcurrencyStamp = Guid.NewGuid().ToString(),
                 SecurityStamp = Guid.NewGuid().ToString(),
             };
-            await Context.AddAsync(user);
+            Context.Users.Add(user);
 
             // Act
             await Context.SaveChangesAsync();
@@ -51,18 +55,20 @@ namespace ASafariM.Test.DomainTests.Persistence
             // Arrange
             var user = new User
             {
+                FirstName = "Test",
+                LastName = "User",
+                UserName = "testuser",
+                PasswordHash = "hashedpassword",
                 Email = "test@example.com",
-                ConcurrencyStamp = Guid.NewGuid().ToString(),
-                SecurityStamp = Guid.NewGuid().ToString(),
             };
-            await Context.Users.AddAsync(user);
+            Context.Users.Add(user);
             await Context.SaveChangesAsync();
 
             // Act
             var result = await Context.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
 
             // Assert
-            Assert.IsNotNull(result, "User should not be null after being added.");
+            Assert.IsNotNull(result);
             Assert.AreEqual(user.Email, result.Email);
         }
 
@@ -84,21 +90,19 @@ namespace ASafariM.Test.DomainTests.Persistence
             // Arrange
             var user = new User
             {
+                FirstName = "Test",
+                LastName = "User",
+                UserName = "testuser",
+                PasswordHash = "hashedpassword",
                 Email = "test@example.com",
-                ConcurrencyStamp = Guid.NewGuid().ToString(),
-                SecurityStamp = Guid.NewGuid().ToString(),
             };
-            await Context.AddAsync(user);
+            Context.Users.Add(user);
 
             // Act
             var result = await Context.SaveChangesAsync();
 
             // Assert
-            Assert.AreEqual(
-                1,
-                result,
-                "SaveChangesAsync should return 1 indicating one change was made."
-            );
+            Assert.AreEqual(1, result); // Ensure one record was saved
         }
 
         [TestMethod]

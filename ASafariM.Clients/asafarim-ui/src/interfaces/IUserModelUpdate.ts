@@ -23,4 +23,5 @@ export interface IUserModelUpdate {
     emailConfirmed?: boolean;
     password?: string;
     roles?: string[]; // Array of role IDs
+    isLoggedIn?: boolean;
 }

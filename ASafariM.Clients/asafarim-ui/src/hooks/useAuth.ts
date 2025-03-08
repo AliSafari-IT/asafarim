@@ -3,17 +3,17 @@ import { useEffect, useState, useCallback } from "react";
 function useAuth() {
   const [authState, setAuthState] = useState(() => {
     const localAuth = localStorage.getItem('auth');
-    return localAuth ? JSON.parse(localAuth) : null;
+    return localAuth ? JSON.parse(localAuth) : { authenticatedUser: null, token: null };
   });
 
   const checkAuthState = useCallback(() => {
     const localAuth = localStorage.getItem('auth');
-    setAuthState(localAuth ? JSON.parse(localAuth) : null);
+    setAuthState(localAuth ? JSON.parse(localAuth) : { authenticatedUser: null, token: null });
   }, []);
 
   const logout = useCallback(() => {
     localStorage.removeItem('auth');
-    setAuthState(null);
+    setAuthState({ authenticatedUser: null, token: null });
     window.dispatchEvent(new Event('authStateChange'));
   }, []);
 
@@ -23,8 +23,6 @@ function useAuth() {
 
     // Listen for storage events (for cross-tab synchronization)
     window.addEventListener('storage', checkAuthState);
-
-    // Create a custom event for auth state changes
     window.addEventListener('authStateChange', checkAuthState);
 
     return () => {
@@ -35,14 +33,20 @@ function useAuth() {
 
   useEffect(() => {
     // Check if user is deleted
-    if (authState?.authState?.authenticatedUser?.isDeleted) {
+    if (authState?.authenticatedUser?.isDeleted) {
       localStorage.removeItem('auth');
-      setAuthState(null);
+      setAuthState({ authenticatedUser: null, token: null });
     }
+    console.log('Auth state updated:', authState);
   }, [authState]);
 
-  return { ...authState, logout, checkAuthState};
+  return {
+    authenticated: Boolean(authState?.authenticatedUser),
+    authenticatedUser: authState?.authenticatedUser,
+    token: authState?.token,
+    logout,
+    checkAuthState
+  };
 }
-
 
 export default useAuth;

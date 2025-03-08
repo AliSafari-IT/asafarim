@@ -1,9 +1,11 @@
 export interface IUserInfo {
   id?: string;
   fullName?: string;
+  isAdmin: boolean;
+  firstName?: string;
+  lastName?: string;
   createdAt?: string;
   updatedAt?: string;
-  isAdmin?: boolean;
   isDeleted?: boolean;
   deletedAt?: string;
   userId?: string;
@@ -21,4 +23,6 @@ export interface IUserInfo {
   phoneNumber?: string;
   phoneNumberConfirmed?: boolean;
   emailConfirmed?: boolean;
+  roles?: string[];
+  isLoggedIn?: boolean;
 }

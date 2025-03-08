@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import { BaseType } from 'd3';
 import d3cloud from "d3-cloud";
-import './StackedChart.scss';
+import './StackedChart.css';
 
 interface DataPoint {
     [key: string]: any;

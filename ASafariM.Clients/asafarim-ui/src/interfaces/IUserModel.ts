@@ -30,4 +30,6 @@ export interface IUserModel {
   phoneNumberConfirmed?: boolean;
   emailConfirmed?: boolean;
   remark?: string;
+  roles?: string[];
+  isLoggedIn?: boolean;
 }

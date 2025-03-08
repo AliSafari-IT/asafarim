@@ -4,7 +4,7 @@ import { handleError } from '../utils/handleError'; // Import the centralized er
 
 const isDevelopment = import.meta.env.VITE_ENVIRONMENT === 'development';
 
-const BASE_URL = isDevelopment ? 'https://localhost:5001' : 'https://asafarim.com';
+const BASE_URL = isDevelopment ? 'http://localhost:5000' : 'https://asafarim.com';
 
 const API_URL = `${BASE_URL}/api/Auth`; // Replace with your actual API URL
 

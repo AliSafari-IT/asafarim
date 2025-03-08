@@ -6,10 +6,14 @@
   ],
   "compilerOptions": {
     "baseUrl": ".",
+    "allowJs": true,
     "paths": {
       "@/*": ["src/*"],
       "react-router-dom": ["node_modules/react-router-dom"]
     },
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
     "types": ["vitest"]
   }
 }

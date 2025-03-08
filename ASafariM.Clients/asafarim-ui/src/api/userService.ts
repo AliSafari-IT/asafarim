@@ -4,10 +4,10 @@ import { IUser } from '../interfaces/IUser';
 import { IUserModel } from '../interfaces/IUserModel';
 import { IRole, IUserModelUpdate, IUserRole } from '@/interfaces';
 
-// in development mode use https://localhost:5001/api/users
+// in development mode use http://localhost:5000/api/users
 // in production mode use https://asafarim.com/api/users
 const isDevelopment = import.meta.env.VITE_ENVIRONMENT === 'development';
-const BASE_API_URL = isDevelopment ? 'https://localhost:5001/api' : 'https://asafarim.com/api';
+const BASE_API_URL = isDevelopment ? 'http://localhost:5000/api' : 'https://asafarim.com/api';
 const USERS_URL = `${BASE_API_URL}/users`;  // Changed to lowercase to match backend route
 const ROLES_URL = `${BASE_API_URL}/roles`;  // Changed to lowercase to match backend route
 const USER_ROLES_URL = `${BASE_API_URL}/userroles`;  // Added URL for user roles

@@ -14,10 +14,12 @@ namespace ASafariM.Infrastructure.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly AppDbContext _dbContext;
+        private readonly ILogger<UserRepository> _logger;
 
-        public UserRepository(AppDbContext dbContext)
+        public UserRepository(AppDbContext dbContext, ILogger<UserRepository> logger)
         {
             _dbContext = dbContext;
+            _logger = logger;
         }
 
         public async Task<User?> GetUserByEmailAsync(string email)
@@ -34,8 +36,14 @@ namespace ASafariM.Infrastructure.Repositories
 
         public async Task<User?> GetUserByIdAsync(Guid userId)
         {
-            Log.Information("Getting user by ID: {UserId}", userId);
-            return await _dbContext.Users.FindAsync(userId);
+            _logger.LogInformation($"Getting user by ID: {userId}");
+            return await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        }
+
+        public async Task<User?> GetUserByPhoneNumberAsync(string phoneNumber)
+        {
+            Log.Information("Getting user by phone number: {PhoneNumber}", phoneNumber);
+            return await _dbContext.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
         }
 
         public async Task<List<User>> GetAllUsersAsync(bool includeSoftDeleted = false)
@@ -83,8 +91,7 @@ namespace ASafariM.Infrastructure.Repositories
         public async Task UpdateUserAsync(User user)
         {
             Log.Information("Updating user: {User}", user);
-            var existingUser = await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.Id == user.Id);
+            var existingUser = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == user.Id);
 
             if (existingUser == null)
                 throw new InvalidOperationException($"User with ID {user.Id} not found.");
@@ -103,7 +110,9 @@ namespace ASafariM.Infrastructure.Repositories
             existingUser.IsActive = user.IsActive;
             existingUser.DateOfBirth = user.DateOfBirth;
             existingUser.LastLogin = user.LastLogin;
+            existingUser.IsLoggedIn = true;
 
+            _dbContext.Users.Update(existingUser);
             await _dbContext.SaveChangesAsync();
             Log.Information("Successfully updated user: {UserId}", user.Id);
         }

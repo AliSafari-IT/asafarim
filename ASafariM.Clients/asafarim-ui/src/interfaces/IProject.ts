@@ -5,25 +5,21 @@ export interface IProject {
   id: string;
   name: string;
   description: string;
-  startDate: Date;
+  startDate?: Date;  // Made optional
   endDate?: Date;
-  isCompleted: boolean;
+  isCompleted?: boolean;  // Made optional
   budget?: number;
-  clientId: string;
+  clientId?: string;  // Made optional
   client?: IUser;
   ownerId: string;
   owner?: IUser;
-  dateCreated: Date;
-  dateModified: Date;
-  Visibility?: number; // Keep as numeric value from backend
-  Status?: number;
+  dateCreated?: Date;  // Made optional
+  dateModified?: Date;  // Made optional
+  visibility?: number;  // Changed to lowercase to match API
+  status?: number;     // Changed to lowercase to match API
   // Frontend presentation
-  visibilityLabel?: string; // Add if needed
+  visibilityLabel?: string;
   statusLabel?: string;
-
-  markAsCompleted?: () => void; // Add ? to make optional
-  updateProjectDetails?: () => void;
-  calculateDaysLeft: (startDate: string) => number;
 }
 
 export default IProject;

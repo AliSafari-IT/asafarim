@@ -16,6 +16,7 @@ namespace ASafariM.Domain.Interfaces
         Task<IEnumerable<User>> GetUsersByRoleNameAsync(string roleName);
         Task AssignRolesToUserAsync(Guid userId, IEnumerable<Guid> roleIds);
         Task<IEnumerable<UserRole>> GetRolesByUserIdAsync(Guid userId);
+        Task<User?> GetUserByPhoneNumberAsync(string phoneNumber);
 
         Task RemoveRolesFromUserAsync(Guid userId, IEnumerable<Guid> roleIds);
         Task<bool> UserExistsAsync(Guid userId);

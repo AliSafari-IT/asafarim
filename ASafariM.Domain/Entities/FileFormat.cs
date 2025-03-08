@@ -1,8 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using ASafariM.Domain.Common;
 
 namespace ASafariM.Domain.Entities
 {
-    public class FileFormat
+    public class FileFormat : BaseEntity
     {
         [Key]
         public Guid Id { get; set; }
@@ -30,13 +31,7 @@ namespace ASafariM.Domain.Entities
 
         public bool IsDefault { get; set; } = false;
 
-        public bool IsActive { get; set; } = true;
-
         // Navigation properties
         public ICollection<MiscellaneousPreference>? MiscellaneousPreferences { get; set; }
-
-        // Audit fields
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? UpdatedAt { get; set; }
     }
 }

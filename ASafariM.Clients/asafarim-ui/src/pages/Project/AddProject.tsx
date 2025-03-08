@@ -4,7 +4,6 @@ import { IField } from "@/interfaces/IField";
 import Wrapper from "@/layout/Wrapper/Wrapper";
 import entityServices from "@/api/entityServices";
 import { logger } from "@/utils/logger";
-import useAuth from "@/hooks/useAuth";
 import { jwtDecode } from "jwt-decode";
 
 interface JwtPayload {
@@ -15,7 +14,6 @@ interface JwtPayload {
 }
 
 const AddProject: React.FC = () => {
-  const auth = useAuth();
 
   // Get user ID from JWT token
   const getUserId = () => {
@@ -45,8 +43,8 @@ const AddProject: React.FC = () => {
       type: "textarea",
       placeholder: "Enter project description",
     },
-    { name: "startDate", label: "Start Date", type: "date", required: true },
-    { name: "endDate", label: "End Date", type: "date" },
+    { name: "startdate", label: "Start Date", type: "date", required: true },
+    { name: "enddate", label: "End Date", type: "date" },
     {
       name: "budget",
       label: "Budget",
@@ -59,9 +57,9 @@ const AddProject: React.FC = () => {
       type: "select",
       required: true,
       options: [
-        { value: "Public", label: "Public" },
-        { value: "MembersOnly", label: "Members Only" },
-        { value: "Private", label: "Private" },
+        { value: "0", label: "Public" },
+        { value: "1", label: "Members Only" },
+        { value: "2", label: "Private" },
       ],
     },
     {
@@ -70,11 +68,11 @@ const AddProject: React.FC = () => {
       type: "select",
       required: true,
       options: [
-        { value: "InProgress", label: "In Progress" },
-        { value: "Completed", label: "Completed" },
-        { value: "Cancelled", label: "Cancelled" },
-        { value: "Paused", label: "Paused" },
-        { value: "Extended", label: "Extended" },
+        { value: "0", label: "In Progress" },
+        { value: "1", label: "Completed" },
+        { value: "2", label: "Cancelled" },
+        { value: "3", label: "Paused" },
+        { value: "4", label: "Extended" },
       ],
     },
   ];
@@ -96,37 +94,32 @@ const AddProject: React.FC = () => {
             }
 
             const projectData = {
-              Name: formData.get("name"),
-              Description: formData.get("description") || "",
-              StartDate: formData.get("startDate"),
-              EndDate: formData.get("endDate") || formData.get("startDate"), // Default to startDate if not provided
-              Budget: formData.get("budget") ? Number(formData.get("budget")) : 0,
-              Visibility: formData.get("visibility") === "Private" ? 2 : formData.get("visibility") === "MembersOnly" ? 1 : 0,
-              Status: formData.get("status") === "InProgress" ? 0 : 
-                     formData.get("status") === "Completed" ? 1 : 
-                     formData.get("status") === "Cancelled" ? 2 :
-                     formData.get("status") === "Paused" ? 3 : 4,
+              Name: formData.get("name")?.toString() || '',
+              Description: formData.get("description")?.toString() || '',
+              StartDate: new Date(formData.get("startdate")?.toString() || '').toISOString(),
+              EndDate: formData.get("enddate") 
+                ? new Date(formData.get("enddate")?.toString() || '').toISOString()
+                : new Date(0).toISOString(),
+              Budget: parseFloat(formData.get("budget")?.toString() || '0'),
+              Visibility: parseInt(formData.get("visibility")?.toString() || '0', 10),
+              Status: parseInt(formData.get("status")?.toString() || '0', 10),
               OwnerId: userId
             };
 
-            console.log("Project data being sent:", projectData);
+            logger.info("Sending project data: " + JSON.stringify(projectData));
             const result = await entityServices.addEntity(
-              "projects",
+              "project",
               projectData
             );
 
             if (result) {
-              logger.info(
-                "Project created successfully:" + JSON.stringify(result)
-              );
-              window.history.back();
+              logger.info("Project created successfully: " + JSON.stringify(result));
+              window.location.href = "/projects";
             } else {
-              const error = "Failed to create project";
-              logger.error(error);
-              throw new Error(error);
+              throw new Error("Failed to create project - no result returned");
             }
           } catch (error) {
-            logger.error("Error creating project:" + error);
+            logger.error("Error creating project: " + error);
             throw error;
           }
         }}

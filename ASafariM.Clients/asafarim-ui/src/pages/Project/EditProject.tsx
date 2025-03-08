@@ -24,7 +24,7 @@ const EditProject: React.FC = () => {
 
     const fetchProject = async () => {
       try {
-        const response = await dashboardServices.fetchProject(id);
+        const response = await dashboardServices.fetchEntityById("project",id);
         setProject(response);
       } catch (error) {
         console.error("Error fetching project:", error);
@@ -79,8 +79,8 @@ const EditProject: React.FC = () => {
           : "N/A",
       ],
       budget: [project.budget?.toLocaleString() || "0"],
-      visibilityLabel: [getVisibilityLabel(project.Visibility ?? 0)],
-      statusLabel: [getStatusLabel(project.Status ?? 0)],
+      visibilityLabel: [getVisibilityLabel(project.visibility ?? 0)],
+      statusLabel: [getStatusLabel(project.status ?? 0)],
     };
   };
 

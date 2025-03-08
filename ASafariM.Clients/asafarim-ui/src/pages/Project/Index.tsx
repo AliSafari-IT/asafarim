@@ -3,9 +3,10 @@ import Wrapper from "../../layout/Wrapper/Wrapper";
 import { Button, Toolbar, Tooltip } from "@fluentui/react-components";
 import { Edit20Regular, Delete20Regular, Eye20Regular, AppsAddIn24Regular as AddNewIcon } from "@fluentui/react-icons";
 import { useNavigate } from "react-router-dom";
-import dashboardServices from "../../api/entityServices";
 import { IProject } from "../../interfaces/IProject";
 import Notification from "@/components/Notification/Notification";
+import { logger } from "@/utils/logger";
+import dashboardServices from "@/api/entityServices";
 
 const ProjectHome: React.FC = () => {
     const [loading, setLoading] = useState(false);
@@ -17,11 +18,11 @@ const ProjectHome: React.FC = () => {
         <header className="w-full text-center mx-auto m-0 flex justify-between items-center">
             <Toolbar aria-label="Project Toolbar" className="mt-4">
                 <h1 className="text-3xl font-bold p-6">
-                    <span className="mx-3">Projects</span>   {/* Add project toolbar */}
+                    <span className="mx-3">Projects</span>
                     <Button
                         appearance="primary"
                         icon={<AddNewIcon />}
-                        onClick={() => navigate("/projects/addnew")}
+                        onClick={() => navigate("/projects/add")}
                         className="ml-5 pl-3 pr-3"
                         aria-label={"Add New Project"}
                         title="Add New Project"
@@ -33,24 +34,22 @@ const ProjectHome: React.FC = () => {
 
     const fetchProjects = async () => {
         setLoading(true);
+        setError(null);
         try {
-            const response = await dashboardServices.fetchEntities("project");
-            console.log("Raw API response:", response); // Log raw response
+            const data = await dashboardServices.fetchProjects();
+            logger.info("Projects data received: " + JSON.stringify(data));
             
-            // Handle direct array response
-            if (Array.isArray(response)) {
-                setProjects(response);
-            } 
-            // Handle wrapped response pattern
-            else if (response?.data && Array.isArray(response.data)) {
-                setProjects(response.data);
+            if (Array.isArray(data)) {
+                setProjects(data);
+                if (data.length === 0) {
+                    logger.info("No projects found in the response");
+                }
+            } else {
+                logger.error("Invalid data format received: " + JSON.stringify(data));
+                setError("Invalid data format received from server");
             }
-            else {
-                console.error("Unsupported response format:", response);
-                setError("Server returned unexpected project format");
-            }
-        } catch (error) {
-            console.error("API Error:", error);
+        } catch (err) {
+            logger.error("Error fetching projects: " + JSON.stringify(err));
             setError("Failed to load projects. Please try again later.");
         } finally {
             setLoading(false);
@@ -69,60 +68,110 @@ const ProjectHome: React.FC = () => {
         navigate(`/projects/edit/${id}`);
     };
 
-    const handleDelete = (id: string) => {
-        // Confirm deletion and call API to delete project
+    const handleDelete = async (id: string) => {
         if (window.confirm("Are you sure you want to delete this project?")) {
-            console.log(`Delete project with id: ${id}`);
+            try {
+                logger.info(`Attempting to delete project with id: ${id}`);
+                await dashboardServices.deleteEntity("projects", id);
+                logger.info(`Successfully deleted project with id: ${id}`);
+                fetchProjects();
+            } catch (error) {
+                logger.error(`Failed to delete project: ${error}`);
+            }
         }
     };
 
-    const calculateDaysLeft = (startDate: string) => {
+    const calculateDaysLeft = (startDate: Date) => {
         const today = new Date();
-        const start = new Date(startDate);
-        return Math.ceil((today.getTime() - start.getTime()) / (1000 * 3600 * 24));
+        return Math.ceil((today.getTime() - startDate.getTime()) / (1000 * 3600 * 24));
     };
+
+    if (loading) {
+        return <Wrapper header={headerBlock}><div className="p-4">Loading projects...</div></Wrapper>;
+    }
+
+    if (error) {
+        return (
+            <Wrapper header={headerBlock}>
+                <div className="p-4">
+                    <Notification type="error" text={error} />
+                    <Button 
+                        appearance="primary" 
+                        onClick={() => fetchProjects()}
+                        className="mt-4"
+                    >
+                        Retry
+                    </Button>
+                </div>
+            </Wrapper>
+        );
+    }
 
     return (
         <Wrapper header={headerBlock}>
-            {loading ? (
-                <p>Loading...</p>
-            ) : error ? (
-                <Notification type="error" text={error} />
-            ) : (
-                <div className="w-full p-4">
-
+            <div className="w-full p-4">
+                {projects.length === 0 ? (
+                    <div className="text-center p-4">
+                        <p>No projects found.</p>
+                        <Button
+                            appearance="primary"
+                            icon={<AddNewIcon />}
+                            onClick={() => navigate("/projects/add")}
+                            className="mt-4"
+                        >
+                            Create Your First Project
+                        </Button>
+                    </div>
+                ) : (
                     <table className="w-full shadow-md rounded-lg">
-                        <thead className="">
+                        <thead>
                             <tr>
-                                <th className="p-1 text-left">Project Name</th>
-                                <th className="p-1 text-left">Description</th>
-                                <th className="p-1 text-left">Start Date</th>
-                                <th className="p-1 text-center">Days Left</th>
+                                <th className="p-2 text-left">Project Name</th>
+                                <th className="p-2 text-left">Description</th>
+                                <th className="p-2 text-left">Start Date</th>
+                                <th className="p-2 text-center">Days Active</th>
+                                <th className="p-2 text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {projects.map((project: IProject) => (
-                                <tr key={project.id} className="border-b">
+                            {projects?.map((project) => (
+                                <tr key={project.id} className="border-t">
                                     <td className="p-2">{project.name}</td>
                                     <td className="p-2">{project.description}</td>
-                                    <td className="p-2 text-center">{new Date(project.startDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</td>
-                                    <td className={`p-2 text-center font-bold ${(calculateDaysLeft(project.startDate as unknown as string) !== undefined && calculateDaysLeft(project.startDate as unknown as string) < 0) ? "bg-danger" : (calculateDaysLeft(project.startDate as unknown as string)  && calculateDaysLeft(project.startDate as unknown as string) < 30) ? "bg-warning" : "bg-info"}`} >{calculateDaysLeft(project.startDate as unknown as string) !== undefined ? calculateDaysLeft(project.startDate as unknown as string) : '-'}</td>
-                                    <td className="p-2 text-center space-x-2">
-                                        <Tooltip content="View" relationship={"description"}>
+                                    <td className="p-2">
+                                        {project.startDate 
+                                            ? new Date(project.startDate).toLocaleDateString()
+                                            : 'Not set'}
+                                    </td>
+                                    <td className={`p-2 text-center font-bold ${
+                                        project.startDate 
+                                            ? calculateDaysLeft(new Date(project.startDate)) < 0 
+                                                ? "bg-danger" 
+                                                : calculateDaysLeft(new Date(project.startDate)) < 30 
+                                                    ? "bg-warning" 
+                                                    : "bg-info"
+                                            : "bg-info"
+                                    }`}>
+                                        {project.startDate 
+                                            ? calculateDaysLeft(new Date(project.startDate))
+                                            : 'Not set'}
+                                    </td>
+                                    <td className="p-2 text-center">
+                                        <Tooltip content="View Project" relationship="label">
                                             <Button
                                                 icon={<Eye20Regular />}
                                                 onClick={() => handleView(project.id)}
                                                 appearance="subtle"
                                             />
                                         </Tooltip>
-                                        <Tooltip content="Edit" relationship={"description"}>
+                                        <Tooltip content="Edit Project" relationship="label">
                                             <Button
                                                 icon={<Edit20Regular />}
                                                 onClick={() => handleEdit(project.id)}
                                                 appearance="subtle"
                                             />
                                         </Tooltip>
-                                        <Tooltip content="Delete" relationship={"description"}>
+                                        <Tooltip content="Delete Project" relationship="label">
                                             <Button
                                                 icon={<Delete20Regular />}
                                                 onClick={() => handleDelete(project.id)}
@@ -134,8 +183,8 @@ const ProjectHome: React.FC = () => {
                             ))}
                         </tbody>
                     </table>
-                </div>
-            )}
+                )}
+            </div>
         </Wrapper>
     );
 };

@@ -28,7 +28,13 @@ echo "Deploying ASafariM Application"
 echo "1: Frontend"
 echo "2: Backend"
 echo "3: Both"
+echo "0: Exit"
 read -p "Enter deploy mode: " DEPLOY_MODE
+
+if [ "$DEPLOY_MODE" -eq 0 ]; then
+    echo "Exiting..."
+    exit 0
+fi
 
 # Function to check if a git pull is needed
 update_repo() {

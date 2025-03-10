@@ -38,7 +38,7 @@ const handleUpdateProfile = async (
     }
 
     if (!/\S+@\S+\.\S+/.test(email)) {
-      setMessage({ type: "error", text: "Please enter a valid email address." });
+      setMessage({ type: "error", text: "Please enter a valid email address: " + email });
       return;
     }
 

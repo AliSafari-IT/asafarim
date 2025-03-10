@@ -2,15 +2,25 @@ import { getUserProfile, updateUserProfile } from "@/api/authapi";
 import { IUserInfo } from "@/interfaces/IUserInfo";
 import authorizationService from "@/api/authorizationService";
 
+interface HandleUpdateProfileProps {
+  authenticatedUser: IUserInfo;
+  firstName: string;
+  lastName: string;
+  email: string;
+  setMessage: (message: { type: string; text: string }) => void;
+  setLoading: (loading: boolean) => void;
+}
+
 const handleUpdateProfile = async (
-  authenticatedUser: IUserInfo,
-  firstName: string,
-  lastName: string,
-  email: string,
-  setMessage: (message: { type: string; text: string }) => void,
-  setLoading: (loading: boolean) => void
+  data: HandleUpdateProfileProps
 ) => {
-  console.debug("Authenticated User:", authenticatedUser);
+  const { authenticatedUser, firstName, lastName, email, setMessage, setLoading } = data;
+  console.info("handleUpdateProfile: ", {
+    authenticatedUser,
+    firstName,
+    lastName,
+    email,
+  });
 
   // Ensure user object is correctly formatted
   if (!authenticatedUser || !authenticatedUser.id) {

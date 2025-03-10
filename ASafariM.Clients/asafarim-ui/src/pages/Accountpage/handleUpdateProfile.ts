@@ -37,8 +37,8 @@ const handleUpdateProfile = async (
       return;
     }
 
-    if (!/\S+@\S+\.\S+/.test(email)) {
-      setMessage({ type: "error", text: "Please enter a valid email address." });
+    if (!/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email)) {
+      setMessage({ type: "error", text: "Please enter a valid email address: " + email });
       return;
     }
 

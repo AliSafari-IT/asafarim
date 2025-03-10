@@ -6,14 +6,14 @@ REPO_DIR="$BASE_DIR/asafarim"
 FRONTEND_DIR="$REPO_DIR/ASafariM.Clients/asafarim-ui"
 BACKEND_DIR="$REPO_DIR/ASafariM.Api"
 FRONTEND_DEPLOY_DIR="$BASE_DIR/asafarim.com/public_html"
-FRONTEND_BACKUP_DIR="$REPO_DIR/backups/frontend"
+FRONTEND_BACKUP_DIR="$REPO_DIR/backups/frontends"
 BACKEND_DEPLOY_DIR="$REPO_DIR/ASafariM.Api"
 BACKEND_BACKUP_DIR="$REPO_DIR/backups/backends"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 FRONTEND_BACKUP_FILE="asafarim-frontend_backup_${TIMESTAMP}.tar.gz"
 BACKEND_BACKUP_FILE="asafarim-backend_backup_${TIMESTAMP}.tar.gz"
 FRONTEND_BACKUP_PATH="$FRONTEND_BACKUP_DIR/$FRONTEND_BACKUP_FILE"
-BACKEND_BACK_PATH="$BACKEND_BACKUP_DIR/$BACKEND_BACKUP_FILE"
+BACKEND_BACKUP_PATH="$BACKEND_BACKUP_DIR/$BACKEND_BACKUP_FILE"
 PUBLISH_DIR="$REPO_DIR/backend"
 SERVICE_NAME="asafarim-api"
 SERVICE_FILE="/tmp/$SERVICE_NAME.service"
@@ -22,7 +22,13 @@ HEALTH_CHECK_URL="https://asafarim.com/api/health"
 LOG_DIR="/var/log/asafarim"
 
 # Deploy Mode (1: Frontend, 2: Backend, 3: Both)
-DEPLOY_MODE=2
+# DEPLOY_MODE=2
+echo ""
+echo "Deploying ASafariM Application"
+echo "1: Frontend"
+echo "2: Backend"
+echo "3: Both"
+read -p "Enter deploy mode: " DEPLOY_MODE
 
 # Function to check if a git pull is needed
 update_repo() {
@@ -140,7 +146,7 @@ rollback() {
 # Function to handle publish failure
 handle_publish_failure() {
     echo " Failed to publish, rolling back..."
-    sudo tar -xvf "$BACKEND_BACKUP_DIR/$BACKUP_FILE" -C "$BACKEND_DEPLOY_DIR"
+    sudo tar -xvf "$BACKEND_BACKUP_PATH" -C "$BACKEND_DEPLOY_DIR"
 }
 
 # Function to create systemd service file
@@ -289,7 +295,7 @@ if [ "$DEPLOY_MODE" -eq 2 ] || [ "$DEPLOY_MODE" -eq 3 ]; then
 
     # Create a backup of the current deployment
     echo "Creating backup..."
-    sudo tar -czvf "$BACKEND_BACK_PATH" -C "$BACKEND_DEPLOY_DIR" .
+    sudo tar -czvf "$BACKEND_BACKUP_PATH" -C "$BACKEND_DEPLOY_DIR" .
 
     # Step 1: Navigate to backend project
     create_backup() {

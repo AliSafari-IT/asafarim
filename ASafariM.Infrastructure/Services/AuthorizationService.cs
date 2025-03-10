@@ -57,7 +57,7 @@ namespace ASafariM.Infrastructure.Services
         {
             var userId = user.Id;
             var currentUserId = _currentUserService.GetCurrentUserId();
-            
+
             _logger.LogInformation(
                 $"User ID from request: {userId}, User ID from token: {currentUserId}"
             );
@@ -68,12 +68,14 @@ namespace ASafariM.Infrastructure.Services
                 // matches the user ID in the request body (client-side validation)
                 if (currentUserId == null)
                 {
-                    _logger.LogWarning("Token validation failed, falling back to client-side validation");
+                    _logger.LogWarning(
+                        "Token validation failed, falling back to client-side validation"
+                    );
                     // For profile updates, we'll trust the client-side validation temporarily
                     // This is a fallback mechanism until the token validation is fixed
                     return true;
                 }
-                
+
                 // Allow users to update their own profile
                 return userId == currentUserId;
             }

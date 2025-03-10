@@ -3,9 +3,14 @@ import { apiConfig } from "@/config/api";
 import { logger } from "@/utils/logger";
 import { jwtDecode } from "jwt-decode";
 
+const ClaimTypes = {
+    NameIdentifier: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+} as const;
+
 interface JwtPayload {
   role?: string;
   exp?: number;
+  [ClaimTypes.NameIdentifier]?: string; // Add this line
 }
 
 // Get auth token
@@ -62,16 +67,19 @@ api.interceptors.response.use(
 
 const hasAdminRole = (): boolean => {
   try {
-    const authData = JSON.parse(localStorage.getItem("auth") || "{}");
-    const token = authData?.token;
+    const token = localStorage.getItem("auth") ? JSON.parse(localStorage.getItem("auth")!).token : null;
+    if (token) {
+      const decodedToken = jwtDecode<JwtPayload>(token);
+      console.info("Decoded Token:", decodedToken);
 
-    if (!token) {
-      logger.warn("No token found when checking admin role");
-      return false;
+      // Check for the ClaimTypes.NameIdentifier claim
+      const userIdClaim = decodedToken[ClaimTypes.NameIdentifier];
+      console.info("User ID Claim:", userIdClaim);
+      return decodedToken.role === "Admin";
+    } else {
+      console.error("No token found in localStorage.");
+      return false; // Return false if no token is found
     }
-
-    const decoded = jwtDecode(token) as JwtPayload;
-    return decoded.role === "Admin";
   } catch (error) {
     logger.error("Error checking admin role: " + JSON.stringify(error));
     return false;

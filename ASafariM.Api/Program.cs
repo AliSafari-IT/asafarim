@@ -43,6 +43,13 @@ Directory.CreateDirectory(logDirectory);
 var logFilePath = Path.Combine(logDirectory, "api_.log");
 Console.WriteLine($"Log File Path: {logFilePath}"); // Debugging line
 var line = new string('-', 100);
+
+// Ensure ASPNETCORE_URLS is set
+if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ASPNETCORE_URLS")))
+{
+    Environment.SetEnvironmentVariable("ASPNETCORE_URLS", "http://localhost:5000;https://localhost:5001");
+}
+
 try
 {
     var builder = WebApplication.CreateBuilder(args);
@@ -75,8 +82,33 @@ try
                 ValidIssuer = builder.Configuration["Jwt:Issuer"],
                 ValidAudience = builder.Configuration["Jwt:Audience"],
                 IssuerSigningKey = new SymmetricSecurityKey(
-                    Convert.FromBase64String(builder.Configuration["Jwt:Key"]!)
+                    Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]!)
                 ),
+                ClockSkew = TimeSpan.Zero
+            };
+
+            options.Events = new JwtBearerEvents
+            {
+                OnTokenValidated = context =>
+                {
+                    Log.Information("JWT token successfully validated");
+                    return Task.CompletedTask;
+                },
+                OnAuthenticationFailed = context =>
+                {
+                    Log.Warning("JWT authentication failed: {Exception}", context.Exception);
+                    return Task.CompletedTask;
+                },
+                OnMessageReceived = context =>
+                {
+                    Log.Information("JWT token received: {Token}", context.Token?.Substring(0, Math.Min(10, context.Token?.Length ?? 0)) + "...");
+                    return Task.CompletedTask;
+                },
+                OnChallenge = context =>
+                {
+                    Log.Warning("JWT authentication challenge occurred");
+                    return Task.CompletedTask;
+                }
             };
         });
 
@@ -287,7 +319,6 @@ try
     // Health check endpoint
     Log.Information("Configuring health check endpoint...");
     app.MapHealthChecks("/health");
-
 
     // HTTPS redirection (disabled for local health checks)
     app.Use(

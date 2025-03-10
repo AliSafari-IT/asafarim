@@ -33,6 +33,7 @@ namespace ASafariM.Api
 
         private static void RegisterRepositories(IServiceCollection services)
         {
+            services.AddScoped<CurrentUserService>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<ITagRepository, TagRepository>();
@@ -47,6 +48,7 @@ namespace ASafariM.Api
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<JwtTokenService>();
             services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
 
             // Register IEntityService<T>
             services.AddScoped(typeof(IEntityService<>), typeof(EntityService<>));
@@ -56,7 +58,6 @@ namespace ASafariM.Api
                 ASafariM.Application.Interfaces.IAuthorizationService,
                 ASafariM.Infrastructure.Services.AuthorizationService
             >();
-            services.AddScoped<ICurrentUserService, CurrentUserService>();
         }
 
         private static void RegisterAutoMapper(IServiceCollection services)

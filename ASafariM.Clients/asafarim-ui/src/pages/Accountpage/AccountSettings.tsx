@@ -140,7 +140,7 @@ const AccountSettings: React.FC = () => {
                         onChange={(e) => setLastName(e.target.value)}
                     />
                     <button
-                        onClick={()=> handleUpdateProfile(authenticatedUser as IUserInfo, email, firstName, lastName, setMessage, setLoading)}
+                        onClick={()=> handleUpdateProfile(authenticatedUser as IUserInfo, firstName, lastName, email, setMessage, setLoading)}
                         className="w-full sm:w-auto bg-info text-white px-4 py-2 rounded-md"
                         disabled={loading}
                     >

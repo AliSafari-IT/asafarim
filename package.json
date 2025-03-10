@@ -30,23 +30,12 @@
     "backend": "yarn clean && yarn restore && yarn build && yarn api",
     "backend:build": "yarn clean && yarn restore && yarn build",
     "backend:run": "yarn backend",
-    "deploy_backend": "bash ./scripts/deploy/deploy_backend_dev.sh",
-    "deploy_frontend": "bash ./scripts/deploy/deploy_frontend_dev.sh",
-    "deploy": "bash ./deploy_from_server.sh",
-    "deployd": "bash ./dynamic_deploy_from_server.sh",
-    "publish:frontend": "bash ./local_frontend_publish.sh",
-    "publish:backend": "bash ./local_backend_publish.sh",
     "prepare:dev": "cp D:/repos/ASafariM/ASafariM.Api/.env.development D:/repos/ASafariM/ASafariM.Api/.env && cp D:/repos/ASafariM/ASafariM.Api/appsettings.Development.json D:/repos/ASafariM/ASafariM.Api/appsettings.json && cp D:/repos/ASafariM/ASafariM.Api/Properties/launchSettings.development.json D:/repos/ASafariM/ASafariM.Api/Properties/launchSettings.json",
     "cleanup:dev": "yarn prepare:dev && yarn clean",
     "dev": "yarn prepare:dev && concurrently \"yarn workspace asafarim-api start\" \"yarn workspace asafarim-ui start\" && yarn cleanup:dev",
     "prepare:env": "cp D:/repos/ASafariM/ASafariM.Api/.env.production D:/repos/ASafariM/ASafariM.Api/.env && cp D:/repos/ASafariM/ASafariM.Api/appsettings.Production.json D:/repos/ASafariM/ASafariM.Api/appsettings.json && cp D:/repos/ASafariM/ASafariM.Api/Properties/launchSettings.production.json D:/repos/ASafariM/ASafariM.Api/Properties/launchSettings.json",
-    "publish": "node scripts/deploy/publish.js",
-    "publish:all": "yarn prepare:env && yarn publish:backend && yarn publish:frontend",
     "app": "concurrently \"yarn backend\" \"yarn ui\"",
     "start": "concurrently \"yarn backend\" \"yarn ui\"",
-    "remote:publish:backend": "sudo rm -rf /var/www/asafarim/backend/* && cd /var/www/asafarim/ASafariM.Api && dotnet publish -c Release -o /var/www/asafarim/backend && sudo chown -R www-data:www-data /var/www/asafarim/backend && sudo chmod -R 755 /var/www/asafarim/backend && sudo systemctl restart asafarim-api",
-    "remote:publish:frontend": "sudo rm -rf /var/www/asafarim.com/public_html/* && cd /var/www/asafarim/ASafariM.Clients/asafarim-ui && yarn install && yarn build && sudo cp -r dist/* /var/www/asafarim.com/public_html/ && sudo chown -R www-data:www-data /var/www/asafarim.com/public_html && sudo chmod -R 755 /var/www/asafarim.com/public_html",
-    "remote:deploy": "yarn remote:publish:backend && yarn remote:publish:frontend",
     "mig": "bash ./scripts/bash_files/dotnet-ef.sh",
     "mig_dev": "powershell -File ./scripts/bash_files/dotnet-ef.ps1",
     "test:backend": "dotnet test D:/repos/ASafariM/ASafariM.Test/ASafariM.Test.csproj --logger \"trx;LogFileName=D:/repos/ASafariM/ASafariM.Test/TestResults/test_results.trx\"",
@@ -69,25 +58,6 @@
     "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "@fluentui/react": "^8.121.11",
-    "@fluentui/react-components": "^9.56.2",
-    "@testing-library/dom": "^10.4.0",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.2.0",
-    "@testing-library/user-event": "^14.6.1",
-    "@types/jest": "^29.5.14",
-    "@types/react-syntax-highlighter": "^15.5.13",
-    "@vitest/ui": "^1.3.1",
-    "concurrently": "^9.1.2",
-    "esbuild": "^0.25.0",
-    "react-test-renderer": "18.2.0",
-    "vite": "~5.0.0",
-    "vitest": "^1.3.1"
-  },
-  "browserslist": [
-    "last 2 Chrome versions",
-    "last 2 Edge versions",
-    "last 2 Firefox versions",
-    "last 2 Safari versions"
-  ]
+    "concurrently": "^9.1.2"
+  }
 }

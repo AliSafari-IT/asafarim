@@ -25,6 +25,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MySqlConnector; // Add this line
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Serilog;
 using Serilog.Context;
@@ -47,7 +48,10 @@ var line = new string('-', 100);
 // Ensure ASPNETCORE_URLS is set
 if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ASPNETCORE_URLS")))
 {
-    Environment.SetEnvironmentVariable("ASPNETCORE_URLS", "http://localhost:5000;https://localhost:5001");
+    Environment.SetEnvironmentVariable(
+        "ASPNETCORE_URLS",
+        "http://localhost:5000;https://localhost:5001"
+    );
 }
 
 try
@@ -84,7 +88,7 @@ try
                 IssuerSigningKey = new SymmetricSecurityKey(
                     Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]!)
                 ),
-                ClockSkew = TimeSpan.Zero
+                ClockSkew = TimeSpan.Zero,
             };
 
             options.Events = new JwtBearerEvents
@@ -101,14 +105,18 @@ try
                 },
                 OnMessageReceived = context =>
                 {
-                    Log.Information("JWT token received: {Token}", context.Token?.Substring(0, Math.Min(10, context.Token?.Length ?? 0)) + "...");
+                    Log.Information(
+                        "JWT token received: {Token}",
+                        context.Token?.Substring(0, Math.Min(10, context.Token?.Length ?? 0))
+                            + "..."
+                    );
                     return Task.CompletedTask;
                 },
                 OnChallenge = context =>
                 {
                     Log.Warning("JWT authentication challenge occurred");
                     return Task.CompletedTask;
-                }
+                },
             };
         });
 
@@ -150,12 +158,14 @@ try
         throw new InvalidOperationException("Database connection string is missing");
     }
 
+    // Connection string already has CharSet=utf8mb4 for emoji support
+
     builder.Services.AddDbContext<AppDbContext>(options =>
     {
         options
             .UseMySql(
                 connectionString,
-                new MySqlServerVersion(new Version(8, 0, 31)),
+                ServerVersion.AutoDetect(connectionString),
                 mySqlOptions =>
                 {
                     mySqlOptions.EnableRetryOnFailure(

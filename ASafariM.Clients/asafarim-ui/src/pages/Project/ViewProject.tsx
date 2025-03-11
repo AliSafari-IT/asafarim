@@ -128,7 +128,10 @@ const ViewProject: React.FC = () => {
     <Wrapper>
       <div className="w-2/3 mx-auto p-6 md:p-10 bg-[var(--bg-primary)] shadow-lg rounded-xl">
         {/* Title */}
-        <Text as="h1" className="text-[var(--text-primary)] text-2xl font-bold mb-6">
+        <Text
+          as="h1"
+          className="text-[var(--text-primary)] text-2xl font-bold mb-6"
+        >
           Project Details
         </Text>
 
@@ -139,7 +142,10 @@ const ViewProject: React.FC = () => {
               key={field.name}
               className="p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md"
             >
-              <Text as="label" className="block text-[var(--text-primary)] font-medium mb-2">
+              <Text
+                as="label"
+                className="block text-[var(--text-primary)] font-medium mb-2"
+              >
                 {field.label}:
               </Text>
               <Text className="text-[var(--text-secondary)] font-semibold">
@@ -150,23 +156,27 @@ const ViewProject: React.FC = () => {
         </div>
 
         {/* Buttons moved to the bottom */}
-        <Toolbar className="flex justify-between items-center mt-8" children={
-          <>
-            <ActionButton
-              className="bg-lime-500 text-gray-700 hover:bg-lime-700  px-4 py-2 rounded-lg"
-              iconProps={{ iconName: "Back" }}
-              onClick={() => navigate(-1)}
-            >
-              <ArrowLeft24Regular className="mr-2" /> Back
-            </ActionButton>
-            <ActionButton
-              className="bg-teal-500 dark:text-primary hover:bg-success dark:hover:bg-success text-[var(--text-primary)]  px-4 py-2 rounded-lg"
-              onClick={() => navigate(`/projects/edit/${id}`)}
-            >
-              <Edit20Regular className="mr-2" /> Edit Project
-            </ActionButton>
-          </>
-        } aria-label={""} />
+        <Toolbar
+          className="flex justify-between items-center mt-8"
+          children={
+            <>
+              <ActionButton
+                className="bg-lime-500 text-gray-700 hover:bg-lime-700  px-4 py-2 rounded-lg"
+                iconProps={{ iconName: "Back" }}
+                onClick={() => navigate(-1)}
+              >
+                <ArrowLeft24Regular className="mr-2" /> Back
+              </ActionButton>
+              <ActionButton
+                className="bg-teal-500 dark:text-primary hover:bg-success dark:hover:bg-success text-[var(--text-primary)]  px-4 py-2 rounded-lg"
+                onClick={() => navigate(`/projects/edit/${id}`)}
+              >
+                <Edit20Regular className="mr-2" /> Edit Project
+              </ActionButton>
+            </>
+          }
+          aria-label={""}
+        />
       </div>
     </Wrapper>
   );

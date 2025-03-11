@@ -53,39 +53,6 @@ const AccountSettings: React.FC = () => {
     loadUserData();
   }, [authenticated, authenticatedUser, navigate]);
 
-  // async function handleUpdateProfile(): Promise<void> {
-  //     console.debug('authenticatedUser:', authenticatedUser);
-
-  //     if (!/\S+@\S+\.\S+/.test(email)) {
-  //         setMessage({ type: 'error', text: 'Please enter a valid email address.' });
-  //         return;
-  //     }
-
-  //     try {
-  //         const updatedUser = { ...authenticatedUser, email, firstName, lastName };
-  //         console.debug("updatedUser:", updatedUser);
-  //         await updateUser(updatedUser);
-  //         setMessage({ type: 'success', text: 'Profile updated successfully!' });
-
-  //         // Wait for 2 seconds before showing the warning
-  //         await new Promise(resolve => setTimeout(resolve, 2000));
-
-  //         // Show warning about re-login
-  //         setMessage({ type: 'warning', text: 'We will now re-login to let the updated details take effect.' });
-
-  //         // Wait for another 2 seconds before removing auth and redirecting
-  //         await new Promise(resolve => setTimeout(resolve, 3000));
-
-  //         localStorage.removeItem('auth');
-  //         window.dispatchEvent(new Event('authStateChange'));
-  //     } catch (err) {
-  //         console.error('Error updating profile:', err);
-  //         setMessage({ type: 'error', text: 'Failed to update profile.' });
-  //     } finally {
-  //         setLoading(false);
-  //     }
-  // }
-
   const handleUpdatePassword = async () => {
     console.log(
       "Updating password...",

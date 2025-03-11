@@ -5,6 +5,8 @@ import Wrapper from "@/layout/Wrapper/Wrapper";
 import entityServices from "@/api/entityServices";
 import { logger } from "@/utils/logger";
 import { jwtDecode } from "jwt-decode";
+import { useState } from "react";
+import Notification from "@/components/Notification/Notification";
 
 interface JwtPayload {
   nameid?: string;
@@ -14,6 +16,7 @@ interface JwtPayload {
 }
 
 const AddProject: React.FC = () => {
+  const [error, setError] = useState<string | null>(null);
 
   // Get user ID from JWT token
   const getUserId = () => {
@@ -79,6 +82,8 @@ const AddProject: React.FC = () => {
 
   return (
     <Wrapper>
+      {error && <Notification type="error" text={error} />}
+      
       <AddForm
         entityName={"Project"}
         fields={fields}
@@ -87,9 +92,12 @@ const AddProject: React.FC = () => {
         }}
         submitHandler={async (formData: FormData) => {
           try {
+            setError(null); // Clear any previous errors
+            
             const userId = getUserId();
             if (!userId) {
               logger.error("No authenticated user found");
+              setError("You must be logged in to create a project");
               throw new Error("You must be logged in to create a project");
             }
 
@@ -120,6 +128,7 @@ const AddProject: React.FC = () => {
             }
           } catch (error) {
             logger.error("Error creating project: " + error);
+            setError(error instanceof Error ? error.message : "Failed to create project");
             throw error;
           }
         }}

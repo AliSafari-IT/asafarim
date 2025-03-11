@@ -3,6 +3,7 @@ using ASafariM.Domain.Entities;
 using ASafariM.Domain.Entities.PostRelationships;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Serilog;
 using Normalize = ASafariM.Application.Utils;
 using TimeZone = ASafariM.Domain.Entities.TimeZone;
@@ -63,6 +64,19 @@ public class AppDbContext : DbContext
     public DbSet<UserNotificationPreference> UserNotificationPreferences { get; set; }
     public DbSet<UserPrivacyPreference> UserPrivacyPreferences { get; set; }
     public DbSet<UserThemePreference> UserThemePreferences { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json")
+            .Build();
+        optionsBuilder.UseMySql(
+            configuration.GetConnectionString("DefaultConnection"),
+            ServerVersion.AutoDetect(configuration.GetConnectionString("DefaultConnection")),
+            options => options.EnableStringComparisonTranslations()
+        );
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -7,22 +7,40 @@ FRONTEND_DIR="$REPO_DIR/ASafariM.Clients/asafarim-ui"
 BACKEND_DIR="$REPO_DIR/ASafariM.Api"
 FRONTEND_DEPLOY_DIR="$BASE_DIR/asafarim-com/public_html"
 FRONTEND_BACKUP_DIR="$REPO_DIR/backups/frontends"
-BACKEND_DEPLOY_DIR="$REPO_DIR/ASafariM.Api"
+BACKEND_DEPLOY_DIR="$BASE_DIR/asafarim-api"
 BACKEND_BACKUP_DIR="$REPO_DIR/backups/backends"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 FRONTEND_BACKUP_FILE="asafarim-frontend_backup_${TIMESTAMP}.tar.gz"
 BACKEND_BACKUP_FILE="asafarim-backend_backup_${TIMESTAMP}.tar.gz"
 FRONTEND_BACKUP_PATH="$FRONTEND_BACKUP_DIR/$FRONTEND_BACKUP_FILE"
 BACKEND_BACKUP_PATH="$BACKEND_BACKUP_DIR/$BACKEND_BACKUP_FILE"
-PUBLISH_DIR="$REPO_DIR/asafarim-api"
+PUBLISH_DIR="$BASE_DIR/asafarim-api"
 SERVICE_NAME="asafarim-api"
-SERVICE_FILE="/tmp/$SERVICE_NAME.service"
+SERVICE_FILE="/etc/systemd/system/$SERVICE_NAME.service"
 MAX_RETRIES=5
-HEALTH_CHECK_URL="https://asafarim.com/api/health"
+HEALTH_CHECK_URL="http://localhost:5000/health"
 LOG_DIR="/var/log/asafarim"
 
+# Ensure log directory exists
+mkdir -p "$LOG_DIR"
+DEPLOY_LOG="$LOG_DIR/deploy_${TIMESTAMP}.log"
+
+# Log function
+log() {
+  echo "$(date +"%Y-%m-%d %H:%M:%S") - $1" | tee -a "$DEPLOY_LOG"
+}
+
+# Error handling function
+handle_error() {
+  log "ERROR: $1"
+  if [ "$2" = "exit" ]; then
+    log "Exiting due to critical error"
+    exit 1
+  fi
+}
+
 # Deploy Mode (1: Frontend, 2: Backend, 3: Both)
-# DEPLOY_MODE=2
+log "******* Deploying ASafariM Application *******"
 echo ""
 echo " ******* Deploying ASafariM Application *******"
 echo "1: Frontend"
@@ -34,43 +52,31 @@ read -p "Enter deploy mode: " DEPLOY_MODE
 
 # Database Migration update
 echo " ******* Database Migration update *******"
-
 read -p "Apply database migration? (y/n): " DB_MODE
 
 if [ "$DB_MODE" = "y" ]; then
   # Apply database migrations
-  cd "$REPO_DIR" || {
-    echo " Error: Repository directory not found!"
-    exit 1
-  }
-  echo " • Applying database migrations..."
-  dotnet tool restore || {
-    echo " Error: Failed to restore .NET tools!"
-    exit 1
-  }
+  cd "$REPO_DIR" || handle_error "Repository directory not found!" "exit"
+  log "Applying database migrations..."
+  
+  dotnet tool restore || handle_error "Failed to restore .NET tools!" "exit"
 
-  dotnet ef database update --project ./ASafariM.Infrastructure/ASafariM.Infrastructure.csproj --startup-project ./ASafariM.Api/ASafariM.Api.csproj --verbose || {
-    echo " Error: Database migration failed!"
-    exit 1
-  }
+  dotnet ef database update --project ./ASafariM.Infrastructure/ASafariM.Infrastructure.csproj --startup-project ./ASafariM.Api/ASafariM.Api.csproj --verbose || handle_error "Database migration failed!" "exit"
 
-  echo " • Database migrations applied successfully."
+  log "Database migrations applied successfully."
 fi
 
 if [ "$DEPLOY_MODE" -eq 0 ]; then
-  echo "Exiting..."
+  log "Exiting..."
   exit 0
 fi
 
 # Function to check if a git pull is needed
 update_repo() {
-  cd "$1" || {
-    echo " Error: Directory not found - $1"
-    exit 1
-  }
+  cd "$1" || handle_error "Directory not found - $1" "exit"
 
   # Check if there are updates on remote
-  echo " Checking for updates in $1..."
+  log "Checking for updates in $1..."
   CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
   git fetch origin "$CURRENT_BRANCH"
 
@@ -78,398 +84,294 @@ update_repo() {
   REMOTE_COMMIT=$(git rev-parse "origin/$CURRENT_BRANCH")
 
   if [ "$LOCAL_COMMIT" != "$REMOTE_COMMIT" ]; then
-    echo " Updates found! Pulling latest changes..."
-    git pull origin "$CURRENT_BRANCH" || {
-      echo " Error: Git pull failed!"
-      exit 1
-    }
+    log "Updates found! Pulling latest changes..."
+    git pull origin "$CURRENT_BRANCH" || handle_error "Git pull failed!" "exit"
+    return 0
   else
-    echo " No updates needed."
+    log "No updates needed."
+    return 1
   fi
-}
-
-# Function to check for running processes using files
-check_processes() {
-  cd "$1" || {
-    echo " Error: Directory not found - $1"
-    exit 1
-  }
-  echo " Checking for running processes in $1..."
-
-  # Get the total number of files
-  total_files=$(git ls-files | wc -l)
-  processed_files=0
-  last_percent=0
-
-  echo -n "Progress: [ 0"
-
-  for file in $(git ls-files); do
-    if [ -f "$file" ]; then
-      processed_files=$((processed_files + 1))
-      percent=$((processed_files * 100 / total_files))
-
-      # Check if the file is in use
-      if [ $(lsof -t "$file" | wc -l) -gt 0 ]; then
-        kill $(lsof -t "$file")
-      fi
-
-      # Update the progress bar
-      if ((percent % 10 == 0 && percent != last_percent)); then
-        echo -n "•"
-        echo -n ">$percent%"
-        last_percent=$percent
-      fi
-    fi
-  done
-
-  echo "] 100% Completed"
-  echo " Completed checking for running processes in $1."
 }
 
 # Function to check API health
 check_health() {
   local retries=0
-  local max_retries=20 # Increased to 60 seconds
+  local max_retries=20
+  log "Starting health check at $HEALTH_CHECK_URL"
+  
   while [ $retries -lt $max_retries ]; do
-    echo "Attempt $((retries + 1)) to check health..."
+    log "Health check attempt $((retries + 1))..."
     response=$(curl -sk "$HEALTH_CHECK_URL" 2>&1)
 
-    if echo "$response" | grep -q '"status":"healthy"'; then
-      echo " Health check passed"
+    if [[ "$response" == *"Healthy"* ]] || [[ "$response" == *"healthy"* ]]; then
+      log "Health check passed"
       return 0
     fi
 
     # Only show logs every 5 attempts to reduce noise
     if [ $((retries % 5)) -eq 0 ]; then
-      echo "Recent application logs:"
-      sudo journalctl -u $SERVICE_NAME -n 10 --no-pager
+      log "Recent application logs:"
+      sudo journalctl -u $SERVICE_NAME -n 10 --no-pager >> "$DEPLOY_LOG"
     fi
 
     # Wait longer between retries as attempts increase
     sleep_time=$((1 + retries / 10))
-    echo "Waiting ${sleep_time} seconds before next attempt..."
+    log "Waiting ${sleep_time} seconds before next attempt..."
     sleep $sleep_time
     retries=$((retries + 1))
   done
 
-  echo " Health check failed after $max_retries attempts"
+  log "Health check failed after $max_retries attempts"
   return 1
 }
 
 # Function for rollback
 rollback() {
-  echo " Rolling back deployment..."
-  if [ -d "$BACKEND_BACKUP_PATH" ]; then
+  log "Rolling back deployment..."
+  if [ -f "$BACKEND_BACKUP_PATH" ]; then
     rm -rf "$BACKEND_DEPLOY_DIR"/*
-    sudo tar -xvf "$BACKEND_BACKUP_PATH" -C "$BACKEND_DEPLOY_DIR"
+    sudo tar -xzf "$BACKEND_BACKUP_PATH" -C "$BACKEND_DEPLOY_DIR" || handle_error "Failed to extract backup" "exit"
+    log "Restarting service after rollback..."
     systemctl restart $SERVICE_NAME
     if check_health; then
-      echo " Rollback successful"
+      log "Rollback successful"
     else
-      echo " Rollback failed - manual intervention required"
-      exit 1
+      handle_error "Rollback failed - manual intervention required" "exit"
     fi
   else
-    echo " No backup found for rollback"
-    exit 1
+    handle_error "No backup found for rollback at $BACKEND_BACKUP_PATH" "exit"
   fi
-}
-
-# Function to handle publish failure
-handle_publish_failure() {
-  echo " Failed to publish, rolling back..."
-  sudo tar -xvf "$BACKEND_BACKUP_PATH" -C "$BACKEND_DEPLOY_DIR"
 }
 
 # Function to create systemd service file
 create_service_file() {
-  echo "[Unit]" >"$SERVICE_FILE"
-  echo "Description=ASafariM .NET API" >>"$SERVICE_FILE"
-  echo "After=network.target mysql.service" >>"$SERVICE_FILE"
-  echo "" >>"$SERVICE_FILE"
-  echo "[Service]" >>"$SERVICE_FILE"
-  echo "WorkingDirectory=$BACKEND_DEPLOY_DIR" >>"$SERVICE_FILE"
-  echo "ExecStart=/usr/bin/dotnet $BACKEND_DEPLOY_DIR/ASafariM.Api.dll" >>"$SERVICE_FILE"
-  echo "User=www-data" >>"$SERVICE_FILE"
-  echo "Group=www-data" >>"$SERVICE_FILE"
-  echo "Restart=always" >>"$SERVICE_FILE"
-  echo "RestartSec=5" >>"$SERVICE_FILE"
-  echo "Environment=ASPNETCORE_ENVIRONMENT=Production" >>"$SERVICE_FILE"
-  echo "Environment=ASAFARIM_ENV=production" >>"$SERVICE_FILE"
-  echo "Environment=ASPNETCORE_URLS=http://0.0.0.0:5000" >>"$SERVICE_FILE"
-  echo "NoNewPrivileges=true" >>"$SERVICE_FILE"
-  echo "ProtectSystem=full" >>"$SERVICE_FILE"
-  echo "ProtectHome=true" >>"$SERVICE_FILE"
-  echo "" >>"$SERVICE_FILE"
-  echo "[Install]" >>"$SERVICE_FILE"
-  echo "WantedBy=multi-user.target" >>"$SERVICE_FILE"
-  echo "Created systemd service file at $SERVICE_FILE"
+  log "Creating systemd service file..."
+  cat > "$SERVICE_FILE" << EOF
+[Unit]
+Description=ASafariM .NET API
+After=network.target mysql.service
+
+[Service]
+WorkingDirectory=/var/www/asafarim-api
+ExecStart=/usr/bin/dotnet /var/www/asafarim-api/ASafariM.Api.dll
+User=root
+Group=root
+Restart=always
+RestartSec=5
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=ASAFARIM_ENV=production
+Environment=ASPNETCORE_URLS=http://0.0.0.0:5000
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target
+EOF
+  log "Created systemd service file at $SERVICE_FILE"
 }
 
-# Aggressive function to check and free port 5000
+# Ensure port 5000 is free
 ensure_port_5000_free() {
-  local max_attempts=5
-  local attempt=0
-  while [ $attempt -lt $max_attempts ]; do
-    echo "Attempt $((attempt + 1)) to free port 5000..."
-    PID=$(sudo lsof -t -i:5000)
-    if [ -n "$PID" ]; then
-      echo "Port 5000 is in use by process $PID, killing it..."
-      sudo kill -9 $PID
-      sleep 5 # Wait for port to be fully released
-      echo "Verifying port is free..."
-      if sudo lsof -i :5000; then
-        echo "Port 5000 is still in use after killing process!"
-        # stop service
-        echo "Stopping backend service..."
-        sudo systemctl stop $SERVICE_NAME
-        sleep 5
-        # check again
-        if sudo lsof -i :5000; then
-          echo "Port 5000 is still in use after stopping service!"
-          attempt=$((attempt + 1))
-        else
-          echo "Port 5000 successfully freed"
-          return 0
-        fi
-      else
-        echo "Port 5000 successfully freed"
-        return 0
-      fi
-    else
-      echo "Port 5000 is available"
-      return 0
+  log "Ensuring port 5000 is free..."
+  
+  # First try to stop the service gracefully
+  sudo systemctl stop $SERVICE_NAME
+  sleep 2
+  
+  # Check if port is still in use
+  PID=$(sudo lsof -t -i:5000)
+  if [ -n "$PID" ]; then
+    log "Port 5000 is still in use by process $PID, killing it..."
+    sudo kill -9 $PID
+    sleep 2
+    
+    # Verify port is free
+    if sudo lsof -i :5000 > /dev/null 2>&1; then
+      handle_error "Failed to free port 5000" "exit"
     fi
-  done
-  echo "Failed to free port 5000 after $max_attempts attempts"
-  exit 1
+  fi
+  
+  log "Port 5000 is available"
+}
+
+# Create backup function
+create_backup() {
+  local source_dir=$1
+  local backup_path=$2
+  local backup_name=$3
+  
+  log "Creating $backup_name backup..."
+
+  # Ensure backup directory exists with correct permissions
+  sudo mkdir -p "$(dirname "$backup_path")"
+  
+  # Verify source directory exists and has content
+  if [ ! -d "$source_dir" ]; then
+    log "Warning: Source directory $source_dir does not exist, creating it..."
+    sudo mkdir -p "$source_dir"
+    return 0
+  fi
+
+  if [ -z "$(ls -A $source_dir 2>/dev/null)" ]; then
+    log "Warning: Source directory $source_dir is empty, skipping backup"
+    return 0
+  fi
+
+  # Create backup
+  log "Creating backup at $backup_path"
+  if sudo tar -czf "$backup_path" -C "$source_dir" . > /dev/null 2>&1; then
+    log "Backup created successfully"
+    return 0
+  else
+    handle_error "Backup creation failed" "continue"
+    return 1
+  fi
+}
+
+# Clean old backups function
+clean_old_backups() {
+  local backup_dir=$1
+  local keep_count=3
+  
+  log "Cleaning old backups in $backup_dir, keeping newest $keep_count"
+  sudo mkdir -p "$backup_dir"
+  
+  # Count files
+  file_count=$(ls -1 "$backup_dir"/*.tar.gz 2>/dev/null | wc -l)
+  
+  if [ "$file_count" -gt "$keep_count" ]; then
+    log "Removing old backups..."
+    ls -t "$backup_dir"/*.tar.gz | tail -n +$((keep_count+1)) | xargs -r sudo rm
+    log "Removed $(($file_count-$keep_count)) old backups"
+  else
+    log "No old backups to remove"
+  fi
 }
 
 # Step 1: Check for updates in asafarim repository
 update_repo "$REPO_DIR"
 
 # *********************************************************************
-# Step 3: Deploy frontend
-echo " Deploying Frontend..."
-cd "$FRONTEND_DIR"
-
+# Frontend Deployment
 if [ "$DEPLOY_MODE" -eq 1 ] || [ "$DEPLOY_MODE" -eq 3 ]; then
-  echo " Starting Frontend Deployment..."
+  log "Starting Frontend Deployment..."
 
-  # Clean old backups (keep only the last newest one)
-  echo " Cleaning old frontend tar-zipped backups except the last one..."
-  sudo mkdir -p "$FRONTEND_BACKUP_DIR"
-  cd "$FRONTEND_BACKUP_DIR" && ls -t | tail -n +2 | xargs -r rm -rf
+  # Clean old backups
+  clean_old_backups "$FRONTEND_BACKUP_DIR"
 
   # Create a backup of the current deployment
-  echo "Creating backup..."
-  sudo tar -czvf "$FRONTEND_BACKUP_PATH" -C "$FRONTEND_DEPLOY_DIR" .
+  create_backup "$FRONTEND_DEPLOY_DIR" "$FRONTEND_BACKUP_PATH" "frontend"
 
-  # Step 1: Navigate to frontend project
-  cd "$FRONTEND_DIR" || {
-    echo " Error: Frontend directory not found!"
-    exit 1
-  }
+  # Navigate to frontend project
+  cd "$FRONTEND_DIR" || handle_error "Frontend directory not found!" "exit"
 
-  # Step 2: Build the frontend
-  echo " Building frontend..."
-  yarn build:npx || {
-    echo " Error: Build failed!"
-    exit 1
-  }
+  # Build the frontend
+  log "Building frontend..."
+  yarn build:npx || handle_error "Frontend build failed!" "exit"
 
-  # Step 3: Ensure Deployment Directory Exists
-  echo " Ensuring deployment directory exists..."
-  mkdir -p "$FRONTEND_DEPLOY_DIR"
+  # Ensure Deployment Directory Exists
+  log "Ensuring deployment directory exists..."
+  sudo mkdir -p "$FRONTEND_DEPLOY_DIR"
 
-  # Step 4: Clear old files
-  echo " Cleaning old deployment files..."
-  rm -rf "$FRONTEND_DEPLOY_DIR"/*
+  # Clear old files
+  log "Cleaning old deployment files..."
+  sudo rm -rf "$FRONTEND_DEPLOY_DIR"/*
 
-  # Function to handle move failure
-  handle_move_failure() {
-    echo " Failed to move files, rolling back..."
-    sudo tar -xvf "$FRONTEND_BACKUP_PATH" -C "$FRONTEND_DEPLOY_DIR"
-  }
-
-  # Step 5: Move new build files
-  echo " Deploying new build files..."
-  mv dist/* "$FRONTEND_DEPLOY_DIR"/ || {
-    echo " Error: Moving files failed!"
-    handle_move_failure
-  }
-
-  # Step 6: Set correct permissions
-  echo " Setting correct file permissions..."
-  chown -R www-data:www-data "$FRONTEND_DEPLOY_DIR"
-  chmod -R 755 "$FRONTEND_DEPLOY_DIR"
-
-  # Step 7: Restart Nginx
-  echo " Restarting Nginx..."
-  systemctl restart nginx || {
-    echo " Error: Failed to restart Nginx!"
-    exit 1
-  }
-
-  # Step 8: Deployment Complete
-  echo " Deployment completed successfully!"
-  echo " Visit https://asafarim.com to check the frontend."
-fi
-# *********************************************************************
-if [ "$DEPLOY_MODE" -eq 2 ] || [ "$DEPLOY_MODE" -eq 3 ]; then
-  echo " Deploying Backend..."
-  cd "$BACKEND_DIR"
-
-  # Clean old backups (keep only the last newest one)
-  echo " Cleaning old backend tar-zipped backups except the last one..."
-  sudo mkdir -p "$BACKEND_BACKUP_DIR"
-  cd "$BACKEND_BACKUP_DIR" && ls -t | tail -n +2 | xargs -r rm -rf
-
-  # Create a backup of the current deployment
-  echo "Creating backup..."
-  sudo tar -czvf "$BACKEND_BACKUP_PATH" -C "$BACKEND_DEPLOY_DIR" .
-
-  # Step 1: Navigate to backend project
-  create_backup() {
-    echo "Creating backend backup..."
-
-    # Ensure backup directory exists with correct permissions
-    sudo mkdir -p "$BACKEND_BACKUP_DIR"
-    sudo chown -R www-data:www-data "$BACKEND_BACKUP_DIR"
-    sudo chmod -R 755 "$BACKEND_BACKUP_DIR"
-
-    # Verify source directory exists and has content
-    if [ ! -d "$BACKEND_DEPLOY_DIR" ]; then
-      echo "Error: Source directory $BACKEND_DEPLOY_DIR does not exist"
-      return 1
-    fi
-
-    if [ -z "$(ls -A $BACKEND_DEPLOY_DIR)" ]; then
-      echo "Warning: Source directory $BACKEND_DEPLOY_DIR is empty"
-      return 0
-    fi
-
-    # Verify file accessibility
-    echo "Verifying file accessibility..."
-    find "$BACKEND_DEPLOY_DIR" -type f -exec test -r {} \; -exec echo "Accessible: {}" \; || {
-      echo "Error: Some files are not accessible"
-      return 1
+  # Move new build files
+  log "Deploying new build files..."
+  if [ -d "dist" ]; then
+    sudo cp -r dist/* "$FRONTEND_DEPLOY_DIR"/ || {
+      log "Error: Moving files failed, rolling back..."
+      sudo tar -xzf "$FRONTEND_BACKUP_PATH" -C "$FRONTEND_DEPLOY_DIR"
+      handle_error "Frontend deployment failed" "exit"
     }
+  else
+    handle_error "Build directory 'dist' not found" "exit"
+  fi
 
-    # Create backup with retry logic and detailed logging
-    local retries=3
-    local attempt=0
+  # Set correct permissions
+  log "Setting correct file permissions..."
+  sudo chown -R www-data:www-data "$FRONTEND_DEPLOY_DIR"
+  sudo chmod -R 755 "$FRONTEND_DEPLOY_DIR"
 
-    while [ $attempt -lt $retries ]; do
-      echo "Backup attempt $((attempt + 1)) of $retries..."
-      if sudo tar -czvf "$BACKEND_BACKUP_PATH" -C "$BACKEND_DEPLOY_DIR" . 2>backup_errors.log; then
-        echo "Backup created successfully at $BACKEND_BACKUP_PATH"
-        return 0
-      else
-        attempt=$((attempt + 1))
-        echo "Backup attempt $attempt failed. Errors:"
-        cat backup_errors.log
-        sleep 2
-      fi
-    done
+  # Restart Nginx
+  log "Restarting Nginx..."
+  sudo systemctl restart nginx || handle_error "Failed to restart Nginx!" "exit"
 
-    echo "Error: Backup creation failed after $retries attempts"
-    return 1
-  }
+  log "Frontend deployment completed successfully!"
+fi
 
-  # Clean old backups (keep only the newest one)
-  sudo mkdir -p "$BACKEND_BACKUP_DIR"
-  sudo chown -R www-data:www-data "$BACKEND_DEPLOY_DIR"
-  sudo chmod -R 755 "$BACKEND_DEPLOY_DIR"
+# *********************************************************************
+# Backend Deployment
+if [ "$DEPLOY_MODE" -eq 2 ] || [ "$DEPLOY_MODE" -eq 3 ]; then
+  log "Starting Backend Deployment..."
 
-  cd "$BACKEND_BACKUP_DIR" && ls -t | tail -n +2 | xargs -r rm -rf
+  # Clean old backups
+  clean_old_backups "$BACKEND_BACKUP_DIR"
 
   # Create a backup of the current deployment
-  echo "Creating backup..."
-  create_backup
+  create_backup "$BACKEND_DEPLOY_DIR" "$BACKEND_BACKUP_PATH" "backend"
 
+  # Ensure port 5000 is free
   ensure_port_5000_free
 
-  echo " Building backend..."
-  cd "$REPO_DIR" || {
-    echo " Error: Repository directory not found!"
-    exit 1
-  }
+  # Navigate to repository directory
+  cd "$REPO_DIR" || handle_error "Repository directory not found!" "exit"
 
-  yarn api:build || {
-    echo " Error: Build for API in Release mode failed!"
-    exit 1
-  }
+  # Build the backend
+  log "Building backend..."
+  yarn api:build || handle_error "Build for API in Release mode failed!" "exit"
 
-  echo " Starting Backend Deployment..."
-  # Build backend
-  cd "$BACKEND_DIR" || {
-    echo " Error: Backend directory not found!"
-    exit 1
-  }
+  # Navigate to backend project
+  cd "$BACKEND_DIR" || handle_error "Backend directory not found!" "exit"
 
   # Stop the service before deployment
-  echo "Stopping backend service..."
+  log "Stopping backend service..."
   sudo systemctl stop $SERVICE_NAME
-  sleep 5
+  sleep 2
 
-  # Ensure the publish directory is correctly specified
+  # Ensure the publish directory exists
+  log "Ensuring publish directory exists..."
   sudo mkdir -p "$PUBLISH_DIR"
 
-  # Handle port 5000 conflicts
-  kill_process_on_port() {
-    local port=$1
-    echo "Checking for processes on port $port..."
-    local pids=$(lsof -ti :$port)
-    if [ -n "$pids" ]; then
-      echo "Killing processes on port $port: $pids"
-      kill -9 $pids
-    else
-      echo "No processes found on port $port."
-    fi
-  }
-
-  # Kill any processes using port 5000
-  kill_process_on_port 5000
-
   # Publish the backend
-  echo " • Publishing backend ..."
-  # Run publish with explicit output path
+  log "Publishing backend..."
   dotnet publish --configuration Release --output "$PUBLISH_DIR" --verbosity normal || {
-    echo " Error: Publish failed!"
-    handle_publish_failure
+    log "Publish failed, rolling back..."
+    rollback
+    handle_error "Backend publish failed" "exit"
   }
 
   # Set correct permissions
-  echo " • Setting correct permissions..."
-  sudo chown -R www-data:www-data "$PUBLISH_DIR"
+  log "Setting correct permissions..."
+  sudo chown -R root:root "$PUBLISH_DIR"
   sudo chmod -R 755 "$PUBLISH_DIR"
 
   # Update systemd service
-  echo " • Updating systemd service..."
-  if [ ! -f "$SERVICE_FILE" ]; then
-    echo " The system service file $SERVICE_FILE does not exist. So, creating it..."
-    echo " Creating systemd service file..."
-    create_service_file
-  fi
+  log "Updating systemd service..."
+  create_service_file
 
-  sudo cp "$SERVICE_FILE" /etc/systemd/system/
-  echo " systemd service updated."
-
+  # Reload systemd
+  log "Reloading systemd daemon..."
   sudo systemctl daemon-reload
-  echo " systemd daemon reloaded."
 
+  # Restart backend service
+  log "Restarting backend service..."
+  sudo systemctl restart "$SERVICE_NAME" || handle_error "Failed to restart backend service!" "exit"
+
+  # Check health
+  if check_health; then
+    log "Backend deployment completed successfully!"
+  else
+    log "Backend service is not responding to health checks, rolling back..."
+    rollback
+    handle_error "Backend deployment failed" "exit"
+  fi
 fi
-# *********************************************************************
-
-# Restart backend service
-echo " • Restarting backend service..."
-systemctl restart "$SERVICE_NAME" || {
-  echo " Error: Failed to restart backend service!"
-  exit 1
-}
 
 # **Deployment Complete**
+log "Deployment completed successfully!"
 echo
 echo "  Deployment completed successfully!  "
 exit 0

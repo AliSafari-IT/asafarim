@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
 namespace ASafariM.Application.DTOs;
 
@@ -12,4 +13,5 @@ public class ProjectCreateDto
     public int Visibility { get; set; }
     public int Status { get; set; }
     public Guid OwnerId { get; set; }
+    public List<string> RepoLinks { get; set; } = new List<string>();
 }

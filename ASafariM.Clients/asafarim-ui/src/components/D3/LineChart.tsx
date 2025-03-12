@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as d3 from "d3";
+import { useEffect, useState, useRef } from "react";
 
 interface Data {
   date: Date | null;
@@ -17,114 +18,204 @@ interface LineChartProps {
   height: number;
 }
 
-export const LineChart: React.FunctionComponent<LineChartProps> = ({ data, width, height }) => {
-  const svgRef = React.useRef<SVGSVGElement>(null);
+export const LineChart: React.FunctionComponent<LineChartProps> = ({
+  data,
+  width,
+  height,
+}) => {
+  const svgRef = useRef<SVGSVGElement>(null);
+  const [renderKey, setRenderKey] = useState(0);
+  const [chartRendered, setChartRendered] = useState(false);
 
-  React.useEffect(() => {
+  // Force re-render after component mounts
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setRenderKey(prev => prev + 1);
+    }, 50);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Main chart rendering effect
+  useEffect(() => {
+    console.log(`[LineChart] Rendering attempt ${renderKey}`);
+    console.log(`[LineChart] Data available:`, !!data, data?.length);
+    console.log(`[LineChart] SVG ref available:`, !!svgRef.current);
+    
+    // Safety checks
     if (!data || !data[0]?.values?.length) {
-      console.warn('No data available for LineChart');
+      console.warn("[LineChart] No data available");
       return;
     }
 
-    // Clear any existing SVG content
-    const svgElement = svgRef.current;
-    if (!svgElement) return;
-    
-    while (svgElement.firstChild) {
-      svgElement.removeChild(svgElement.firstChild);
+    if (!svgRef.current) {
+      console.error("[LineChart] SVG element not found");
+      return;
     }
 
+    // Create a stable reference to the SVG element
+    const svgElement = svgRef.current;
+    
+    // Don't remove any existing content - D3 will handle updates
     const svg = d3.select(svgElement);
-    const margin = 50;
-    const duration = 250;
-
-    const lineOpacity = "1";
-    const otherLinesOpacity = "0.3";
-    const lineOpacityHover = "0.85";
-    const otherLinesOpacityHover = "0.1";
-    const lineStroke = "3.5";
-    const otherLinesStroke = "1.5";
-    const lineStrokeHover = "5";
-
-    const circleOpacity = "0.85";
-    const circleOpacityOnLineHover = "0.85";
-    const circleRadius = 5;
-    const circleRadiusHover = 6;
-
+    
+    // Clear existing content
+    svg.selectAll("*").remove();
+    
+    // Add new container with more appropriate margins
+    const margin = { top: 60, right: 30, bottom: 80, left: 60 };
+    const chartWidth = width - margin.left - margin.right;
+    const chartHeight = height - margin.top - margin.bottom;
+    
+    const g = svg
+      .append("g")
+      .attr("class", "chart-container")
+      .attr("transform", `translate(${margin.left}, ${margin.top})`);
+    
     try {
+      // Set chart dimensions
+      svg
+        .attr("width", width)
+        .attr("height", height)
+        .attr("viewBox", `0 0 ${width} ${height}`)
+        .style("font-family", "'Inter', 'Roboto', sans-serif");
+      
+      const duration = 250;
+
+      // Professional color palette
+      const colors = ["#0066cc", "#ff9933", "#00cc99", "#cc3366", "#6666ff"];
+
+      // Line styling
+      const lineOpacity = "0.85";
+      // const otherLinesOpacity = "0.45";
+      const lineOpacityHover = "1";
+      const otherLinesOpacityHover = "0.25";
+      const lineStroke = "3";
+      const otherLinesStroke = "2";
+      const lineStrokeHover = "4";
+
+      // Circle styling
+      const circleOpacity = "0.85";
+      const circleRadius = 5;
+      const circleRadiusHover = 7;
+
       /* Scale */
       const [minX, maxX] = d3.extent(data[0].values, (d) => d.date);
       if (!minX || !maxX) {
-        console.error('Invalid date range in data');
+        console.error("Invalid date range in data");
         return;
       }
 
       const xScale = d3
         .scaleTime()
         .domain([minX, maxX])
-        .range([0, width - margin]);
+        .range([0, chartWidth]);
 
       const [minY, maxY] = d3.extent(data[0].values, (d) => d.price);
       if (minY === undefined || maxY === undefined) {
-        console.error('Invalid price range in data');
+        console.error("Invalid price range in data");
         return;
       }
 
       const yScale = d3
         .scaleLinear()
         .domain([minY, maxY])
-        .range([height - margin, 0]);
+        .range([chartHeight, 0]);
 
-      /* Add SVG */
-      const g = svg
-        .attr("width", width + margin + "px")
-        .attr("height", height + margin + "px")
-        .append("g")
-        .attr("transform", `translate(${margin}, ${margin})`);
-
-      // Add background rect for better visibility
-      g.append("rect")
-        .attr("width", width - margin)
-        .attr("height", height - margin)
-        .attr("fill", "none");
-
+      // Setup axes
       const xAxis = d3
         .axisBottom(xScale)
-        .tickSize(height - margin)
-        .tickSizeOuter(0)
-        .tickFormat(d => d3.timeFormat("%Y-%m-%d")(d as Date))
-        .tickPadding(15);
+        .ticks(5)
+        .tickFormat((d) => d3.timeFormat("%b %d, %Y")(d as Date));
 
-      const yAxis = d3
-        .axisLeft(yScale)
-        .tickSize(margin - width)
-        .tickSizeOuter(0)
-        .ticks(12)
-        .tickPadding(20);
+      const yAxis = d3.axisLeft(yScale).ticks(5);
 
-      // Add the X Axis
+      // Add background for better visibility
+      g.append("rect")
+        .attr("width", chartWidth)
+        .attr("height", chartHeight)
+        .attr("fill", "#f9f9f9")
+        .attr("opacity", 0.3)
+        .attr("rx", 8)
+        .attr("ry", 8);
+
+      // Add chart title
+      g.append("text")
+        .attr("x", chartWidth / 2)
+        .attr("y", -30)
+        .attr("text-anchor", "middle")
+        .attr("class", "chart-title")
+        .style("font-size", "16px")
+        .style("font-weight", "600")
+        .style("fill", "#333")
+        .text("Data Comparison by Region");
+
+      // Add X axis with improved styling
       g.append("g")
         .attr("class", "x axis")
-        .attr("font-weight", "100")
-        .attr("font-family", '"Roboto", "sans-serif"')
-        .call(xAxis);
+        .attr("transform", `translate(0, ${chartHeight})`)
+        .call(xAxis)
+        .selectAll("text")
+        .style("text-anchor", "end")
+        .style("font-size", "11px")
+        .style("fill", "#666")
+        .attr("dx", "-.8em")
+        .attr("dy", ".15em")
+        .attr("transform", "rotate(-45)");
+        
+      // Add X axis label
+      g.append("text")
+        .attr("class", "x-axis-label")
+        .attr("x", chartWidth / 2)
+        .attr("y", chartHeight + 60)
+        .attr("text-anchor", "middle")
+        .style("font-size", "12px")
+        .style("fill", "#666")
+        .text("Date");
 
-      // Add the Y Axis
+      // Add Y axis with improved styling
       g.append("g")
         .attr("class", "y axis")
-        .attr("font-weight", "100")
-        .attr("font-family", '"Roboto", "sans-serif"')
         .call(yAxis)
-        .append("text")
-        .attr("y", 15)
-        .attr("transform", "rotate(-90)");
+        .selectAll("text")
+        .style("font-size", "11px")
+        .style("fill", "#666");
+        
+      // Add Y axis label
+      g.append("text")
+        .attr("class", "y-axis-label")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -chartHeight / 2)
+        .attr("y", -40)
+        .attr("text-anchor", "middle")
+        .style("font-size", "12px")
+        .style("fill", "#666")
+        .text("Value");
+        
+      // Improve the appearance of grid lines
+      g.selectAll(".axis line")
+        .style("stroke", "#e0e0e0");
+      g.selectAll(".axis path")
+        .style("stroke", "#e0e0e0")
+        .style("stroke-width", "1");
+        
+      // Add subtle grid lines
+      g.append("g")
+        .attr("class", "grid")
+        .attr("transform", `translate(0, ${chartHeight})`)
+        .call(d3.axisBottom(xScale)
+          .tickSize(-chartHeight)
+          .tickFormat(() => "")
+        )
+        .selectAll("line")
+        .style("stroke", "#eaeaea")
+        .style("stroke-dasharray", "3,3");
 
       /* Add line into SVG */
       const line = d3
         .line<Data>()
-        .x(d => xScale(d.date!))
-        .y(d => yScale(d.price))
-        .defined(d => d.date !== null); // Skip null dates
+        .x((d) => xScale(d.date!))
+        .y((d) => yScale(d.price))
+        .defined((d) => d.date !== null);
 
       const lines = g.append("g").attr("class", "lines");
 
@@ -136,20 +227,24 @@ export const LineChart: React.FunctionComponent<LineChartProps> = ({ data, width
         .attr("class", "line-group")
         .append("path")
         .attr("class", "line")
-        .attr("stroke", (_d, i) => d3.schemeCategory10[i])
-        .attr("d", d => line(d.values))
+        .attr("stroke", (_d, i) => colors[i % colors.length])
+        .attr("d", (d) => line(d.values))
         .style("fill", "none")
         .style("stroke-width", lineStroke)
         .style("opacity", lineOpacity)
-        .style("stroke-opacity", otherLinesOpacity)
-        .on("mouseover", function(_event, d) {
+        .on("mouseover", function (_event, d) {
           // Reduce opacity and stroke width of other lines
-          lines.selectAll(".line")
+          lines
+            .selectAll(".line")
             .transition()
             .duration(duration)
-            .style("opacity", (otherD) => otherD === d ? lineOpacityHover : otherLinesOpacityHover)
-            .style("stroke-width", (otherD) => otherD === d ? lineStrokeHover : otherLinesStroke);
-          
+            .style("opacity", (otherD) =>
+              otherD === d ? lineOpacityHover : otherLinesOpacityHover
+            )
+            .style("stroke-width", (otherD) =>
+              otherD === d ? lineStrokeHover : otherLinesStroke
+            );
+
           // Highlight the current line
           d3.select(this)
             .transition()
@@ -157,8 +252,9 @@ export const LineChart: React.FunctionComponent<LineChartProps> = ({ data, width
             .style("opacity", lineOpacityHover)
             .style("stroke-width", lineStrokeHover);
         })
-        .on("mouseout", function() {
-          lines.selectAll(".line")
+        .on("mouseout", function () {
+          lines
+            .selectAll(".line")
             .transition()
             .duration(duration)
             .style("opacity", lineOpacity)
@@ -171,62 +267,107 @@ export const LineChart: React.FunctionComponent<LineChartProps> = ({ data, width
         .data(data)
         .enter()
         .append("g")
-        .style("fill", (_d, i) => d3.schemeCategory10[i])
+        .style("fill", (_d, i) => colors[i % colors.length])
         .selectAll("circle")
-        .data(d => d.values)
+        .data((d) => d.values)
         .enter()
         .append("circle")
         .attr("class", "circle")
-        .attr("cx", d => xScale(d.date!))
-        .attr("cy", d => yScale(d.price))
+        .attr("cx", (d) => xScale(d.date!))
+        .attr("cy", (d) => yScale(d.price))
         .attr("r", circleRadius)
         .style("opacity", circleOpacity)
-        .on("mouseover", function(_event, d) {
+        .on("mouseover", function (_event, d) {
           // Highlight circle
           d3.select(this)
             .transition()
             .duration(duration)
-            .attr("r", circleRadiusHover)
-            .style("opacity", circleOpacityOnLineHover);
+            .attr("r", circleRadiusHover);
 
-          // Add tooltip
+          // Show tooltip
           g.append("text")
             .attr("class", "hover-text")
-            .attr("x", xScale(d.date!) + 10)
+            .attr("x", xScale(d.date!) + 5)
             .attr("y", yScale(d.price) - 10)
-            .text(`${d.price}`)
+            .text(`Value: ${d.price.toLocaleString()}`)
             .style("font-size", "12px")
-            .style("fill", "black");
+            .style("font-weight", "500")
+            .style("fill", "#333")
+            .style("filter", "drop-shadow(0px 1px 1px rgba(0,0,0,0.1))");
         })
-        .on("mouseout", function() {
+        .on("mouseout", function () {
           // Restore circle
           d3.select(this)
             .transition()
             .duration(duration)
-            .attr("r", circleRadius)
-            .style("opacity", circleOpacity);
+            .attr("r", circleRadius);
 
           // Remove tooltip
           g.select(".hover-text").remove();
         });
+
+      // Mark as rendered successfully
+      setChartRendered(true);
+      console.log("[LineChart] Chart rendered successfully");
     } catch (error) {
-      console.error('Error rendering LineChart:', error);
+      console.error("Error rendering LineChart:", error);
     }
 
-    // Cleanup function
+    // No cleanup function - we want the chart to persist
     return () => {
-      while (svgElement.firstChild) {
-        svgElement.removeChild(svgElement.firstChild);
-      }
+      // IMPORTANT: Do not clean up SVG contents in the return function
+      // This is likely what's causing your chart to disappear
+      console.log("[LineChart] Component unmounting, but not clearing SVG");
     };
-  }, [data, width, height]); // Re-render when these props change
+  }, [data, width, height, renderKey]);
 
   return (
-    <svg 
-      ref={svgRef} 
-      className="w-full h-full rounded-lg shadow-sm"
-      style={{ minHeight: '300px' }}
-    />
+    <div className="line-chart-container" style={{ 
+      width: `${width}px`, 
+      height: `${height}px`, 
+      position: 'relative',
+      borderRadius: '8px',
+      boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
+      background: 'white',
+      padding: '8px'
+    }}>
+      {!chartRendered && (
+        <div style={{ 
+          position: 'absolute', 
+          top: '50%', 
+          left: '50%', 
+          transform: 'translate(-50%, -50%)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#666',
+          fontWeight: 500
+        }}>
+          <svg width="20" height="20" viewBox="0 0 24 24" style={{ 
+            marginRight: '8px', 
+            animation: 'spin 1s linear infinite'
+          }}>
+            <circle cx="12" cy="12" r="10" fill="none" stroke="#ccc" strokeWidth="3" />
+            <path fill="none" stroke="#666" strokeWidth="3" d="M12 2a10 10 0 0 1 10 10" />
+          </svg>
+          Loading chart...
+        </div>
+      )}
+      <svg
+        ref={svgRef}
+        className="line-chart-svg"
+        style={{ width: '100%', height: '100%' }}
+        data-render-key={renderKey}
+      />
+      <style>
+        {`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}
+      </style>
+    </div>
   );
 };
 

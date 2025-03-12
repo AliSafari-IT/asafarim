@@ -8,7 +8,7 @@ import md from 'vite-plugin-md';
 export default defineConfig({
   mode: process.env.NODE_ENV,
   optimizeDeps: {
-    include: ['d3', 'react', 'react-dom'],
+    include: ['d3', 'd3-selection', 'd3-scale', 'd3-shape', 'd3-axis', 'd3-time-format', 'react', 'react-dom'],
     exclude: ['@fluentui/tokens'],
   },
   plugins: [
@@ -16,7 +16,7 @@ export default defineConfig({
     vitePluginMd({
       markdownItOptions: {
         html: true,
-      },      
+      },
     }),
     md()
   ],
@@ -66,7 +66,7 @@ export default defineConfig({
       },
     },
     commonjsOptions: {
-      include: [/node_modules/],
+      include: [/d3/, /node_modules/],
       transformMixedEsModules: true
     },
     chunkSizeWarningLimit: 2000,

@@ -355,6 +355,16 @@ const HomePanels = () => {
     />,
   ];
 
+  const renderChart = (index: number) => {
+    return (
+      <ErrorBoundary fallback={<div className="chart-error">Error loading chart</div>}>
+        <div className="chart-container" style={{ width: "100%", height: "100%" }}>
+          {d3Components[index]}
+        </div>
+      </ErrorBoundary>
+    );
+  };
+
   return (
     <div className="w-full flex flex-col md:flex-row min-h-[calc(100vh-var(--navbar-height)-var(--footer-height))]">
       {/* Mobile Menu Toggle */}
@@ -523,7 +533,7 @@ const HomePanels = () => {
                       </div>
                     }
                   >
-                    {component}
+                    {renderChart(index)}
                   </ErrorBoundary>
                 ) : null}
               </div>

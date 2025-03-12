@@ -1,3 +1,4 @@
+import { ILink } from "./ILink";
 import { IUser } from "./IUser";
 
 // Create Project Interface
@@ -20,6 +21,7 @@ export interface IProject {
   // Frontend presentation
   visibilityLabel?: string;
   statusLabel?: string;
+  links?: ILink[];
 }
 
 export default IProject;

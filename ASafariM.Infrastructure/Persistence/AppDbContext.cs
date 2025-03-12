@@ -65,6 +65,8 @@ public class AppDbContext : DbContext
     public DbSet<UserPrivacyPreference> UserPrivacyPreferences { get; set; }
     public DbSet<UserThemePreference> UserThemePreferences { get; set; }
 
+    public DbSet<Link> Links { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         var configuration = new ConfigurationBuilder()
@@ -259,6 +261,13 @@ public class AppDbContext : DbContext
                 .HasOne(p => p.Progress)
                 .WithOne(ph => ph.Project)
                 .HasForeignKey<ProgressHistory>(ph => ph.ProjectId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure the relationship with Link entities
+            entity
+                .HasMany(p => p.Links)
+                .WithOne(l => l.Project)
+                .HasForeignKey(l => l.ProjectId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
 

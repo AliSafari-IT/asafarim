@@ -21,6 +21,8 @@ import TimeSeriesChart from "@/components/D3/TimeSeriesChart";
 import Header from "@/layout/Header/Header";
 import * as d3 from "d3";
 import ErrorBoundary from "@/components/D3/ErrorBoundary";
+import { Hierarchy } from "@/components/D3/Hierarchy";
+import { treeMapData2 } from "@/components/D3/data/treeMapData2";
 
 interface Data {
   date: Date | null;
@@ -291,6 +293,11 @@ const HomePanels = () => {
           { id: "3", value: 60, category: "Database", name: "MySQL" },
         ] as TreeMapData[]
       }
+      width={dimensions.width}
+      height={dimensions.height}
+    />,
+    <Hierarchy
+      data={treeMapData2}
       width={dimensions.width}
       height={dimensions.height}
     />,

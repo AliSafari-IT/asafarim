@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as d3 from "d3";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useLayoutEffect } from "react";
 
 interface Data {
   date: Date | null;
@@ -18,25 +18,86 @@ interface LineChartProps {
   height: number;
 }
 
-export const LineChart: React.FunctionComponent<LineChartProps> = ({
+// Create a wrapper component to handle client-side only rendering
+export const LineChart: React.FunctionComponent<LineChartProps> = (props) => {
+  const [isMounted, setIsMounted] = useState(false);
+  
+  // Only render on client-side
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+  
+  // Show a placeholder during SSR
+  if (!isMounted) {
+    return (
+      <div 
+        className="line-chart-container" 
+        style={{ 
+          width: `${props.width}px`, 
+          height: `${props.height}px`, 
+          position: 'relative',
+          borderRadius: '8px',
+          boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
+          background: 'white',
+          padding: '8px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <div>Loading chart...</div>
+      </div>
+    );
+  }
+  
+  // Render the actual chart component once mounted
+  return <LineChartImpl {...props} />;
+};
+
+// Implementation component that only runs on client-side
+const LineChartImpl: React.FunctionComponent<LineChartProps> = ({
   data,
   width,
   height,
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [renderKey, setRenderKey] = useState(0);
   const [chartRendered, setChartRendered] = useState(false);
+  const renderAttemptRef = useRef(0);
 
-  // Force re-render after component mounts
+  // Force re-render after component mounts with multiple attempts
   useEffect(() => {
-    const timer = setTimeout(() => {
+    // Initial render
+    const timer1 = setTimeout(() => {
+      renderAttemptRef.current += 1;
       setRenderKey(prev => prev + 1);
+      console.log(`[LineChart] Render attempt ${renderAttemptRef.current}`);
     }, 50);
-    return () => clearTimeout(timer);
+
+    // Second attempt
+    const timer2 = setTimeout(() => {
+      renderAttemptRef.current += 1;
+      setRenderKey(prev => prev + 1);
+      console.log(`[LineChart] Render attempt ${renderAttemptRef.current}`);
+    }, 300);
+
+    // Third attempt (if needed)
+    const timer3 = setTimeout(() => {
+      renderAttemptRef.current += 1;
+      setRenderKey(prev => prev + 1);
+      console.log(`[LineChart] Render attempt ${renderAttemptRef.current}`);
+    }, 1000);
+
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      clearTimeout(timer3);
+    };
   }, []);
 
-  // Main chart rendering effect
-  useEffect(() => {
+  // Main chart rendering effect using useLayoutEffect for synchronous rendering
+  useLayoutEffect(() => {
     console.log(`[LineChart] Rendering attempt ${renderKey}`);
     console.log(`[LineChart] Data available:`, !!data, data?.length);
     console.log(`[LineChart] SVG ref available:`, !!svgRef.current);
@@ -52,26 +113,35 @@ export const LineChart: React.FunctionComponent<LineChartProps> = ({
       return;
     }
 
-    // Create a stable reference to the SVG element
-    const svgElement = svgRef.current;
-    
-    // Don't remove any existing content - D3 will handle updates
-    const svg = d3.select(svgElement);
-    
-    // Clear existing content
-    svg.selectAll("*").remove();
-    
-    // Add new container with more appropriate margins
-    const margin = { top: 60, right: 30, bottom: 80, left: 60 };
-    const chartWidth = width - margin.left - margin.right;
-    const chartHeight = height - margin.top - margin.bottom;
-    
-    const g = svg
-      .append("g")
-      .attr("class", "chart-container")
-      .attr("transform", `translate(${margin.left}, ${margin.top})`);
-    
     try {
+      // Process data to ensure dates are Date objects
+      const processedData = data.map(line => ({
+        name: line.name,
+        values: line.values.map(d => ({
+          date: typeof d.date === 'string' ? new Date(d.date) : d.date,
+          price: d.price
+        }))
+      }));
+
+      // Create a stable reference to the SVG element
+      const svgElement = svgRef.current;
+      
+      // Select the SVG element
+      const svg = d3.select(svgElement);
+      
+      // Clear existing content
+      svg.selectAll("*").remove();
+      
+      // Add new container with more appropriate margins
+      const margin = { top: 60, right: 30, bottom: 80, left: 60 };
+      const chartWidth = width - margin.left - margin.right;
+      const chartHeight = height - margin.top - margin.bottom;
+      
+      const g = svg
+        .append("g")
+        .attr("class", "chart-container")
+        .attr("transform", `translate(${margin.left}, ${margin.top})`);
+      
       // Set chart dimensions
       svg
         .attr("width", width)
@@ -86,7 +156,7 @@ export const LineChart: React.FunctionComponent<LineChartProps> = ({
 
       // Line styling
       const lineOpacity = "0.85";
-      // const otherLinesOpacity = "0.45";
+      const otherLinesOpacity = "0.45";
       const lineOpacityHover = "1";
       const otherLinesOpacityHover = "0.25";
       const lineStroke = "3";
@@ -99,7 +169,7 @@ export const LineChart: React.FunctionComponent<LineChartProps> = ({
       const circleRadiusHover = 7;
 
       /* Scale */
-      const [minX, maxX] = d3.extent(data[0].values, (d) => d.date);
+      const [minX, maxX] = d3.extent(processedData[0].values, (d) => d.date);
       if (!minX || !maxX) {
         console.error("Invalid date range in data");
         return;
@@ -110,7 +180,7 @@ export const LineChart: React.FunctionComponent<LineChartProps> = ({
         .domain([minX, maxX])
         .range([0, chartWidth]);
 
-      const [minY, maxY] = d3.extent(data[0].values, (d) => d.price);
+      const [minY, maxY] = d3.extent(processedData[0].values, (d) => d.price);
       if (minY === undefined || maxY === undefined) {
         console.error("Invalid price range in data");
         return;
@@ -221,7 +291,7 @@ export const LineChart: React.FunctionComponent<LineChartProps> = ({
 
       lines
         .selectAll(".line-group")
-        .data(data)
+        .data(processedData)
         .enter()
         .append("g")
         .attr("class", "line-group")
@@ -264,7 +334,7 @@ export const LineChart: React.FunctionComponent<LineChartProps> = ({
       /* Add circles in the line */
       lines
         .selectAll("circle-group")
-        .data(data)
+        .data(processedData)
         .enter()
         .append("g")
         .style("fill", (_d, i) => colors[i % colors.length])
@@ -312,25 +382,22 @@ export const LineChart: React.FunctionComponent<LineChartProps> = ({
     } catch (error) {
       console.error("Error rendering LineChart:", error);
     }
-
-    // No cleanup function - we want the chart to persist
-    return () => {
-      // IMPORTANT: Do not clean up SVG contents in the return function
-      // This is likely what's causing your chart to disappear
-      console.log("[LineChart] Component unmounting, but not clearing SVG");
-    };
   }, [data, width, height, renderKey]);
 
   return (
-    <div className="line-chart-container" style={{ 
-      width: `${width}px`, 
-      height: `${height}px`, 
-      position: 'relative',
-      borderRadius: '8px',
-      boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
-      background: 'white',
-      padding: '8px'
-    }}>
+    <div 
+      ref={containerRef}
+      className="line-chart-container" 
+      style={{ 
+        width: `${width}px`, 
+        height: `${height}px`, 
+        position: 'relative',
+        borderRadius: '8px',
+        boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
+        background: 'white',
+        padding: '8px'
+      }}
+    >
       {!chartRendered && (
         <div style={{ 
           position: 'absolute', 

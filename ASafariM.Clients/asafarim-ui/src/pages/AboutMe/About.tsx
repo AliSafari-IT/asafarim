@@ -3,6 +3,8 @@ import Wrapper from "../../layout/Wrapper/Wrapper";
 import aboutMeMd from "./aboutme.en.md?raw";
 import aboutMeNlMd from "./aboutme.nl.md?raw";
 import AdditionalInfo from "./AdditionalInfo";
+import { TechStackSection } from "./TechStackSection";
+import { ExperienceTimeline } from "./ExperienceTimeline";
 import { useState } from "react";
 
 export default function About(): JSX.Element {
@@ -11,6 +13,12 @@ export default function About(): JSX.Element {
   return (
     <Wrapper footer={null}>
       <div className="flex flex-col gap-6">
+        {/* Tech Stack Section */}
+        <TechStackSection />
+
+        {/* Experience Timeline */}
+        <ExperienceTimeline />
+
         {/* First row: English and Dutch summaries */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
@@ -27,7 +35,7 @@ export default function About(): JSX.Element {
           </div>
         </div>
 
-        {/* Second row: Collapsible Additional Information */}
+        {/* Additional Information Section */}
         <div className="bg-gradient-to-r from-teal-50 to-blue-50 dark:from-gray-800 dark:to-gray-750 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200 border border-teal-100 dark:border-teal-900">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
@@ -39,12 +47,12 @@ export default function About(): JSX.Element {
                   Technical Background & Expertise
                 </h2>
                 <span className="text-sm text-teal-600/70 dark:text-teal-400/70 font-medium">
-                  {isExpanded ? '(click to collapse)' : '(click to expand)'}
+                  {isExpanded ? "(click to collapse)" : "(click to expand)"}
                 </span>
               </div>
               <div className="flex items-center space-x-2">
                 <span className="text-sm text-teal-600 dark:text-teal-400 font-medium">
-                  {isExpanded ? 'Show Less' : 'Show More'}
+                  {isExpanded ? "Show Less" : "Show More"}
                 </span>
                 <svg
                   className={`w-6 h-6 transform transition-transform duration-200 text-teal-600 dark:text-teal-400 ${
@@ -64,7 +72,7 @@ export default function About(): JSX.Element {
               </div>
             </div>
           </button>
-          
+
           <div
             className={`transition-all duration-300 ease-in-out ${
               isExpanded ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"

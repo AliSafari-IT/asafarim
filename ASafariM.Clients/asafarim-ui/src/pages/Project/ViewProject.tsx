@@ -18,18 +18,29 @@ const ViewProject: React.FC = () => {
   const navigate = useNavigate();
   const isAuthenticated = useAuth()?.authenticated;
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate("/login", { replace: true });
-    }
-  }, [isAuthenticated, navigate]);
-
   const [project, setProject] = useState<IProject | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showAuthErrorNotification, setShowAuthErrorNotification] = useState(false);
   const { id } = useParams();
 
-  // Fetch project data
+  const [repoLinks, setRepoLinks] = useState<string[]>([]);
+
+  // Check authentication on component mount
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setShowAuthErrorNotification(true);
+      setLoading(false);
+      
+      // Redirect to login after 3 seconds
+      const timer = setTimeout(() => {
+        navigate("/login", { state: { returnUrl: `/projects/view/${id}` } });
+      }, 3000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isAuthenticated, navigate, id]);
+
   useEffect(() => {
     if (!id) {
       setError("Invalid project ID");
@@ -37,20 +48,61 @@ const ViewProject: React.FC = () => {
       return;
     }
 
-    const fetchProject = async () => {
+    if (!isAuthenticated) {
+      setShowAuthErrorNotification(true);
+      setLoading(false);
+      return;
+    }
+
+    const fetchProjectData = async () => {
       try {
-        const response = await dashboardServices.fetchEntityById("project", id);
-        setProject(response);
-      } catch (error) {
-        console.error("Error fetching project:", error);
-        setError("Failed to fetch project");
+        const projectResponse = await dashboardServices.fetchEntityById(
+          "project",
+          id
+        );
+        setProject(projectResponse);
+
+        // Fetch repo links
+        try {
+          const linksResponse = await dashboardServices.fetchEntityRepoLinks(
+            "project",
+            id
+          );
+          console.log('Repository links response:', JSON.stringify(linksResponse));
+          setRepoLinks(linksResponse || []);
+        } catch (linkError: any) {
+          // Check if it's an authentication error (401)
+          if (linkError?.response?.status === 401) {
+            console.error("Authentication error fetching repository links:", linkError);
+            // Redirect to login if not authenticated
+            setShowAuthErrorNotification(true);
+            setTimeout(() => {
+              navigate("/login", { state: { returnUrl: `/projects/view/${id}` } });
+            }, 3000);
+            return;
+          }
+          // For other errors, just log them but continue showing the project
+          console.error("Error fetching repository links:", linkError);
+        }
+      } catch (error: any) {
+        console.error("Error fetching project data:", error);
+        
+        // Check for authentication errors
+        if (error?.response?.status === 401) {
+          setShowAuthErrorNotification(true);
+          setTimeout(() => {
+            navigate("/login", { state: { returnUrl: `/projects/view/${id}` } });
+          }, 3000);
+        } else {
+          setError("Failed to fetch project data. Please try again later.");
+        }
       } finally {
         setLoading(false);
       }
     };
 
-    fetchProject();
-  }, [id]);
+    fetchProjectData();
+  }, [id, isAuthenticated, navigate]);
 
   // Define form fields
   const fields: IField[] = [
@@ -91,23 +143,36 @@ const ViewProject: React.FC = () => {
     }
   };
 
-  // Render loading state
+  // Show loading spinner
   if (loading) {
+    return <Loading message="Loading project details..." />;
+  }
+
+  // Show auth error notification
+  if (showAuthErrorNotification) {
     return (
       <Wrapper>
         <Stack className="max-w-5xl mx-auto p-8">
-          <Loading />
+          <Notification
+            text="Authentication required. You must be logged in to view project details. Redirecting to login page..."
+            type="error"
+            onDismiss={() => setShowAuthErrorNotification(false)}
+          />
         </Stack>
       </Wrapper>
     );
   }
 
-  // Render error state
+  // Show error message
   if (error) {
     return (
       <Wrapper>
         <Stack className="max-w-5xl mx-auto p-8">
-          <Notification type="error" text={error} />
+          <Notification
+            text={error}
+            type="error"
+            onDismiss={() => setError(null)}
+          />
         </Stack>
       </Wrapper>
     );
@@ -154,6 +219,32 @@ const ViewProject: React.FC = () => {
             </div>
           ))}
         </div>
+        {/* Repository Links Section */}
+
+        {repoLinks.length > 0 && (
+          <div className="mt-6 p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md">
+            <Text
+              as="h2"
+              className="text-[var(--text-primary)] text-xl font-bold mb-3"
+            >
+              Repository Links
+            </Text>
+            <ul className="list-disc list-inside">
+              {repoLinks.map((repo, index) => (
+                <li key={index}>
+                  <a
+                    href={repo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-teal-500 underline hover:text-teal-700"
+                  >
+                    {repo}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* Buttons moved to the bottom */}
         <Toolbar

@@ -226,7 +226,7 @@ const AccountSettings: React.FC = () => {
             <Notification
               type={message.type}
               text={message.text}
-              onClose={() => setMessage(null)}
+              onDismiss={() => setMessage(null)}
             />
           )}
           <TabPane

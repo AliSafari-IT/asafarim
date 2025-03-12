@@ -1,9 +1,9 @@
-import * as React from "react";
 import * as d3 from "d3";
-import { useEffect, useState, useRef, useLayoutEffect } from "react";
+import { useEffect, useRef, useState } from "react";
+import D3ChartWrapper from "./D3ChartWrapper";
 
 interface Data {
-  date: Date | null;
+  date: Date | string | null;
   price: number;
 }
 
@@ -13,429 +13,296 @@ interface Line {
 }
 
 interface LineChartProps {
-  data: Line[];
   width: number;
   height: number;
+  data: Line[];
 }
 
-// Create a wrapper component to handle client-side only rendering
-export const LineChart: React.FunctionComponent<LineChartProps> = (props) => {
-  const [isMounted, setIsMounted] = useState(false);
-  
-  // Only render on client-side
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-  
-  // Show a placeholder during SSR
-  if (!isMounted) {
-    return (
-      <div 
-        className="line-chart-container" 
-        style={{ 
-          width: `${props.width}px`, 
-          height: `${props.height}px`, 
-          position: 'relative',
-          borderRadius: '8px',
-          boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
-          background: 'white',
-          padding: '8px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-      >
-        <div>Loading chart...</div>
-      </div>
-    );
-  }
-  
-  // Render the actual chart component once mounted
-  return <LineChartImpl {...props} />;
-};
+// Main component that handles client-side rendering
+export default function LineChart({ width, height, data }: LineChartProps) {
+  return (
+    <D3ChartWrapper chartName="LineChart" width={width} height={height}>
+      <LineChartImpl width={width} height={height} data={data} />
+    </D3ChartWrapper>
+  );
+}
 
-// Implementation component that only runs on client-side
-const LineChartImpl: React.FunctionComponent<LineChartProps> = ({
-  data,
-  width,
-  height,
-}) => {
+// Implementation component that does the actual D3 rendering
+function LineChartImpl({ width, height, data }: LineChartProps) {
   const svgRef = useRef<SVGSVGElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [renderKey, setRenderKey] = useState(0);
-  const [chartRendered, setChartRendered] = useState(false);
-  const renderAttemptRef = useRef(0);
+  const [processedData, setProcessedData] = useState<Line[]>([]);
 
-  // Force re-render after component mounts with multiple attempts
+  // Process data when component mounts or data changes
   useEffect(() => {
-    // Initial render
-    const timer1 = setTimeout(() => {
-      renderAttemptRef.current += 1;
-      setRenderKey(prev => prev + 1);
-      console.log(`[LineChart] Render attempt ${renderAttemptRef.current}`);
-    }, 50);
+    try {
+      const parseDate = d3.timeParse("%Y-%m");
 
-    // Second attempt
-    const timer2 = setTimeout(() => {
-      renderAttemptRef.current += 1;
-      setRenderKey(prev => prev + 1);
-      console.log(`[LineChart] Render attempt ${renderAttemptRef.current}`);
-    }, 300);
+      // Process and validate the data
+      const processedLines = data
+        .map((line) => {
+          const validValues = line.values
+            .filter(
+              (d) =>
+                d && d.date !== null && d.date !== undefined && !isNaN(d.price)
+            )
+            .map((d) => ({
+              date: typeof d.date === "string" ? parseDate(d.date) : d.date,
+              price: d.price,
+            }))
+            .filter((d) => d.date !== null) as { date: Date; price: number }[];
 
-    // Third attempt (if needed)
-    const timer3 = setTimeout(() => {
-      renderAttemptRef.current += 1;
-      setRenderKey(prev => prev + 1);
-      console.log(`[LineChart] Render attempt ${renderAttemptRef.current}`);
-    }, 1000);
+          return {
+            name: line.name,
+            values: validValues,
+          };
+        })
+        .filter((line) => line.values.length > 0);
 
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-      clearTimeout(timer3);
-    };
-  }, []);
-
-  // Main chart rendering effect using useLayoutEffect for synchronous rendering
-  useLayoutEffect(() => {
-    console.log(`[LineChart] Rendering attempt ${renderKey}`);
-    console.log(`[LineChart] Data available:`, !!data, data?.length);
-    console.log(`[LineChart] SVG ref available:`, !!svgRef.current);
-    
-    // Safety checks
-    if (!data || !data[0]?.values?.length) {
-      console.warn("[LineChart] No data available");
-      return;
+      setProcessedData(processedLines);
+      console.log(
+        `[LineChart] Processed ${processedLines.length} lines of data`
+      );
+    } catch (error) {
+      console.error("[LineChart] Error processing data:", error);
     }
+  }, [data]);
 
-    if (!svgRef.current) {
-      console.error("[LineChart] SVG element not found");
-      return;
-    }
+  // Render the chart when processed data is available
+  useEffect(() => {
+    if (!svgRef.current || processedData.length === 0) return;
 
     try {
-      // Process data to ensure dates are Date objects
-      const processedData = data.map(line => ({
-        name: line.name,
-        values: line.values.map(d => ({
-          date: typeof d.date === 'string' ? new Date(d.date) : d.date,
-          price: d.price
-        }))
-      }));
+      console.log("[LineChart] Rendering chart with processed data");
 
-      // Create a stable reference to the SVG element
-      const svgElement = svgRef.current;
-      
-      // Select the SVG element
-      const svg = d3.select(svgElement);
-      
-      // Clear existing content
+      // Clear previous rendering
+      const svg = d3.select(svgRef.current);
       svg.selectAll("*").remove();
-      
-      // Add new container with more appropriate margins
-      const margin = { top: 60, right: 30, bottom: 80, left: 60 };
-      const chartWidth = width - margin.left - margin.right;
-      const chartHeight = height - margin.top - margin.bottom;
-      
-      const g = svg
-        .append("g")
-        .attr("class", "chart-container")
-        .attr("transform", `translate(${margin.left}, ${margin.top})`);
-      
-      // Set chart dimensions
-      svg
-        .attr("width", width)
-        .attr("height", height)
-        .attr("viewBox", `0 0 ${width} ${height}`)
-        .style("font-family", "'Inter', 'Roboto', sans-serif");
-      
-      const duration = 250;
 
-      // Professional color palette
-      const colors = ["#0066cc", "#ff9933", "#00cc99", "#cc3366", "#6666ff"];
+      // Set up margins and dimensions
+      const margin = { top: 20, right: 80, bottom: 30, left: 50 };
+      const innerWidth = width - margin.left - margin.right;
+      const innerHeight = height - margin.top - margin.bottom;
 
-      // Line styling
-      const lineOpacity = "0.85";
-      const otherLinesOpacity = "0.45";
-      const lineOpacityHover = "1";
-      const otherLinesOpacityHover = "0.25";
-      const lineStroke = "3";
-      const otherLinesStroke = "2";
-      const lineStrokeHover = "4";
+      // Find min and max dates across all lines
+      const allDates = processedData.flatMap(
+        (line) =>
+          line.values
+            .filter((d) => d.date instanceof Date) // Only keep items with actual Date objects
+            .map((d) => d.date as Date) // Tell TypeScript these are definitely Date objects
+      );
 
-      // Circle styling
-      const circleOpacity = "0.85";
-      const circleRadius = 5;
-      const circleRadiusHover = 7;
+      // Safely use d3.min and d3.max with proper typing
+      const minDate =
+        allDates.length > 0 ? d3.min<Date>(allDates) || new Date() : new Date();
 
-      /* Scale */
-      const [minX, maxX] = d3.extent(processedData[0].values, (d) => d.date);
-      if (!minX || !maxX) {
-        console.error("Invalid date range in data");
-        return;
-      }
+      const maxDate =
+        allDates.length > 0 ? d3.max<Date>(allDates) || new Date() : new Date();
 
+      // Find min and max prices across all lines
+      const allPrices = processedData.flatMap((line) =>
+        line.values.map((d) => d.price)
+      );
+      const minPrice = d3.min(allPrices) || 0;
+      const maxPrice = d3.max(allPrices) || 100;
+
+      // Create scales
       const xScale = d3
         .scaleTime()
-        .domain([minX, maxX])
-        .range([0, chartWidth]);
-
-      const [minY, maxY] = d3.extent(processedData[0].values, (d) => d.price);
-      if (minY === undefined || maxY === undefined) {
-        console.error("Invalid price range in data");
-        return;
-      }
+        .domain([minDate, maxDate])
+        .range([0, innerWidth]);
 
       const yScale = d3
         .scaleLinear()
-        .domain([minY, maxY])
-        .range([chartHeight, 0]);
+        .domain([minPrice, maxPrice])
+        .range([innerHeight, 0]);
 
-      // Setup axes
-      const xAxis = d3
-        .axisBottom(xScale)
-        .ticks(5)
-        .tickFormat((d) => d3.timeFormat("%b %d, %Y")(d as Date));
+      // Create line generator
+      const line = d3
+        .line<{ date: Date; price: number }>()
+        .x((d) => xScale(d.date))
+        .y((d) => yScale(d.price))
+        .curve(d3.curveBasis);
 
-      const yAxis = d3.axisLeft(yScale).ticks(5);
+      // Create color scale
+      const color = d3.scaleOrdinal(d3.schemeCategory10);
 
-      // Add background for better visibility
-      g.append("rect")
-        .attr("width", chartWidth)
-        .attr("height", chartHeight)
-        .attr("fill", "#f9f9f9")
-        .attr("opacity", 0.3)
-        .attr("rx", 8)
-        .attr("ry", 8);
+      // Create axes
+      const xAxis = d3.axisBottom(xScale);
+      const yAxis = d3.axisLeft(yScale);
 
-      // Add chart title
-      g.append("text")
-        .attr("x", chartWidth / 2)
-        .attr("y", -30)
-        .attr("text-anchor", "middle")
-        .attr("class", "chart-title")
-        .style("font-size", "16px")
-        .style("font-weight", "600")
-        .style("fill", "#333")
-        .text("Data Comparison by Region");
+      // Create chart group
+      const g = svg
+        .append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
 
-      // Add X axis with improved styling
+      // Add x-axis
       g.append("g")
         .attr("class", "x axis")
-        .attr("transform", `translate(0, ${chartHeight})`)
-        .call(xAxis)
-        .selectAll("text")
-        .style("text-anchor", "end")
-        .style("font-size", "11px")
-        .style("fill", "#666")
-        .attr("dx", "-.8em")
-        .attr("dy", ".15em")
-        .attr("transform", "rotate(-45)");
-        
-      // Add X axis label
-      g.append("text")
-        .attr("class", "x-axis-label")
-        .attr("x", chartWidth / 2)
-        .attr("y", chartHeight + 60)
-        .attr("text-anchor", "middle")
-        .style("font-size", "12px")
-        .style("fill", "#666")
-        .text("Date");
+        .attr("transform", `translate(0,${innerHeight})`)
+        .call(xAxis);
 
-      // Add Y axis with improved styling
+      // Add y-axis
       g.append("g")
         .attr("class", "y axis")
         .call(yAxis)
-        .selectAll("text")
-        .style("font-size", "11px")
-        .style("fill", "#666");
-        
-      // Add Y axis label
-      g.append("text")
-        .attr("class", "y-axis-label")
+        .append("text")
         .attr("transform", "rotate(-90)")
-        .attr("x", -chartHeight / 2)
-        .attr("y", -40)
-        .attr("text-anchor", "middle")
-        .style("font-size", "12px")
-        .style("fill", "#666")
-        .text("Value");
-        
-      // Improve the appearance of grid lines
-      g.selectAll(".axis line")
-        .style("stroke", "#e0e0e0");
-      g.selectAll(".axis path")
-        .style("stroke", "#e0e0e0")
-        .style("stroke-width", "1");
-        
-      // Add subtle grid lines
-      g.append("g")
-        .attr("class", "grid")
-        .attr("transform", `translate(0, ${chartHeight})`)
-        .call(d3.axisBottom(xScale)
-          .tickSize(-chartHeight)
-          .tickFormat(() => "")
-        )
-        .selectAll("line")
-        .style("stroke", "#eaeaea")
-        .style("stroke-dasharray", "3,3");
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Price");
 
-      /* Add line into SVG */
-      const line = d3
-        .line<Data>()
-        .x((d) => xScale(d.date!))
-        .y((d) => yScale(d.price))
-        .defined((d) => d.date !== null);
-
-      const lines = g.append("g").attr("class", "lines");
-
-      lines
+      // Add lines
+      const lineGroups = g
         .selectAll(".line-group")
         .data(processedData)
         .enter()
         .append("g")
-        .attr("class", "line-group")
+        .attr("class", "line-group");
+
+      lineGroups
         .append("path")
         .attr("class", "line")
-        .attr("stroke", (_d, i) => colors[i % colors.length])
-        .attr("d", (d) => line(d.values))
-        .style("fill", "none")
-        .style("stroke-width", lineStroke)
-        .style("opacity", lineOpacity)
-        .on("mouseover", function (_event, d) {
-          // Reduce opacity and stroke width of other lines
-          lines
-            .selectAll(".line")
-            .transition()
-            .duration(duration)
-            .style("opacity", (otherD) =>
-              otherD === d ? lineOpacityHover : otherLinesOpacityHover
-            )
-            .style("stroke-width", (otherD) =>
-              otherD === d ? lineStrokeHover : otherLinesStroke
-            );
-
-          // Highlight the current line
-          d3.select(this)
-            .transition()
-            .duration(duration)
-            .style("opacity", lineOpacityHover)
-            .style("stroke-width", lineStrokeHover);
+        .attr("d", (d) => {
+          // Filter to only include values with valid Date objects
+          const validValues = d.values
+            .filter((item) => item.date instanceof Date)
+            .map((item) => ({
+              date: item.date as Date,
+              price: item.price,
+            }));
+          return line(validValues);
         })
-        .on("mouseout", function () {
-          lines
-            .selectAll(".line")
-            .transition()
-            .duration(duration)
-            .style("opacity", lineOpacity)
-            .style("stroke-width", lineStroke);
-        });
+        .style("stroke", (_d, i) => color(i.toString()))
+        .style("fill", "none")
+        .style("stroke-width", 2);
 
-      /* Add circles in the line */
-      lines
-        .selectAll("circle-group")
+      // Add line labels
+      lineGroups
+        .append("text")
+        .datum((d) => {
+          const lastValidValue = d.values
+            .filter((item) => item.date instanceof Date)
+            .pop();
+          return {
+            name: d.name,
+            value: lastValidValue,
+          };
+        })
+        .attr("transform", (d) => {
+          if (!d.value || !(d.value.date instanceof Date)) return "";
+          return `translate(${xScale(d.value.date as Date)},${yScale(
+            d.value.price
+          )})`;
+        })
+        .attr("x", 3)
+        .attr("dy", ".35em")
+        .style("font", "10px sans-serif")
+        .text((d) => d.name);
+
+      // Add hover effects
+      const mouseG = g.append("g").attr("class", "mouse-over-effects");
+
+      mouseG
+        .append("path")
+        .attr("class", "mouse-line")
+        .style("stroke", "#666")
+        .style("stroke-width", "1px")
+        .style("opacity", "0");
+
+      const mousePerLine = mouseG
+        .selectAll(".mouse-per-line")
         .data(processedData)
         .enter()
         .append("g")
-        .style("fill", (_d, i) => colors[i % colors.length])
-        .selectAll("circle")
-        .data((d) => d.values)
-        .enter()
+        .attr("class", "mouse-per-line");
+
+      mousePerLine
         .append("circle")
-        .attr("class", "circle")
-        .attr("cx", (d) => xScale(d.date!))
-        .attr("cy", (d) => yScale(d.price))
-        .attr("r", circleRadius)
-        .style("opacity", circleOpacity)
-        .on("mouseover", function (_event, d) {
-          // Highlight circle
-          d3.select(this)
-            .transition()
-            .duration(duration)
-            .attr("r", circleRadiusHover);
+        .attr("r", 5)
+        .style("stroke", (d, i) => color(i.toString()))
+        .style("fill", "none")
+        .style("stroke-width", "1px")
+        .style("opacity", "0");
 
-          // Show tooltip
-          g.append("text")
-            .attr("class", "hover-text")
-            .attr("x", xScale(d.date!) + 5)
-            .attr("y", yScale(d.price) - 10)
-            .text(`Value: ${d.price.toLocaleString()}`)
-            .style("font-size", "12px")
-            .style("font-weight", "500")
-            .style("fill", "#333")
-            .style("filter", "drop-shadow(0px 1px 1px rgba(0,0,0,0.1))");
+      mousePerLine.append("text").attr("transform", "translate(10,3)");
+
+      mouseG
+        .append("rect")
+        .attr("width", innerWidth)
+        .attr("height", innerHeight)
+        .attr("fill", "none")
+        .attr("pointer-events", "all")
+        .on("mouseout", () => {
+          d3.select(".mouse-line").style("opacity", "0");
+          d3.selectAll(".mouse-per-line circle").style("opacity", "0");
+          d3.selectAll(".mouse-per-line text").style("opacity", "0");
         })
-        .on("mouseout", function () {
-          // Restore circle
-          d3.select(this)
-            .transition()
-            .duration(duration)
-            .attr("r", circleRadius);
+        .on("mouseover", () => {
+          d3.select(".mouse-line").style("opacity", "1");
+          d3.selectAll(".mouse-per-line circle").style("opacity", "1");
+          d3.selectAll(".mouse-per-line text").style("opacity", "1");
+        })
+        .on("mousemove", function (event) {
+          const mouse = d3.pointer(event, this);
+          d3.select(".mouse-line").attr(
+            "d",
+            `M${mouse[0]},${innerHeight} ${mouse[0]},0`
+          );
 
-          // Remove tooltip
-          g.select(".hover-text").remove();
+          d3.selectAll(".mouse-per-line").attr(
+            "transform",
+            function (this: any, d: any) {
+              // Type guard to ensure d has the expected structure
+              if (!d || !d.values || !d.values.length) return "";
+
+              const xDate = xScale.invert(mouse[0]);
+              const bisect = d3.bisector(
+                (d: { date: Date; price: number }) => d.date
+              ).left;
+
+              // Filter to only include values with valid Date objects
+              const validValues = d.values
+                .filter((item: any) => item.date instanceof Date)
+                .map((item: any) => ({
+                  date: item.date as Date,
+                  price: item.price,
+                }));
+
+              if (!validValues.length) return "";
+
+              const idx = bisect(validValues, xDate);
+
+              if (idx >= validValues.length) return "";
+
+              const x = xScale(validValues[idx].date);
+              const y = yScale(validValues[idx].price);
+
+              d3.select(this)
+                .select("text")
+                .text(`${d.name}: ${validValues[idx].price}`);
+
+              return `translate(${x},${y})`;
+            }
+          );
         });
 
-      // Mark as rendered successfully
-      setChartRendered(true);
       console.log("[LineChart] Chart rendered successfully");
     } catch (error) {
-      console.error("Error rendering LineChart:", error);
+      console.error("[LineChart] Error rendering chart:", error);
     }
-  }, [data, width, height, renderKey]);
+  }, [processedData, width, height]);
 
   return (
-    <div 
-      ref={containerRef}
-      className="line-chart-container" 
-      style={{ 
-        width: `${width}px`, 
-        height: `${height}px`, 
-        position: 'relative',
-        borderRadius: '8px',
-        boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
-        background: 'white',
-        padding: '8px'
+    <svg
+      ref={svgRef}
+      width={width}
+      height={height}
+      style={{
+        backgroundColor: "#fff",
+        borderRadius: "8px",
+        boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
       }}
-    >
-      {!chartRendered && (
-        <div style={{ 
-          position: 'absolute', 
-          top: '50%', 
-          left: '50%', 
-          transform: 'translate(-50%, -50%)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: '#666',
-          fontWeight: 500
-        }}>
-          <svg width="20" height="20" viewBox="0 0 24 24" style={{ 
-            marginRight: '8px', 
-            animation: 'spin 1s linear infinite'
-          }}>
-            <circle cx="12" cy="12" r="10" fill="none" stroke="#ccc" strokeWidth="3" />
-            <path fill="none" stroke="#666" strokeWidth="3" d="M12 2a10 10 0 0 1 10 10" />
-          </svg>
-          Loading chart...
-        </div>
-      )}
-      <svg
-        ref={svgRef}
-        className="line-chart-svg"
-        style={{ width: '100%', height: '100%' }}
-        data-render-key={renderKey}
-      />
-      <style>
-        {`
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        `}
-      </style>
-    </div>
+    />
   );
-};
-
-export default LineChart;
+}

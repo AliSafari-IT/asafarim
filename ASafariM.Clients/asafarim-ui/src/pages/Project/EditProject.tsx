@@ -171,7 +171,7 @@ const EditProject: React.FC = () => {
   };
 
   const handleDropdownChange = (
-    event: React.FormEvent<HTMLDivElement>,
+    _event: React.FormEvent<HTMLDivElement>,
     option?: IDropdownOption,
     name?: string
   ) => {

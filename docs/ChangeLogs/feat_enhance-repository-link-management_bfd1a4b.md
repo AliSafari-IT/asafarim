@@ -4,7 +4,7 @@ Date: 2025-03-13
 
 ## Description of Changes
 
-This update improves the repository link management functionality in the ASafariM application, focusing on both the frontend display and data handling. The changes address issues with repository links not displaying properly in the project view page and enhance the user experience when managing links in the edit project page.
+This update improves the repository link management functionality in the ASafariM application, focusing on both the frontend display and data handling. The changes address issues with repository links not displaying properly in the project view page and enhance the user experience when managing links in the edit project and add project pages.
 
 ### 1. Fixed Repository Link Data Processing
 
@@ -118,19 +118,107 @@ console.log('Type of response data:', typeof response.data);
 console.log('Is Array?', Array.isArray(response.data));
 ```
 
+### 5. Fixed Repository Links in Add Project
+
+Fixed an issue where repository links weren't being saved when creating a new project:
+
+#### 5.1 Updated ProjectCreateDto to Include Repository Links
+
+```csharp
+// Before
+public class ProjectCreateDto
+{
+    public required string Name { get; set; }
+    public string? Description { get; set; }
+    public DateTime StartDate { get; set; }
+    public DateTime EndDate { get; set; }
+    public decimal Budget { get; set; }
+    public int Visibility { get; set; }
+    public int Status { get; set; }
+    public Guid OwnerId { get; set; }
+}
+
+// After
+public class ProjectCreateDto
+{
+    public required string Name { get; set; }
+    public string? Description { get; set; }
+    public DateTime StartDate { get; set; }
+    public DateTime EndDate { get; set; }
+    public decimal Budget { get; set; }
+    public int Visibility { get; set; }
+    public int Status { get; set; }
+    public Guid OwnerId { get; set; }
+    public List<string> RepoLinks { get; set; } = new List<string>();
+}
+```
+
+#### 5.2 Enhanced ProjectsController to Handle Repository Links
+
+Updated the CreateProject method to properly handle repository links:
+
+```csharp
+// Before
+var createdProject = await _projectService.CreateAsync(project);
+
+// After
+Project createdProject;
+
+// Check if repository links are provided
+if (projectDto.RepoLinks != null && projectDto.RepoLinks.Any())
+{
+    _logger.LogInformation($"Creating project with {projectDto.RepoLinks.Count} repository links");
+    
+    // Filter out invalid links
+    var validLinks = projectDto.RepoLinks
+        .Where(link => !string.IsNullOrWhiteSpace(link))
+        .ToList();
+    
+    if (validLinks.Count != projectDto.RepoLinks.Count)
+    {
+        _logger.LogWarning($"Filtered out {projectDto.RepoLinks.Count - validLinks.Count} invalid links");
+    }
+    
+    // Use the CreateAsync method that accepts repository links
+    createdProject = await _projectService.CreateAsync(project, validLinks);
+    _logger.LogInformation($"Successfully created project with repository links: {createdProject.Name}");
+}
+else
+{
+    // Use the standard CreateAsync method without links
+    createdProject = await _projectService.CreateAsync(project);
+    _logger.LogInformation($"Successfully created project without repository links: {createdProject.Name}");
+}
+```
+
+### 6. Redesigned AddProject Component
+
+Completely redesigned the AddProject component to match the layout and styling of the EditProject component:
+
+- Implemented a two-column grid layout for form fields
+- Used direct form state management instead of the AddForm component
+- Added consistent styling and validation
+- Moved repository links section to match EditProject layout
+- Added action buttons at the bottom with the same styling as EditProject
+
 ## Impact
 
 These changes impact the following areas of the application:
 
 1. **Project View Page**: Repository links now display correctly when viewing project details
 2. **Project Edit Page**: Enhanced UI for managing repository links with better feedback and safety features
-3. **API Data Handling**: Improved handling of API response formats for repository links
+3. **Project Add Page**: Redesigned to match Edit Page layout and fixed repository link saving
+4. **API Data Handling**: Improved handling of API response formats for repository links
+5. **Backend DTOs and Controllers**: Updated to properly handle repository links during project creation
 
 ## Files Affected
 
 - `ASafariM.Clients/asafarim-ui/src/api/entityServices.ts`
 - `ASafariM.Clients/asafarim-ui/src/pages/Project/ViewProject.tsx`
 - `ASafariM.Clients/asafarim-ui/src/pages/Project/EditProject.tsx`
+- `ASafariM.Clients/asafarim-ui/src/pages/Project/AddProject.tsx`
+- `ASafariM.Application/DTOs/ProjectCreateDto.cs`
+- `ASafariM.Presentation/Controllers/ProjectsController.cs`
 
 ## Testing
 
@@ -146,10 +234,16 @@ II. **Edit Project Page**:
    - Test the delete confirmation dialog
    - Verify visual feedback when hovering over delete buttons
 
-III. **API Response Handling**:
+III. **Add Project Page**:
+   - Create a new project with repository links
+   - Verify that the links are saved correctly and appear in the project view
+   - Test the form layout and styling matches the edit project page
+   - Verify that the repository links section appears after the form fields
+
+IV. **API Response Handling**:
    - Check browser console logs to verify correct processing of API responses
    - Verify that links with different response formats are handled correctly
 
-IV. **Error Handling**:
+V. **Error Handling**:
    - Verify that authentication errors are handled correctly
    - Verify that other errors are handled gracefully

@@ -14,6 +14,9 @@ namespace ASafariM.Domain.Entities
 
         public string? Description { get; set; }
 
+        public Guid? ProjectId { get; set; } // Foreign key to associate links with projects
+        public Project? Project { get; set; }
+
         // ✅ Relationship: Link can belong to multiple posts
         public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 

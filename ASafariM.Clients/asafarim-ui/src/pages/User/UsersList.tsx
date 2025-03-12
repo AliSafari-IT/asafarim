@@ -181,7 +181,7 @@ const UsersList: React.FC = () => {
         </Link>
 
         {error && (
-          <Notification type="error" text={error} role="alert" onClose={() => setError(null)} />
+          <Notification type="error" text={error} role="alert" onDismiss={() => setError(null)} />
         )}
         <div className="overflow-x-auto rounded-lg border border-[var(--border-default)]">
           <table className="min-w-full table-auto">

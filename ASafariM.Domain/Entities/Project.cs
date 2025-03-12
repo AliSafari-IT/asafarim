@@ -49,6 +49,9 @@ namespace ASafariM.Domain.Entities
         public bool IsExtended { get; set; } = false;
         public DateTime? ExtendedUntil { get; set; }
 
+        // Foreign Key Relationship
+        public List<Link> Links { get; set; } = new List<Link>(); // Repository links
+
         // ✅ Project members with roles ("Manager", "Member", etc.)
         public virtual ICollection<ProjectMember> ProjectMembers { get; set; } =
             new List<ProjectMember>();

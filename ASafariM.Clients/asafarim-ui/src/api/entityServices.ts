@@ -3,9 +3,14 @@ import { apiConfig } from "@/config/api";
 import { logger } from "@/utils/logger";
 import { jwtDecode } from "jwt-decode";
 
+const ClaimTypes = {
+    NameIdentifier: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+} as const;
+
 interface JwtPayload {
   role?: string;
   exp?: number;
+  [ClaimTypes.NameIdentifier]?: string; 
 }
 
 // Get auth token
@@ -62,16 +67,19 @@ api.interceptors.response.use(
 
 const hasAdminRole = (): boolean => {
   try {
-    const authData = JSON.parse(localStorage.getItem("auth") || "{}");
-    const token = authData?.token;
+    const token = localStorage.getItem("auth") ? JSON.parse(localStorage.getItem("auth")!).token : null;
+    if (token) {
+      const decodedToken = jwtDecode<JwtPayload>(token);
+      console.info("Decoded Token:", decodedToken);
 
-    if (!token) {
-      logger.warn("No token found when checking admin role");
-      return false;
+      // Check for the ClaimTypes.NameIdentifier claim
+      const userIdClaim = decodedToken[ClaimTypes.NameIdentifier];
+      console.info("User ID Claim:", userIdClaim);
+      return decodedToken.role === "Admin";
+    } else {
+      console.error("No token found in localStorage.");
+      return false; // Return false if no token is found
     }
-
-    const decoded = jwtDecode(token) as JwtPayload;
-    return decoded.role === "Admin";
   } catch (error) {
     logger.error("Error checking admin role: " + JSON.stringify(error));
     return false;
@@ -159,6 +167,7 @@ const fetchEntityById = async (entityTableName: string, id: string) => {
     ? entityTableName
     : `${entityTableName}s`;
   try {
+    // The baseURL already includes /api/, so we should NOT add it again
     const response = await api.get(`/${endpoint}/${id}`);
     return response.data;
   } catch (error) {
@@ -194,9 +203,45 @@ const updateEntity = async (
     ? entityTableName
     : `${entityTableName}s`;
   try {
+    // Log the payload for debugging
+    if (data.RepoLinks) {
+      logger.info(`Updating ${entityTableName} with repository links. Links count: ${(data.RepoLinks as string[]).length}`);
+      // Format repository links as objects with required properties for Link entity
+      if (Array.isArray(data.RepoLinks)) {
+        // Transform repo links into proper objects with required fields for the Link entity
+        const formattedLinks = (data.RepoLinks as string[]).map(url => ({
+          Url: url,
+          Name: "Repository", // Required field in Link entity
+          Description: "Project repository link"
+        }));
+        
+        // Create a separate property for the formatted links
+        data = {
+          ...data,
+          FormattedRepoLinks: formattedLinks
+        };
+        
+        logger.info(`Formatted ${formattedLinks.length} repository links for update request`);
+      }
+    }
+    
     const response = await api.put(`/${endpoint}/${id}`, data);
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
+    // Enhanced error logging
+    if (error.response) {
+      logger.error(`API Error ${error.response.status}: ${JSON.stringify(error.response.data)}`);
+      
+      // If it's a validation error, extract more details
+      if (error.response.status === 400 && error.response.data) {
+        logger.error(`Validation error: ${JSON.stringify(error.response.data)}`);
+      }
+    } else if (error.request) {
+      logger.error(`No response received: ${error.request}`);
+    } else {
+      logger.error(`Error setting up request: ${error.message}`);
+    }
+    
     logger.error(`Error updating ${entityTableName}: ${error}`);
     throw error;
   }
@@ -215,15 +260,97 @@ const deleteEntity = async (entityTableName: string, id: string) => {
   }
 };
 
+const addProjectWithLinks = async (projectData: Record<string, unknown>) => {
+  try {
+    // Extract repository links from the project data
+    const repoLinks = projectData.RepoLinks as string[];
+    
+    // Remove RepoLinks from the project data as it's not part of the ProjectCreateDto
+    const { RepoLinks, ...projectDataWithoutLinks } = projectData as { RepoLinks: string[], [key: string]: unknown };
+    
+    logger.info(`Adding project with data: ${JSON.stringify(projectDataWithoutLinks)}`);
+    logger.info(`Repository links: ${JSON.stringify(repoLinks)}`);
+    
+    // First create the project
+    const response = await api.post('/projects', projectDataWithoutLinks);
+    const createdProject = response.data;
+    logger.info(`Successfully added project with ID: ${createdProject.id}`);
+    
+    // If there are repository links, add them to the project
+    if (repoLinks && repoLinks.length > 0) {
+      logger.info(`Adding ${repoLinks.length} repository links to project ${createdProject.id}`);
+      
+      // Add each repository link to the project
+      for (const link of repoLinks) {
+        try {
+          await api.post(`/projects/${createdProject.id}/links`, { url: link });
+          logger.info(`Added repository link ${link} to project ${createdProject.id}`);
+        } catch (linkError) {
+          logger.error(`Error adding repository link ${link} to project ${createdProject.id}: ${linkError}`);
+          // Continue with other links even if one fails
+        }
+      }
+    }
+    
+    return createdProject;
+  } catch (error) {
+    logger.error(`Error adding project: ${error}`);
+    throw error;
+  }
+};
+
+const fetchEntityRepoLinks = async (entityTableName: string, entityId: string) => {
+  const endpoint = entityTableName.endsWith("s")
+    ? entityTableName
+    : `${entityTableName}s`;
+  try {
+    logger.info(`Fetching repository links for ${entityTableName} with ID ${entityId}`);
+    // The baseURL already includes /api/, so we should NOT add it again
+    const response = await api.get(`/${endpoint}/${entityId}/links`);
+    logger.info(`Successfully fetched repository links: ${JSON.stringify(response.data)}`);
+    console.log('Raw API response data:', response.data);
+    console.log('Type of response data:', typeof response.data);
+    console.log('Is Array?', Array.isArray(response.data));
+    if (response.data && response.data.$values) {
+      console.log('Found $values property:', response.data.$values);
+      return response.data.$values;
+    }
+    
+    // If the response is already an array, return it
+    if (Array.isArray(response.data)) {
+      console.log('Response is an array with length:', response.data.length);
+      return response.data;
+    }
+    
+    // Otherwise, return an empty array
+    console.log('Returning empty array as fallback');
+    return [];
+  } catch (error) {
+    const axiosError = error as AxiosError;
+    
+    // If it's an authentication error, we should propagate it
+    if (axiosError.response?.status === 401) {
+      logger.error(`Authentication error when fetching repository links: ${axiosError.message}`);
+      throw error; // Re-throw authentication errors to be handled by caller
+    }
+    
+    // For other errors, log and return empty array
+    logger.error(`Failed to fetch repository links: ${error}`);
+    return [];
+  }
+};
+
 const dashboardServices = {
   fetchEntities,
   fetchEntityById,
   addEntity,
   updateEntity,
   deleteEntity,
+  fetchEntityRepoLinks,
   hasAdminRole,
   tableExistsInDb,
-  fetchProjects
+  fetchProjects,
+  addProjectWithLinks,
 };
 
 export default dashboardServices;

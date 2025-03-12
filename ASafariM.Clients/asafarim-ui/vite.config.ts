@@ -8,15 +8,19 @@ import md from 'vite-plugin-md';
 export default defineConfig({
   mode: process.env.NODE_ENV,
   optimizeDeps: {
-    include: ['d3', 'react', 'react-dom'],
+    include: ['d3', 'd3-selection', 'd3-scale', 'd3-shape', 'd3-axis', 'd3-time-format', 'react', 'react-dom'],
     exclude: ['@fluentui/tokens'],
+    esbuildOptions: {
+      // Needed for D3 to work properly in production
+      keepNames: true,
+    },
   },
   plugins: [
     react(),
     vitePluginMd({
       markdownItOptions: {
         html: true,
-      },      
+      },
     }),
     md()
   ],
@@ -52,6 +56,12 @@ export default defineConfig({
     outDir: 'dist',
     emptyOutDir: true,
     sourcemap: true,
+    minify: 'terser',
+    terserOptions: {
+      // Preserve function and class names for D3
+      keep_fnames: true,
+      keep_classnames: true,
+    },
     rollupOptions: {
       output: {
         manualChunks: {
@@ -66,18 +76,14 @@ export default defineConfig({
       },
     },
     commonjsOptions: {
-      include: [/node_modules/],
-      transformMixedEsModules: true
+      // Improve compatibility with D3 modules
+      transformMixedEsModules: true,
     },
-    chunkSizeWarningLimit: 2000,
   },
   test: {
-    environment: 'jsdom',
     globals: true,
-    setupFiles: './tests/setupTests.js',
-    exclude: [...configDefaults.exclude],
-    coverage: {
-      reporter: ['text', 'json', 'html'],
-    },
-  }
+    environment: 'jsdom',
+    exclude: [...configDefaults.exclude, 'e2e/*'],
+    root: path.resolve(__dirname, './'),
+  },
 });

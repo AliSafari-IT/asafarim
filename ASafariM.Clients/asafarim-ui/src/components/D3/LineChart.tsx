@@ -1,8 +1,9 @@
-import * as React from "react";
 import * as d3 from "d3";
+import { useEffect, useRef, useState } from "react";
+import D3ChartWrapper from "./D3ChartWrapper";
 
 interface Data {
-  date: Date | null;
+  date: Date | string | null;
   price: number;
 }
 
@@ -12,222 +13,296 @@ interface Line {
 }
 
 interface LineChartProps {
-  data: Line[];
   width: number;
   height: number;
+  data: Line[];
 }
 
-export const LineChart: React.FunctionComponent<LineChartProps> = ({ data, width, height }) => {
-  const svgRef = React.useRef<SVGSVGElement>(null);
+// Main component that handles client-side rendering
+export default function LineChart({ width, height, data }: LineChartProps) {
+  return (
+    <D3ChartWrapper chartName="LineChart" width={width} height={height}>
+      <LineChartImpl width={width} height={height} data={data} />
+    </D3ChartWrapper>
+  );
+}
 
-  React.useEffect(() => {
-    if (!data || !data[0]?.values?.length) {
-      console.warn('No data available for LineChart');
-      return;
+// Implementation component that does the actual D3 rendering
+function LineChartImpl({ width, height, data }: LineChartProps) {
+  const svgRef = useRef<SVGSVGElement>(null);
+  const [processedData, setProcessedData] = useState<Line[]>([]);
+
+  // Process data when component mounts or data changes
+  useEffect(() => {
+    try {
+      const parseDate = d3.timeParse("%Y-%m");
+
+      // Process and validate the data
+      const processedLines = data
+        .map((line) => {
+          const validValues = line.values
+            .filter(
+              (d) =>
+                d && d.date !== null && d.date !== undefined && !isNaN(d.price)
+            )
+            .map((d) => ({
+              date: typeof d.date === "string" ? parseDate(d.date) : d.date,
+              price: d.price,
+            }))
+            .filter((d) => d.date !== null) as { date: Date; price: number }[];
+
+          return {
+            name: line.name,
+            values: validValues,
+          };
+        })
+        .filter((line) => line.values.length > 0);
+
+      setProcessedData(processedLines);
+      console.log(
+        `[LineChart] Processed ${processedLines.length} lines of data`
+      );
+    } catch (error) {
+      console.error("[LineChart] Error processing data:", error);
     }
+  }, [data]);
 
-    // Clear any existing SVG content
-    const svgElement = svgRef.current;
-    if (!svgElement) return;
-    
-    while (svgElement.firstChild) {
-      svgElement.removeChild(svgElement.firstChild);
-    }
-
-    const svg = d3.select(svgElement);
-    const margin = 50;
-    const duration = 250;
-
-    const lineOpacity = "1";
-    const otherLinesOpacity = "0.3";
-    const lineOpacityHover = "0.85";
-    const otherLinesOpacityHover = "0.1";
-    const lineStroke = "3.5";
-    const otherLinesStroke = "1.5";
-    const lineStrokeHover = "5";
-
-    const circleOpacity = "0.85";
-    const circleOpacityOnLineHover = "0.85";
-    const circleRadius = 5;
-    const circleRadiusHover = 6;
+  // Render the chart when processed data is available
+  useEffect(() => {
+    if (!svgRef.current || processedData.length === 0) return;
 
     try {
-      /* Scale */
-      const [minX, maxX] = d3.extent(data[0].values, (d) => d.date);
-      if (!minX || !maxX) {
-        console.error('Invalid date range in data');
-        return;
-      }
+      console.log("[LineChart] Rendering chart with processed data");
 
+      // Clear previous rendering
+      const svg = d3.select(svgRef.current);
+      svg.selectAll("*").remove();
+
+      // Set up margins and dimensions
+      const margin = { top: 20, right: 80, bottom: 30, left: 50 };
+      const innerWidth = width - margin.left - margin.right;
+      const innerHeight = height - margin.top - margin.bottom;
+
+      // Find min and max dates across all lines
+      const allDates = processedData.flatMap(
+        (line) =>
+          line.values
+            .filter((d) => d.date instanceof Date) // Only keep items with actual Date objects
+            .map((d) => d.date as Date) // Tell TypeScript these are definitely Date objects
+      );
+
+      // Safely use d3.min and d3.max with proper typing
+      const minDate =
+        allDates.length > 0 ? d3.min<Date>(allDates) || new Date() : new Date();
+
+      const maxDate =
+        allDates.length > 0 ? d3.max<Date>(allDates) || new Date() : new Date();
+
+      // Find min and max prices across all lines
+      const allPrices = processedData.flatMap((line) =>
+        line.values.map((d) => d.price)
+      );
+      const minPrice = d3.min(allPrices) || 0;
+      const maxPrice = d3.max(allPrices) || 100;
+
+      // Create scales
       const xScale = d3
         .scaleTime()
-        .domain([minX, maxX])
-        .range([0, width - margin]);
-
-      const [minY, maxY] = d3.extent(data[0].values, (d) => d.price);
-      if (minY === undefined || maxY === undefined) {
-        console.error('Invalid price range in data');
-        return;
-      }
+        .domain([minDate, maxDate])
+        .range([0, innerWidth]);
 
       const yScale = d3
         .scaleLinear()
-        .domain([minY, maxY])
-        .range([height - margin, 0]);
+        .domain([minPrice, maxPrice])
+        .range([innerHeight, 0]);
 
-      /* Add SVG */
+      // Create line generator
+      const line = d3
+        .line<{ date: Date; price: number }>()
+        .x((d) => xScale(d.date))
+        .y((d) => yScale(d.price))
+        .curve(d3.curveBasis);
+
+      // Create color scale
+      const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+      // Create axes
+      const xAxis = d3.axisBottom(xScale);
+      const yAxis = d3.axisLeft(yScale);
+
+      // Create chart group
       const g = svg
-        .attr("width", width + margin + "px")
-        .attr("height", height + margin + "px")
         .append("g")
-        .attr("transform", `translate(${margin}, ${margin})`);
+        .attr("transform", `translate(${margin.left},${margin.top})`);
 
-      // Add background rect for better visibility
-      g.append("rect")
-        .attr("width", width - margin)
-        .attr("height", height - margin)
-        .attr("fill", "none");
-
-      const xAxis = d3
-        .axisBottom(xScale)
-        .tickSize(height - margin)
-        .tickSizeOuter(0)
-        .tickFormat(d => d3.timeFormat("%Y-%m-%d")(d as Date))
-        .tickPadding(15);
-
-      const yAxis = d3
-        .axisLeft(yScale)
-        .tickSize(margin - width)
-        .tickSizeOuter(0)
-        .ticks(12)
-        .tickPadding(20);
-
-      // Add the X Axis
+      // Add x-axis
       g.append("g")
         .attr("class", "x axis")
-        .attr("font-weight", "100")
-        .attr("font-family", '"Roboto", "sans-serif"')
+        .attr("transform", `translate(0,${innerHeight})`)
         .call(xAxis);
 
-      // Add the Y Axis
+      // Add y-axis
       g.append("g")
         .attr("class", "y axis")
-        .attr("font-weight", "100")
-        .attr("font-family", '"Roboto", "sans-serif"')
         .call(yAxis)
         .append("text")
-        .attr("y", 15)
-        .attr("transform", "rotate(-90)");
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Price");
 
-      /* Add line into SVG */
-      const line = d3
-        .line<Data>()
-        .x(d => xScale(d.date!))
-        .y(d => yScale(d.price))
-        .defined(d => d.date !== null); // Skip null dates
-
-      const lines = g.append("g").attr("class", "lines");
-
-      lines
+      // Add lines
+      const lineGroups = g
         .selectAll(".line-group")
-        .data(data)
+        .data(processedData)
         .enter()
         .append("g")
-        .attr("class", "line-group")
+        .attr("class", "line-group");
+
+      lineGroups
         .append("path")
         .attr("class", "line")
-        .attr("stroke", (_d, i) => d3.schemeCategory10[i])
-        .attr("d", d => line(d.values))
-        .style("fill", "none")
-        .style("stroke-width", lineStroke)
-        .style("opacity", lineOpacity)
-        .style("stroke-opacity", otherLinesOpacity)
-        .on("mouseover", function(_event, d) {
-          // Reduce opacity and stroke width of other lines
-          lines.selectAll(".line")
-            .transition()
-            .duration(duration)
-            .style("opacity", (otherD) => otherD === d ? lineOpacityHover : otherLinesOpacityHover)
-            .style("stroke-width", (otherD) => otherD === d ? lineStrokeHover : otherLinesStroke);
-          
-          // Highlight the current line
-          d3.select(this)
-            .transition()
-            .duration(duration)
-            .style("opacity", lineOpacityHover)
-            .style("stroke-width", lineStrokeHover);
+        .attr("d", (d) => {
+          // Filter to only include values with valid Date objects
+          const validValues = d.values
+            .filter((item) => item.date instanceof Date)
+            .map((item) => ({
+              date: item.date as Date,
+              price: item.price,
+            }));
+          return line(validValues);
         })
-        .on("mouseout", function() {
-          lines.selectAll(".line")
-            .transition()
-            .duration(duration)
-            .style("opacity", lineOpacity)
-            .style("stroke-width", lineStroke);
-        });
+        .style("stroke", (_d, i) => color(i.toString()))
+        .style("fill", "none")
+        .style("stroke-width", 2);
 
-      /* Add circles in the line */
-      lines
-        .selectAll("circle-group")
-        .data(data)
+      // Add line labels
+      lineGroups
+        .append("text")
+        .datum((d) => {
+          const lastValidValue = d.values
+            .filter((item) => item.date instanceof Date)
+            .pop();
+          return {
+            name: d.name,
+            value: lastValidValue,
+          };
+        })
+        .attr("transform", (d) => {
+          if (!d.value || !(d.value.date instanceof Date)) return "";
+          return `translate(${xScale(d.value.date as Date)},${yScale(
+            d.value.price
+          )})`;
+        })
+        .attr("x", 3)
+        .attr("dy", ".35em")
+        .style("font", "10px sans-serif")
+        .text((d) => d.name);
+
+      // Add hover effects
+      const mouseG = g.append("g").attr("class", "mouse-over-effects");
+
+      mouseG
+        .append("path")
+        .attr("class", "mouse-line")
+        .style("stroke", "#666")
+        .style("stroke-width", "1px")
+        .style("opacity", "0");
+
+      const mousePerLine = mouseG
+        .selectAll(".mouse-per-line")
+        .data(processedData)
         .enter()
         .append("g")
-        .style("fill", (_d, i) => d3.schemeCategory10[i])
-        .selectAll("circle")
-        .data(d => d.values)
-        .enter()
+        .attr("class", "mouse-per-line");
+
+      mousePerLine
         .append("circle")
-        .attr("class", "circle")
-        .attr("cx", d => xScale(d.date!))
-        .attr("cy", d => yScale(d.price))
-        .attr("r", circleRadius)
-        .style("opacity", circleOpacity)
-        .on("mouseover", function(_event, d) {
-          // Highlight circle
-          d3.select(this)
-            .transition()
-            .duration(duration)
-            .attr("r", circleRadiusHover)
-            .style("opacity", circleOpacityOnLineHover);
+        .attr("r", 5)
+        .style("stroke", (d, i) => color(i.toString()))
+        .style("fill", "none")
+        .style("stroke-width", "1px")
+        .style("opacity", "0");
 
-          // Add tooltip
-          g.append("text")
-            .attr("class", "hover-text")
-            .attr("x", xScale(d.date!) + 10)
-            .attr("y", yScale(d.price) - 10)
-            .text(`${d.price}`)
-            .style("font-size", "12px")
-            .style("fill", "black");
+      mousePerLine.append("text").attr("transform", "translate(10,3)");
+
+      mouseG
+        .append("rect")
+        .attr("width", innerWidth)
+        .attr("height", innerHeight)
+        .attr("fill", "none")
+        .attr("pointer-events", "all")
+        .on("mouseout", () => {
+          d3.select(".mouse-line").style("opacity", "0");
+          d3.selectAll(".mouse-per-line circle").style("opacity", "0");
+          d3.selectAll(".mouse-per-line text").style("opacity", "0");
         })
-        .on("mouseout", function() {
-          // Restore circle
-          d3.select(this)
-            .transition()
-            .duration(duration)
-            .attr("r", circleRadius)
-            .style("opacity", circleOpacity);
+        .on("mouseover", () => {
+          d3.select(".mouse-line").style("opacity", "1");
+          d3.selectAll(".mouse-per-line circle").style("opacity", "1");
+          d3.selectAll(".mouse-per-line text").style("opacity", "1");
+        })
+        .on("mousemove", function (event) {
+          const mouse = d3.pointer(event, this);
+          d3.select(".mouse-line").attr(
+            "d",
+            `M${mouse[0]},${innerHeight} ${mouse[0]},0`
+          );
 
-          // Remove tooltip
-          g.select(".hover-text").remove();
+          d3.selectAll(".mouse-per-line").attr(
+            "transform",
+            function (this: any, d: any) {
+              // Type guard to ensure d has the expected structure
+              if (!d || !d.values || !d.values.length) return "";
+
+              const xDate = xScale.invert(mouse[0]);
+              const bisect = d3.bisector(
+                (d: { date: Date; price: number }) => d.date
+              ).left;
+
+              // Filter to only include values with valid Date objects
+              const validValues = d.values
+                .filter((item: any) => item.date instanceof Date)
+                .map((item: any) => ({
+                  date: item.date as Date,
+                  price: item.price,
+                }));
+
+              if (!validValues.length) return "";
+
+              const idx = bisect(validValues, xDate);
+
+              if (idx >= validValues.length) return "";
+
+              const x = xScale(validValues[idx].date);
+              const y = yScale(validValues[idx].price);
+
+              d3.select(this)
+                .select("text")
+                .text(`${d.name}: ${validValues[idx].price}`);
+
+              return `translate(${x},${y})`;
+            }
+          );
         });
-    } catch (error) {
-      console.error('Error rendering LineChart:', error);
-    }
 
-    // Cleanup function
-    return () => {
-      while (svgElement.firstChild) {
-        svgElement.removeChild(svgElement.firstChild);
-      }
-    };
-  }, [data, width, height]); // Re-render when these props change
+      console.log("[LineChart] Chart rendered successfully");
+    } catch (error) {
+      console.error("[LineChart] Error rendering chart:", error);
+    }
+  }, [processedData, width, height]);
 
   return (
-    <svg 
-      ref={svgRef} 
-      className="w-full h-full rounded-lg shadow-sm"
-      style={{ minHeight: '300px' }}
+    <svg
+      ref={svgRef}
+      width={width}
+      height={height}
+      style={{
+        backgroundColor: "#fff",
+        borderRadius: "8px",
+        boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+      }}
     />
   );
-};
-
-export default LineChart;
+}

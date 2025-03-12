@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using ASafariM.Domain.Enums;
 
@@ -24,4 +25,9 @@ public class ProjectUpdateDto
 
     [EnumDataType(typeof(VisibilityEnum))]
     public VisibilityEnum? Visibility { get; set; }
+    
+    /// <summary>
+    /// Collection of repository URLs to associate with the project
+    /// </summary>
+    public List<string> RepoLinks { get; set; } = new List<string>();
 }

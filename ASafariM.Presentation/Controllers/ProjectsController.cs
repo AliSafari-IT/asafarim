@@ -34,7 +34,9 @@ namespace ASafariM.Presentation.Controllers
             _logger.LogInformation("ProjectsController initialized.");
         }
 
-        // To fetch all projects
+        /// <summary>
+        /// Retrieves all projects
+        /// </summary>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Project>>> GetProjects()
         {
@@ -83,6 +85,124 @@ namespace ASafariM.Presentation.Controllers
         }
 
         /// <summary>
+        /// Retrieves repository links for a project by its ID
+        /// </summary>
+        [HttpGet("{id:guid}/links")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<string>>> GetProjectRepoLinks(Guid id)
+        {
+            try
+            {
+                _logger.LogInformation(
+                    "Retrieving repository links for project with ID: {ProjectId}",
+                    id
+                );
+
+                // Check if project exists first
+                var projectExists = await _projectService.ExistsAsync(id);
+                if (!projectExists)
+                {
+                    _logger.LogWarning("Project with ID {ProjectId} not found.", id);
+                    return NotFound($"Project with ID {id} not found");
+                }
+
+                try
+                {
+                    // Get project with links
+                    var project = await _projectService.GetByIdWithLinksAsync(id);
+                    if (project == null)
+                    {
+                        _logger.LogWarning(
+                            "Project with ID {ProjectId} not found after confirming existence.",
+                            id
+                        );
+                        return NotFound($"Project with ID {id} not found");
+                    }
+
+                    // Check if Links collection is null to avoid NullReferenceException
+                    if (project.Links == null)
+                    {
+                        _logger.LogWarning("Links collection is null for project {ProjectId}", id);
+                        project.Links = new List<Link>();
+                    }
+
+                    // Extract links
+                    var links = project.Links.ToList();
+                    _logger.LogInformation(
+                        "Found {LinkCount} links for project {ProjectId}",
+                        links.Count,
+                        id
+                    );
+
+                    // Extract URLs
+                    var repoLinks = links.Select(l => l.Url).ToList();
+
+                    _logger.LogInformation(
+                        "Successfully retrieved {LinkCount} repository links for project: {ProjectName}",
+                        repoLinks.Count,
+                        project.Name
+                    );
+
+                    return Ok(repoLinks);
+                }
+                catch (Exception innerEx)
+                    when (innerEx.Message.Contains("ProjectId")
+                        || (
+                            innerEx.InnerException != null
+                            && innerEx.InnerException.Message.Contains("ProjectId")
+                        )
+                    )
+                {
+                    // Special handling for the "Unknown column 'l.ProjectId'" error
+                    _logger.LogError(
+                        innerEx,
+                        "Database schema error: missing ProjectId column in Links table. Error: {ErrorMessage}",
+                        innerEx.Message
+                    );
+
+                    // Return empty links rather than crashing with a 500 error
+                    _logger.LogInformation(
+                        "Returning empty links list due to database schema issue"
+                    );
+                    return Ok(new List<string>());
+                }
+                catch (Exception innerEx)
+                {
+                    _logger.LogError(
+                        innerEx,
+                        "Error fetching links for project {ProjectId}: {ErrorMessage}",
+                        id,
+                        innerEx.Message
+                    );
+                    if (innerEx.InnerException != null)
+                    {
+                        _logger.LogError(
+                            "Inner exception: {InnerError}",
+                            innerEx.InnerException.Message
+                        );
+                    }
+                    throw; // Rethrow to be caught by outer handler
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                    ex,
+                    "Error retrieving repository links for project with ID {ProjectId}: {ErrorMessage}",
+                    id,
+                    ex.Message
+                );
+                return StatusCode(
+                    500,
+                    "An internal error occurred while retrieving repository links. Please check server logs for details."
+                );
+            }
+        }
+
+        /// <summary>
         /// Creates a new project
         /// </summary>
         [HttpPost]
@@ -119,9 +239,41 @@ namespace ASafariM.Presentation.Controllers
                     Status = (StatusEnum)projectDto.Status,
                 };
 
-                var createdProject = await _projectService.CreateAsync(project);
+                Project createdProject;
 
-                _logger.LogInformation($"Successfully created project: {createdProject.Name}");
+                // Check if repository links are provided
+                if (projectDto.RepoLinks != null && projectDto.RepoLinks.Any())
+                {
+                    _logger.LogInformation(
+                        $"Creating project with {projectDto.RepoLinks.Count} repository links"
+                    );
+
+                    // Filter out invalid links
+                    var validLinks = projectDto
+                        .RepoLinks.Where(link => !string.IsNullOrWhiteSpace(link))
+                        .ToList();
+
+                    if (validLinks.Count != projectDto.RepoLinks.Count)
+                    {
+                        _logger.LogWarning(
+                            $"Filtered out {projectDto.RepoLinks.Count - validLinks.Count} invalid links"
+                        );
+                    }
+
+                    // Use the CreateAsync method that accepts repository links
+                    createdProject = await _projectService.CreateAsync(project, validLinks);
+                    _logger.LogInformation(
+                        $"Successfully created project with repository links: {createdProject.Name}"
+                    );
+                }
+                else
+                {
+                    // Use the standard CreateAsync method without links
+                    createdProject = await _projectService.CreateAsync(project);
+                    _logger.LogInformation(
+                        $"Successfully created project without repository links: {createdProject.Name}"
+                    );
+                }
 
                 return CreatedAtAction(
                     nameof(GetProjectById),
@@ -172,7 +324,7 @@ namespace ASafariM.Presentation.Controllers
                     return NotFound($"Project with ID {id} does not exist.");
                 }
 
-                // ✅ Map DTO to Entity
+                // Map DTO to Entity
                 existingProject.Name = projectDto.Name;
                 existingProject.Description = projectDto.Description;
                 existingProject.StartDate = projectDto.StartDate;
@@ -186,15 +338,84 @@ namespace ASafariM.Presentation.Controllers
                     : existingProject.Visibility;
                 existingProject.UpdatedAt = DateTime.UtcNow;
 
-                // ✅ Call UpdateAsync with the correct entity
+                // First update the basic project properties
                 await _projectService.UpdateAsync(existingProject);
+                _logger.LogInformation(
+                    $"Successfully updated basic project properties for ID: {id}"
+                );
 
-                _logger.LogInformation($"Successfully updated project with ID: {id}");
-                return NoContent();
+                // Log received repository links
+                if (projectDto.RepoLinks != null)
+                {
+                    _logger.LogInformation(
+                        $"Received {projectDto.RepoLinks.Count} repo links with update request"
+                    );
+
+                    // Log individual links for debugging
+                    foreach (var link in projectDto.RepoLinks)
+                    {
+                        _logger.LogInformation($"Received repo link: '{link}'");
+                    }
+
+                    // Then handle repository links separately if provided
+                    if (projectDto.RepoLinks.Any())
+                    {
+                        _logger.LogInformation(
+                            $"Updating repository links for project {id}. Links count: {projectDto.RepoLinks.Count}"
+                        );
+
+                        try
+                        {
+                            // Create a filtered list of valid links
+                            var validLinks = projectDto
+                                .RepoLinks.Where(link => !string.IsNullOrWhiteSpace(link))
+                                .ToList();
+
+                            if (validLinks.Count != projectDto.RepoLinks.Count)
+                            {
+                                _logger.LogWarning(
+                                    $"Filtered out {projectDto.RepoLinks.Count - validLinks.Count} invalid links"
+                                );
+                            }
+
+                            // Separate call to update repository links
+                            await _projectService.UpdateAsync(existingProject, validLinks);
+                            _logger.LogInformation(
+                                $"Successfully updated repository links for project ID: {id}"
+                            );
+                        }
+                        catch (Exception linkEx)
+                        {
+                            _logger.LogError(
+                                linkEx,
+                                $"Error updating repository links for project ID {id}: {linkEx.Message}"
+                            );
+
+                            if (linkEx.InnerException != null)
+                            {
+                                _logger.LogError(
+                                    $"Inner exception: {linkEx.InnerException.Message}"
+                                );
+                            }
+
+                            // Return a partial success response
+                            return StatusCode(
+                                207, // 207 Multi-Status
+                                new
+                                {
+                                    message = "Project was updated but repository links could not be updated",
+                                    error = linkEx.Message,
+                                }
+                            );
+                        }
+                    }
+                }
+
+                return NoContent(); // 204 No Content indicates success
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error updating project with ID {id}");
+                _logger.LogError(ex, $"Unhandled exception in UpdateProject: {ex.Message}");
                 return StatusCode(500, "An internal error occurred.");
             }
         }
@@ -222,7 +443,7 @@ namespace ASafariM.Presentation.Controllers
                 await _projectService.DeleteAsync(id);
 
                 _logger.LogInformation($"Successfully deleted project with ID: {id}");
-                return NoContent(); // ✅ Returns NoContent instead of assigning void to a variable
+                return NoContent(); // Returns NoContent instead of assigning void to a variable
             }
             catch (Exception ex)
             {

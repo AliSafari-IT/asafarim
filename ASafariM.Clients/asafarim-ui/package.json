@@ -1,7 +1,7 @@
 {
   "name": "asafarim-ui",
+  "version": "1.2.0",
   "private": true,
-  "version": "0.2.0",
   "type": "module",
   "packageManager": "yarn@4.7.0",
   "overrides": {
@@ -9,6 +9,7 @@
   },
   "repository": "https://github.com/AliSafari-IT/asafarim.git",
   "scripts": {
+    "co": "cd ../.. && yarn co",
     "preinstall": "npx only-allow yarn",
     "api": "node ./server.js",
     "serve": "cross-env NODE_ENV=development concurrently \"postcss ./src/index.css -o public/build/tailwind.css --watch\"  \"live-server ./\"",

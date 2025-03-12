@@ -4,10 +4,10 @@ interface NotificationProps {
     type: 'success' | 'warning' | 'error' | 'info' | string;
     text: string;
     role?: string;
-    onClose?: () => void;
+    onDismiss?: () => void;
 }
 
-const Notification: React.FC<NotificationProps> = ({ type, text, role, onClose }) => {
+const Notification: React.FC<NotificationProps> = ({ type, text, role, onDismiss: onClose }) => {
     const bgColor =
         type === 'success' ? 'bg-green-100 dark:bg-green-800' :
         type === 'warning' ? 'bg-yellow-100 dark:bg-yellow-800' :

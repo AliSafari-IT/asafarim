@@ -260,7 +260,46 @@ const deleteEntity = async (entityTableName: string, id: string) => {
   }
 };
 
-export const fetchEntityRepoLinks = async (entityTableName: string, entityId: string) => {
+const addProjectWithLinks = async (projectData: Record<string, unknown>) => {
+  try {
+    // Extract repository links from the project data
+    const repoLinks = projectData.RepoLinks as string[];
+    
+    // Remove RepoLinks from the project data as it's not part of the ProjectCreateDto
+    const { RepoLinks, ...projectDataWithoutLinks } = projectData as { RepoLinks: string[], [key: string]: unknown };
+    
+    logger.info(`Adding project with data: ${JSON.stringify(projectDataWithoutLinks)}`);
+    logger.info(`Repository links: ${JSON.stringify(repoLinks)}`);
+    
+    // First create the project
+    const response = await api.post('/projects', projectDataWithoutLinks);
+    const createdProject = response.data;
+    logger.info(`Successfully added project with ID: ${createdProject.id}`);
+    
+    // If there are repository links, add them to the project
+    if (repoLinks && repoLinks.length > 0) {
+      logger.info(`Adding ${repoLinks.length} repository links to project ${createdProject.id}`);
+      
+      // Add each repository link to the project
+      for (const link of repoLinks) {
+        try {
+          await api.post(`/projects/${createdProject.id}/links`, { url: link });
+          logger.info(`Added repository link ${link} to project ${createdProject.id}`);
+        } catch (linkError) {
+          logger.error(`Error adding repository link ${link} to project ${createdProject.id}: ${linkError}`);
+          // Continue with other links even if one fails
+        }
+      }
+    }
+    
+    return createdProject;
+  } catch (error) {
+    logger.error(`Error adding project: ${error}`);
+    throw error;
+  }
+};
+
+const fetchEntityRepoLinks = async (entityTableName: string, entityId: string) => {
   const endpoint = entityTableName.endsWith("s")
     ? entityTableName
     : `${entityTableName}s`;
@@ -307,10 +346,11 @@ const dashboardServices = {
   addEntity,
   updateEntity,
   deleteEntity,
+  fetchEntityRepoLinks,
   hasAdminRole,
   tableExistsInDb,
   fetchProjects,
-  fetchEntityRepoLinks
+  addProjectWithLinks,
 };
 
 export default dashboardServices;

@@ -239,9 +239,41 @@ namespace ASafariM.Presentation.Controllers
                     Status = (StatusEnum)projectDto.Status,
                 };
 
-                var createdProject = await _projectService.CreateAsync(project);
+                Project createdProject;
 
-                _logger.LogInformation($"Successfully created project: {createdProject.Name}");
+                // Check if repository links are provided
+                if (projectDto.RepoLinks != null && projectDto.RepoLinks.Any())
+                {
+                    _logger.LogInformation(
+                        $"Creating project with {projectDto.RepoLinks.Count} repository links"
+                    );
+
+                    // Filter out invalid links
+                    var validLinks = projectDto
+                        .RepoLinks.Where(link => !string.IsNullOrWhiteSpace(link))
+                        .ToList();
+
+                    if (validLinks.Count != projectDto.RepoLinks.Count)
+                    {
+                        _logger.LogWarning(
+                            $"Filtered out {projectDto.RepoLinks.Count - validLinks.Count} invalid links"
+                        );
+                    }
+
+                    // Use the CreateAsync method that accepts repository links
+                    createdProject = await _projectService.CreateAsync(project, validLinks);
+                    _logger.LogInformation(
+                        $"Successfully created project with repository links: {createdProject.Name}"
+                    );
+                }
+                else
+                {
+                    // Use the standard CreateAsync method without links
+                    createdProject = await _projectService.CreateAsync(project);
+                    _logger.LogInformation(
+                        $"Successfully created project without repository links: {createdProject.Name}"
+                    );
+                }
 
                 return CreatedAtAction(
                     nameof(GetProjectById),

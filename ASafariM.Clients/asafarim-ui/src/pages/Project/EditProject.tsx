@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { IProject } from "@/interfaces/IProject";
 import { useNavigate, useParams } from "react-router-dom";
 import dashboardServices from "@/api/entityServices";
 import Loading from "@/components/Loading/Loading";

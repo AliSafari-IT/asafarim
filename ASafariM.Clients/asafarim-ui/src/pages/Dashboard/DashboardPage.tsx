@@ -4,6 +4,7 @@ import { DashboardHeaderBlock } from "./DashboardHeaderBlock";
 import { Link } from "@fluentui/react-components";
 import QuickNavigation from "../../components/Navigation/QuickNavigation";
 import "./Dashboard.css";
+import VisitorStats from "./VisitorStats";
 
 const Dashboard: React.FC = () => {
   return (
@@ -44,6 +45,7 @@ const Dashboard: React.FC = () => {
                 </Link>
               </div>
             </div>
+            <VisitorStats />
           </div>
         </div>
       </div>

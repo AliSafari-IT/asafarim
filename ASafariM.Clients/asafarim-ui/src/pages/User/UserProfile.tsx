@@ -3,13 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import { getUserById } from '@/api/userService';
 import useAuth from '@/hooks/useAuth';
 import { IUser } from '@/interfaces';
+import Wrapper from '@/layout/Wrapper/Wrapper';
+import Header from '@/layout/Header/Header';
+import Footer from '@/layout/Footer/Footer';
 
 const UserProfile: React.FC = () => {
     const [userInfo, setUserInfo] = useState<IUser | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const { authenticatedUser, authenticated, token } = useAuth();
-    const [isActive, setIsActive] = useState(false);
+    const [_isActive, setIsActive] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -44,112 +47,204 @@ const UserProfile: React.FC = () => {
             }
         }, [userInfo]);
 
+    // Generate user avatar initials
+    const getUserInitials = () => {
+        if (!userInfo) return '';
+        const firstInitial = userInfo.firstName ? userInfo.firstName.charAt(0).toUpperCase() : '';
+        const lastInitial = userInfo.lastName ? userInfo.lastName.charAt(0).toUpperCase() : '';
+        return `${firstInitial}${lastInitial}`;
+    };
+
     if (loading) {
         return (
-            <div className="flex items-center justify-center h-screen">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900 dark:border-gray-100"></div>
-            </div>
+            <Wrapper header={<Header />} footer={<Footer />}>
+                <div className="flex justify-center items-center h-[70vh]">
+                    <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[var(--info)]"></div>
+                </div>
+            </Wrapper>
         );
     }
 
     if (error) {
         return (
-            <div className="flex items-center justify-center h-screen">
-                <p className="text-red-600 dark:text-red-400">{error}</p>
-            </div>
+            <Wrapper header={<Header />} footer={<Footer />}>
+                <div className="flex items-center justify-center h-[70vh]">
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-lg max-w-lg">
+                        <p className="font-medium">{error}</p>
+                    </div>
+                </div>
+            </Wrapper>
         );
     }
 
     if (!userInfo) {
         return (
-            <div className="flex items-center justify-center h-screen">
-                <p className="text-gray-500 dark:text-gray-400">User information is not available.</p>
-            </div>
+            <Wrapper header={<Header />} footer={<Footer />}>
+                <div className="flex items-center justify-center h-[70vh]">
+                    <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-6 py-4 rounded-lg max-w-lg">
+                        <p className="font-medium">User information is not available.</p>
+                    </div>
+                </div>
+            </Wrapper>
         );
     }
 
     return (
-        <div className="max-w-4xl mx-auto p-6">
-            <div className="space-y-6">
-                <div className="flex items-center justify-between pb-6">
-                    <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200">User Profile</h2>
-                    <div className="flex items-center space-x-2">
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-teal-500 flex items-center justify-center text-white text-xl font-bold">
-                            {userInfo.firstName?.charAt(0).toUpperCase() || '-'}
-                        </div>
+        <Wrapper header={<Header />} footer={<Footer />}>
+            <div className="container mx-auto px-4 py-8 max-w-5xl">
+                <div className="flex items-center justify-between mb-6">
+                    <div>
+
+                        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mt-2">
+                            My Profile
+                        </h1>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Personal Information */}
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-                        <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">Personal Information</h3>
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400">First Name</label>
-                                <p className="mt-1 text-gray-800 dark:text-gray-200">{userInfo.firstName || 'N/A'}</p>
+                {userInfo.isDeleted && (
+                    <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative mb-4" role="alert">
+                        <span className="font-bold">Note:</span>
+                        <span className="block sm:inline"> Your account has been deleted. Please contact an administrator for reactivation.</span>
+                    </div>
+                )}
+
+                <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
+                    {/* User Header with Avatar */}
+                    <div className="bg-gradient-to-r from-[var(--info-light)] to-[var(--info)] p-6 flex items-center">
+                        {userInfo.profilePicture ? (
+                            <img 
+                                src={userInfo.profilePicture} 
+                                alt={`${userInfo.firstName} ${userInfo.lastName}`}
+                                className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-md" 
+                            />
+                        ) : (
+                            <div className="w-20 h-20 rounded-full bg-white text-[var(--info)] flex items-center justify-center text-2xl font-bold border-4 border-white shadow-md">
+                                {getUserInitials()}
                             </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400">Last Name</label>
-                                <p className="mt-1 text-gray-800 dark:text-gray-200">{userInfo.lastName || 'N/A'}</p>
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400">Email</label>
-                                <p className="mt-1 text-gray-800 dark:text-gray-200">{userInfo.email || 'N/A'}</p>
+                        )}
+                        <div className="ml-6 text-white">
+                            <h2 className="text-2xl font-bold">{userInfo.firstName} {userInfo.lastName}</h2>
+                            <p className="opacity-90">{userInfo.userName || userInfo.email}</p>
+                            <div className="flex mt-2 space-x-2">
+                                <span className={`px-2 py-1 text-xs rounded-full font-medium ${userInfo.isAdmin ? 'bg-purple-200 text-purple-800' : 'bg-gray-200 text-gray-800'}`}>
+                                    {userInfo.isAdmin ? 'Administrator' : 'Standard User'}
+                                </span>
+                                <span className={`px-2 py-1 text-xs rounded-full font-medium ${
+                                    userInfo.isDeleted 
+                                        ? 'bg-red-200 text-red-800' 
+                                        : (userInfo.isActive ? 'bg-green-200 text-green-800' : 'bg-yellow-200 text-yellow-800')
+                                }`}>
+                                    {userInfo.isDeleted ? 'Deleted' : (userInfo.isActive ? 'Active' : 'Inactive')}
+                                </span>
                             </div>
                         </div>
                     </div>
 
-                    {/* Account Details */}
-                    <div className={"bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 col-span-2 sm:col-span-1 "+ (userInfo.isAdmin ? 'border-x-4 border-blue-500' : 'border-x-4 border-gray-500')}>
-                        <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">Account Details</h3>
-                        <div className="space-y-4">
-                            <div className='w-full'>
-                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400">User ID</label>
-                                <p className="mt-1 text-sm text-gray-800 dark:text-gray-200 font-mono">{userInfo.id || 'N/A'}</p>
-                            </div>
-                            <div className='w-full flex justify-between'>
-                                <div className='w-full'>
-                                    <label className="block text-sm font-medium text-gray-500 dark:text-gray-400">Is Admin</label>
-                                    <p className="mt-1 text-gray-800 dark:text-gray-200 font-semibold">{userInfo.isAdmin ? 'Yes' : 'No'}</p>
+                    {/* User Details */}
+                    <div className="p-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {/* Personal Information Section */}
+                            <div className="space-y-4 col-span-2">
+                                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700 pb-2">
+                                    Personal Information
+                                </h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {/* First Name */}
+                                    <div className="space-y-2">
+                                        <h3 className="text-sm font-medium text-[var(--text-info)] dark:text-[var(--info)]">First Name</h3>
+                                        <p className="text-gray-700 dark:text-gray-300">{userInfo.firstName || 'N/A'}</p>
+                                    </div>
+
+                                    {/* Last Name */}
+                                    <div className="space-y-2">
+                                        <h3 className="text-sm font-medium text-[var(--text-info)] dark:text-[var(--info)]">Last Name</h3>
+                                        <p className="text-gray-700 dark:text-gray-300">{userInfo.lastName || 'N/A'}</p>
+                                    </div>
+
+                                    {/* Email */}
+                                    <div className="space-y-2">
+                                        <h3 className="text-sm font-medium text-[var(--text-info)] dark:text-[var(--info)]">Email</h3>
+                                        <p className="text-gray-700 dark:text-gray-300">{userInfo.email || 'N/A'}</p>
+                                    </div>
+
+                                    {/* Username */}
+                                    <div className="space-y-2">
+                                        <h3 className="text-sm font-medium text-[var(--text-info)] dark:text-[var(--info)]">Username</h3>
+                                        <p className="text-gray-700 dark:text-gray-300">{userInfo.userName || 'N/A'}</p>
+                                    </div>
                                 </div>
-                                <div className='w-full'>
-                                    {isActive === true ? (
-                                        <div className="bg-green-300 dark:bg-green-800 text-center rounded-full px-2 py-1 mt-1 text-gray-800 font-semibold dark:text-yellow-100">
-                                            Active User
+                            </div>
+
+                            {/* Account Details Section */}
+                            <div className="space-y-4 col-span-2">
+                                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700 pb-2">
+                                    Account Details
+                                </h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {/* User ID */}
+                                    <div className="space-y-2">
+                                        <h3 className="text-sm font-medium text-[var(--text-info)] dark:text-[var(--info)]">User ID</h3>
+                                        <p className="text-gray-700 dark:text-gray-300 font-mono text-sm">{userInfo.id || 'N/A'}</p>
+                                    </div>
+
+                                    {/* Account Status */}
+                                    <div className="space-y-2">
+                                        <h3 className="text-sm font-medium text-[var(--text-info)] dark:text-[var(--info)]">Account Status</h3>
+                                        <div className="flex items-center">
+                                            <span className={`inline-block w-3 h-3 rounded-full mr-2 ${
+                                                userInfo.isDeleted 
+                                                    ? 'bg-red-500' 
+                                                    : (userInfo.isActive ? 'bg-green-500' : 'bg-yellow-500')
+                                            }`}></span>
+                                            <p className="text-gray-700 dark:text-gray-300">
+                                                {userInfo.isDeleted ? 'Deleted' : (userInfo.isActive ? 'Active' : 'Inactive')}
+                                            </p>
                                         </div>
-                                    ) : (
-                                        <div className="bg-red-200 dark:bg-red-800 text-center rounded-full px-2 py-1 mt-1 text-gray-800 font-semibold dark:text-yellow-400">
-                                            Inactive User
+                                    </div>
+
+                                    {/* Date Created */}
+                                    <div className="space-y-2">
+                                        <h3 className="text-sm font-medium text-[var(--text-info)] dark:text-[var(--info)]">Date Created</h3>
+                                        <p className="text-gray-700 dark:text-gray-300">
+                                            {userInfo.createdAt && new Date(userInfo.createdAt).toLocaleString() || 'N/A'}
+                                        </p>
+                                    </div>
+
+                                    {/* Date Modified */}
+                                    <div className="space-y-2">
+                                        <h3 className="text-sm font-medium text-[var(--text-info)] dark:text-[var(--info)]">Date Modified</h3>
+                                        <p className="text-gray-700 dark:text-gray-300">
+                                            {userInfo.updatedAt && new Date(userInfo.updatedAt).toLocaleString() || 'N/A'}
+                                        </p>
+                                    </div>
+
+                                    {/* Last Login */}
+                                    <div className="space-y-2">
+                                        <h3 className="text-sm font-medium text-[var(--text-info)] dark:text-[var(--info)]">Last Login</h3>
+                                        <p className="text-gray-700 dark:text-gray-300">
+                                            {userInfo.lastLogin && userInfo.lastLogin !== '0001-01-01T00:00:00' 
+                                                ? new Date(userInfo.lastLogin).toLocaleString() 
+                                                : 'N/A'}
+                                        </p>
+                                    </div>
+
+                                    {/* Admin Status */}
+                                    <div className="space-y-2">
+                                        <h3 className="text-sm font-medium text-[var(--text-info)] dark:text-[var(--info)]">Admin Status</h3>
+                                        <div className="flex items-center">
+                                            <span className={`inline-block w-3 h-3 rounded-full mr-2 ${userInfo.isAdmin ? 'bg-purple-500' : 'bg-gray-500'}`}></span>
+                                            <p className="text-gray-700 dark:text-gray-300">
+                                                {userInfo.isAdmin ? 'Administrator' : 'Standard User'}
+                                            </p>
                                         </div>
-                                    )}
+                                    </div>
                                 </div>
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400">Date Created</label>
-                                <p className="mt-1 text-gray-800 dark:text-gray-200">{userInfo.createdAt && new Date(userInfo.createdAt).toLocaleString() || 'N/A'}</p>
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400">Date Modified</label>
-                                <p className="mt-1 text-gray-800 dark:text-gray-200">{userInfo.updatedAt && new Date(userInfo.updatedAt).toLocaleString() || 'N/A'}</p>
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400">Last Login</label>
-                                <p className="mt-1 text-gray-800 dark:text-gray-200">
-                                    {userInfo.lastLogin && userInfo.lastLogin !== '0001-01-01T00:00:00' 
-                                        ? new Date(userInfo.lastLogin).toLocaleString() 
-                                        : 'N/A'}
-                                </p>
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400">Is Deleted</label>
-                                <p className="mt-1 text-gray-800 dark:text-gray-200">{userInfo.isDeleted ? `Yes (${userInfo.deletedAt?.toLocaleString()})` : 'No'}</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </Wrapper>
     );
 };
 

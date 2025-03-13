@@ -337,9 +337,7 @@ function App() {
             path="/user-profile"
             element={
               <PrivateRoute>
-                <Layout header={<></>} footer={<Footer />}>
-                  <UserProfile />
-                </Layout>
+                <UserProfile />
               </PrivateRoute>
             }
           />

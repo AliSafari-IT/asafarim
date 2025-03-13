@@ -78,15 +78,20 @@ namespace ASafariM.Infrastructure.Services
             return roles;
         }
 
-        public async Task<Role> GetRoleByIdAsync(Guid id)
+        public async Task<Role?> GetRoleByIdAsync(Guid id)
         {
             Log.Information($"Getting role by ID: {id}");
             var role = await GetByIdAsync(id);
+            if (role == null)
+            {
+                Log.Warning("Role not found by ID: {RoleId}", id);
+                return null;
+            }
             Log.Information("Role retrieved successfully.");
             return role;
         }
 
-        public async Task<Role> GetRoleByNameAsync(string name)
+        public async Task<Role?> GetRoleByNameAsync(string name)
         {
             Log.Information($"Getting role by name: {name}");
             var role = await _context.Roles.FirstOrDefaultAsync(r => r.Name == name);

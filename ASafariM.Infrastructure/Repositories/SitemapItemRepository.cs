@@ -37,7 +37,7 @@ namespace ASafariM.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<SitemapItem> GetByIdAsync(Guid id)
+        public async Task<SitemapItem?> GetByIdAsync(Guid id)
         {
             return await _context
                 .SitemapItems.Include(s => s.ParentItemId)
@@ -46,7 +46,7 @@ namespace ASafariM.Infrastructure.Repositories
                 .FirstOrDefaultAsync(s => s.Id == id && !s.IsDeleted);
         }
 
-        public async Task<SitemapItem> GetBySlugAsync(string slug)
+        public async Task<SitemapItem?> GetBySlugAsync(string slug)
         {
             return await _context
                 .SitemapItems.Include(s => s.ParentItemId)

@@ -37,7 +37,8 @@ namespace ASafariM.Infrastructure.Services
             AppDbContext context,
             ASafariM.Application.Interfaces.IAuthorizationService authorizationService,
             IConfiguration configuration,
-            IEmailService emailService
+            IEmailService emailService,
+            JwtTokenService jwtTokenService
         )
         {
             _userRepository = userRepository;
@@ -46,6 +47,7 @@ namespace ASafariM.Infrastructure.Services
             _authorizationService = authorizationService;
             _configuration = configuration;
             _emailService = emailService;
+            _jwtTokenService = jwtTokenService;
         }
 
         public async Task<bool> RegisterUserAsync(RegisterUserCommand command)

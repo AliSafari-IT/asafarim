@@ -67,6 +67,9 @@ public class AppDbContext : DbContext
 
     public DbSet<Link> Links { get; set; }
 
+    // Visitor tracking
+    public DbSet<VisitorLog> VisitorLogs { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         var configuration = new ConfigurationBuilder()

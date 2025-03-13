@@ -262,6 +262,9 @@ const EditUser: React.FC = () => {
     },
   });
 
+  // Determine if form fields should be disabled
+  const isFormDisabled = user?.isDeleted || false;
+
   if (!user) return <p>Loading...</p>;
 
   return (
@@ -270,31 +273,37 @@ const EditUser: React.FC = () => {
       footer={<Footer />}
     >
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-        <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 sm:p-6 lg:p-8 transition-colors duration-200">
-          {error && (
-            <div className="mb-6 p-4 bg-red-100 dark:bg-red-900/30 border-l-4 border-red-500 rounded-md">
-              <p className="text-red-700 dark:text-red-400 text-sm">
-                {error}
-              </p>
-            </div>
-          )}
-          
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-xl sm:text-2xl font-semibold text-[var(--text-warning)] dark:text-[var(--warning)] transition-colors duration-200">
-              User Management
-            </h1>
-            <button
-              type="button"
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <button 
               onClick={() => navigate('/users')}
-              className="flex items-center px-3 py-2 text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-colors duration-200"
+              className="flex items-center text-[var(--info)] hover:text-[var(--info-dark)] transition-colors duration-200"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
               Back to Users
             </button>
+            <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mt-2">
+              {user?.isDeleted ? 'View Deleted User' : 'Edit User'}
+            </h1>
           </div>
-          
+        </div>
+
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span className="block sm:inline">{error}</span>
+          </div>
+        )}
+
+        {user?.isDeleted && (
+          <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span className="font-bold">Note:</span>
+            <span className="block sm:inline"> This account has been deleted. You can view the details but cannot make changes. The account must be reactivated before any updates can be made.</span>
+          </div>
+        )}
+        
+        <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 sm:p-6 lg:p-8 transition-colors duration-200">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {isLoggedInUserAdmin && (
@@ -306,6 +315,7 @@ const EditUser: React.FC = () => {
                     options={roleOptions}
                     onChange={handleRoleChange}
                     selectedKeys={user.roles?.map(r => r.toString()) || []}
+                    disabled={isFormDisabled}
                     styles={{
                       root: dropdownStyles,
                       dropdown: {
@@ -326,7 +336,8 @@ const EditUser: React.FC = () => {
                   name="firstName"
                   value={user.firstName || ''}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
+                  disabled={isFormDisabled}
+                  className={`w-full px-4 py-2 ${isFormDisabled ? 'bg-gray-100 dark:bg-gray-800 cursor-not-allowed' : 'bg-white dark:bg-gray-700'} text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200`}
                 />
               </div>
 
@@ -340,7 +351,8 @@ const EditUser: React.FC = () => {
                   name="lastName"
                   value={user.lastName || ''}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
+                  disabled={isFormDisabled}
+                  className={`w-full px-4 py-2 ${isFormDisabled ? 'bg-gray-100 dark:bg-gray-800 cursor-not-allowed' : 'bg-white dark:bg-gray-700'} text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200`}
                 />
               </div>
 
@@ -354,7 +366,8 @@ const EditUser: React.FC = () => {
                   name="userName"
                   value={user.userName || ''}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
+                  disabled={isFormDisabled}
+                  className={`w-full px-4 py-2 ${isFormDisabled ? 'bg-gray-100 dark:bg-gray-800 cursor-not-allowed' : 'bg-white dark:bg-gray-700'} text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200`}
                 />
                 {/* Feedback message */}
                 {usernameAvailable !== null && (
@@ -376,7 +389,8 @@ const EditUser: React.FC = () => {
                   name="email"
                   value={user.email || ''}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
+                  disabled={isFormDisabled}
+                  className={`w-full px-4 py-2 ${isFormDisabled ? 'bg-gray-100 dark:bg-gray-800 cursor-not-allowed' : 'bg-white dark:bg-gray-700'} text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200`}
                 />
                 {/* Feedback message */}
                 {emailAvailable !== null && (
@@ -396,7 +410,8 @@ const EditUser: React.FC = () => {
                   name="dateOfBirth"
                   value={user.dateOfBirth || ''}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
+                  disabled={isFormDisabled}
+                  className={`w-full px-4 py-2 ${isFormDisabled ? 'bg-gray-100 dark:bg-gray-800 cursor-not-allowed' : 'bg-white dark:bg-gray-700'} text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200`}
                 />
               </div>
 
@@ -408,7 +423,8 @@ const EditUser: React.FC = () => {
                   name="profilePicture"
                   value={user.profilePicture || ''}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
+                  disabled={isFormDisabled}
+                  className={`w-full px-4 py-2 ${isFormDisabled ? 'bg-gray-100 dark:bg-gray-800 cursor-not-allowed' : 'bg-white dark:bg-gray-700'} text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200`}
                 />
               </div>
 
@@ -420,7 +436,8 @@ const EditUser: React.FC = () => {
                   name="remark"
                   value={user.remark || ''}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
+                  disabled={isFormDisabled}
+                  className={`w-full px-4 py-2 ${isFormDisabled ? 'bg-gray-100 dark:bg-gray-800 cursor-not-allowed' : 'bg-white dark:bg-gray-700'} text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200`}
                 />
               </div>
 
@@ -431,7 +448,8 @@ const EditUser: React.FC = () => {
                   name="biography"
                   value={user.biography || ''}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
+                  disabled={isFormDisabled}
+                  className={`w-full px-4 py-2 ${isFormDisabled ? 'bg-gray-100 dark:bg-gray-800 cursor-not-allowed' : 'bg-white dark:bg-gray-700'} text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200`}
                   rows={4}
                 ></textarea>
               </div>
@@ -451,7 +469,8 @@ const EditUser: React.FC = () => {
                         isAdmin: e.target.checked
                       });
                     }}
-                    className="w-5 h-5 text-[var(--info)] dark:text-[var(--info)] bg-white dark:bg-gray-600 border-gray-300 dark:border-gray-500 rounded focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
+                    disabled={isFormDisabled}
+                    className={`w-5 h-5 text-[var(--info)] dark:text-[var(--info)] ${isFormDisabled ? 'bg-gray-100 dark:bg-gray-800 cursor-not-allowed' : 'bg-white dark:bg-gray-600'} border-gray-300 dark:border-gray-500 rounded focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200`}
                   />
                   <label className="text-gray-700 dark:text-gray-200 text-sm font-medium">Administrator Access</label>
                 </div>
@@ -465,19 +484,22 @@ const EditUser: React.FC = () => {
                   <input
                     type="checkbox"
                     name="isActive"
-                    checked={user.isActive || false}
+                    checked={user.isDeleted ? false : (user.isActive || false)}
+                    disabled={user.isDeleted || isFormDisabled}
                     onChange={(e) => {
                       setUser({
                         ...user,
                         isActive: e.target.checked
                       });
                     }}
-                    className="w-5 h-5 text-[var(--info)] dark:text-[var(--info)] bg-white dark:bg-gray-600 border-gray-300 dark:border-gray-500 rounded focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
+                    className={`w-5 h-5 text-[var(--info)] dark:text-[var(--info)] ${isFormDisabled ? 'bg-gray-100 dark:bg-gray-800 cursor-not-allowed' : 'bg-white dark:bg-gray-600'} border-gray-300 dark:border-gray-500 rounded focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200`}
                   />
                   <label className="text-gray-700 dark:text-gray-200 text-sm font-medium">Active Account</label>
                 </div>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 ml-8">
-                  Determines whether this user can log in and access the system
+                  {user.isDeleted 
+                    ? "This account has been deleted and cannot be activated" 
+                    : "Determines whether this user can log in and access the system"}
                 </p>
               </div>
             </div>
@@ -488,14 +510,16 @@ const EditUser: React.FC = () => {
                 onClick={() => navigate('/users')}
                 className="px-5 py-2.5 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-colors duration-200"
               >
-                Cancel
+                {user?.isDeleted ? 'Back' : 'Cancel'}
               </button>
-              <button
-                type="submit"
-                className="px-5 py-2.5 bg-[var(--info)] dark:bg-[var(--info-dark)] text-white rounded-lg hover:bg-[var(--info-dark)] dark:hover:bg-[var(--info-dark)] focus:outline-none focus:ring-2 focus:ring-[var(--info)] transition-colors duration-200"
-              >
-                Save Changes
-              </button>
+              {!user?.isDeleted && (
+                <button
+                  type="submit"
+                  className="px-5 py-2.5 bg-[var(--info)] dark:bg-[var(--info-dark)] text-white rounded-lg hover:bg-[var(--info-dark)] dark:hover:bg-[var(--info-dark)] focus:outline-none focus:ring-2 focus:ring-[var(--info)] transition-colors duration-200"
+                >
+                  Save Changes
+                </button>
+              )}
             </div>
           </form>
         </div>

@@ -50,21 +50,9 @@ echo "0: Exit"
 echo ""
 read -p "Enter deploy mode: " DEPLOY_MODE
 
-# Database Migration update
+# Database Migration prompt
 echo " ******* Database Migration update *******"
 read -p "Apply database migration? (y/n): " DB_MODE
-
-if [ "$DB_MODE" = "y" ]; then
-  # Apply database migrations
-  cd "$REPO_DIR" || handle_error "Repository directory not found!" "exit"
-  log "Applying database migrations..."
-  
-  dotnet tool restore || handle_error "Failed to restore .NET tools!" "exit"
-
-  dotnet ef database update --project ./ASafariM.Infrastructure/ASafariM.Infrastructure.csproj --startup-project ./ASafariM.Api/ASafariM.Api.csproj --verbose || handle_error "Database migration failed!" "exit"
-
-  log "Database migrations applied successfully."
-fi
 
 if [ "$DEPLOY_MODE" -eq 0 ]; then
   log "Exiting..."
@@ -251,6 +239,19 @@ clean_old_backups() {
 
 # Step 1: Check for updates in asafarim repository
 update_repo "$REPO_DIR"
+
+# Step 2: Apply database migrations if requested
+if [ "$DB_MODE" = "y" ]; then
+  # Apply database migrations
+  cd "$REPO_DIR" || handle_error "Repository directory not found!" "exit"
+  log "Applying database migrations..."
+  
+  dotnet tool restore || handle_error "Failed to restore .NET tools!" "exit"
+
+  dotnet ef database update --project ./ASafariM.Infrastructure/ASafariM.Infrastructure.csproj --startup-project ./ASafariM.Api/ASafariM.Api.csproj --verbose || handle_error "Database migration failed!" "exit"
+
+  log "Database migrations applied successfully."
+fi
 
 # *********************************************************************
 # Frontend Deployment

@@ -317,6 +317,70 @@
   background-color: var(--primary-dark);
 }
 
+/* Visitor Analytics */
+.visitor-status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: var(--bg-primary);
+  border-radius: 8px;
+  border-left: 4px solid var(--info);
+}
+
+.visitor-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(var(--info-rgb), 0.1);
+  border-radius: 50%;
+  color: var(--info);
+}
+
+.visitor-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.visitor-count {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.visitor-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.visitor-label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.visitor-description {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0 0 0.5rem 0;
+}
+
+.loading-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+  background-color: var(--bg-primary);
+  border-radius: 8px;
+  font-style: italic;
+}
+
 /* Responsive Styles */
 @media (max-width: 992px) {
   .dashboard-additional-sections {
@@ -349,6 +413,15 @@
   
   .view-details-button {
     align-self: flex-start;
+  }
+  
+  .visitor-status-indicator {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .visitor-info {
+    width: 100%;
   }
 }
 

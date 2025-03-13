@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
 import About from "./pages/AboutMe/About";
 import Dashboard from "./pages/Dashboard/DashboardPage";
@@ -48,12 +48,19 @@ import HealthCheck from "./pages/HealthCheck/HealthCheck";
 import ViewUser from "./pages/User/ViewUser";
 import EditProject from "./pages/Project/EditProject";
 import UnderConstruction from "./pages/UnderConstruction";
+import { trackPageView } from "./services/analyticsService";
 
 // const userUrl = API_URL + '/users';
 
 function App() {
   const { authenticatedUser, authenticated, token } = useAuth();
   const mds = getAllMdFiles();
+  const location = useLocation();
+
+  // Track page views when route changes
+  useEffect(() => {
+    trackPageView(location.pathname, document.title);
+  }, [location]);
 
   useEffect(() => {
     if (!authenticated || authenticatedUser?.isDeleted) {

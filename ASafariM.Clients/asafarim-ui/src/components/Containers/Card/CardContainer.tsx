@@ -3,68 +3,138 @@ import {
   Button,
   FluentProvider,
   makeStyles,
-  Text,
   webDarkTheme,
   webLightTheme,
 } from '@fluentui/react-components';
 import { DashCard } from './DashCard';
-import { TextField } from '@fluentui/react';
-import { ArrowLeft24Regular, ArrowRight24Regular } from '@fluentui/react-icons';
+import { 
+  ArrowLeft24Regular, 
+  ArrowRight24Regular,
+  Add24Regular as IconAdd,
+  Search24Regular,
+  Filter24Regular,
+  Fire24Regular as Refresh24Regular
+} from '@fluentui/react-icons';
 import { ITopic } from '../../../interfaces/ITopic';
 import { ITag } from '../../../interfaces/ITag';
-import { Add24Regular as IconAdd } from "@fluentui/react-icons";
 import { useNavigate } from 'react-router-dom';
 import dashboardServices from '../../../api/entityServices';
 import Loading from '../../Loading/Loading';
 import { useTheme } from '@/contexts/ThemeContext';
+import './CardContainer.css';
 
 const useStyles = makeStyles({
   container: {
-    padding: '20px',
+    padding: '0',
     display: 'flex',
     flexDirection: 'column',
+    width: '100%',
+  },
+  sectionHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: '1rem',
+    padding: '0.5rem 0',
+    borderBottom: '1px solid var(--border-primary)',
+  },
+  sectionTitle: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    margin: '0',
+    fontSize: '1.25rem',
+    fontWeight: '600',
+    color: 'var(--text-primary)',
+  },
+  actionButtons: {
+    display: 'flex',
+    gap: '0.5rem',
   },
   cardsWrapper: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    gap: '16px',
-    marginBottom: '20px',
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+    gap: '1.25rem',
+    marginBottom: '1.5rem',
   },
   pagination: {
     display: 'flex',
     alignItems: 'center',
-    gap: '5px',
+    justifyContent: 'center',
+    gap: '0.75rem',
+    padding: '0.75rem',
+    background: 'var(--bg-primary)',
+    borderRadius: '8px',
+    marginBottom: '1.5rem',
+  },
+  pageInfo: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    color: 'var(--text-secondary)',
+    fontSize: '0.875rem',
+  },
+  pageButton: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '36px',
+    height: '36px',
+    borderRadius: '50%',
+    background: 'var(--bg-secondary)',
+    border: '1px solid var(--border-primary)',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    color: 'var(--text-primary)',
+    '&:hover': {
+      background: 'var(--primary)',
+      color: 'white',
+    },
+    '&:disabled': {
+      opacity: 0.5,
+      cursor: 'not-allowed',
+    },
+  },
+  emptyState: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '3rem',
+    background: 'var(--bg-primary)',
+    borderRadius: '8px',
+    textAlign: 'center',
+    color: 'var(--text-secondary)',
   },
 });
 
 const CardContainer: React.FC = () => {
   const classes = useStyles();
-  const theme = useTheme().theme === 'dark' ? webDarkTheme : webLightTheme;
+  const { theme: appTheme } = useTheme();
+  const theme = appTheme === 'dark' ? webDarkTheme : webLightTheme;
 
   const [topics, setTopics] = useState<ITopic[]>();
   const [currentTopicsPage, setCurrentTopicsPage] = useState<number>(1);
   const [currentTagsPage, setCurrentTagsPage] = useState<number>(1);
   const [tags, setTags] = useState<ITag[]>();
   const [inputPage, setInputPage] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [refreshKey, setRefreshKey] = useState<number>(0);
   const cardsPerPage = 3;
   const navigate = useNavigate();
 
   useEffect(() => {
-    const loadTopics = async () => {
+    const loadData = async () => {
+      setIsLoading(true);
       try {
-        const fetchedTopics = await dashboardServices.fetchEntities('topics');
+        const [fetchedTopics, fetchedTags] = await Promise.all([
+          dashboardServices.fetchEntities('topics'),
+          dashboardServices.fetchEntities('tags')
+        ]);
+        
         console.log('Fetched topics:', fetchedTopics);
         setTopics(fetchedTopics);
-      } catch (error) {
-        console.error('Error fetching topics:', error);
-      }
-    };
-
-    const loadTags = async () => {
-      try {
-        const fetchedTags = await dashboardServices.fetchEntities('tags');
+        
         console.log('Fetched tags:', fetchedTags);
         if (Array.isArray(fetchedTags)) {
           setTags(fetchedTags);
@@ -72,13 +142,18 @@ const CardContainer: React.FC = () => {
           console.error('Tags data is not an array:', fetchedTags);
         }
       } catch (error) {
-        console.error('Error fetching tags:', error);
+        console.error('Error fetching data:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    loadTags();
-    loadTopics();
-  }, []);
+    loadData();
+  }, [refreshKey]);
+
+  const refreshData = () => {
+    setRefreshKey(prev => prev + 1);
+  };
 
   const totalTopicCards = topics?.length || 0;
   const totalTopicPages = Math.max(1, Math.ceil(totalTopicCards / cardsPerPage));
@@ -103,7 +178,6 @@ const CardContainer: React.FC = () => {
         setCurrentTopicsPage((prev) => Math.min(prev + 1, totalTopicPages));
         break;
     }
-
   };
 
   const goToPreviousPage = (cardType = 'topic') => {
@@ -115,7 +189,6 @@ const CardContainer: React.FC = () => {
         setCurrentTopicsPage((prev) => Math.max(prev - 1, 1));
         break;
     }
-
   };
 
   const goToPage = (cardType = 'topic') => {
@@ -150,122 +223,246 @@ const CardContainer: React.FC = () => {
     }
   };
 
-  const renderTags = () => {
-    console.log('Rendering tags:', { tags, currentTags, totalTagCards, currentTagsPage });
-    
-    if (!tags || tags.length === 0) {
+  const renderTopics = () => {
+    if (isLoading) {
       return (
-        <>
-          <h1><span>Tags </span> <Button icon={<IconAdd fontSize={16} />} onClick={() => navigate('/tags/add')} title='Add New Tag' /></h1>
-          <div className={classes.cardsWrapper}>
-            <Loading size={50} color="skyblue" />
-          </div>
-        </>
+        <div className="card-container__loading">
+          <Loading size={50} color="var(--primary)" />
+          <p>Loading topics...</p>
+        </div>
+      );
+    }
+
+    if (!topics || topics.length === 0) {
+      return (
+        <div className={classes.emptyState}>
+          <img src="/empty-state.svg" alt="No topics" className="empty-state-icon" />
+          <h3>No Topics Found</h3>
+          <p>Start by adding your first topic</p>
+          <Button 
+            appearance="primary" 
+            icon={<IconAdd />} 
+            onClick={() => navigate('/topics/add')}
+          >
+            Add Topic
+          </Button>
+        </div>
       );
     }
 
     return (
-      <>
-        <h1><span>Tags </span> <Button icon={<IconAdd fontSize={16} />} onClick={() => navigate('/tags/add')} title='Add New Tag' /></h1>
-        <div className={classes.cardsWrapper}>
-          {currentTags && currentTags.length > 0 ? (
-            currentTags.map((tag) => (
-              <DashCard
-                key={tag.id}
-                modelName='tag'
-                modelId={tag.id}
-                name={tag.name}
-                title={tag.name}
-                content={tag.slug}
-                description={tag.description}
-                imgPath="logoT.svg"
-                imgAlt={tag.name}
-              />
-            ))
-          ) : (
-            <Text>No tags to display</Text>
-          )}
+      <div className={classes.cardsWrapper}>
+        {currentTopics?.map((topic, index) => (
+          <DashCard
+            key={index}
+            modelName='topic'
+            modelId={topic.id}
+            name={topic.name}
+            title={topic.name}
+            content={topic.technologyCategory}
+            description={topic.description}
+            imgPath="./TopicDefaultIcon.svg"
+            imgAlt={topic.name}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  const renderTags = () => {
+    if (isLoading) {
+      return (
+        <div className="card-container__loading">
+          <Loading size={50} color="var(--primary)" />
+          <p>Loading tags...</p>
         </div>
-      </>
+      );
+    }
+
+    if (!tags || tags.length === 0) {
+      return (
+        <div className={classes.emptyState}>
+          <img src="/empty-state.svg" alt="No tags" className="empty-state-icon" />
+          <h3>No Tags Found</h3>
+          <p>Start by adding your first tag</p>
+          <Button 
+            appearance="primary" 
+            icon={<IconAdd />} 
+            onClick={() => navigate('/tags/add')}
+          >
+            Add Tag
+          </Button>
+        </div>
+      );
+    }
+
+    return (
+      <div className={classes.cardsWrapper}>
+        {currentTags?.map((tag) => (
+          <DashCard
+            key={tag.id}
+            modelName='tag'
+            modelId={tag.id}
+            name={tag.name}
+            title={tag.name}
+            content={tag.slug}
+            description={tag.description}
+            imgPath="logoT.svg"
+            imgAlt={tag.name}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  const renderPagination = (currentPage: number, totalPages: number, type: string) => {
+    if (totalPages <= 1) return null;
+
+    return (
+      <div className={classes.pagination}>
+        <button 
+          className="pagination-button prev"
+          onClick={() => goToPreviousPage(type)}
+          disabled={currentPage === 1}
+          title="Previous Page"
+        >
+          <ArrowLeft24Regular />
+        </button>
+        
+        <div className="pagination-pages">
+          {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+            // Logic to show pages around current page
+            let pageNum;
+            if (totalPages <= 5) {
+              pageNum = i + 1;
+            } else {
+              const startPage = Math.max(1, currentPage - 2);
+              const endPage = Math.min(totalPages, startPage + 4);
+              pageNum = startPage + i;
+              if (pageNum > endPage) return null;
+            }
+            
+            return (
+              <button 
+                key={pageNum}
+                className={`pagination-page ${pageNum === currentPage ? 'active' : ''}`}
+                onClick={() => {
+                  if (type === 'tag') {
+                    setCurrentTagsPage(pageNum);
+                  } else {
+                    setCurrentTopicsPage(pageNum);
+                  }
+                }}
+              >
+                {pageNum}
+              </button>
+            );
+          })}
+        </div>
+        
+        <button 
+          className="pagination-button next"
+          onClick={() => goToNextPage(type)}
+          disabled={currentPage === totalPages}
+          title="Next Page"
+        >
+          <ArrowRight24Regular />
+        </button>
+        
+        <div className="pagination-info">
+          Page {currentPage} of {totalPages}
+        </div>
+      </div>
     );
   };
 
   return (
     <FluentProvider theme={theme}>
-      <div className={classes.container}>
-        <h1><span>Topics </span> <Button icon={<IconAdd fontSize={16} />} onClick={() => navigate('/topics/add')} title='Add New Topic' /></h1>
-        <div className={classes.cardsWrapper}>
-          {currentTopics ? currentTopics.map((topic, index) => (
-            <DashCard
-              key={index}
-              modelName='topic'
-              modelId={topic.id}
-              name={topic.name}
-              title={topic.name}
-              content={topic.technologyCategory}
-              description={topic.description}
-              imgPath="./TopicDefaultIcon.svg"
-              imgAlt={topic.name}
-
-            />
-          )) :
-            <Loading size={50} color="skyblue" />}
+      <div className="card-container">
+        {/* Topics Section */}
+        <div className={classes.container}>
+          <div className={classes.sectionHeader}>
+            <h2 className={classes.sectionTitle}>
+              <span className="section-icon topics">T</span>
+              Topics
+            </h2>
+            <div className={classes.actionButtons}>
+              <Button 
+                icon={<Refresh24Regular />} 
+                onClick={refreshData} 
+                title="Refresh Data"
+                className="action-button refresh"
+              />
+              <Button 
+                icon={<Search24Regular />} 
+                onClick={() => navigate('/topics/search')} 
+                title="Search Topics"
+                className="action-button search"
+              />
+              <Button 
+                icon={<Filter24Regular />} 
+                onClick={() => {}} 
+                title="Filter Topics"
+                className="action-button filter"
+              />
+              <Button 
+                icon={<IconAdd />} 
+                onClick={() => navigate('/topics/add')} 
+                title="Add New Topic"
+                appearance="primary"
+                className="action-button add"
+              >
+                Add Topic
+              </Button>
+            </div>
+          </div>
+          
+          {renderTopics()}
+          {renderPagination(currentTopicsPage, totalTopicPages, 'topic')}
         </div>
-        {totalTopicPages > 1 && (
-          <div className={classes.pagination}>
-            <ArrowLeft24Regular onClick={() => goToPreviousPage('topic')} style={{ cursor: 'pointer' }} title='Previous Page' />
-            <Text align='center' weight='regular' size={400} style={{ margin: '5px', color: 'darkgrey' }}>
-              {currentTopicsPage}
-            </Text>
-            <ArrowRight24Regular onClick={() => goToNextPage('topic')} style={{ cursor: 'pointer' }} title='Next Page' />
-            <TextField
-              value={inputPage}
-              onChange={(e) => setInputPage((e.target as HTMLInputElement).value)}
-              styles={{
-                root: { width: '35px', margin: '10px', color: 'skyblue' },
-                field: { textAlign: 'center', fontWeight: 'bold', verticalAlign: 'middle', color: 'blue' },
-              }}
-              onKeyUp={(e) => {
-                if (e.key === 'Enter') {
-                  goToPage();
-                }
-              }}
-            />
-            <Text>
-              Page {currentTopicsPage} of {totalTopicPages}
-            </Text>
-          </div>
-        )}
-      </div>
-      <div className={classes.container}>
-        {renderTags()}
-        {totalTagPages > 0 && (
-          <div className={classes.pagination}>
-            <ArrowLeft24Regular onClick={() => goToPreviousPage('tag')} style={{ cursor: 'pointer' }} title='Previous Page' />
-            <Text align='center' weight='regular' size={400} style={{ margin: '5px', color: 'darkgrey' }}>
-              {currentTagsPage}
-            </Text>
-            <ArrowRight24Regular onClick={() => goToNextPage('tag')} style={{ cursor: 'pointer' }} title='Next Page' />
-            <TextField
-              value={inputPage}
-              onChange={(e) => setInputPage((e.target as HTMLInputElement).value)}
-              styles={{
-                root: { width: '35px', margin: '10px', color: 'skyblue' },
-                field: { textAlign: 'center', fontWeight: 'bold', verticalAlign: 'middle', color: 'blue' },
-              }}
-              onKeyUp={(e) => {
-                if (e.key === 'Enter') {
-                  goToPage('tag');
-                }
-              }}
-            />
-            <Text>
-              Page {currentTagsPage} of {totalTagPages}
-            </Text>
-          </div>
-        )}
-      </div>
 
+        {/* Tags Section */}
+        <div className={classes.container}>
+          <div className={classes.sectionHeader}>
+            <h2 className={classes.sectionTitle}>
+              <span className="section-icon tags">T</span>
+              Tags
+            </h2>
+            <div className={classes.actionButtons}>
+              <Button 
+                icon={<Refresh24Regular />} 
+                onClick={refreshData} 
+                title="Refresh Data"
+                className="action-button refresh"
+              />
+              <Button 
+                icon={<Search24Regular />} 
+                onClick={() => navigate('/tags/search')} 
+                title="Search Tags"
+                className="action-button search"
+              />
+              <Button 
+                icon={<Filter24Regular />} 
+                onClick={() => {}} 
+                title="Filter Tags"
+                className="action-button filter"
+              />
+              <Button 
+                icon={<IconAdd />} 
+                onClick={() => navigate('/tags/add')} 
+                title="Add New Tag"
+                appearance="primary"
+                className="action-button add"
+              >
+                Add Tag
+              </Button>
+            </div>
+          </div>
+          
+          {renderTags()}
+          {renderPagination(currentTagsPage, totalTagPages, 'tag')}
+        </div>
+      </div>
     </FluentProvider>
   );
 };

@@ -42,6 +42,10 @@ const EditProject: React.FC = () => {
     status: "0",
   });
   
+  // Description character count state
+  const [descriptionCharCount, setDescriptionCharCount] = useState(0);
+  const maxDescriptionLength = 500;
+  
   // Repository links state
   const [repoLinks, setRepoLinks] = useState<string[]>([]);
   const [newRepoLink, setNewRepoLink] = useState("");
@@ -135,6 +139,9 @@ const EditProject: React.FC = () => {
           status: projectResponse.status?.toString() ?? "0",
         });
         
+        // Set initial description character count
+        setDescriptionCharCount(projectResponse.description?.length || 0);
+        
         // Fetch repository links
         const linksResponse = await dashboardServices.fetchEntityRepoLinks("project", id);
         setRepoLinks(linksResponse || []);
@@ -167,7 +174,15 @@ const EditProject: React.FC = () => {
     newValue?: string
   ) => {
     const target = event.target as HTMLInputElement;
-    setFormData({ ...formData, [target.name]: newValue || target.value });
+    const name = target.name;
+    const value = newValue || target.value;
+    
+    // Update character count for description field
+    if (name === "description") {
+      setDescriptionCharCount(value.length);
+    }
+    
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleDropdownChange = (
@@ -240,14 +255,21 @@ const EditProject: React.FC = () => {
     : githubRepos;
 
   // Handle form submission
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setLoading(true);
-    setError(null); // Clear any previous errors
+    setError(null);
 
     try {
-      if (!formData.name || !formData.description) {
-        setError("Project name and description are required");
+      // Validate description length before submission
+      if (formData.description && formData.description.length > maxDescriptionLength) {
+        setError(`Description must be ${maxDescriptionLength} characters or less`);
+        setLoading(false);
+        return;
+      }
+
+      if (!formData.name) {
+        setError("Project name is required");
         setLoading(false);
         return;
       }
@@ -279,9 +301,17 @@ const EditProject: React.FC = () => {
         logger.warn(`Filtered out ${currentLinks.length - validLinks.length} invalid repository links`);
       }
 
+      // Ensure description is properly trimmed and doesn't exceed max length
+      const trimmedDescription = formData.description ? formData.description.trim() : "";
+      if (trimmedDescription.length > maxDescriptionLength) {
+        setError(`Description must be ${maxDescriptionLength} characters or less`);
+        setLoading(false);
+        return;
+      }
+
       const updatedProject = {
-        Name: formData.name,
-        Description: formData.description,
+        Name: formData.name.trim(),
+        Description: trimmedDescription,
         StartDate: formData.startDate
           ? new Date(formData.startDate).toISOString()
           : null,
@@ -301,45 +331,27 @@ const EditProject: React.FC = () => {
       try {
         await dashboardServices.updateEntity("project", id!, updatedProject);
         logger.info("Project updated successfully");
-        navigate(-1);
-      } catch (apiError: any) {
-        // Handle specific API errors
-        if (apiError?.response?.status === 500 && apiError?.response?.data) {
-          // Check if it's related to repository links
-          const errorMessage = typeof apiError.response.data === 'string' 
-            ? apiError.response.data 
-            : JSON.stringify(apiError.response.data);
-            
-          if (errorMessage.toLowerCase().includes('repository') || 
-              errorMessage.toLowerCase().includes('link')) {
-            setError(`Error updating repository links: ${errorMessage}`);
-          } else {
-            setError(`Server error: ${errorMessage}`);
-          }
+        navigate("/projects");
+      } catch (updateError: any) {
+        logger.error("Error updating project: " + updateError);
+        
+        if (updateError?.response?.status === 400) {
+          // Handle validation errors from the API
+          const errorMessage = updateError?.response?.data?.title || 
+                               updateError?.response?.data?.message || 
+                               "Invalid project data";
+          setError(errorMessage);
         } else {
-          throw apiError; // Re-throw for generic handling
+          setError("Failed to update project. Please try again.");
         }
+        setLoading(false);
       }
-    } catch (error) {
-      logger.error("Error updating project: " + error);
-      setError(
-        error instanceof Error ? error.message : "Failed to update project"
-      );
-    } finally {
+    } catch (error: any) {
+      logger.error("Error in form submission: " + error);
+      setError("An unexpected error occurred. Please try again.");
       setLoading(false);
     }
   };
-
-  // Define form fields array
-  const fields = [
-    { name: "name", label: "Project Name", type: "text" },
-    { name: "description", label: "Description", type: "textarea" },
-    { name: "startDate", label: "Start Date", type: "date" },
-    { name: "endDate", label: "End Date", type: "date" },
-    { name: "budget", label: "Budget", type: "number" },
-    { name: "visibility", label: "Visibility", type: "select" },
-    { name: "status", label: "Status", type: "select" },
-  ];
 
   // Dropdown options
   const visibilityOptions: IDropdownOption[] = [
@@ -356,80 +368,37 @@ const EditProject: React.FC = () => {
     { key: "4", text: "Extended" },
   ];
 
-  // Function to render input fields dynamically
-  const renderField = (field: {
-    name: string;
-    label: string;
-    type: string;
-  }) => {
-    return (
-      <div
-        key={field.name}
-        className="p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md"
-      >
-        <Text
-          as="label"
-          className="block text-[var(--text-primary)] font-medium mb-2"
-        >
-          {field.label}:
-        </Text>
-        {field.type === "select" ? (
-          <Dropdown
-            placeholder="Select an option"
-            options={
-              field.name === "visibility" ? visibilityOptions : statusOptions
-            }
-            selectedKey={formData[field.name as keyof typeof formData]}
-            onChange={(e, option) => handleDropdownChange(e, option, field.name)}
-          />
-        ) : (
-          <TextField
-            name={field.name}
-            type={field.type}
-            value={formData[field.name as keyof typeof formData]}
-            onChange={handleChange}
-            multiline={field.type === "textarea"}
-            rows={field.type === "textarea" ? 4 : undefined}
-          />
-        )}
-      </div>
-    );
-  };
-
-  // Handle loading and error states
-  if (loading)
+  if (loading) {
     return (
       <Wrapper>
         <Stack className="max-w-5xl mx-auto p-8">
-          <Loading />
+          <Spinner size={SpinnerSize.large} label="Loading project data..." />
         </Stack>
       </Wrapper>
     );
+  }
 
-  if (error)
+  if (showAuthErrorNotification) {
     return (
       <Wrapper>
         <Stack className="max-w-5xl mx-auto p-8">
-          <Notification type="error" text={error} />
-        </Stack>
-      </Wrapper>
-    );
-
-  if (showAuthErrorNotification)
-    return (
-      <Wrapper>
-        <Stack className="max-w-5xl mx-auto p-8">
-          <Notification
-            type="error"
-            text="Authentication required. You must be logged in to view or edit projects. Redirecting to login page..."
-            onDismiss={() => setShowAuthErrorNotification(false)}
+          <Notification 
+            type="error" 
+            text="You must be logged in to edit projects. Redirecting to login..." 
           />
         </Stack>
       </Wrapper>
     );
+  }
 
   return (
     <Wrapper>
+      {error && (
+        <Stack className="max-w-5xl mx-auto p-8">
+          <Notification type="error" text={error} />
+        </Stack>
+      )}
+      
       <div className="w-2/3 mx-auto p-6 md:p-10 bg-[var(--bg-primary)] shadow-lg rounded-xl">
         <Text
           as="h1"
@@ -437,148 +406,287 @@ const EditProject: React.FC = () => {
         >
           Edit Project
         </Text>
-
-        {/* Project Fields in Two Columns */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-          {fields.map(renderField)}
-        </div>
-
-        {/* Repository Links Section */}
-        <div className="mt-6 p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md">
-          <Text as="h2" className="text-[var(--text-primary)] text-xl font-bold mb-3">
-            Repository Links
-          </Text>
-          
-          {/* List of existing links */}
-          {repoLinks.length > 0 ? (
-            <ul className="list-disc list-inside mb-4">
-              {repoLinks.map((link, index) => (
-                <li key={index} className="flex items-center mb-2">
-                  <a 
-                    href={link} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-teal-500 underline hover:text-teal-700 flex-grow"
-                  >
-                    {link}
-                  </a>
-                  <IconButton 
-                    onClick={() => confirmDeleteLink(index)}
-                    className="ml-2 bg-red-100 hover:bg-red-200 text-red-600 hover:text-red-700 rounded-md transition-colors duration-200"
-                    title="Remove Link"
-                    ariaLabel="Delete repository link"
-                  >
-                    <Delete24Regular />
-                  </IconButton>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <Text className="text-[var(--text-secondary)] italic mb-4">
-              No repository links added yet
-            </Text>
-          )}
-          
-          {/* Add new link form */}
-          <div className="flex items-center mt-4">
-            <TextField 
-              placeholder="Enter repository URL" 
-              value={newRepoLink}
-              onChange={(_, newValue) => setNewRepoLink(newValue || '')}
-              className="flex-grow"
-            />
-            <PrimaryButton 
-              onClick={handleAddRepoLink}
-              className="ml-2 bg-teal-500 hover:bg-teal-600"
-              title="Add Repository Link"
+        
+        <form onSubmit={handleSubmit}>
+          {/* Project Name */}
+          <div className="mb-6 p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md">
+            <Text
+              as="label"
+              className="block text-[var(--text-primary)] font-medium mb-2"
             >
-              <Add20Regular className="mr-1" /> Add Link
-            </PrimaryButton>
+              Project Name:
+            </Text>
+            <TextField
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
           </div>
           
-          {/* GitHub Repositories Modal */}
-          <Dialog
-            hidden={!isModalOpen}
-            onDismiss={() => setIsModalOpen(false)}
-            dialogContentProps={{
-              type: DialogType.normal,
-              title: 'Select GitHub Repository',
-              subText: 'Choose a repository to add as a link to your project'
-            }}
-            modalProps={{
-              isBlocking: true,
-              styles: { main: { maxWidth: 600 } }
-            }}
-          >
-            <div className="mb-4">
-              <div className="flex items-center mb-4">
-                <TextField
-                  placeholder="Search repositories..."
-                  value={searchQuery}
-                  onChange={(_, newValue) => setSearchQuery(newValue || '')}
-                  className="flex-grow"
-                />
-                <PrimaryButton className="ml-2" type="button">
-                  <Search24Regular />
-                </PrimaryButton>
-              </div>
-              
-              {isLoadingRepos ? (
-                <div className="flex justify-center py-4">
-                  <Spinner size={SpinnerSize.large} label="Loading repositories..." />
-                </div>
-              ) : filteredRepos.length > 0 ? (
-                <div className="max-h-80 overflow-y-auto border border-[var(--border-primary)] rounded-md">
-                  <List
-                    items={filteredRepos}
-                    onRenderCell={(item?: {name: string, html_url: string, description?: string}) => (
-                      <div 
-                        className="p-3 border-b border-[var(--border-primary)] hover:bg-[var(--bg-secondary)] flex items-center cursor-pointer"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          if (item) {
-                            console.log('Selected repository:', item.name);
-                            // Ensure repoLinks is an array before spreading
-                            const currentLinks = Array.isArray(repoLinks) ? repoLinks : [];
-                            const newLinks = [...currentLinks];
-                            if (!newLinks.includes(item.html_url)) {
-                              newLinks.push(item.html_url);
-                              setRepoLinks(newLinks);
-                              console.log('Added repository:', item.name);
-                              console.log('New links array:', newLinks);
-                            }
-                            setIsModalOpen(false);
-                          }
-                        }}
-                      >
-                        <div className="flex-shrink-0 mr-3 text-teal-500 hover:text-teal-600">
-                          <Add20Regular />
-                        </div>
-                        <div className="flex-grow min-w-0">
-                          <Text className="font-medium">{item?.name}</Text>
-                          <Text className="text-sm text-[var(--text-secondary)] truncate">{item?.html_url}</Text>
-                          {item?.description && (
-                            <Text className="text-xs text-[var(--text-secondary)] truncate mt-1">{item.description}</Text>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  />
-                </div>
-              ) : (
-                <Text className="text-center py-4 text-[var(--text-secondary)]">
-                  No repositories found
-                </Text>
-              )}
+          {/* Project Description */}
+          <div className="mb-6 p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md">
+            <Text
+              as="label"
+              className="block text-[var(--text-primary)] font-medium mb-2"
+            >
+              Description:
+              <span className={`ml-2 text-sm ${descriptionCharCount > maxDescriptionLength ? 'text-red-500 font-bold' : 'text-gray-500'}`}>
+                {descriptionCharCount}/{maxDescriptionLength}
+              </span>
+            </Text>
+            <TextField
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              multiline
+              rows={4}
+              errorMessage={descriptionCharCount > maxDescriptionLength 
+                ? `Description must be ${maxDescriptionLength} characters or less` 
+                : undefined}
+              className={descriptionCharCount > maxDescriptionLength ? 'error-field' : ''}
+            />
+            {descriptionCharCount > maxDescriptionLength && (
+              <Text className="text-red-500 text-sm mt-1">
+                Please shorten your description to {maxDescriptionLength} characters or less.
+              </Text>
+            )}
+          </div>
+          
+          {/* Project Dates */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            {/* Start Date */}
+            <div className="p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md">
+              <Text
+                as="label"
+                className="block text-[var(--text-primary)] font-medium mb-2"
+              >
+                Start Date:
+              </Text>
+              <TextField
+                name="startDate"
+                type="date"
+                value={formData.startDate}
+                onChange={handleChange}
+              />
             </div>
             
-            <DialogFooter>
-              <PrimaryButton onClick={() => setIsModalOpen(false)} text="Close" type="button" />
-            </DialogFooter>
-          </Dialog>
-        </div>
-
+            {/* End Date */}
+            <div className="p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md">
+              <Text
+                as="label"
+                className="block text-[var(--text-primary)] font-medium mb-2"
+              >
+                End Date:
+              </Text>
+              <TextField
+                name="endDate"
+                type="date"
+                value={formData.endDate}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          
+          {/* Project Details */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            {/* Budget */}
+            <div className="p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md">
+              <Text
+                as="label"
+                className="block text-[var(--text-primary)] font-medium mb-2"
+              >
+                Budget:
+              </Text>
+              <TextField
+                name="budget"
+                type="number"
+                value={formData.budget}
+                onChange={handleChange}
+              />
+            </div>
+            
+            {/* Visibility */}
+            <div className="p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md">
+              <Text
+                as="label"
+                className="block text-[var(--text-primary)] font-medium mb-2"
+              >
+                Visibility:
+              </Text>
+              <Dropdown
+                selectedKey={formData.visibility}
+                options={visibilityOptions}
+                onChange={(e, option) => handleDropdownChange(e, option, "visibility")}
+              />
+            </div>
+            
+            {/* Status */}
+            <div className="p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md">
+              <Text
+                as="label"
+                className="block text-[var(--text-primary)] font-medium mb-2"
+              >
+                Status:
+              </Text>
+              <Dropdown
+                selectedKey={formData.status}
+                options={statusOptions}
+                onChange={(e, option) => handleDropdownChange(e, option, "status")}
+              />
+            </div>
+          </div>
+          
+          {/* Repository Links Section */}
+          <div className="mb-6 p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md">
+            <Text as="h2" className="text-[var(--text-primary)] text-xl font-bold mb-3">
+              Repository Links
+            </Text>
+            
+            {/* List of existing links */}
+            {repoLinks && repoLinks.length > 0 ? (
+              <ul className="list-disc list-inside mb-4">
+                {repoLinks.map((link, index) => (
+                  <li key={index} className="flex items-center mb-2">
+                    <a 
+                      href={link} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-teal-500 underline hover:text-teal-700 flex-grow"
+                    >
+                      {link}
+                    </a>
+                    <IconButton 
+                      onClick={() => confirmDeleteLink(index)}
+                      className="ml-2 bg-red-100 hover:bg-red-200 text-red-600 hover:text-red-700 rounded-md transition-colors duration-200"
+                      title="Remove Link"
+                      ariaLabel="Delete repository link"
+                    >
+                      <Delete24Regular />
+                    </IconButton>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <Text className="text-[var(--text-secondary)] italic mb-4">
+                No repository links added yet
+              </Text>
+            )}
+            
+            {/* Add new link form */}
+            <div className="flex items-center mt-4">
+              <TextField 
+                placeholder="Enter repository URL" 
+                value={newRepoLink}
+                onChange={(_, newValue) => setNewRepoLink(newValue || '')}
+                className="flex-grow"
+              />
+              <PrimaryButton 
+                onClick={handleAddRepoLink}
+                className="ml-2 bg-teal-500 hover:bg-teal-600"
+                title="Add Repository Link"
+              >
+                <Add20Regular className="mr-1" /> Add Link
+              </PrimaryButton>
+            </div>
+          </div>
+          
+          {/* Action Buttons */}
+          <Toolbar
+            className="flex justify-between items-center mt-8"
+            aria-label={"Edit-Project"}
+          >
+            <ActionButton
+              className="bg-lime-500 text-gray-700 hover:bg-lime-700 px-4 py-2 rounded-lg"
+              onClick={() => navigate(-1)}
+              type="button"
+            >
+              <ArrowLeft24Regular className="mr-2" /> Cancel
+            </ActionButton>
+            <ActionButton
+              className="bg-teams-purple text-white hover:bg-teams-purple-dark px-4 py-2 rounded-lg"
+              type="submit"
+            >
+              <Save20Regular className="mr-2" /> Save Changes
+            </ActionButton>
+          </Toolbar>
+        </form>
+        
+        {/* GitHub Repositories Modal */}
+        <Dialog
+          hidden={!isModalOpen}
+          onDismiss={() => setIsModalOpen(false)}
+          dialogContentProps={{
+            type: DialogType.normal,
+            title: 'Select GitHub Repository',
+            subText: 'Choose a repository to add as a link to your project'
+          }}
+          modalProps={{
+            isBlocking: true,
+            styles: { main: { maxWidth: 600 } }
+          }}
+        >
+          <div className="mb-4">
+            <div className="flex items-center mb-4">
+              <TextField
+                placeholder="Search repositories..."
+                value={searchQuery}
+                onChange={(_, newValue) => setSearchQuery(newValue || '')}
+                className="flex-grow"
+              />
+              <PrimaryButton className="ml-2" type="button">
+                <Search24Regular />
+              </PrimaryButton>
+            </div>
+            
+            {isLoadingRepos ? (
+              <div className="flex justify-center py-4">
+                <Spinner size={SpinnerSize.large} label="Loading repositories..." />
+              </div>
+            ) : filteredRepos.length > 0 ? (
+              <div className="max-h-80 overflow-y-auto border border-[var(--border-primary)] rounded-md">
+                <List
+                  items={filteredRepos}
+                  onRenderCell={(item?: {name: string, html_url: string, description?: string}) => (
+                    <div 
+                      className="p-3 border-b border-[var(--border-primary)] hover:bg-[var(--bg-secondary)] flex items-center cursor-pointer"
+                      onClick={() => {
+                        if (item) {
+                          // Add the URL directly to the repoLinks array
+                          const currentLinks = Array.isArray(repoLinks) ? repoLinks : [];
+                          if (!currentLinks.includes(item.html_url)) {
+                            setRepoLinks([...currentLinks, item.html_url]);
+                          }
+                          setIsModalOpen(false);
+                        }
+                      }}
+                    >
+                      <div className="flex-shrink-0 mr-3 text-teal-500 hover:text-teal-600">
+                        <Add20Regular />
+                      </div>
+                      <div className="flex-grow min-w-0">
+                        <Text className="font-medium">{item?.name}</Text>
+                        <Text className="text-sm text-[var(--text-secondary)] truncate">{item?.html_url}</Text>
+                        {item?.description && (
+                          <Text className="text-xs text-[var(--text-secondary)] truncate mt-1">{item.description}</Text>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                />
+              </div>
+            ) : (
+              <Text className="text-center py-4 text-[var(--text-secondary)]">
+                No repositories found
+              </Text>
+            )}
+          </div>
+          
+          <DialogFooter>
+            <PrimaryButton onClick={() => setIsModalOpen(false)} text="Close" type="button" />
+          </DialogFooter>
+        </Dialog>
+        
         {/* Delete Confirmation Dialog */}
         <Dialog
           hidden={!showDeleteDialog}
@@ -586,7 +694,7 @@ const EditProject: React.FC = () => {
           dialogContentProps={{
             type: DialogType.normal,
             title: 'Confirm Delete',
-            subText: linkToDeleteIndex !== null && repoLinks[linkToDeleteIndex] 
+            subText: linkToDeleteIndex !== null && repoLinks && repoLinks[linkToDeleteIndex] 
               ? `Are you sure you want to delete this repository link?`
               : 'Are you sure you want to delete this repository link?'
           }}
@@ -595,7 +703,7 @@ const EditProject: React.FC = () => {
             styles: { main: { maxWidth: 450 } }
           }}
         >
-          {linkToDeleteIndex !== null && repoLinks[linkToDeleteIndex] && (
+          {linkToDeleteIndex !== null && repoLinks && repoLinks[linkToDeleteIndex] && (
             <div className="mb-4 p-3 bg-gray-100 border border-gray-200 rounded-md break-all">
               <Text className="text-sm text-gray-700">{repoLinks[linkToDeleteIndex]}</Text>
             </div>
@@ -604,34 +712,11 @@ const EditProject: React.FC = () => {
             <PrimaryButton 
               onClick={() => handleRemoveRepoLink()} 
               text="Delete" 
-              className="bg-red-500 hover:bg-red-600 border-0 text-white"
+              className="bg-red-500 hover:bg-red-600 border-0"
             />
-            <DefaultButton 
-              onClick={() => setShowDeleteDialog(false)} 
-              text="Cancel" 
-            />
+            <DefaultButton onClick={() => setShowDeleteDialog(false)} text="Cancel" />
           </DialogFooter>
         </Dialog>
-
-        {/* Action Buttons */}
-        <Toolbar
-          className="flex justify-between items-center mt-8"
-          aria-label={"Edit-Project"}
-        >
-          <ActionButton
-            className="bg-lime-500 text-gray-700 hover:bg-lime-700 px-4 py-2 rounded-lg"
-            onClick={() => navigate(-1)}
-          >
-            <ArrowLeft24Regular className="mr-2" /> Cancel
-          </ActionButton>
-          <ActionButton
-            className="bg-teams-purple text-white hover:bg-teams-purple-dark px-4 py-2 rounded-lg"
-            type="submit"
-            onClick={handleSubmit}
-          >
-            <Save20Regular className="mr-2" /> Save Changes
-          </ActionButton>
-        </Toolbar>
       </div>
     </Wrapper>
   );

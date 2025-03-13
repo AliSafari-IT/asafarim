@@ -44,6 +44,10 @@ const AddProject: React.FC = () => {
     status: "0",
   });
   
+  // Description character count state
+  const [descriptionCharCount, setDescriptionCharCount] = useState(0);
+  const maxDescriptionLength = 500;
+  
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [githubRepos, setGithubRepos] = useState<{name: string, html_url: string, description?: string}[]>([]);
@@ -60,7 +64,15 @@ const AddProject: React.FC = () => {
     newValue?: string
   ) => {
     const target = event.target as HTMLInputElement;
-    setFormData({ ...formData, [target.name]: newValue || target.value });
+    const name = target.name;
+    const value = newValue || target.value;
+    
+    // Update character count for description field
+    if (name === "description") {
+      setDescriptionCharCount(value.length);
+    }
+    
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleDropdownChange = (
@@ -173,6 +185,13 @@ const AddProject: React.FC = () => {
         setLoading(false);
         return;
       }
+      
+      // Check description length
+      if (formData.description && formData.description.length > maxDescriptionLength) {
+        setError(`Description must be ${maxDescriptionLength} characters or less`);
+        setLoading(false);
+        return;
+      }
 
       const userId = getUserId();
       if (!userId) {
@@ -251,6 +270,11 @@ const AddProject: React.FC = () => {
           className="block text-[var(--text-primary)] font-medium mb-2"
         >
           {field.label}:
+          {field.name === "description" && (
+            <span className={`ml-2 text-sm ${descriptionCharCount > maxDescriptionLength ? 'text-red-500 font-bold' : 'text-gray-500'}`}>
+              {descriptionCharCount}/{maxDescriptionLength}
+            </span>
+          )}
         </Text>
         {field.type === "select" ? (
           <Dropdown
@@ -269,6 +293,9 @@ const AddProject: React.FC = () => {
             onChange={handleChange}
             multiline={field.type === "textarea"}
             rows={field.type === "textarea" ? 4 : undefined}
+            errorMessage={field.name === "description" && descriptionCharCount > maxDescriptionLength 
+              ? `Description must be ${maxDescriptionLength} characters or less` 
+              : undefined}
           />
         )}
       </div>
@@ -499,12 +526,9 @@ const AddProject: React.FC = () => {
             <PrimaryButton 
               onClick={handleRemoveRepoLink} 
               text="Delete" 
-              className="bg-red-500 hover:bg-red-600 border-0 text-white"
+              className="bg-red-500 hover:bg-red-600 border-0"
             />
-            <DefaultButton 
-              onClick={() => setShowDeleteDialog(false)} 
-              text="Cancel" 
-            />
+            <DefaultButton onClick={() => setShowDeleteDialog(false)} text="Cancel" />
           </DialogFooter>
         </Dialog>
       </div>

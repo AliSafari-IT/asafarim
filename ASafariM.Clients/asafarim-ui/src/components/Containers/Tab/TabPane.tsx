@@ -23,7 +23,7 @@ const TabPane: React.FC<TabPaneProps> = ({ tabs, defaultActiveKey, onTabChange, 
     };
 
     return (
-        <div className="tab-pane">
+        <div className="tab-pane p-0">
             {/* Tab Headers */}
             <div className="tab-headers flex border-b pb-2 space-x-4">
                 {tabs.map(({ key, title, icon }) => (

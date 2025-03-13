@@ -1,6 +1,8 @@
 import React, { useState, useEffect, Suspense } from "react";
-import { FaEnvelope, FaKey } from "react-icons/fa";
-import Layout from "@/layout/Layout";
+import { FaEnvelope, FaKey, FaTrash, FaDownload, FaUser } from "react-icons/fa";
+import Wrapper from "@/layout/Wrapper/Wrapper";
+import Header from "@/layout/Header/Header";
+import Footer from "@/layout/Footer/Footer";
 import useAuth from "@/hooks/useAuth";
 import DeleteAccount from "../User/DeleteAccount";
 import ExportData from "../User/ExportData";
@@ -53,6 +55,14 @@ const AccountSettings: React.FC = () => {
     loadUserData();
   }, [authenticated, authenticatedUser, navigate]);
 
+  // Generate user avatar initials
+  const getUserInitials = () => {
+    if (!authenticatedUser) return '';
+    const firstInitial = authenticatedUser.firstName ? authenticatedUser.firstName.charAt(0).toUpperCase() : '';
+    const lastInitial = authenticatedUser.lastName ? authenticatedUser.lastName.charAt(0).toUpperCase() : '';
+    return `${firstInitial}${lastInitial}`;
+  };
+
   const handleUpdatePassword = async () => {
     console.log(
       "Updating password...",
@@ -75,6 +85,8 @@ const AccountSettings: React.FC = () => {
       // Trigger auth state change
       window.dispatchEvent(new Event("authStateChange"));
       setMessage({ type: "success", text: "Password updated successfully." });
+      setCurrentPassword("");
+      setNewPassword("");
     } catch (err) {
       console.error("Error updating password:", err);
       setMessage({ type: "error", text: "Failed to update password." });
@@ -90,153 +102,196 @@ const AccountSettings: React.FC = () => {
   const tabs = [
     {
       key: "email",
-      title: "Email Settings",
-      icon: <FaEnvelope />,
+      title: "Profile Information",
+      icon: <FaUser className="mr-2" />,
       content: (
-        <div className="space-y-6">
-          <InputField
-            label="Email Address"
-            value={email}
-            placeholder="Enter your email"
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <InputField
-            label="First Name"
-            value={firstName}
-            placeholder="Enter your first name"
-            onChange={(e) => setFirstName(e.target.value)}
-          />
-          <InputField
-            label="Last Name"
-            value={lastName}
-            placeholder="Enter your last name"
-            onChange={(e) => setLastName(e.target.value)}
-          />
-          <button
-            onClick={() =>
-              handleUpdateProfile({
-                authenticatedUser,
-                firstName,
-                lastName,
-                email,
-                setMessage,
-                setLoading,
-              })
-            }
-            className="w-full sm:w-auto bg-info text-white px-4 py-2 rounded-md"
-            disabled={loading}
-          >
-            {loading ? "Updating..." : "Update Profile"}
-          </button>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <InputField
+              label="Email Address"
+              value={email}
+              placeholder="Enter your email"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+              <InputField
+                label="First Name"
+                value={firstName}
+                placeholder="Enter your first name"
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+              <InputField
+                label="Last Name"
+                value={lastName}
+                placeholder="Enter your last name"
+                onChange={(e) => setLastName(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="pt-4">
+            <button
+              onClick={() =>
+                handleUpdateProfile({
+                  authenticatedUser,
+                  firstName,
+                  lastName,
+                  email,
+                  setMessage,
+                  setLoading,
+                })
+              }
+              className="px-6 py-2.5 bg-[var(--info)] hover:bg-[var(--info-dark)] text-white font-medium rounded-lg shadow-md transition-all duration-200 flex items-center"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span className="mr-2 inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                  Updating...
+                </>
+              ) : (
+                "Update Profile"
+              )}
+            </button>
+          </div>
         </div>
       ),
     },
     {
       key: "password",
       title: "Password Settings",
-      icon: <FaKey />,
+      icon: <FaKey className="mr-2" />,
       content: (
-        <div className="space-y-6">
-          <InputField
-            label="Current Password"
-            type="password"
-            value={currentPassword}
-            placeholder="Enter current password"
-            onChange={(e) => setCurrentPassword(e.target.value)}
-          />
-          <InputField
-            label="New Password"
-            type="password"
-            value={newPassword}
-            placeholder="Enter new password"
-            onChange={(e) => setNewPassword(e.target.value)}
-          />
-          <button
-            onClick={handleUpdatePassword}
-            className="w-full sm:w-auto bg-info text-white px-4 py-2 rounded-md"
-            disabled={loading}
-          >
-            {loading ? "Updating..." : "Update Password"}
-          </button>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <InputField
+              label="Current Password"
+              type="password"
+              value={currentPassword}
+              placeholder="Enter current password"
+              onChange={(e) => setCurrentPassword(e.target.value)}
+            />
+            <InputField
+              label="New Password"
+              type="password"
+              value={newPassword}
+              placeholder="Enter new password"
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+          </div>
+          <div className="pt-4">
+            <button
+              onClick={handleUpdatePassword}
+              className="px-6 py-2.5 bg-[var(--info)] hover:bg-[var(--info-dark)] text-white font-medium rounded-lg shadow-md transition-all duration-200 flex items-center"
+              disabled={loading || !currentPassword || !newPassword}
+            >
+              {loading ? (
+                <>
+                  <span className="mr-2 inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                  Updating...
+                </>
+              ) : (
+                "Update Password"
+              )}
+            </button>
+          </div>
         </div>
       ),
     },
     {
       key: "delete",
       title: "Delete Account",
-      icon: null,
+      icon: <FaTrash className="mr-2" />,
       content: (
-        <DeleteAccount currentUserInfo={authenticatedUser as IUserInfo} />
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <DeleteAccount currentUserInfo={authenticatedUser as IUserInfo} />
+        </div>
       ),
     },
     {
       key: "export",
       title: "Export Data",
-      icon: null,
-      content: <ExportData currentUserInfo={authenticatedUser as IUserInfo} />,
+      icon: <FaDownload className="mr-2" />,
+      content: (
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <ExportData currentUserInfo={authenticatedUser as IUserInfo} />
+        </div>
+      ),
     },
   ];
 
-  if (loading) {
-    return <div className="text-center p-4">Loading...</div>;
+  if (loading && !authenticatedUser) {
+    return (
+      <Wrapper header={<Header />} footer={<Footer />}>
+        <div className="flex justify-center items-center h-[70vh]">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[var(--info)]"></div>
+        </div>
+      </Wrapper>
+    );
   }
 
   if (error) {
     return (
-      <div
-        className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-        role="alert"
-      >
-        <span className="block sm:inline">{error}</span>
-        <button
-          className="absolute top-0 bottom-0 right-0 px-4 py-3"
-          onClick={() => setError(null)}
-        >
-          <span className="sr-only">Dismiss</span>
-          <svg
-            className="h-6 w-6 text-red-500"
-            role="button"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-          >
-            <title>Close</title>
-            <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
-          </svg>
-        </button>
-      </div>
+      <Wrapper header={<Header />} footer={<Footer />}>
+        <div className="flex items-center justify-center h-[70vh]">
+          <div className="bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-lg max-w-lg">
+            <p className="font-medium">{error}</p>
+            <button
+              className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+              onClick={() => setError(null)}
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      </Wrapper>
     );
   }
 
   return (
-    <Layout
-      header={
-        <div className="bg-info/5 p-6 text-center">
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
-            Account Settings
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            Manage your preferences and security settings
-          </p>
+    <Wrapper header={<Header />} footer={<Footer />}>
+      <div className="container mx-auto px-4 py-8 max-w-5xl">
+        {/* Header with user avatar */}
+        <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden mb-6">
+          <div className="bg-gradient-to-r from-[var(--info-light)] to-[var(--info)] p-6 flex items-center">
+            {authenticatedUser?.profilePicture ? (
+              <img 
+                src={authenticatedUser.profilePicture} 
+                alt={`${authenticatedUser.firstName} ${authenticatedUser.lastName}`}
+                className="w-16 h-16 rounded-full object-cover border-4 border-white shadow-md" 
+              />
+            ) : (
+              <div className="w-16 h-16 rounded-full bg-white text-[var(--info)] flex items-center justify-center text-xl font-bold border-4 border-white shadow-md">
+                {getUserInitials()}
+              </div>
+            )}
+            <div className="ml-6 text-white">
+              <h1 className="text-2xl font-bold">Account Settings</h1>
+              <p className="opacity-90">Manage your preferences and security settings</p>
+            </div>
+          </div>
         </div>
-      }
-    >
-      <div className="max-w-4xl mx-auto px-4 py-8">
+
         <Suspense fallback={<LoadingSpinner />}>
           {message && (
-            <Notification
-              type={message.type}
-              text={message.text}
-              onDismiss={() => setMessage(null)}
-            />
+            <div className="mb-6">
+              <Notification
+                type={message.type}
+                text={message.text}
+                onDismiss={() => setMessage(null)}
+              />
+            </div>
           )}
-          <TabPane
-            tabs={tabs}
-            defaultActiveKey="email"
-            onTabChange={handleTabChange}
-          />
+          
+          <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
+            <TabPane
+              tabs={tabs}
+              defaultActiveKey="email"
+              onTabChange={handleTabChange}
+            />
+          </div>
         </Suspense>
       </div>
-    </Layout>
+    </Wrapper>
   );
 };
 

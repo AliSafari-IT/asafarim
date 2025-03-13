@@ -1,11 +1,12 @@
-using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace ASafariM.Application.DTOs;
 
 public class ProjectCreateDto
 {
     public required string Name { get; set; }
+    [MaxLength(500)]
     public string? Description { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }

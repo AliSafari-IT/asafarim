@@ -96,24 +96,109 @@ def generate_commit_message(diff):
     return None
 
 
+def is_branch_up_to_date():
+    try:
+        # Fetch remote changes without merging
+        subprocess.run(['git', 'fetch'], check=True)
+        
+        # Compare local and remote branches
+        status = subprocess.check_output(
+            ['git', 'status', '-uno'], encoding='utf-8'
+        )
+        return 'Your branch is up to date' in status
+    except subprocess.CalledProcessError as e:
+        logging.error(f'Error checking branch status: {e}')
+        return False
+
+
+def stash_changes():
+    try:
+        subprocess.run(['git', 'stash'], check=True)
+        logging.info('Stashed uncommitted changes')
+        return True
+    except subprocess.CalledProcessError as e:
+        logging.error(f'Error stashing changes: {e}')
+        return False
+
+
+def unstash_changes():
+    try:
+        subprocess.run(['git', 'stash', 'pop'], check=True)
+        logging.info('Restored stashed changes')
+        return True
+    except subprocess.CalledProcessError as e:
+        logging.error(f'Error unstashing changes: {e}')
+        return False
+
+
+def pull_changes():
+    try:
+        # Check if there are uncommitted changes
+        status = subprocess.check_output(
+            ['git', 'status', '--porcelain'], encoding='utf-8'
+        )
+        
+        stashed = False
+        if status.strip():  # If there are uncommitted changes
+            if not stash_changes():
+                return False
+            stashed = True
+            
+        # Perform the pull with rebase
+        subprocess.run(['git', 'pull', '--rebase'], check=True)
+        logging.info('Successfully pulled remote changes')
+        
+        # Restore stashed changes if we stashed them
+        if stashed:
+            if not unstash_changes():
+                return False
+                
+        return True
+    except subprocess.CalledProcessError as e:
+        logging.error(f'Error pulling changes: {e}')
+        return False
+
+
+def stage_changes():
+    try:
+        subprocess.run(['git', 'add', '.'], check=True)
+        logging.info('Staged all changes')
+        return True
+    except subprocess.CalledProcessError as e:
+        logging.error(f'Error staging changes: {e}')
+        return False
+
+
 def main():
+    # Check if branch is up to date
+    if not is_branch_up_to_date():
+        logging.info('Local branch is behind remote. Pulling changes...')
+        if not pull_changes():
+            logging.error('Failed to pull changes. Aborting commit.')
+            return
+
+    # Stage changes before getting diff
+    if not stage_changes():
+        logging.error('Failed to stage changes. Aborting commit.')
+        return
+
     diff = get_git_diff()
     if diff:
         commit_message = generate_commit_message(diff)
         if commit_message:
-            logging.info("Generated Commit Message:")
+            logging.info('Generated Commit Message:')
             logging.info(commit_message)
 
             # Create the commit with the generated message
             try:
-                subprocess.run(["git", "commit", "-m", commit_message], check=True)
-                logging.info("Commit created successfully!")
+                subprocess.run(['git', 'commit', '-m', commit_message], check=True)
+                logging.info('Commit created successfully!')
             except subprocess.CalledProcessError as e:
-                logging.error(f"Error creating commit: {e}")
+                logging.error(f'Error creating commit: {e}')
         else:
-            logging.warning("Failed to generate commit message.")
+            logging.warning('Failed to generate commit message.')
     else:
-        logging.info("No changes to commit.")
+        logging.info('No changes to commit.')
 
 
 if __name__ == "__main__":

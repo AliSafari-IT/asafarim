@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import './StacksPage.css';
-import { ActionButton, Modal, SearchBox } from '@fluentui/react';
+import { Modal, SearchBox } from '@fluentui/react';
 import Header from '@/layout/Header/Header';
 import { Tooltip } from '@material-tailwind/react';
-import { DialogActions, Title3 } from '@fluentui/react-components';
 import transformMdFilesToStackData from './transformMdFilesToStackData';
 import { IMenuItem } from '@/interfaces/IMenuItem';
 import getSlug from '@/utils/getSlug';
 import generateCategoryColors from '@/utils/categoryColors';
 import determineTextColor from '@/utils/determineTextColor';
 import { getFirstHeading } from '@/utils/mdUtils';
+import Wrapper from '@/layout/Wrapper/Wrapper';
+import Footer from '@/layout/Footer/Footer';
 
 interface StacksPageProps {
   docBranch: string;
@@ -21,7 +22,8 @@ const StacksPage: React.FC<StacksPageProps> = ({ docBranch, stackTitle }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [dynamicStackData, setDynamicStackData] = useState<Record<string, IMenuItem[]>>({});
   const [stacksHeaderBgColor, setStacksHeaderBgColor] = useState<string>();
-  const [stacksHeaderTextColor, setStacksHeaderTextColor] = useState<string >();
+  const [stacksHeaderTextColor, setStacksHeaderTextColor] = useState<string>();
+  const [isLoading, setIsLoading] = useState(true);
 
   const basePath = docBranch === 'techDocs'
     ? '/tech-docs'
@@ -30,10 +32,12 @@ const StacksPage: React.FC<StacksPageProps> = ({ docBranch, stackTitle }) => {
       : '/legal-docs';
 
   useEffect(() => {
+    setIsLoading(true);
     const transformedData = transformMdFilesToStackData(docBranch);
     console.log('Transformed Stack Data:', transformedData);
     setDynamicStackData(transformedData);
-  }, []);
+    setIsLoading(false);
+  }, [docBranch]);
 
   useEffect(() => {
     if (!stacksHeaderBgColor) {
@@ -49,7 +53,6 @@ const StacksPage: React.FC<StacksPageProps> = ({ docBranch, stackTitle }) => {
 
   const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
 
-
   const handleCardClick = (stack: IMenuItem) => {
     setSelectedStack(stack);
   };
@@ -57,6 +60,7 @@ const StacksPage: React.FC<StacksPageProps> = ({ docBranch, stackTitle }) => {
   const closeModal = () => {
     setSelectedStack(null);
   };
+  
   const handleClear = () => setSearchTerm('');
 
   const handleSearch = (e?: { target: { value: string } }) => {
@@ -129,115 +133,161 @@ const StacksPage: React.FC<StacksPageProps> = ({ docBranch, stackTitle }) => {
     return parentFolders; // Return the valid parent folder path relative to basePath
   }
 
-
   return (
-    <div className="stacks-container">
-      <Header
-        id="stacks-header"
-        className="stacks-header"
-        color={stacksHeaderBgColor}
-        size="text-lg"
-      >
-        {stackTitle}
-      </Header>
+    <Wrapper footer={<></>} removeNavbar>
+      <div className="container mx-auto px-4 py-8">
+        {/* Page Header */}
+        <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden mb-6">
+          <div className="bg-gradient-to-r from-[var(--info-light)] to-[var(--info)] p-6">
+            <h1 className="text-2xl font-bold text-white">{stackTitle}</h1>
+            <p className="text-white opacity-90">Browse and explore available technology stacks</p>
+          </div>
+          
+          {/* Search Bar */}
+          <div className="p-4 bg-white dark:bg-gray-800">
+            <SearchBox
+              value={searchTerm}
+              onChange={handleSearch}
+              onClear={handleClear}
+              onEscape={handleClear}
+              onAbort={handleClear}
+              onSearch={handleClear}
+              className="stacks-search-bar"
+              placeholder="Search stacks..."
+            />
+          </div>
+        </div>
 
-      <SearchBox
-        value={searchTerm}
-        onChange={handleSearch}
-        onClear={handleClear}
-        onEscape={handleClear}
-        onAbort={handleClear}
-        onSearch={handleClear}
-        className="stacks-search-bar"
-        placeholder="Search..."
-      />
-      <div className="categories">
-        {Object.entries(filteredData)?.map(([category, stackItems]) => {
-          const categoryStyle = categoryColors[category] || categoryColors.default;
+        {/* Loading State */}
+        {isLoading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[var(--info)]"></div>
+          </div>
+        ) : (
+          /* Categories and Stacks */
+          <div className="categories-container">
+            {Object.entries(filteredData)?.length > 0 ? (
+              Object.entries(filteredData)?.map(([category, stackItems]) => {
+                const categoryStyle = categoryColors[category] || categoryColors.default;
 
-          stackItems.map((stack) => {
-            stack.color = categoryStyle.color;
-            stack.textColor = determineTextColor(currentTheme, categoryStyle.color);
-          });
+                stackItems.map((stack) => {
+                  stack.color = categoryStyle.color;
+                  stack.textColor = determineTextColor(currentTheme, categoryStyle.color);
+                });
 
-          return (
-            <div key={category} className="category-section">
-              <Title3
-                className="category-title"
-                style={{
-                  color: categoryStyle.textColor,
-                  backgroundColor: categoryStyle.color,
-                }}
-              >
-                {stackItems[0].parentFolder || category}
-              </Title3>
-              <div className="stack-grid">
-                {stackItems.length > 0 ? (
-                  stackItems.map((stack, index) => (
-                    <Tooltip key={index} content={stack.description ?? (stack.content ? getFirstHeading(stack.content) : stack.title ?? stack.name)}>
-                      <div
-                        className="stack-card"
-                        style={{
-                          backgroundColor: stack.color,
-                          color: stack.textColor,
-                        }}
-                        onClick={() => handleCardClick(stack)}
-                      >
-                        <span className="stack-name">{stack.content ? getFirstHeading(stack.content) : stack.title ?? stack.name}</span>
-                      </div>
-                    </Tooltip>
-                  ))
-                ) : (
-                  <p>No stacks available in this category.</p>
+                return (
+                  <div key={category} className="category-section mb-8">
+                    <div 
+                      className="category-header mb-4 px-4 py-3 rounded-lg shadow-md"
+                      style={{
+                        backgroundColor: categoryStyle.color,
+                        color: categoryStyle.textColor,
+                      }}
+                    >
+                      <h2 className="text-xl font-bold">{stackItems[0].parentFolder || category}</h2>
+                    </div>
+                    
+                    <div className="stack-grid">
+                      {stackItems.length > 0 ? (
+                        stackItems.map((stack, index) => (
+                          <Tooltip key={index} content={stack.description ?? (stack.content ? getFirstHeading(stack.content) : stack.title ?? stack.name)}>
+                            <div
+                              className="stack-card"
+                              onClick={() => handleCardClick(stack)}
+                            >
+                              <div className="stack-card-inner">
+                                <div className="stack-icon" style={{ backgroundColor: stack.color }}>
+                                  {stack.name.charAt(0).toUpperCase()}
+                                </div>
+                                <span className="stack-name">{stack.content ? getFirstHeading(stack.content) : stack.title ?? stack.name}</span>
+                              </div>
+                            </div>
+                          </Tooltip>
+                        ))
+                      ) : (
+                        <p className="text-gray-500 dark:text-gray-400 italic">No stacks available in this category.</p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="empty-state text-center py-16">
+                <div className="text-gray-400 text-6xl mb-4">
+                  <i className="fas fa-layer-group"></i>
+                </div>
+                <h3 className="text-xl font-semibold text-gray-600 dark:text-gray-300 mb-2">No Stacks Found</h3>
+                <p className="text-gray-500 dark:text-gray-400">
+                  {searchTerm ? `No results match "${searchTerm}"` : "There are no technology stacks available."}
+                </p>
+                {searchTerm && (
+                  <button 
+                    onClick={handleClear}
+                    className="mt-4 px-4 py-2 bg-[var(--info)] text-white rounded-md hover:bg-[var(--info-dark)] transition-colors"
+                  >
+                    Clear Search
+                  </button>
                 )}
               </div>
-            </div>
-          );
-        })}
-      </div>
+            )}
+          </div>
+        )}
 
-      {selectedStack && (
-        <Modal className="modal " isOpen={true} onDismiss={closeModal} containerClassName='stack-modal-container'>
-          <div className="stack-modal-content">
-            <Header className="stack-modal-header" color='var(--text-info)'>{selectedStack.name}</Header>
-            <p>{selectedStack.description}</p>
-            <DialogActions className='stack-modal-actions'>
-              <ActionButton className="btn-close" onClick={closeModal}>
-                Close
-              </ActionButton>
-              {selectedStack && (
-                <ActionButton
-                  className="btn-info"
+        {/* Modal */}
+        {selectedStack && (
+          <Modal 
+            isOpen={true} 
+            onDismiss={closeModal} 
+            isBlocking={true}
+            containerClassName="stack-modal-container"
+          >
+            <div className="stack-modal-content">
+              <div className="modal-header bg-gradient-to-r from-[var(--info-light)] to-[var(--info)] p-4 rounded-t-lg">
+                <h2 className="text-xl font-bold text-white">{selectedStack.name}</h2>
+              </div>
+              
+              <div className="modal-body p-6">
+                {selectedStack.description && (
+                  <p className="text-gray-700 dark:text-gray-300 mb-6">{selectedStack.description}</p>
+                )}
+                
+                <div className="stack-details">
+                  {selectedStack.content && (
+                    <div className="mb-4">
+                      <h3 className="text-sm font-medium text-[var(--text-info)] dark:text-[var(--info)] mb-2">Content</h3>
+                      <p className="text-gray-700 dark:text-gray-300">{getFirstHeading(selectedStack.content)}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              <div className="modal-footer bg-gray-50 dark:bg-gray-800 p-4 rounded-b-lg flex justify-between">
+                <button 
+                  onClick={closeModal}
+                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                >
+                  Close
+                </button>
+                
+                <button
                   onClick={(e) => {
                     e?.preventDefault();
-
-                    console.log("Selected Stack:", selectedStack);
-
-                    const folderName = selectedStack.folderName || '';
-                    const filepath = selectedStack.filepath || '';
-
-                    console.log("Folder Name:", folderName);
-                    console.log("Filepath:", filepath);
-
-                    const parentFolderName = getParentFolders(folderName || filepath);
-                    console.log("Parent Folder Name:", parentFolderName);
-
+                    const parentFolderName = getParentFolders(selectedStack.folderName || selectedStack.filepath || '');
                     navigateToProjects({
                       selected: selectedStack,
                       parentFolder: parentFolderName,
                     });
                   }}
-                  title={selectedStack.name}
+                  className="px-4 py-2 bg-[var(--info)] text-white rounded-md hover:bg-[var(--info-dark)] transition-colors"
                 >
-                  Projects: {selectedStack.name.length > 20 ? `${selectedStack.name.slice(0, 15)}...` : selectedStack.name}
-                </ActionButton>
-
-              )}
-            </DialogActions>
-          </div>
-        </Modal>
-      )}
-    </div>
+                  View Details
+                </button>
+              </div>
+            </div>
+          </Modal>
+        )}
+      </div>
+    </Wrapper>
   );
 };
 

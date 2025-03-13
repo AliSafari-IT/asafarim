@@ -17,6 +17,7 @@ interface LayoutProps {
   className?: string;
   id?: string;
   error?: string;
+  removeNavbar?: boolean;
 }
 
 const Wrapper: React.FC<LayoutProps> = ({
@@ -29,6 +30,7 @@ const Wrapper: React.FC<LayoutProps> = ({
   className,
   id,
   error,
+  removeNavbar
 }) => {
   const { theme } = useTheme();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -92,7 +94,7 @@ const Wrapper: React.FC<LayoutProps> = ({
 
   return (
     <div id={id || 'wrapper'} className={`flex flex-col min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] ${className}`}>
-      <Navbar />
+      {!removeNavbar && <Navbar />}
       {/* Mobile Sidebar Overlay */}
       {isMobileMenuOpen && (
         <div

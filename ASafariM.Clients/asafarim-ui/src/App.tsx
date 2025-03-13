@@ -47,6 +47,7 @@ import CreatePost from "./pages/Blog/CreatePost";
 import HealthCheck from "./pages/HealthCheck/HealthCheck";
 import ViewUser from "./pages/User/ViewUser";
 import EditProject from "./pages/Project/EditProject";
+import UnderConstruction from "./pages/UnderConstruction";
 
 // const userUrl = API_URL + '/users';
 
@@ -417,6 +418,7 @@ function App() {
             path="/sitemap-items/delete/:id"
             element={<DeleteForm entity="sitemapitems" />}
           />
+          <Route path="/blog" element={<UnderConstruction />} />
           <Route path="/health" element={<HealthCheck />} />
           <Route path="/access-denied" element={<AccessDenied />} />
           <Route path="*" element={<NotFound />} />

@@ -418,7 +418,28 @@ function App() {
             path="/sitemap-items/delete/:id"
             element={<DeleteForm entity="sitemapitems" />}
           />
-          <Route path="/blog" element={<UnderConstruction />} />
+          <Route
+            path="/blog"
+            element={
+              <UnderConstruction
+                title="Our Blog is Under Construction"
+                constructionTips={[
+                  "Our blog will feature in-depth technical articles and tutorials.",
+                  "We're building a comment system for community discussions.",
+                  "Expect categories for different technology domains.",
+                  "Subscribe feature coming soon to get notified of new posts.",
+                  "Author profiles will showcase expertise and credentials.",
+                  "Dark mode support is being implemented for comfortable reading.",
+                  "Code snippets with syntax highlighting are on the way!",
+                  "Search functionality will help you find relevant content quickly.",
+                ]}
+                description="We're working hard to build a new and improved blog. Check back soon!"
+                bodyText={`Our team is working hard to create a blog platform that will provide valuable insights, 
+              tutorials, and updates about our products and services. We appreciate your patience 
+              as we construct this new section of our website.`}
+              />
+            }
+          />
           <Route path="/health" element={<HealthCheck />} />
           <Route path="/access-denied" element={<AccessDenied />} />
           <Route path="*" element={<NotFound />} />

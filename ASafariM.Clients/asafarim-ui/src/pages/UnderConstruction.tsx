@@ -1,51 +1,51 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  FluentProvider, 
-  webLightTheme, 
-  webDarkTheme, 
-  Button, 
-  Title1, 
-  Subtitle1, 
+import React, { useState, useEffect } from "react";
+import {
+  FluentProvider,
+  webLightTheme,
+  webDarkTheme,
+  Button,
+  Title1,
+  Subtitle1,
   Body1,
-  Caption1
-} from '@fluentui/react-components';
-import { 
+  Caption1,
+} from "@fluentui/react-components";
+import {
   Toolbox24Regular,
-  Warning24Regular, 
+  Warning24Regular,
   Building24Regular,
-  ArrowLeft24Regular, 
+  ArrowLeft24Regular,
   Lightbulb24Regular,
   Rocket24Regular,
-  Clock24Regular
-} from '@fluentui/react-icons';
-import { useNavigate } from 'react-router-dom';
-import { useTheme } from '@/contexts/ThemeContext';
-import './UnderConstruction.css';
+  Clock24Regular,
+} from "@fluentui/react-icons";
+import { useNavigate } from "react-router-dom";
+import { useTheme } from "@/contexts/ThemeContext";
+import "./UnderConstruction.css";
 
-const UnderConstruction: React.FC = () => {
+interface UnderConstructionProps {
+  title: string;
+  constructionTips: string[];
+  description: string;
+  bodyText: string;
+}
+
+const UnderConstruction: React.FC<UnderConstructionProps> = ({
+  title,
+  constructionTips,
+  description,
+  bodyText,
+}) => {
   const { theme } = useTheme();
-  const currentTheme = theme === 'dark' ? webDarkTheme : webLightTheme;
+  const currentTheme = theme === "dark" ? webDarkTheme : webLightTheme;
   const navigate = useNavigate();
   const [progress, setProgress] = useState(0);
   const [showToolTip, setShowToolTip] = useState(false);
   const [tipIndex, setTipIndex] = useState(0);
 
-  // Construction tips
-  const constructionTips = [
-    "Our blog will feature in-depth technical articles and tutorials.",
-    "We're building a comment system for community discussions.",
-    "Expect categories for different technology domains.",
-    "Subscribe feature coming soon to get notified of new posts.",
-    "Author profiles will showcase expertise and credentials.",
-    "Dark mode support is being implemented for comfortable reading.",
-    "Code snippets with syntax highlighting are on the way!",
-    "Search functionality will help you find relevant content quickly."
-  ];
-
   // Simulate construction progress
   useEffect(() => {
     const timer = setInterval(() => {
-      setProgress(prevProgress => {
+      setProgress((prevProgress) => {
         const newProgress = prevProgress + 0.1;
         return newProgress > 100 ? 0 : newProgress;
       });
@@ -57,7 +57,7 @@ const UnderConstruction: React.FC = () => {
   // Rotate through tips
   useEffect(() => {
     const tipTimer = setInterval(() => {
-      setTipIndex(prevIndex => (prevIndex + 1) % constructionTips.length);
+      setTipIndex((prevIndex) => (prevIndex + 1) % constructionTips.length);
     }, 5000);
 
     return () => clearInterval(tipTimer);
@@ -65,12 +65,12 @@ const UnderConstruction: React.FC = () => {
 
   // Toggle tooltip
   const handleToolTipToggle = () => {
-    setShowToolTip(prev => !prev);
+    setShowToolTip((prev) => !prev);
   };
 
   // Navigate back to dashboard
   const goBack = () => {
-    navigate('/');
+    navigate("/");
   };
 
   return (
@@ -78,9 +78,9 @@ const UnderConstruction: React.FC = () => {
       <div className="under-construction-container">
         <div className="construction-content">
           <div className="construction-header">
-            <Button 
-              icon={<ArrowLeft24Regular />} 
-              appearance="subtle" 
+            <Button
+              icon={<ArrowLeft24Regular />}
+              appearance="subtle"
               onClick={goBack}
               className="back-button"
             >
@@ -101,10 +101,8 @@ const UnderConstruction: React.FC = () => {
               </div>
             </div>
 
-            <Title1 className="construction-title">
-              Our Blog is Under Construction
-            </Title1>
-            
+            <Title1 className="construction-title">{title}</Title1>
+
             <div className="construction-animation">
               <div className="construction-scene">
                 <div className="building">
@@ -127,14 +125,10 @@ const UnderConstruction: React.FC = () => {
             </div>
 
             <Subtitle1 className="construction-subtitle">
-              We're building something amazing for you!
+              {description}
             </Subtitle1>
-            
-            <Body1 className="construction-description">
-              Our team is working hard to create a blog platform that will provide valuable insights, 
-              tutorials, and updates about our products and services. We appreciate your patience 
-              as we construct this new section of our website.
-            </Body1>
+
+            <Body1 className="construction-description">{bodyText}</Body1>
 
             <div className="progress-container">
               <div className="progress-label">
@@ -142,8 +136,8 @@ const UnderConstruction: React.FC = () => {
                 <span>Construction Progress</span>
               </div>
               <div className="progress-bar">
-                <div 
-                  className="progress-fill" 
+                <div
+                  className="progress-fill"
                   style={{ width: `${progress}%` }}
                 ></div>
               </div>
@@ -159,9 +153,11 @@ const UnderConstruction: React.FC = () => {
                 <p className="tip-text">{constructionTips[tipIndex]}</p>
                 <div className="tip-indicators">
                   {constructionTips.map((_, index) => (
-                    <div 
-                      key={index} 
-                      className={`tip-indicator ${index === tipIndex ? 'active' : ''}`}
+                    <div
+                      key={index}
+                      className={`tip-indicator ${
+                        index === tipIndex ? "active" : ""
+                      }`}
                     ></div>
                   ))}
                 </div>
@@ -169,7 +165,7 @@ const UnderConstruction: React.FC = () => {
             </div>
 
             <div className="construction-actions">
-              <Button 
+              <Button
                 icon={<Rocket24Regular />}
                 appearance="primary"
                 onClick={handleToolTipToggle}
@@ -181,8 +177,13 @@ const UnderConstruction: React.FC = () => {
 
             {showToolTip && (
               <div className="tooltip-popup">
-                <p>Thanks for your interest! This feature is also under construction. 😊</p>
-                <Button appearance="subtle" onClick={handleToolTipToggle}>Close</Button>
+                <p>
+                  Thanks for your interest! This feature is also under
+                  construction. 😊
+                </p>
+                <Button appearance="subtle" onClick={handleToolTipToggle}>
+                  Close
+                </Button>
               </div>
             )}
           </div>

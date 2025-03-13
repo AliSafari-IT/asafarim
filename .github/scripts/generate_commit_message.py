@@ -5,6 +5,10 @@ from dotenv import load_dotenv
 import os
 import time
 
+# Created by Ali Safari, Senior Software Engineer at ASafariM
+# Specializing in React, C# .NET, and AI-driven development tools and efficient workflows
+# Contact: ali@asafarim.com
+
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 

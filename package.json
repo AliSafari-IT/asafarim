@@ -1,6 +1,6 @@
 {
   "name": "asafarim",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "packageManager": "yarn@4.7.0",
   "repository": "https://github.com/AliSafari-IT/asafarim.git",
   "private": true,
@@ -11,6 +11,7 @@
     "asafarim-api:publish": "bash -c 'set -e && cd /var/www/asafarim && git pull origin main && sudo rm -rf /var/www/asafarim-api/* && dotnet publish ASafariM.Api/ASafariM.Api.csproj -c Release -o /var/www/asafarim-api && sudo chown -R www-data:www-data /var/www/asafarim-api && sudo chmod -R 755 /var/www/asafarim-api && sudo systemctl restart asafarim-api'",
     "asafarim-ui:publish": "bash -c 'set -e && cd /var/www/asafarim && git pull origin main && yarn workspace asafarim-ui build && sudo rm -rf /var/www/asafarim-com/public_html/* && sudo cp -r /var/www/asafarim/ASafariM.Clients/asafarim-ui/dist/* /var/www/asafarim-com/public_html/ && sudo chown -R www-data:www-data /var/www/asafarim-com/public_html && sudo chmod -R 755 /var/www/asafarim-com/public_html && sudo systemctl restart nginx'",
     "asafarim:publish": "yarn asafarim-api:publish && yarn asafarim-ui:publish",
+    "publish": "yarn asafarim:publish",
     "clean": "bash ./scripts/bash_files/dotnet-commands.sh clean",
     "clean_dev": "powershell -File ./scripts/bash_files/dotnet-commands.ps1 clean",
     "restore": "bash ./scripts/bash_files/dotnet-commands.sh restore",

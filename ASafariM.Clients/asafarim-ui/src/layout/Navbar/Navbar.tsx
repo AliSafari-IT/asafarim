@@ -91,6 +91,11 @@ const Navbar: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
             />
           ) : (
             <div className="flex flex-col lg:flex-row space-y-2 lg:space-y-0 lg:space-x-2">
+              {viewWidth < 401 && (
+                <div className="px-3 py-2">
+                  <ThemeToggler {...togglerProps} />
+                </div>
+              )}
               <Link
                 to="/login"
                 className="text-[var(--text-secondary)] hover:bg-[var(--bg-tertiary)] hover:text-[var(--text-primary)] px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"

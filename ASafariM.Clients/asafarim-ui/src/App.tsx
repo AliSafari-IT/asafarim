@@ -49,6 +49,7 @@ import ViewUser from "./pages/User/ViewUser";
 import EditProject from "./pages/Project/EditProject";
 import UnderConstruction from "./pages/UnderConstruction";
 import { trackPageView } from "./services/analyticsService";
+import AnalyticsPage from "./pages/Analytics/AnalyticsPage";
 
 // const userUrl = API_URL + '/users';
 
@@ -317,6 +318,15 @@ function App() {
             element={
               <PrivateRoute requireAdmin={true}>
                 <Dashboard />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/analytics"
+            element={
+              <PrivateRoute requireAdmin={true}>
+                <AnalyticsPage />
               </PrivateRoute>
             }
           />

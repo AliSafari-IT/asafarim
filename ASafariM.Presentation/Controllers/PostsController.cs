@@ -70,7 +70,13 @@ namespace ASafariM.Presentation.Controllers
                     return BadRequest("Title and Content are required.");
                 }
 
-                if (await _postRepository.SlugExistsAsync(command?.Slug))
+                if (string.IsNullOrEmpty(command?.Slug))
+                {
+                    Log.Warning("Slug is null or empty");
+                    return BadRequest("Slug is required.");
+                }
+
+                if (await _postRepository.SlugExistsAsync(command.Slug))
                 {
                     Log.Warning("Slug already exists: {Slug}", command.Slug);
                     return BadRequest("Slug already exists.");

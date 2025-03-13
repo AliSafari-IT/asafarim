@@ -22,11 +22,11 @@ namespace ASafariM.Presentation.Controllers
     [Route("api/health")]
     public class HealthCheckController : ControllerBase
     {
-        private readonly string _connectionString;
+        private readonly string _connectionString = string.Empty;
 
         public HealthCheckController(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection");
+            _connectionString = configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
         }
 
         [HttpGet]

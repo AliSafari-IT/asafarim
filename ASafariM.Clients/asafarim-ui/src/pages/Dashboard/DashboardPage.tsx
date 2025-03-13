@@ -9,134 +9,121 @@ import {
 } from "@fluentui/react-components";
 import CardContainer from "../../components/Containers/Card/CardContainer";
 import { useTheme } from "@/contexts/ThemeContext";
+import "./Dashboard.css";
 
 const Dashboard: React.FC = () => {
   const { theme } = useTheme();
   const currentTheme = theme === "dark" ? webDarkTheme : webLightTheme;
 
+  // Navigation card data
+  const navigationCards = [
+    {
+      title: "Projects",
+      description: "Browse and manage your active projects",
+      icon: "📊",
+      link: "/projects",
+      color: "primary",
+      buttonText: "Discover Projects",
+    },
+    {
+      title: "Users",
+      description: "Manage user accounts and permissions",
+      icon: "👥",
+      link: "/users",
+      color: "secondary",
+      buttonText: "Manage Users",
+    },
+    {
+      title: "Blog",
+      description: "Read the latest articles and updates",
+      icon: "📝",
+      link: "/blog",
+      color: "tertiary",
+      buttonText: "Read Our Blog",
+    },
+    {
+      title: "Contact",
+      description: "Get in touch with our support team",
+      icon: "📞",
+      link: "/contact-asafarim",
+      color: "accent",
+      buttonText: "Get in Touch",
+    },
+    {
+      title: "Changelogs",
+      description: "View recent updates and changes",
+      icon: "📋",
+      link: "/changelogs",
+      color: "info",
+      buttonText: "View Changelogs",
+    },
+  ];
+
   return (
     <Wrapper header={<DashboardHeaderBlock />}>
-      <FluentProvider theme={currentTheme}>
-        <CardContainer />
-      </FluentProvider>
+      <div className="dashboard-container">
+        {/* Main Content Area */}
+        <div className="dashboard-content">
+          {/* Navigation Section */}
+          <div className="dashboard-navigation-section">
+            <h2 className="dashboard-section-title">Quick Navigation</h2>
+            <div className="dashboard-nav-cards">
+              {navigationCards.map((card, index) => (
+                <div key={index} className={`dashboard-nav-card ${card.color}`}>
+                  <div className="nav-card-icon">{card.icon}</div>
+                  <div className="nav-card-content">
+                    <h3 className="nav-card-title">{card.title}</h3>
+                    <p className="nav-card-description">{card.description}</p>
+                  </div>
+                  <Link href={card.link}>
+                    <button className={`nav-card-button ${card.color}`}>
+                      {card.buttonText}
+                    </button>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </div>
 
-      {/* Button Row */}
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
-        <Link href="/projects">
-          <button
-            className="
-              px-5 py-3 
-              font-bold 
-              rounded-md 
-              shadow-md 
-              transition 
-              duration-300 
-              transform 
-              bg-[var(--primary)] 
-              text-[var(--text-inverted)] 
-              hover:bg-[var(--primary-dark)] 
-              hover:scale-105
-              focus:outline-none 
-              focus:ring-2 
-              focus:ring-[var(--accent)]
-            "
-          >
-            Discover Projects
-          </button>
-        </Link>
+          <FluentProvider theme={currentTheme}>
+            <div className="dashboard-cards-section">
+              <h2 className="dashboard-section-title">System Overview</h2>
+              <CardContainer />
+            </div>
+          </FluentProvider>
 
-        <Link href="/users">
-          <button
-            className="
-              px-5 py-3 
-              font-bold 
-              rounded-md 
-              shadow-md 
-              transition 
-              duration-300 
-              transform 
-              bg-[var(--secondary)] 
-              text-[var(--text-inverted)] 
-              hover:bg-[var(--secondary-dark)] 
-              hover:scale-105
-              focus:outline-none 
-              focus:ring-2 
-              focus:ring-[var(--accent)]
-            "
-          >
-            Manage Users
-          </button>
-        </Link>
+          {/* Additional Dashboard Sections */}
+          <div className="dashboard-additional-sections">
+            <div className="dashboard-section health-status">
+              <h2 className="dashboard-section-title">System Health</h2>
+              <div className="dashboard-section-content">
+                <div className="health-status-indicator">
+                  <div className="status-icon healthy"></div>
+                  <div className="status-info">
+                    <p className="status-text">All systems operational</p>
+                    <Link href="/health-check">
+                      <button className="view-details-button">
+                        View Details
+                      </button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-        <Link href="/blog">
-          <button
-            className="
-              px-5 py-3 
-              font-bold 
-              rounded-md 
-              shadow-md 
-              transition 
-              duration-300 
-              transform 
-              bg-[var(--tertiary)] 
-              text-[var(--text-inverted)] 
-              hover:bg-[var(--tertiary-dark)] 
-              hover:scale-105
-              focus:outline-none 
-              focus:ring-2 
-              focus:ring-[var(--accent)]
-            "
-          >
-            Read Our Blog
-          </button>
-        </Link>
-
-        <Link href="/contact-asafarim">
-          <button
-            className="
-              px-5 py-3 
-              font-bold 
-              rounded-md 
-              shadow-md 
-              transition 
-              duration-300 
-              transform 
-              bg-[var(--accent)] 
-              text-[var(--text-inverted)] 
-              hover:bg-[var(--accent-dark)] 
-              hover:scale-105
-              focus:outline-none 
-              focus:ring-2 
-              focus:ring-[var(--accent)]
-            "
-          >
-            Get in Touch
-          </button>
-        </Link>
-
-        <Link href="/changelogs">
-          <button
-            className="
-              px-5 py-3 
-              font-bold 
-              rounded-md 
-              shadow-md 
-              transition 
-              duration-300 
-              transform 
-              bg-[var(--info)] 
-              text-[var(--text-inverted)] 
-              hover:bg-[var(--info-dark)] 
-              hover:scale-105
-              focus:outline-none 
-              focus:ring-2 
-              focus:ring-[var(--accent)]
-            "
-          >
-            View Changelogs
-          </button>
-        </Link>
-        
+            <div className="dashboard-section recent-activity">
+              <h2 className="dashboard-section-title">Recent Activity</h2>
+              <div className="dashboard-section-content">
+                <p className="activity-empty-state">
+                  No recent activities to display
+                </p>
+                <Link href="/activity">
+                  <button className="view-all-button">View All Activity</button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </Wrapper>
   );

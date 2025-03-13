@@ -1,0 +1,207 @@
+/* Card Container Styles */
+.card-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+}
+
+/* Section Icons */
+.section-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--text-inverted);
+}
+
+.section-icon.topics {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+}
+
+.section-icon.tags {
+  background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+}
+
+/* Action Buttons */
+.action-button {
+  border-radius: 6px !important;
+  transition: all 0.2s ease !important;
+}
+
+.action-button.refresh:hover {
+  background-color: var(--info-light) !important;
+  color: var(--info-dark) !important;
+}
+
+.action-button.search:hover {
+  background-color: var(--success-light) !important;
+  color: var(--success-dark) !important;
+}
+
+.action-button.filter:hover {
+  background-color: var(--warning-light) !important;
+  color: var(--warning-dark) !important;
+}
+
+.action-button.add {
+  font-weight: 600 !important;
+}
+
+/* Loading State */
+.card-container__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  background: var(--bg-primary);
+  border-radius: 8px;
+  gap: 1rem;
+}
+
+.card-container__loading p {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+/* Empty State */
+.empty-state-icon {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 1rem;
+  opacity: 0.6;
+}
+
+/* Pagination Styling */
+.pagination-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination-button:hover:not(:disabled) {
+  background: var(--primary);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.pagination-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-pages {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.pagination-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination-page:hover {
+  background: var(--bg-hover);
+}
+
+.pagination-page.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.pagination-info {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  padding: 0 0.5rem;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .pagination-pages {
+    display: none;
+  }
+  
+  .pagination-info {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .action-button span {
+    display: none;
+  }
+}
+
+/* Card Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-container .cardsWrapper > * {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Apply staggered animation to cards */
+.card-container .cardsWrapper > *:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.card-container .cardsWrapper > *:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.card-container .cardsWrapper > *:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+/* Custom Scrollbar */
+.card-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.card-container::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+.card-container::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 4px;
+}
+
+.card-container::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-dark);
+}

@@ -6,7 +6,7 @@
   "repository": "https://github.com/AliSafari-IT/asafarim.git",
   "private": true,
   "scripts": {
-    "start": "bash scripts/bash_files/taskkill.sh; cd .. && dotnet watch run --project ASafariM.Api/ASafariM.Api.csproj",
+    "start": "cd .. && bash scripts/bash_files/taskkill.sh; cd .. && dotnet watch run --project ASafariM.Api/ASafariM.Api.csproj",
     "run": "dotnet run --project ./ASafariM.Api.csproj",
     "restore": "dotnet restore --project ./ASafariM.Api.csproj",
     "build": "dotnet build --project ./ASafariM.Api.csproj",

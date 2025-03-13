@@ -52,9 +52,13 @@ const EditProject: React.FC = () => {
   
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isGistModalOpen, setIsGistModalOpen] = useState(false);
   const [githubRepos, setGithubRepos] = useState<{name: string, html_url: string, description?: string}[]>([]);
+  const [githubGists, setGithubGists] = useState<{description: string, html_url: string, files?: any}[]>([]);
   const [isLoadingRepos, setIsLoadingRepos] = useState(false);
+  const [isLoadingGists, setIsLoadingGists] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [gistSearchQuery, setGistSearchQuery] = useState("");
 
   // State for delete confirmation dialog
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -216,6 +220,11 @@ const EditProject: React.FC = () => {
     }
   };
   
+  const handleAddGistLink = () => {
+    setIsGistModalOpen(true);
+    fetchGithubGists();
+  };
+  
   const confirmDeleteLink = (index: number) => {
     setLinkToDeleteIndex(index);
     setShowDeleteDialog(true);
@@ -248,11 +257,36 @@ const EditProject: React.FC = () => {
     }
   };
   
+  // GitHub gists handlers
+  const fetchGithubGists = async () => {
+    try {
+      setIsLoadingGists(true);
+      const response = await axios.get('https://api.github.com/users/AliSafari-IT/gists');
+      setGithubGists(response.data);
+      logger.info(`Fetched ${response.data.length} GitHub gists`);
+    } catch (error) {
+      logger.error('Error fetching GitHub gists: ' + error);
+      setError('Failed to fetch GitHub gists');
+    } finally {
+      setIsLoadingGists(false);
+    }
+  };
+  
   // Filter repositories based on search query
   const filteredRepos = searchQuery
     ? githubRepos.filter(repo => 
         repo.name.toLowerCase().includes(searchQuery.toLowerCase()))
     : githubRepos;
+    
+  // Filter gists based on search query
+  const filteredGists = gistSearchQuery
+    ? githubGists.filter(gist => {
+        const description = gist.description || '';
+        const fileNames = gist.files ? Object.keys(gist.files).join(' ') : '';
+        return description.toLowerCase().includes(gistSearchQuery.toLowerCase()) || 
+               fileNames.toLowerCase().includes(gistSearchQuery.toLowerCase());
+      })
+    : githubGists;
 
   // Handle form submission
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -540,7 +574,7 @@ const EditProject: React.FC = () => {
           {/* Repository Links Section */}
           <div className="mb-6 p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md">
             <Text as="h2" className="text-[var(--text-primary)] text-xl font-bold mb-3">
-              Repository Links
+              Repository & Gist Links
             </Text>
             
             {/* List of existing links */}
@@ -576,7 +610,7 @@ const EditProject: React.FC = () => {
             {/* Add new link form */}
             <div className="flex items-center mt-4">
               <TextField 
-                placeholder="Enter repository URL" 
+                placeholder="Enter repository or gist URL" 
                 value={newRepoLink}
                 onChange={(_, newValue) => setNewRepoLink(newValue || '')}
                 className="flex-grow"
@@ -584,10 +618,29 @@ const EditProject: React.FC = () => {
               <PrimaryButton 
                 onClick={handleAddRepoLink}
                 className="ml-2 bg-teal-500 hover:bg-teal-600"
-                title="Add Repository Link"
+                title="Add Link"
               >
                 <Add20Regular className="mr-1" /> Add Link
               </PrimaryButton>
+            </div>
+            
+            {/* Buttons to open GitHub modals */}
+            <div className="flex mt-4 space-x-2">
+              <DefaultButton 
+                onClick={() => {
+                  setIsModalOpen(true);
+                  fetchGithubRepos();
+                }}
+                className="bg-gray-100 hover:bg-gray-200 text-gray-700"
+              >
+                Browse Repositories
+              </DefaultButton>
+              <DefaultButton 
+                onClick={handleAddGistLink}
+                className="bg-gray-100 hover:bg-gray-200 text-gray-700"
+              >
+                Browse Gists
+              </DefaultButton>
             </div>
           </div>
           
@@ -684,6 +737,85 @@ const EditProject: React.FC = () => {
           
           <DialogFooter>
             <PrimaryButton onClick={() => setIsModalOpen(false)} text="Close" type="button" />
+          </DialogFooter>
+        </Dialog>
+        
+        {/* GitHub Gists Modal */}
+        <Dialog
+          hidden={!isGistModalOpen}
+          onDismiss={() => setIsGistModalOpen(false)}
+          dialogContentProps={{
+            type: DialogType.normal,
+            title: 'Select GitHub Gist',
+            subText: 'Choose a gist to add as a link to your project'
+          }}
+          modalProps={{
+            isBlocking: true,
+            styles: { main: { maxWidth: 600 } }
+          }}
+        >
+          <div className="mb-4">
+            <div className="flex items-center mb-4">
+              <TextField
+                placeholder="Search gists..."
+                value={gistSearchQuery}
+                onChange={(_, newValue) => setGistSearchQuery(newValue || '')}
+                className="flex-grow"
+              />
+              <PrimaryButton className="ml-2" type="button">
+                <Search24Regular />
+              </PrimaryButton>
+            </div>
+            
+            {isLoadingGists ? (
+              <div className="flex justify-center py-4">
+                <Spinner size={SpinnerSize.large} label="Loading gists..." />
+              </div>
+            ) : filteredGists.length > 0 ? (
+              <div className="max-h-80 overflow-y-auto border border-[var(--border-primary)] rounded-md">
+                <List
+                  items={filteredGists}
+                  onRenderCell={(item?: {description: string, html_url: string, files?: any}) => (
+                    <div 
+                      className="p-3 border-b border-[var(--border-primary)] hover:bg-[var(--bg-secondary)] flex items-center cursor-pointer"
+                      onClick={() => {
+                        if (item) {
+                          // Add the URL directly to the repoLinks array
+                          const currentLinks = Array.isArray(repoLinks) ? repoLinks : [];
+                          if (!currentLinks.includes(item.html_url)) {
+                            setRepoLinks([...currentLinks, item.html_url]);
+                          }
+                          setIsGistModalOpen(false);
+                        }
+                      }}
+                    >
+                      <div className="flex-shrink-0 mr-3 text-teal-500 hover:text-teal-600">
+                        <Add20Regular />
+                      </div>
+                      <div className="flex-grow min-w-0">
+                        <Text className="font-medium">
+                          {item?.description || 'Untitled Gist'}
+                        </Text>
+                        <Text className="text-sm text-[var(--text-secondary)] truncate">{item?.html_url}</Text>
+                        {item?.files && (
+                          <Text className="text-xs text-[var(--text-secondary)] truncate mt-1">
+                            Files: {Object.keys(item.files).join(', ')}
+                          </Text>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                />
+              </div>
+            ) : (
+              <Text className="text-center py-4 text-[var(--text-secondary)]">
+                No gists found
+              </Text>
+            )}
+          </div>
+          
+          <DialogFooter>
+            <PrimaryButton onClick={() => setIsGistModalOpen(false)} text="Close" type="button" />
           </DialogFooter>
         </Dialog>
         

@@ -272,18 +272,34 @@ const EditUser: React.FC = () => {
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
         <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 sm:p-6 lg:p-8 transition-colors duration-200">
           {error && (
-            <p className="text-red-500 dark:text-red-400 text-sm mb-4">
-              {error}
-            </p>
+            <div className="mb-6 p-4 bg-red-100 dark:bg-red-900/30 border-l-4 border-red-500 rounded-md">
+              <p className="text-red-700 dark:text-red-400 text-sm">
+                {error}
+              </p>
+            </div>
           )}
-          <h1 className="text-xl sm:text-2xl font-semibold text-center text-[var(--text-warning)] dark:text-[var(--warning)] mb-4 sm:mb-6 transition-colors duration-200">
-            User Management
-          </h1>
-          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+          
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-xl sm:text-2xl font-semibold text-[var(--text-warning)] dark:text-[var(--warning)] transition-colors duration-200">
+              User Management
+            </h1>
+            <button
+              type="button"
+              onClick={() => navigate('/users')}
+              className="flex items-center px-3 py-2 text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-colors duration-200"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              Back to Users
+            </button>
+          </div>
+          
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {isLoggedInUserAdmin && (
-                <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Assign Roles:</label>
+                <div className="md:col-span-2 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                  <label className="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">Assign Roles:</label>
                   <Dropdown
                     placeholder="Select roles"
                     multiSelect
@@ -299,9 +315,10 @@ const EditUser: React.FC = () => {
                   />
                 </div>
               )}
+              
               {/* First Name */}
-              <div>
-                <label className="block text-[var(--text-info)] dark:text-[var(--info)] text-sm sm:text-base mb-2">
+              <div className="space-y-2">
+                <label className="block text-[var(--text-info)] dark:text-[var(--info)] text-sm font-medium">
                   First Name
                 </label>
                 <input
@@ -309,13 +326,13 @@ const EditUser: React.FC = () => {
                   name="firstName"
                   value={user.firstName || ''}
                   onChange={handleInputChange}
-                  className="w-full px-3 sm:px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
+                  className="w-full px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
                 />
               </div>
 
               {/* Last Name */}
-              <div>
-                <label className="block text-[var(--text-info)] dark:text-[var(--info)] text-sm sm:text-base mb-2">
+              <div className="space-y-2">
+                <label className="block text-[var(--text-info)] dark:text-[var(--info)] text-sm font-medium">
                   Last Name
                 </label>
                 <input
@@ -323,13 +340,13 @@ const EditUser: React.FC = () => {
                   name="lastName"
                   value={user.lastName || ''}
                   onChange={handleInputChange}
-                  className="w-full px-3 sm:px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
+                  className="w-full px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
                 />
               </div>
 
               {/* User Name */}
-              <div>
-                <label className="block text-[var(--text-info)] dark:text-[var(--info)] text-sm sm:text-base mb-2">
+              <div className="space-y-2">
+                <label className="block text-[var(--text-info)] dark:text-[var(--info)] text-sm font-medium">
                   User Name
                 </label>
                 <input
@@ -337,7 +354,7 @@ const EditUser: React.FC = () => {
                   name="userName"
                   value={user.userName || ''}
                   onChange={handleInputChange}
-                  className="w-full px-3 sm:px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
+                  className="w-full px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
                 />
                 {/* Feedback message */}
                 {usernameAvailable !== null && (
@@ -350,8 +367,8 @@ const EditUser: React.FC = () => {
               </div>
 
               {/* Email */}
-              <div>
-                <label className="block text-[var(--text-info)] dark:text-[var(--info)] text-sm sm:text-base mb-2">
+              <div className="space-y-2">
+                <label className="block text-[var(--text-info)] dark:text-[var(--info)] text-sm font-medium">
                   Email
                 </label>
                 <input
@@ -359,7 +376,7 @@ const EditUser: React.FC = () => {
                   name="email"
                   value={user.email || ''}
                   onChange={handleInputChange}
-                  className="w-full px-3 sm:px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
+                  className="w-full px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
                 />
                 {/* Feedback message */}
                 {emailAvailable !== null && (
@@ -372,96 +389,112 @@ const EditUser: React.FC = () => {
               </div>
 
               {/* Date of Birth */}
-              <div>
-                <label className="block text-[var(--text-info)] dark:text-[var(--info)] text-sm sm:text-base mb-2">Date of Birth</label>
+              <div className="space-y-2">
+                <label className="block text-[var(--text-info)] dark:text-[var(--info)] text-sm font-medium">Date of Birth</label>
                 <input
                   type="date"
                   name="dateOfBirth"
                   value={user.dateOfBirth || ''}
                   onChange={handleInputChange}
-                  className="w-full px-3 sm:px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
+                  className="w-full px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
                 />
               </div>
 
               {/* Profile Picture */}
-              <div>
-                <label className="block text-[var(--text-info)] dark:text-[var(--info)] text-sm sm:text-base mb-2">Profile Picture</label>
+              <div className="space-y-2">
+                <label className="block text-[var(--text-info)] dark:text-[var(--info)] text-sm font-medium">Profile Picture URL</label>
                 <input
                   type="text"
                   name="profilePicture"
                   value={user.profilePicture || ''}
                   onChange={handleInputChange}
-                  className="w-full px-3 sm:px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
+                  className="w-full px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
                 />
               </div>
 
               {/* Remark */}
-              <div>
-                <label className="block text-[var(--text-info)] dark:text-[var(--info)] text-sm sm:text-base mb-2">Remark</label>
+              <div className="space-y-2">
+                <label className="block text-[var(--text-info)] dark:text-[var(--info)] text-sm font-medium">Remark</label>
                 <input
                   type="text"
                   name="remark"
                   value={user.remark || ''}
                   onChange={handleInputChange}
-                  className="w-full px-3 sm:px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
+                  className="w-full px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
                 />
               </div>
 
               {/* Biography */}
-              <div className="col-span-2">
-                <label className="block text-[var(--text-info)] dark:text-[var(--info)] text-sm sm:text-base mb-2">Biography</label>
+              <div className="md:col-span-2 space-y-2">
+                <label className="block text-[var(--text-info)] dark:text-[var(--info)] text-sm font-medium">Biography</label>
                 <textarea
                   name="biography"
                   value={user.biography || ''}
                   onChange={handleInputChange}
-                  className="w-full px-3 sm:px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
+                  className="w-full px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
                   rows={4}
                 ></textarea>
               </div>
             </div>
 
-            {/* Admin Status */}
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                name="isAdmin"
-                checked={user.isAdmin || false}
-                onChange={(e) => {
-                  setUser({
-                    ...user,
-                    isAdmin: e.target.checked
-                  });
-                }}
-                className="w-4 h-4 text-[var(--info)] dark:text-[var(--info)] bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
-              />
-              <label className="text-[var(--text-info)] dark:text-[var(--info)] text-sm sm:text-base">Is Admin</label>
+            {/* Checkboxes in a nice card */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-700">
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    name="isAdmin"
+                    checked={user.isAdmin || false}
+                    onChange={(e) => {
+                      setUser({
+                        ...user,
+                        isAdmin: e.target.checked
+                      });
+                    }}
+                    className="w-5 h-5 text-[var(--info)] dark:text-[var(--info)] bg-white dark:bg-gray-600 border-gray-300 dark:border-gray-500 rounded focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
+                  />
+                  <label className="text-gray-700 dark:text-gray-200 text-sm font-medium">Administrator Access</label>
+                </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 ml-8">
+                  Grants full administrative privileges to manage all aspects of the system
+                </p>
+              </div>
+
+              <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-700">
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    name="isActive"
+                    checked={user.isActive || false}
+                    onChange={(e) => {
+                      setUser({
+                        ...user,
+                        isActive: e.target.checked
+                      });
+                    }}
+                    className="w-5 h-5 text-[var(--info)] dark:text-[var(--info)] bg-white dark:bg-gray-600 border-gray-300 dark:border-gray-500 rounded focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
+                  />
+                  <label className="text-gray-700 dark:text-gray-200 text-sm font-medium">Active Account</label>
+                </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 ml-8">
+                  Determines whether this user can log in and access the system
+                </p>
+              </div>
             </div>
 
-            {/* Active Status */}
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                name="isActive"
-                checked={user.isActive || false}
-                onChange={handleInputChange}
-                className="w-4 h-4 text-[var(--info)] dark:text-[var(--info)] bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
-              />
-              <label className="text-[var(--text-info)] dark:text-[var(--info)] text-sm sm:text-base">Is Active</label>
-            </div>
-
-            <div className="flex justify-end space-x-4">
+            <div className="flex justify-end space-x-4 pt-4 border-t border-gray-200 dark:border-gray-700">
               <button
                 type="button"
                 onClick={() => navigate('/users')}
-                className="px-4 py-2 bg-[var(--secondary)] dark:bg-[var(--secondary-dark)] text-white rounded-lg hover:bg-[var(--tertiary-light)] dark:hover:bg-[var(--tertiary-dark)] focus:outline-none focus:ring-2 focus:ring-[var(--secondary)] transition-colors duration-200"
+                className="px-5 py-2.5 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-colors duration-200"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 bg-[var(--info)] dark:bg-[var(--info-dark)] text-white rounded-lg hover:bg-[var(--info-dark)] dark:hover:bg-[var(--info-dark)] focus:outline-none focus:ring-2 focus:ring-[var(--info)] transition-colors duration-200"
+                className="px-5 py-2.5 bg-[var(--info)] dark:bg-[var(--info-dark)] text-white rounded-lg hover:bg-[var(--info-dark)] dark:hover:bg-[var(--info-dark)] focus:outline-none focus:ring-2 focus:ring-[var(--info)] transition-colors duration-200"
               >
-                Update User
+                Save Changes
               </button>
             </div>
           </form>

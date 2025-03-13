@@ -193,6 +193,9 @@ const EditUser: React.FC = () => {
         firstName: user.firstName || '',
         lastName: user.lastName || '',
         dateOfBirth: user.dateOfBirth ? new Date(user.dateOfBirth).toISOString() : undefined,
+        // Ensure boolean values are properly typed
+        isAdmin: typeof user.isAdmin === 'string' ? user.isAdmin === 'true' : !!user.isAdmin,
+        isActive: typeof user.isActive === 'string' ? user.isActive === 'true' : !!user.isActive,
         // Only include password if it was changed
         ...(user.password ? { password: user.password } : {})
       };
@@ -423,7 +426,12 @@ const EditUser: React.FC = () => {
                 type="checkbox"
                 name="isAdmin"
                 checked={user.isAdmin || false}
-                onChange={handleInputChange}
+                onChange={(e) => {
+                  setUser({
+                    ...user,
+                    isAdmin: e.target.checked
+                  });
+                }}
                 className="w-4 h-4 text-[var(--info)] dark:text-[var(--info)] bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-[var(--info)] dark:focus:ring-[var(--info)] transition-colors duration-200"
               />
               <label className="text-[var(--text-info)] dark:text-[var(--info)] text-sm sm:text-base">Is Admin</label>

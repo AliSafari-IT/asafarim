@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
-import Navbar from '../Navbar/Navbar';
+import ModernNavbar from '../Navbar/ModernNavbar';
 import { SidebarWrapper } from './SidebarWrapper';
 import MainContent from './MainContent';
 import { useLocation } from 'react-router-dom';
 import { useTheme } from '@/contexts/ThemeContext';
+
 interface LayoutProps {
   pageTitle?: string;
   pageDescription?: string;
@@ -94,7 +95,7 @@ const Wrapper: React.FC<LayoutProps> = ({
 
   return (
     <div id={id || 'wrapper'} className={`flex flex-col min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] ${className}`}>
-      {!removeNavbar && <Navbar />}
+      {!removeNavbar && <ModernNavbar />}
       {/* Mobile Sidebar Overlay */}
       {isMobileMenuOpen && (
         <div

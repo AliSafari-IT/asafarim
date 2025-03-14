@@ -6,12 +6,17 @@ import {
   Delete20Regular,
   Eye20Regular,
   AppsAddIn24Regular as AddNewIcon,
+  EyeOff20Regular,
+  People20Regular,
+  Earth20Regular,
+  LockClosed20Regular,
 } from "@fluentui/react-icons";
 import { useNavigate } from "react-router-dom";
 import { IProject } from "../../interfaces/IProject";
 import Notification from "@/components/Notification/Notification";
 import { logger } from "@/utils/logger";
 import dashboardServices from "@/api/entityServices";
+import useAuth from "@/hooks/useAuth";
 
 const ProjectHome: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -19,6 +24,36 @@ const ProjectHome: React.FC = () => {
   const [projects, setProjects] = useState<IProject[]>([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const navigate = useNavigate();
+  const { authenticated, authenticatedUser } = useAuth();
+
+  // Function to check if user is admin
+  const isAdmin = authenticatedUser?.role === "Admin";
+
+  // Function to check if user is the owner of a project
+  const isProjectOwner = (projectOwnerId: string) => {
+    return authenticatedUser?.id === projectOwnerId;
+  };
+
+  // Function to determine if user can edit/delete a project
+  const canModifyProject = (projectOwnerId: string) => {
+    return authenticated && (isAdmin || isProjectOwner(projectOwnerId));
+  };
+
+  // Function to determine if user can view sensitive project details
+  const canViewSensitiveDetails = (project: IProject) => {
+    // Admin and project owner can always see details
+    if (isAdmin || isProjectOwner(project.ownerId)) {
+      return true;
+    }
+
+    // For public projects, everyone can see details
+    if (project.visibility === 0) { // Public
+      return true;
+    }
+
+    // For private and members-only projects, only authenticated users with proper access can see
+    return false;
+  };
 
   // Add resize listener for responsive behavior
   useEffect(() => {
@@ -85,6 +120,25 @@ const ProjectHome: React.FC = () => {
   };
 
   const handleDelete = async (id: string) => {
+    // Check if user is authenticated
+    if (!authenticated) {
+      setError("You must be logged in to delete projects");
+      return;
+    }
+    
+    // Find the project to check ownership
+    const projectToDelete = projects.find(p => p.id === id);
+    if (!projectToDelete) {
+      setError("Project not found");
+      return;
+    }
+    
+    // Check if user has permission to delete
+    if (!isAdmin && !isProjectOwner(projectToDelete.ownerId)) {
+      setError("You don't have permission to delete this project");
+      return;
+    }
+    
     if (window.confirm("Are you sure you want to delete this project?")) {
       try {
         logger.info(`Attempting to delete project with id: ${id}`);
@@ -93,6 +147,7 @@ const ProjectHome: React.FC = () => {
         fetchProjects();
       } catch (error) {
         logger.error(`Failed to delete project: ${error}`);
+        setError("Failed to delete project. Please try again later.");
       }
     }
   };
@@ -139,6 +194,9 @@ const ProjectHome: React.FC = () => {
     }
   };
 
+  // This function is replaced by getVisibilityIcon for display purposes
+  // but kept for reference and potential future use
+  /* 
   const getVisibilityLabel = (visibility: number | undefined) => {
     switch (visibility) {
       case 0:
@@ -149,6 +207,44 @@ const ProjectHome: React.FC = () => {
         return "Private";
       default:
         return "Unknown";
+    }
+  };
+  */
+
+  const getVisibilityIcon = (visibility: number | undefined) => {
+    switch (visibility) {
+      case 0: // Public
+        return (
+          <Tooltip content="Public - Visible to everyone" relationship="label">
+            <span className="flex items-center">
+              <Earth20Regular className="text-green-500" />
+            </span>
+          </Tooltip>
+        );
+      case 1: // Members Only
+        return (
+          <Tooltip content="Members Only - Visible to project members" relationship="label">
+            <span className="flex items-center">
+              <People20Regular className="text-blue-500" />
+            </span>
+          </Tooltip>
+        );
+      case 2: // Private
+        return (
+          <Tooltip content="Private - Only visible to owner and admins" relationship="label">
+            <span className="flex items-center">
+              <LockClosed20Regular className="text-red-500" />
+            </span>
+          </Tooltip>
+        );
+      default:
+        return (
+          <Tooltip content="Unknown visibility" relationship="label">
+            <span className="flex items-center">
+              <EyeOff20Regular className="text-gray-500" />
+            </span>
+          </Tooltip>
+        );
     }
   };
 
@@ -233,7 +329,9 @@ const ProjectHome: React.FC = () => {
             <p className="text-sm text-gray-500 dark:text-gray-400">
               Visibility
             </p>
-            <p>{getVisibilityLabel(project.visibility)}</p>
+            <div className="flex items-center">
+              {getVisibilityIcon(project.visibility)}
+            </div>
           </div>
         </div>
 
@@ -242,7 +340,9 @@ const ProjectHome: React.FC = () => {
             <p className="text-sm text-gray-500 dark:text-gray-400">
               Start Date
             </p>
-            <p>
+            <p
+              className={`p-2 ${!canViewSensitiveDetails(project) ? "opacity-50 blur-sm" : ""}`}
+            >
               {project.startDate
                 ? new Date(project.startDate).toLocaleDateString()
                 : "Not set"}
@@ -270,15 +370,15 @@ const ProjectHome: React.FC = () => {
                       new Date(project.startDate),
                       project.endDate
                     ) < 0
-                    ? "bg-danger"
+                    ? "bg-red-300"
                     : calculateDaysActive(
                         new Date(project.startDate),
                         project.endDate
                       ) < 30
-                    ? "bg-success"
-                    : "bg-info"
-                  : "bg-info"
-              }`}
+                    ? "bg-yellow-800"
+                    : "bg-green-100"
+                  : "bg-gray-100"
+              } ${!canViewSensitiveDetails(project) ? "opacity-50 blur-sm" : ""}`}
             >
               {project.startDate
                 ? formatDaysActive(
@@ -295,7 +395,7 @@ const ProjectHome: React.FC = () => {
               Days Left
             </p>
             <p
-              className={`p-1 text-center font-bold rounded ${
+              className={`p-1 text-center font-bold ${
                 project.endDate
                   ? calculateDaysRemaining(project.endDate) !== null
                     ? calculateDaysRemaining(project.endDate)! < 0
@@ -305,7 +405,7 @@ const ProjectHome: React.FC = () => {
                       : "bg-green-100"
                     : "bg-gray-100"
                   : "bg-gray-100"
-              }`}
+              } ${!canViewSensitiveDetails(project) ? "opacity-50 blur-sm" : ""}`}
             >
               {project.endDate
                 ? calculateDaysRemaining(project.endDate) !== null
@@ -341,54 +441,58 @@ const ProjectHome: React.FC = () => {
               </span>
             </Button>
           </Tooltip>
-          <Tooltip content="Edit Project" relationship="label">
-            <Button
-              icon={<Edit20Regular />}
-              onClick={() => handleEdit(project.id)}
-              appearance="subtle"
-              className="bg-blue-100 hover:bg-blue-200 dark:bg-transparent dark:hover:bg-blue-900 text-blue-700 dark:text-blue-400 p-2 rounded-md border border-blue-200 dark:border-blue-800"
-              style={{
-                color: "var(--blue-700, #1d4ed8) !important",
-                backgroundColor: "var(--blue-100, #dbeafe) !important",
-                fontWeight: "bold !important",
-              }}
-              aria-label="Edit Project"
-            >
-              <span
-                className="ml-1 text-xs sm:text-sm font-medium"
+          {canModifyProject(project.ownerId) && (
+            <Tooltip content="Edit Project" relationship="label">
+              <Button
+                icon={<Edit20Regular />}
+                onClick={() => handleEdit(project.id)}
+                appearance="subtle"
+                className="bg-blue-100 hover:bg-blue-200 dark:bg-transparent dark:hover:bg-blue-900 text-blue-700 dark:text-blue-400 p-2 rounded-md border border-blue-200 dark:border-blue-800"
                 style={{
                   color: "var(--blue-700, #1d4ed8) !important",
+                  backgroundColor: "var(--blue-100, #dbeafe) !important",
                   fontWeight: "bold !important",
                 }}
+                aria-label="Edit Project"
               >
-                Edit
-              </span>
-            </Button>
-          </Tooltip>
-          <Tooltip content="Delete Project" relationship="label">
-            <Button
-              icon={<Delete20Regular />}
-              onClick={() => handleDelete(project.id)}
-              appearance="subtle"
-              className="bg-red-100 hover:bg-red-200 dark:bg-transparent dark:hover:bg-red-900 text-red-700 dark:text-red-400 p-2 rounded-md border border-red-200 dark:border-red-800"
-              style={{
-                color: "var(--red-700, #b91c1c) !important",
-                backgroundColor: "var(--red-100, #fee2e2) !important",
-                fontWeight: "bold !important",
-              }}
-              aria-label="Delete Project"
-            >
-              <span
-                className="ml-1 text-xs sm:text-sm font-medium"
+                <span
+                  className="ml-1 text-xs sm:text-sm font-medium"
+                  style={{
+                    color: "var(--blue-700, #1d4ed8) !important",
+                    fontWeight: "bold !important",
+                  }}
+                >
+                  Edit
+                </span>
+              </Button>
+            </Tooltip>
+          )}
+          {canModifyProject(project.ownerId) && (
+            <Tooltip content="Delete Project" relationship="label">
+              <Button
+                icon={<Delete20Regular />}
+                onClick={() => handleDelete(project.id)}
+                appearance="subtle"
+                className="bg-red-100 hover:bg-red-200 dark:bg-transparent dark:hover:bg-red-900 text-red-700 dark:text-red-400 p-2 rounded-md border border-red-200 dark:border-red-800"
                 style={{
                   color: "var(--red-700, #b91c1c) !important",
+                  backgroundColor: "var(--red-100, #fee2e2) !important",
                   fontWeight: "bold !important",
                 }}
+                aria-label="Delete Project"
               >
-                Delete
-              </span>
-            </Button>
-          </Tooltip>
+                <span
+                  className="ml-1 text-xs sm:text-sm font-medium"
+                  style={{
+                    color: "var(--red-700, #b91c1c) !important",
+                    fontWeight: "bold !important",
+                  }}
+                >
+                  Delete
+                </span>
+              </Button>
+            </Tooltip>
+          )}
         </div>
       </div>
     );
@@ -459,10 +563,10 @@ const ProjectHome: React.FC = () => {
                   <tr key={project.id} className="border-t">
                     <td className="p-2">{project.name}</td>
                     <td className="p-2">{getStatusLabel(project.status)}</td>
-                    <td className="p-2">
-                      {getVisibilityLabel(project.visibility)}
-                    </td>
-                    <td className="p-2">
+                    <td className="p-2">{getVisibilityIcon(project.visibility)}</td>
+                    <td
+                      className={`p-2 ${!canViewSensitiveDetails(project) ? "opacity-50 blur-sm" : ""}`}
+                    >
                       {project.startDate
                         ? new Date(project.startDate).toLocaleDateString()
                         : "Not set"}
@@ -474,15 +578,15 @@ const ProjectHome: React.FC = () => {
                               new Date(project.startDate),
                               project.endDate
                             ) < 0
-                            ? "bg-danger"
+                            ? "bg-red-300"
                             : calculateDaysActive(
                                 new Date(project.startDate),
                                 project.endDate
                               ) < 30
-                            ? "bg-success"
-                            : "bg-info"
-                          : "bg-info"
-                      }`}
+                            ? "bg-yellow-800"
+                            : "bg-green-100"
+                          : "bg-gray-100"
+                      } ${!canViewSensitiveDetails(project) ? "opacity-50 blur-sm" : ""}`}
                     >
                       {project.startDate
                         ? formatDaysActive(
@@ -504,7 +608,7 @@ const ProjectHome: React.FC = () => {
                               : "bg-green-100"
                             : "bg-gray-100"
                           : "bg-gray-100"
-                      }`}
+                      } ${!canViewSensitiveDetails(project) ? "opacity-50 blur-sm" : ""}`}
                     >
                       {project.endDate
                         ? calculateDaysRemaining(project.endDate) !== null
@@ -541,56 +645,60 @@ const ProjectHome: React.FC = () => {
                             </span>
                           </Button>
                         </Tooltip>
-                        <Tooltip content="Edit Project" relationship="label">
-                          <Button
-                            icon={<Edit20Regular />}
-                            onClick={() => handleEdit(project.id)}
-                            appearance="subtle"
-                            className="bg-blue-100 hover:bg-blue-200 dark:bg-transparent dark:hover:bg-blue-900 text-blue-700 dark:text-blue-400 p-1 min-w-0 rounded-md border border-blue-200 dark:border-blue-800"
-                            style={{
-                              color: "var(--blue-700, #1d4ed8) !important",
-                              backgroundColor:
-                                "var(--blue-100, #dbeafe) !important",
-                              fontWeight: "bold !important",
-                            }}
-                            aria-label="Edit Project"
-                          >
-                            <span
-                              className="hidden sm:inline ml-1 text-xs font-medium"
+                        {canModifyProject(project.ownerId) && (
+                          <Tooltip content="Edit Project" relationship="label">
+                            <Button
+                              icon={<Edit20Regular />}
+                              onClick={() => handleEdit(project.id)}
+                              appearance="subtle"
+                              className="bg-blue-100 hover:bg-blue-200 dark:bg-transparent dark:hover:bg-blue-900 text-blue-700 dark:text-blue-400 p-1 min-w-0 rounded-md border border-blue-200 dark:border-blue-800"
                               style={{
                                 color: "var(--blue-700, #1d4ed8) !important",
+                                backgroundColor:
+                                  "var(--blue-100, #dbeafe) !important",
                                 fontWeight: "bold !important",
                               }}
+                              aria-label="Edit Project"
                             >
-                              Edit
-                            </span>
-                          </Button>
-                        </Tooltip>
-                        <Tooltip content="Delete Project" relationship="label">
-                          <Button
-                            icon={<Delete20Regular />}
-                            onClick={() => handleDelete(project.id)}
-                            appearance="subtle"
-                            className="bg-red-100 hover:bg-red-200 dark:bg-transparent dark:hover:bg-red-900 text-red-700 dark:text-red-400 p-1 min-w-0 rounded-md border border-red-200 dark:border-red-800"
-                            style={{
-                              color: "var(--red-700, #b91c1c) !important",
-                              backgroundColor:
-                                "var(--red-100, #fee2e2) !important",
-                              fontWeight: "bold !important",
-                            }}
-                            aria-label="Delete Project"
-                          >
-                            <span
-                              className="hidden sm:inline ml-1 text-xs font-medium"
+                              <span
+                                className="hidden sm:inline ml-1 text-xs font-medium"
+                                style={{
+                                  color: "var(--blue-700, #1d4ed8) !important",
+                                  fontWeight: "bold !important",
+                                }}
+                              >
+                                Edit
+                              </span>
+                            </Button>
+                          </Tooltip>
+                        )}
+                        {canModifyProject(project.ownerId) && (
+                          <Tooltip content="Delete Project" relationship="label">
+                            <Button
+                              icon={<Delete20Regular />}
+                              onClick={() => handleDelete(project.id)}
+                              appearance="subtle"
+                              className="bg-red-100 hover:bg-red-200 dark:bg-transparent dark:hover:bg-red-900 text-red-700 dark:text-red-400 p-1 min-w-0 rounded-md border border-red-200 dark:border-red-800"
                               style={{
                                 color: "var(--red-700, #b91c1c) !important",
+                                backgroundColor:
+                                  "var(--red-100, #fee2e2) !important",
                                 fontWeight: "bold !important",
                               }}
+                              aria-label="Delete Project"
                             >
-                              Delete
-                            </span>
-                          </Button>
-                        </Tooltip>
+                              <span
+                                className="hidden sm:inline ml-1 text-xs font-medium"
+                                style={{
+                                  color: "var(--red-700, #b91c1c) !important",
+                                  fontWeight: "bold !important",
+                                }}
+                              >
+                                Delete
+                              </span>
+                            </Button>
+                          </Tooltip>
+                        )}
                       </div>
                     </td>
                   </tr>

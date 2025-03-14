@@ -13,43 +13,66 @@ import { ActionButton } from "@fluentui/react/lib/Button";
 import { ArrowLeft24Regular, Edit20Regular } from "@fluentui/react-icons";
 import useAuth from "@/hooks/useAuth";
 import Toolbar from "@/components/Toolbars/Toolbar";
+import { apiConfig } from "@/config/api";
 
 const ViewProject: React.FC = () => {
   const navigate = useNavigate();
-  const isAuthenticated = useAuth()?.authenticated;
+  const { id } = useParams();
+  const { authenticated, authenticatedUser } = useAuth();
 
   const [project, setProject] = useState<IProject | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [showAuthErrorNotification, setShowAuthErrorNotification] = useState(false);
-  const { id } = useParams();
+  const [showAuthErrorNotification, setShowAuthErrorNotification] =
+    useState(false);
 
   const [repoLinks, setRepoLinks] = useState<string[]>([]);
 
-  // Check authentication on component mount
-  useEffect(() => {
-    if (!isAuthenticated) {
-      setShowAuthErrorNotification(true);
-      setLoading(false);
+  // Function to fetch repository links
+  const fetchRepoLinks = async (projectId: string) => {
+    try {
+      console.log(`Attempting to fetch repository links for project ID: ${projectId}`);
       
-      // Redirect to login after 3 seconds
-      const timer = setTimeout(() => {
-        navigate("/login", { state: { returnUrl: `/projects/view/${id}` } });
-      }, 3000);
+      // Direct API call using fetch - no authentication needed for public projects now
+      const response = await fetch(`${apiConfig.baseURL}/projects/${projectId}/links`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          // Add auth token if available, but not required for public projects
+          ...(authenticated && localStorage.getItem('auth') ? {
+            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('auth')!).token}`
+          } : {})
+        }
+      });
       
-      return () => clearTimeout(timer);
+      console.log('Repository links API response status:', response.status);
+      
+      if (!response.ok) {
+        console.error(`Error fetching repository links: ${response.status} ${response.statusText}`);
+        return;
+      }
+      
+      const data = await response.json();
+      console.log('Repository links raw response data:', data);
+      
+      let links = [];
+      if (Array.isArray(data)) {
+        links = data;
+      } else if (data && data.$values) {
+        links = data.$values;
+      }
+      
+      console.log('Processed repository links:', links);
+      setRepoLinks(links || []);
+    } catch (error) {
+      console.error("Exception when fetching repository links:", error);
     }
-  }, [isAuthenticated, navigate, id]);
+  };
 
+  // Check authentication and project visibility on component mount
   useEffect(() => {
     if (!id) {
       setError("Invalid project ID");
-      setLoading(false);
-      return;
-    }
-
-    if (!isAuthenticated) {
-      setShowAuthErrorNotification(true);
       setLoading(false);
       return;
     }
@@ -60,38 +83,84 @@ const ViewProject: React.FC = () => {
           "project",
           id
         );
-        setProject(projectResponse);
 
-        // Fetch repo links
-        try {
-          const linksResponse = await dashboardServices.fetchEntityRepoLinks(
-            "project",
-            id
-          );
-          console.log('Repository links response:', JSON.stringify(linksResponse));
-          setRepoLinks(linksResponse || []);
-        } catch (linkError: any) {
-          // Check if it's an authentication error (401)
-          if (linkError?.response?.status === 401) {
-            console.error("Authentication error fetching repository links:", linkError);
-            // Redirect to login if not authenticated
-            setShowAuthErrorNotification(true);
-            setTimeout(() => {
-              navigate("/login", { state: { returnUrl: `/projects/view/${id}` } });
-            }, 3000);
-            return;
+        // Check if project exists
+        if (!projectResponse) {
+          setError("Project not found");
+          setLoading(false);
+          return;
+        }
+
+        // Set the project data first
+        setProject(projectResponse);
+        
+        // For public projects, always fetch and display all properties including repo links
+        if (projectResponse.visibility === 0) {
+          try {
+            await fetchRepoLinks(id);
+          } catch (error) {
+            console.error("Error fetching repository links for public project:", error);
           }
-          // For other errors, just log them but continue showing the project
-          console.error("Error fetching repository links:", linkError);
+        }
+
+        // For non-public projects, check authentication
+        if (projectResponse.visibility !== 0) {
+          // Not public
+          if (!authenticated) {
+            setShowAuthErrorNotification(true);
+            setError("Authentication required to view this project");
+
+            // Redirect to login after 3 seconds
+            const timer = setTimeout(() => {
+              navigate("/login", {
+                state: { returnUrl: `/projects/view/${id}` },
+              });
+            }, 4000);
+
+            setLoading(false);
+            return () => clearTimeout(timer);
+          }
+
+          // If user is authenticated but not admin or owner, check project visibility
+          if (
+            projectResponse.visibility !== 0 && // Not public
+            projectResponse.ownerId !== authenticatedUser?.id && // Not owner
+            authenticatedUser?.role !== "Admin"
+          ) {
+            // Not admin
+
+            // For members-only projects, check if user is a project member
+            if (projectResponse.visibility === 1) {
+              // Members only
+              // TODO: Add logic to check if user is a project member
+              // For now, we'll assume they're not a member
+              setError("You don't have permission to view this project");
+              setLoading(false);
+              return;
+            }
+
+            // For private projects
+            if (projectResponse.visibility === 2) {
+              // Private
+              setError("You don't have permission to view this project");
+              setLoading(false);
+              return;
+            }
+          }
+
+          // Fetch repo links
+          await fetchRepoLinks(id);
         }
       } catch (error: any) {
         console.error("Error fetching project data:", error);
-        
+
         // Check for authentication errors
         if (error?.response?.status === 401) {
           setShowAuthErrorNotification(true);
           setTimeout(() => {
-            navigate("/login", { state: { returnUrl: `/projects/view/${id}` } });
+            navigate("/login", {
+              state: { returnUrl: `/projects/view/${id}` },
+            });
           }, 3000);
         } else {
           setError("Failed to fetch project data. Please try again later.");
@@ -102,7 +171,7 @@ const ViewProject: React.FC = () => {
     };
 
     fetchProjectData();
-  }, [id, isAuthenticated, navigate]);
+  }, [id, authenticated, navigate, authenticatedUser]);
 
   // Define form fields
   const fields: IField[] = [
@@ -142,6 +211,14 @@ const ViewProject: React.FC = () => {
         return "Information not available";
     }
   };
+
+  // Remove the mock repository links approach and use the real API
+  useEffect(() => {
+    if (project && project.id) {
+      // Always fetch repository links for public projects, regardless of authentication
+      fetchRepoLinks(project.id);
+    }
+  }, [project]);
 
   // Show loading spinner
   if (loading) {
@@ -258,12 +335,18 @@ const ViewProject: React.FC = () => {
               >
                 <ArrowLeft24Regular className="mr-2" /> Back
               </ActionButton>
-              <ActionButton
-                className="bg-teal-500 dark:text-primary hover:bg-success dark:hover:bg-success text-[var(--text-primary)]  px-4 py-2 rounded-lg"
-                onClick={() => navigate(`/projects/edit/${id}`)}
-              >
-                <Edit20Regular className="mr-2" /> Edit Project
-              </ActionButton>
+
+              {/* Only show Edit button for authenticated users who are admins or project owners */}
+              {authenticated &&
+                (authenticatedUser?.role === "Admin" ||
+                  authenticatedUser?.id === project?.ownerId) && (
+                  <ActionButton
+                    className="bg-teal-500 dark:text-primary hover:bg-success dark:hover:bg-success text-[var(--text-primary)]  px-4 py-2 rounded-lg"
+                    onClick={() => navigate(`/projects/edit/${id}`)}
+                  >
+                    <Edit20Regular className="mr-2" /> Edit Project
+                  </ActionButton>
+                )}
             </>
           }
           aria-label={""}

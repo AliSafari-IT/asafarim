@@ -36,7 +36,9 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
       logger.info(`Added authorization header to request`);
     } else {
-      logger.warn("No auth token found in localStorage");
+      logger.info("No auth token found in localStorage - request will be unauthenticated");
+      // Still allow the request to proceed without auth token
+      // This is important for public resources that don't require authentication
     }
     return config;
   },

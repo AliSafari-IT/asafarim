@@ -3,7 +3,10 @@ import {
   Teaching24Regular as IconTeaching,
   ProjectionScreenText24Regular as IconProject,
   Bluetooth28Regular as IconBlog,
-  LearningApp24Regular as IconLearning
+  LearningApp24Regular as IconLearning,
+  ContactCardRegular as IconContact,
+  InfoRegular as IconInfo,
+  BoardRegular as IconDashboard
 } from '@fluentui/react-icons';
 import { IMenuItem } from '../../interfaces/IMenuItem';
 import { INavItem } from '../../interfaces/INavItem';
@@ -253,17 +256,113 @@ const essentialInsights: IMenuItem = {
   ],
 };
 
-
 const mdFiles = getAllMdFiles();
+
+// Dashboard menu item with dropdown
+const dashboard: IMenuItem = {
+  id: 'dashboard',
+  isForNavbar: true,
+  title: 'Dashboard',
+  className: '',
+  description: '',
+  label: 'Dashboard',
+  style: {},
+  name: 'asafarim-dashboard',
+  to: '#',
+  icon: <IconDashboard />,
+  subMenu: [
+    {
+      id: 'system-health',
+      title: 'System Health Status',
+      className: '',
+      description: '',
+      label: 'System Health Status',
+      style: {},
+      isForNavbar: true,
+      name: 'system-health-status',
+      to: '/system-health',
+      icon: <IconDashboard />
+    },
+    {
+      id: 'dashboard-main',
+      title: 'Dashboard',
+      className: '',
+      description: '',
+      label: 'Dashboard',
+      style: {},
+      isForNavbar: true,
+      name: 'dashboard-main',
+      to: '/dashboard',
+      icon: <IconDashboard />
+    },
+    {
+      id: 'projects',
+      title: 'Projects',
+      className: '',
+      description: '',
+      label: 'Projects',
+      style: {},
+      isForNavbar: true,
+      name: 'projects',
+      to: '/projects',
+      icon: <IconProject />
+    },
+    {
+      id: 'users',
+      title: 'Users',
+      className: '',
+      description: '',
+      label: 'Users',
+      style: {},
+      isForNavbar: true,
+      name: 'users',
+      to: '/users',
+      icon: <IconContact />
+    }
+  ]
+};
+
+// About page item
+const about: IMenuItem = {
+  id: 'about',
+  isForNavbar: true,
+  title: 'About',
+  className: '',
+  description: '',
+  label: 'About',
+  style: {},
+  name: 'asafarim-about',
+  to: '/about',
+  icon: <IconInfo />,
+  subMenu: []
+};
+
+// Contact page item
+const contact: IMenuItem = {
+  id: 'contact',
+  isForNavbar: true,
+  title: 'Contact',
+  className: '',
+  description: '',
+  label: 'Contact',
+  style: {},
+  name: 'asafarim-contact',
+  to: '/contact',
+  icon: <IconContact />,
+  subMenu: []
+};
 
 const navItems: IMenuItem[] = [
   blog,
   mdFiles.techDocs,
   books,
-  learn,
+  //learn,
   essentialInsights,
   mdFiles.legalDocs,
   mdFiles.changelogs,
+  dashboard,
+  about,
+  contact
 ];
 
 export default navItems;

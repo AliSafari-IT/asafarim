@@ -459,7 +459,7 @@ function App() {
               />
             }
           />
-          <Route path="/health" element={<HealthCheck />} />
+          <Route path="/system-health" element={<HealthCheck />} />
           <Route path="/activity" element={<ActivityPage />} />
           <Route path="/navbar-demo" element={<NavbarDemo />} />
           <Route path="/access-denied" element={<AccessDenied />} />

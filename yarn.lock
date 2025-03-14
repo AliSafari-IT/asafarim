@@ -6449,6 +6449,7 @@ __metadata:
     cssnano: "npm:^7.0.6"
     d3: "npm:^7.9.0"
     d3-cloud: "npm:^1.2.7"
+    date-fns: "npm:^4.1.0"
     docx: "npm:^9.0.2"
     esbuild: "npm:^0.25.0"
     eslint: "npm:^9.11.1"
@@ -7957,6 +7958,13 @@ __metadata:
     whatwg-mimetype: "npm:^4.0.0"
     whatwg-url: "npm:^14.0.0"
   checksum: 10c0/1b894d7d41c861f3a4ed2ae9b1c3f0909d4575ada02e36d3d3bc584bdd84278e20709070c79c3b3bff7ac98598cb191eb3e86a89a79ea4ee1ef360e1694f92ad
+  languageName: node
+  linkType: hard
+
+"date-fns@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "date-fns@npm:4.1.0"
+  checksum: 10c0/b79ff32830e6b7faa009590af6ae0fb8c3fd9ffad46d930548fbb5acf473773b4712ae887e156ba91a7b3dc30591ce0f517d69fd83bd9c38650fdc03b4e0bac8
   languageName: node
   linkType: hard
 

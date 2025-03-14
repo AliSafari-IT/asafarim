@@ -51,6 +51,7 @@ import UnderConstruction from "./pages/UnderConstruction";
 import { trackPageView } from "./services/analyticsService";
 import AnalyticsPage from "./pages/Analytics/AnalyticsPage";
 import ActivityPage from "./pages/Activity/ActivityPage";
+import NavbarDemo from "./pages/Demo/NavbarDemo";
 
 // const userUrl = API_URL + '/users';
 
@@ -333,7 +334,6 @@ function App() {
           />
 
           <Route path="/[...notfound]" element={<NotFound />} />
-          <Route path="/about-asafarim" element={<About />} />
           <Route path="/logout" element={<LogoutPage />} />
           {token && (
             <>
@@ -343,7 +343,8 @@ function App() {
               />
             </>
           )}
-          <Route path="/contact-asafarim" element={<Contact />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/about" element={<About />} />
           <Route
             path="/user-account-settings"
             element={
@@ -460,6 +461,7 @@ function App() {
           />
           <Route path="/health" element={<HealthCheck />} />
           <Route path="/activity" element={<ActivityPage />} />
+          <Route path="/navbar-demo" element={<NavbarDemo />} />
           <Route path="/access-denied" element={<AccessDenied />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

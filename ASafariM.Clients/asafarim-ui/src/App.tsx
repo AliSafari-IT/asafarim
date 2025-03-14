@@ -50,6 +50,7 @@ import EditProject from "./pages/Project/EditProject";
 import UnderConstruction from "./pages/UnderConstruction";
 import { trackPageView } from "./services/analyticsService";
 import AnalyticsPage from "./pages/Analytics/AnalyticsPage";
+import ActivityPage from "./pages/Activity/ActivityPage";
 
 // const userUrl = API_URL + '/users';
 
@@ -458,6 +459,7 @@ function App() {
             }
           />
           <Route path="/health" element={<HealthCheck />} />
+          <Route path="/activity" element={<ActivityPage />} />
           <Route path="/access-denied" element={<AccessDenied />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

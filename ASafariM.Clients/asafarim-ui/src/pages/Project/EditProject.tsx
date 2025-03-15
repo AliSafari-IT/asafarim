@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import dashboardServices from "@/api/entityServices";
-import Loading from "@/components/Loading/Loading";
+import entityServices from "@/api/entityServices";
 import Wrapper from "@/layout/Wrapper/Wrapper";
 import Notification from "@/components/Notification/Notification";
 import { Stack } from "@fluentui/react/lib/Stack";
@@ -12,22 +11,16 @@ import { Dialog, DialogType, DialogFooter } from "@fluentui/react/lib/Dialog";
 import { TextField } from "@fluentui/react/lib/TextField";
 import { Dropdown, IDropdownOption } from "@fluentui/react/lib/Dropdown";
 import { ActionButton, DefaultButton, PrimaryButton, IconButton } from "@fluentui/react/lib/Button";
-import { ArrowLeft24Regular, Save20Regular, Add20Regular, Delete20Regular, Delete24Regular, Search24Regular } from "@fluentui/react-icons";
+import { ArrowLeft24Regular, Save20Regular, Add20Regular, Delete24Regular, Search24Regular } from "@fluentui/react-icons";
 import Toolbar from "@/components/Toolbars/Toolbar";
-import { jwtDecode } from "jwt-decode";
 import { logger } from "@/utils/logger";
 import axios from "axios";
-
-interface JwtPayload {
-  nameid?: string;
-  unique_name?: string;
-  role?: string;
-  exp?: number;
-}
+import useAuth from "@/hooks/useAuth";
 
 const EditProject: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { authenticated, authenticatedUser } = useAuth();
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -64,31 +57,9 @@ const EditProject: React.FC = () => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [linkToDeleteIndex, setLinkToDeleteIndex] = useState<number | null>(null);
 
-  // Check if user is authenticated
-  const isUserAuthenticated = () => {
-    try {
-      const authData = localStorage.getItem('auth');
-      if (!authData) return false;
-      
-      const parsedAuth = JSON.parse(authData);
-      if (!parsedAuth.token) return false;
-      
-      // Check if token is expired
-      const decoded = jwtDecode<JwtPayload>(parsedAuth.token);
-      if (!decoded.exp) return false;
-      
-      // Token expiration is in seconds since epoch, convert to milliseconds
-      const expiryDate = new Date(decoded.exp * 1000);
-      return expiryDate > new Date();
-    } catch (error) {
-      logger.error("Error checking authentication: " + error);
-      return false;
-    }
-  };
-
   // Check authentication on component mount
   useEffect(() => {
-    if (!isUserAuthenticated()) {
+    if (!authenticated) {
       setShowAuthErrorNotification(true);
       setLoading(false);
       
@@ -99,18 +70,18 @@ const EditProject: React.FC = () => {
       
       return () => clearTimeout(timer);
     }
-  }, [navigate, id]);
+  }, [navigate, id, authenticated]);
 
   // Get user ID from JWT token - same as in AddProject
   const getUserId = () => {
     try {
-      const token = localStorage.getItem('auth') ? JSON.parse(localStorage.getItem('auth')!).token : null;
-      if (!token) return null;
-
-      const decoded = jwtDecode<JwtPayload>(token);
-      return decoded.nameid; // User ID is stored in nameid claim
+      if (!authenticated || !authenticatedUser) {
+        return null;
+      }
+      
+      return authenticatedUser.id;
     } catch (error) {
-      logger.error("Error decoding JWT token:" + error);
+      logger.error("Error getting user ID: " + error);
       return null;
     }
   };
@@ -126,13 +97,13 @@ const EditProject: React.FC = () => {
     const fetchProjectData = async () => {
       try {
         // First check if user is authenticated
-        if (!isUserAuthenticated()) {
+        if (!authenticated) {
           setShowAuthErrorNotification(true);
           return;
         }
         
         // Fetch project details
-        const projectResponse = await dashboardServices.fetchEntityById("project", id);
+        const projectResponse = await entityServices.fetchEntityById("project", id);
         setFormData({
           name: projectResponse.name ?? "",
           description: projectResponse.description ?? "",
@@ -147,7 +118,7 @@ const EditProject: React.FC = () => {
         setDescriptionCharCount(projectResponse.description?.length || 0);
         
         // Fetch repository links
-        const linksResponse = await dashboardServices.fetchEntityRepoLinks("project", id);
+        const linksResponse = await entityServices.fetchEntityRepoLinks("project", id);
         setRepoLinks(linksResponse || []);
       } catch (error: any) {
         console.error("Error fetching project data:", error);
@@ -170,7 +141,7 @@ const EditProject: React.FC = () => {
     };
 
     fetchProjectData();
-  }, [id]);
+  }, [id, authenticated]);
 
   // Handle form changes
   const handleChange = (
@@ -363,7 +334,7 @@ const EditProject: React.FC = () => {
       logger.info("Sending project update request: " + JSON.stringify(updatedProject));
       
       try {
-        await dashboardServices.updateEntity("project", id!, updatedProject);
+        await entityServices.updateEntity("project", id!, updatedProject);
         logger.info("Project updated successfully");
         navigate("/projects");
       } catch (updateError: any) {

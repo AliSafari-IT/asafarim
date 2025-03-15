@@ -3,7 +3,7 @@ import { IField } from "@/interfaces/IField";
 import { getVisibilityLabel, getStatusLabel } from "@/interfaces/ProjectEnums";
 import { IProject } from "@/interfaces/IProject";
 import { useNavigate, useParams } from "react-router-dom";
-import dashboardServices from "@/api/entityServices";
+import entityServices from "@/api/entityServices";
 import Loading from "@/components/Loading/Loading";
 import Wrapper from "@/layout/Wrapper/Wrapper";
 import Notification from "@/components/Notification/Notification";
@@ -33,39 +33,24 @@ const ViewProject: React.FC = () => {
     try {
       console.log(`Attempting to fetch repository links for project ID: ${projectId}`);
       
-      // Direct API call using fetch - no authentication needed for public projects now
-      const response = await fetch(`${apiConfig.baseURL}/projects/${projectId}/links`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          // Add auth token if available, but not required for public projects
-          ...(authenticated && localStorage.getItem('auth') ? {
-            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('auth')!).token}`
-          } : {})
-        }
-      });
+      // Use the entityServices to fetch repository links
+      const links = await entityServices.fetchEntityRepoLinks("project", projectId);
       
-      console.log('Repository links API response status:', response.status);
-      
-      if (!response.ok) {
-        console.error(`Error fetching repository links: ${response.status} ${response.statusText}`);
-        return;
+      if (links && Array.isArray(links)) {
+        setRepoLinks(links);
+        console.log('Repository links fetched successfully:', links);
+      } else if (links && links.$values) {
+        // Handle .NET serialization format if needed
+        setRepoLinks(links.$values);
+        console.log('Repository links fetched successfully (from $values):', links.$values);
+      } else {
+        console.log('No repository links found or empty response');
+        setRepoLinks([]);
       }
-      
-      const data = await response.json();
-      console.log('Repository links raw response data:', data);
-      
-      let links = [];
-      if (Array.isArray(data)) {
-        links = data;
-      } else if (data && data.$values) {
-        links = data.$values;
-      }
-      
-      console.log('Processed repository links:', links);
-      setRepoLinks(links || []);
     } catch (error) {
-      console.error("Exception when fetching repository links:", error);
+      console.error('Error fetching repository links:', error);
+      // Don't set error state for repository links - they're optional
+      setRepoLinks([]);
     }
   };
 
@@ -79,7 +64,7 @@ const ViewProject: React.FC = () => {
 
     const fetchProjectData = async () => {
       try {
-        const projectResponse = await dashboardServices.fetchEntityById(
+        const projectResponse = await entityServices.fetchEntityById(
           "project",
           id
         );

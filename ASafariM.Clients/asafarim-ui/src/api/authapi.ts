@@ -22,6 +22,30 @@ const api = axios.create({
   withCredentials: true, // Send cookies with requests
 });
 
+// Add a function to get auth token from both storage locations
+const getAuthToken = () => {
+  try {
+    // Check localStorage first
+    const localAuth = localStorage.getItem('auth');
+    if (localAuth) {
+      const parsedAuth = JSON.parse(localAuth);
+      return parsedAuth.token || parsedAuth.Token;
+    }
+    
+    // Then check sessionStorage
+    const sessionAuth = sessionStorage.getItem('auth');
+    if (sessionAuth) {
+      const parsedAuth = JSON.parse(sessionAuth);
+      return parsedAuth.token || parsedAuth.Token;
+    }
+    
+    return null;
+  } catch (error) {
+    console.error("Error getting auth token:", error);
+    return null;
+  }
+};
+
 // Add a response interceptor to log errors
 api.interceptors.response.use(
   (response) => {
@@ -42,17 +66,14 @@ api.interceptors.response.use(
 
 api.interceptors.request.use(
   (config) => {
-    // Get auth token from storage
-    const authData = localStorage.getItem('auth') || sessionStorage.getItem('auth');
-    if (authData) {
-      try {
-        const parsedAuth = JSON.parse(authData);
-        if (parsedAuth.token) {
-          config.headers.Authorization = `Bearer ${parsedAuth.token}`;
-        }
-      } catch (e) {
-        console.error('Error parsing auth data:', e);
-      }
+    // Get auth token from storage using the helper function
+    const token = getAuthToken();
+    
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+      console.log('Added authorization header to request');
+    } else {
+      console.log('No auth token found - request will be unauthenticated');
     }
     return config;
   },

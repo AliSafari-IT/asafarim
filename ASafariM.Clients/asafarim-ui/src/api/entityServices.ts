@@ -13,8 +13,29 @@ interface JwtPayload {
   [ClaimTypes.NameIdentifier]?: string; 
 }
 
-// Get auth token
-const token = localStorage.getItem('auth') ? JSON.parse(localStorage.getItem('auth')!).token : null;
+// Get auth token from either localStorage or sessionStorage
+const getAuthToken = () => {
+  try {
+    // Check localStorage first
+    const localAuth = localStorage.getItem('auth');
+    if (localAuth) {
+      const parsedAuth = JSON.parse(localAuth);
+      return parsedAuth.token || parsedAuth.Token;
+    }
+    
+    // Then check sessionStorage
+    const sessionAuth = sessionStorage.getItem('auth');
+    if (sessionAuth) {
+      const parsedAuth = JSON.parse(sessionAuth);
+      return parsedAuth.token || parsedAuth.Token;
+    }
+    
+    return null;
+  } catch (error) {
+    logger.error("Error getting auth token: " + error);
+    return null;
+  }
+};
 
 const api = axios.create({
   baseURL: apiConfig.baseURL,
@@ -22,21 +43,17 @@ const api = axios.create({
     "Content-Type": "application/json",
   },
 });
-if (token) {
-  api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-}
 
 // Add request interceptor to include auth token
 api.interceptors.request.use(
   (config) => {
-    const authData = JSON.parse(localStorage.getItem("auth") || "{}");
-    const token = authData?.token;
+    const token = getAuthToken();
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
       logger.info(`Added authorization header to request`);
     } else {
-      logger.info("No auth token found in localStorage - request will be unauthenticated");
+      logger.info("No auth token found - request will be unauthenticated");
       // Still allow the request to proceed without auth token
       // This is important for public resources that don't require authentication
     }
@@ -69,7 +86,7 @@ api.interceptors.response.use(
 
 const hasAdminRole = (): boolean => {
   try {
-    const token = localStorage.getItem("auth") ? JSON.parse(localStorage.getItem("auth")!).token : null;
+    const token = getAuthToken();
     if (token) {
       const decodedToken = jwtDecode<JwtPayload>(token);
       console.info("Decoded Token:", decodedToken);
@@ -79,7 +96,7 @@ const hasAdminRole = (): boolean => {
       console.info("User ID Claim:", userIdClaim);
       return decodedToken.role === "Admin";
     } else {
-      console.error("No token found in localStorage.");
+      console.error("No token found.");
       return false; // Return false if no token is found
     }
   } catch (error) {

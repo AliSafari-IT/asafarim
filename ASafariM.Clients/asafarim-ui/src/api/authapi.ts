@@ -5,7 +5,6 @@ import { ILoginModel } from '../interfaces/ILoginModel';
 import { IRegisterModel } from '../interfaces/IRegisterModel';
 import { logger } from '@/utils/logger';
 import apiUrls from './getApiUrls';
-import { IUserModelUpdate } from '@/interfaces';
 
 interface ErrorResponse {
   message?: string;
@@ -15,26 +14,50 @@ interface ErrorResponse {
 const host = window.location.hostname;
 const baseURL = apiUrls(host);  // Get the base URL from getApiUrls
 
+console.log('Using API base URL:', baseURL);
+
 const api = axios.create({
   baseURL: baseURL,
-  timeout: 5000, // Timeout in milliseconds
+  timeout: 15000, // Increase timeout to 15 seconds
   withCredentials: true, // Send cookies with requests
 });
 
-api.interceptors.request.use(
-  (config) => {
-    return config;
+// Add a response interceptor to log errors
+api.interceptors.response.use(
+  (response) => {
+    return response;
   },
   (error) => {
-    console.error('Request error:', error);
+    console.error('API Error Response:', error.message);
+    if (error.response) {
+      console.error('Status:', error.response.status);
+      console.error('Data:', error.response.data);
+      console.error('Headers:', error.response.headers);
+    } else if (error.request) {
+      console.error('No response received:', error.request);
+    }
     return Promise.reject(error);
   }
 );
 
-api.interceptors.response.use(
-  (response) => response,
+api.interceptors.request.use(
+  (config) => {
+    // Get auth token from storage
+    const authData = localStorage.getItem('auth') || sessionStorage.getItem('auth');
+    if (authData) {
+      try {
+        const parsedAuth = JSON.parse(authData);
+        if (parsedAuth.token) {
+          config.headers.Authorization = `Bearer ${parsedAuth.token}`;
+        }
+      } catch (e) {
+        console.error('Error parsing auth data:', e);
+      }
+    }
+    return config;
+  },
   (error) => {
-    console.error('Response error:', error);
+    console.error('Request error:', error);
     return Promise.reject(error);
   }
 );
@@ -144,7 +167,11 @@ export const requestPasswordReset = async (email: string) => {
 export const resetPassword = async (email: string, newPassword: string, token: string) => {
   try {
     logger.info(`Attempting to reset password for email: ${email}`);
-    const response = await axios.post(`${baseURL}/auth/reset-password`, { email, newPassword, token });
+    const response = await axios.post(`${baseURL}/auth/reset-password`, { 
+      Email: email, 
+      NewPassword: newPassword, 
+      Token: token 
+    });
     logger.info(`Password reset successful, response received: ${JSON.stringify(response.data)}`);
     return response.data;
   } catch (error) {
@@ -185,26 +212,59 @@ export const getUserProfile = async (userId: string | undefined) => {
 };
 
 // Update user profile by ID
-export const updateUserProfile = async (user: IUserModelUpdate): Promise<IUserModelUpdate> => {
-    const targetUrl = `/users/${user.id}`; // Use PUT to existing user endpoint
-    
+export const updateUserProfile = async (user: any): Promise<any> => {
     try {
-        // Validate required fields
-        if (!user.id || !user.firstName || !user.lastName) {
-            throw new Error('Missing required fields: id, firstName, and lastName are required');
+        // Get auth token from storage
+        const authData = localStorage.getItem('auth') || sessionStorage.getItem('auth');
+        
+        if (!authData) {
+            console.error('No auth data found in storage');
+            throw new Error('No authentication data found');
+        }
+        
+        // Log the auth data for debugging (hide sensitive data)
+        const parsedAuthData = JSON.parse(authData);
+        console.log('Auth data found:', {
+            hasToken: !!parsedAuthData.token,
+            tokenLength: parsedAuthData.token ? parsedAuthData.token.length : 0,
+            hasUser: !!parsedAuthData.authenticatedUser,
+            userId: parsedAuthData.authenticatedUser?.id
+        });
+        
+        const token = parsedAuthData.token;
+        if (!token) {
+            console.error('No token found in auth data');
+            throw new Error('No authentication token found');
         }
 
-        // Send PUT request with all necessary fields
-        const response = await api.put(targetUrl, {
-            id: user.id,
+        // Create request data with all available profile fields
+        const requestData = {
+            userId: user.id,
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
-            userName: user.userName,
-            isActive: true // Default to active
+            phoneNumber: user.phoneNumber || undefined,
+            userName: user.userName || undefined,
+            profilePicture: user.profilePicture || undefined,
+            biography: user.biography || undefined
+        };
+
+        // Log request details
+        console.log('Updating profile with request:', {
+            endpoint: 'auth/update-profile',
+            method: 'POST',
+            data: requestData,
+            authHeader: `Bearer ${token.substring(0, 10)}...`
+        });
+
+        const response = await api.post('auth/update-profile', requestData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
         });
         
-        console.log("Profile update successful:", response.data);
+        console.log('Profile update successful:', response.data);
         return response.data;
     } catch (error) {
         console.error('Error updating profile:', error);

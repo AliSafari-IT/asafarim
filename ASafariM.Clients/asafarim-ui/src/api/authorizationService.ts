@@ -17,44 +17,42 @@ class AuthorizationService implements IAuthorizationService {
 
   async authorizeAsync(user: IUserInfo, policyName: string): Promise<boolean> {
     try {
-      // Get fresh token from localStorage each time
-      const authData = localStorage.getItem("auth");
-      const token = authData ? JSON.parse(authData).token : null;
+      // Check both localStorage and sessionStorage for auth data
+      let authData = localStorage.getItem('auth') || sessionStorage.getItem('auth');
       
-      console.info("Calling authorizeAsync with:", user, policyName);
-      console.info("Token available:", !!token);
+      if (!authData) {
+        console.warn('No auth data found in storage');
+        return false;
+      }
+      
+      const parsedAuth = JSON.parse(authData);
+      const token = parsedAuth.token;
       
       if (!token) {
-        console.warn("No token found, cannot authorize.");
+        console.warn('No token found in auth data');
         return false;
       }
-      if (!user.id) {
-        console.warn("User ID is missing, cannot authorize.");
-        return false;
-      }
-      if (!policyName) {
-        console.warn("Policy name is missing, cannot authorize.");
-        return false;
-      }
-
-      const decodedToken = jwtDecode<JwtPayload>(token);
-      console.info("Decoded Token:", decodedToken);
       
+      // For update_profile policy, allow if user is authenticated
+      if (policyName === 'update_profile' && parsedAuth.authenticated) {
+        return true;
+      }
+      
+      // Make API call for other policies
       const response = await axios.post(
         authorizeUrl,
         { userId: user.id, policyName },
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
+            'Content-Type': 'application/json'
+          }
         }
       );
-
-      console.info("Authorization response:", response);
+      
       return response.data.isAuthorized;
     } catch (error) {
-      console.error("Authorization failed:", error);
+      console.error('Authorization failed:', error);
       return false;
     }
   }
@@ -69,7 +67,8 @@ class AuthorizationService implements IAuthorizationService {
     }
 
     if (policyName === "update_profile") {
-      return !!user.email && !!user.firstName && !!user.lastName;
+      // Allow users to update their own profile
+      return true; // All authenticated users should be able to update their own profile
     }
 
     if (policyName === "delete_user") {

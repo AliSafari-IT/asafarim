@@ -542,8 +542,35 @@ namespace ASafariM.Infrastructure.Services
                     throw new InvalidOperationException("User not found");
                 }
 
-                user.PhoneNumber = command.PhoneNumber;
+                // Update user properties only if they are provided in the command
+                if (!string.IsNullOrEmpty(command.FirstName))
+                    user.FirstName = command.FirstName;
+                
+                if (!string.IsNullOrEmpty(command.LastName))
+                    user.LastName = command.LastName;
+                
+                if (!string.IsNullOrEmpty(command.Email))
+                    user.Email = command.Email;
+                
+                if (!string.IsNullOrEmpty(command.UserName))
+                    user.UserName = command.UserName;
+                
+                // Only update PhoneNumber if it's provided, otherwise keep the existing value
+                if (!string.IsNullOrEmpty(command.PhoneNumber))
+                    user.PhoneNumber = command.PhoneNumber;
+                
+                // Update optional fields if provided
+                if (!string.IsNullOrEmpty(command.ProfilePicture))
+                    user.ProfilePicture = command.ProfilePicture;
+                
+                if (!string.IsNullOrEmpty(command.Biography))
+                    user.Biography = command.Biography;
+                
+                if (command.BirthDate.HasValue)
+                    user.DateOfBirth = command.BirthDate.Value;
+
                 user.UpdatedAt = DateTime.UtcNow;
+                user.UpdatedBy = command.UserId;
 
                 await _userRepository.UpdateUserAsync(user);
                 Log.Information(
@@ -737,7 +764,7 @@ namespace ASafariM.Infrastructure.Services
             {
                 return false;
             }
-            var token = _jwtTokenService.GenerateJwtToken(user);
+            var token = _jwtTokenService.GeneratePasswordResetToken(user);
             user.ForgotPasswordToken = token;
             user.ForgotPasswordTokenExpiration = DateTime.UtcNow.AddDays(7);
             await _userRepository.UpdateUserAsync(user);

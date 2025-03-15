@@ -1,6 +1,5 @@
-import { getUserProfile, updateUserProfile } from "@/api/authapi";
+import { updateUserProfile } from "@/api/authapi";
 import { IUserInfo } from "@/interfaces/IUserInfo";
-import authorizationService from "@/api/authorizationService";
 
 interface HandleUpdateProfileProps {
   authenticatedUser: IUserInfo;
@@ -31,21 +30,15 @@ const handleUpdateProfile = async (
   try {
     setLoading(true);
 
-    // Ensure authorization works
-    const isAuthorized = await authorizationService.authorizeAsync(
-      authenticatedUser,
-      "update_profile"
-    );
-
-    console.debug("Authorization check result:", isAuthorized);
-
-    if (!isAuthorized) {
-      setMessage({
-        type: "error",
-        text: "You are not authorized to update your profile.",
-      });
+    // Get current stored auth data
+    const storedAuthData = localStorage.getItem('auth') || sessionStorage.getItem('auth');
+    if (!storedAuthData) {
+      setMessage({ type: "error", text: "Authentication data not found. Please log in again." });
       return;
     }
+
+    // Skip authorization check for self-update
+    // This operation is always allowed for the authenticated user
 
     if (email !== authenticatedUser.email && !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email)) {
       setMessage({ type: "error", text: "Please enter a valid email address: " + email });
@@ -62,18 +55,31 @@ const handleUpdateProfile = async (
     await updateUserProfile(updatedUser);
     setMessage({
       type: "success",
-      text: "Profile updated successfully! Refreshing...",
+      text: "Profile updated successfully! Redirecting...",
     });
 
-    // Refresh user data
-    const userProfile = await getUserProfile(authenticatedUser.id);
-    localStorage.setItem(
-      "auth",
-      JSON.stringify({ ...authenticatedUser, user: userProfile })
-    );
-
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    window.dispatchEvent(new Event("authStateChange"));
+    // Parse stored auth data
+    const parsedAuthData = JSON.parse(storedAuthData);
+    
+    // Update the stored auth data with new profile information
+    const updatedAuthData = {
+      ...parsedAuthData,
+      authenticatedUser: {
+        ...parsedAuthData.authenticatedUser,
+        firstName,
+        lastName, 
+        email
+      }
+    };
+    
+    // Save updated auth data
+    localStorage.setItem('auth', JSON.stringify(updatedAuthData));
+    
+    // Redirect to profile page after 1 second
+    setTimeout(() => {
+      window.location.href = '/user-profile';
+    }, 1000);
+    
   } catch (err) {
     console.error("Error updating profile:", err);
     setMessage({ type: "error", text: "Failed to update profile." });

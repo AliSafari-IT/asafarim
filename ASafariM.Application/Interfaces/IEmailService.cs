@@ -8,5 +8,7 @@ namespace ASafariM.Application.Interfaces
             string email,
             string reason = "User believes this Account Deleted by mistake!"
         );
+
+        void SendPasswordResetEmail(string email, string token);
     }
 }

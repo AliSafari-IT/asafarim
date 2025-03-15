@@ -35,6 +35,8 @@ const ResetPasswordPage = () => {
   const validatePassword = (password: string): boolean => {
     // Password must be at least 8 characters long and contain at least one uppercase letter,
     // one lowercase letter, one number, and one special character
+    logger.info('Validating password: ' + password);
+    logger.info('Allowed special characters: @$!%*?&');
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return passwordRegex.test(password);
   };
@@ -59,7 +61,7 @@ const ResetPasswordPage = () => {
     }
 
     if (!validatePassword(password)) {
-      setError('Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character');
+      setError('Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&)');
       return;
     }
   
@@ -87,14 +89,27 @@ const ResetPasswordPage = () => {
       if (isAxiosError(err)) {
         if (err.response) {
           const { status, data } = err.response;
+          logger.error(`Password reset error details - Status: ${status}, Data: ${JSON.stringify(data)}`);
+          
           if (status === 400) {
-            setError(data?.message || 'Invalid reset token or email.');
+            if (data?.message) {
+              setError(data.message);
+            } else if (data?.errors) {
+              setError(`Validation errors: ${JSON.stringify(data.errors)}`);
+            } else {
+              setError('Invalid reset token or email.');
+            }
           } else {
             setError(data?.message || 'An unexpected error occurred.');
           }
+        } else if (err.request) {
+          logger.error('No response received from server');
+          setError('No response received from server. Please try again later.');
         } else {
-          setError('Network error. Please try again.');
+          setError('Error setting up the request: ' + err.message);
         }
+      } else if (err instanceof Error) {
+        setError('Error: ' + err.message);
       } else {
         setError('An unexpected error occurred.');
       }

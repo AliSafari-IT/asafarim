@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
-import { logout as apiLogout } from "../api/authapi";
+import { logout as apiLogout, login as apiLogin } from "../api/authapi";
+import { ILoginModel } from "@/interfaces/ILoginModel";
 
 function useAuth() {
   const [authState, setAuthState] = useState(() => {
@@ -116,6 +117,30 @@ function useAuth() {
     }
   }, []);
 
+  const login = useCallback(async (credentials: ILoginModel) => {
+    try {
+      const response = await apiLogin(credentials);
+      
+      // Store auth data in localStorage
+      const authData = {
+        authenticated: true,
+        authenticatedUser: response.authenticatedUser,
+        token: response.token
+      };
+      
+      localStorage.setItem('auth', JSON.stringify(authData));
+      sessionStorage.setItem('auth', JSON.stringify(authData));
+      
+      setAuthState(authData);
+      window.dispatchEvent(new Event('authStateChange'));
+      
+      return authData;
+    } catch (error) {
+      console.error('Login failed:', error);
+      throw error;
+    }
+  }, []);
+
   const logout = useCallback(async () => {
     console.log('Logging out - calling backend logout API');
     await apiLogout();
@@ -164,6 +189,7 @@ function useAuth() {
     authenticated: Boolean(authState?.authenticated) && Boolean(authState?.authenticatedUser),
     authenticatedUser: authState?.authenticatedUser,
     token: authState?.token,
+    login,
     logout,
     checkAuthState
   };

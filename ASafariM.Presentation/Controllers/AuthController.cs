@@ -28,6 +28,7 @@ public class AuthController : ControllerBase
     private readonly JwtTokenService _jwtTokenService;
     private readonly ASafariM.Application.Interfaces.IAuthorizationService _authorizationService;
     private readonly CurrentUserService _currentUserService;
+    private readonly IEmailService _emailService;
 
     public class AuthorizeRequest
     {
@@ -40,7 +41,8 @@ public class AuthController : ControllerBase
         JwtTokenService jwtTokenService,
         IUserService userService,
         ASafariM.Application.Interfaces.IAuthorizationService authorizationService,
-        CurrentUserService currentUserService
+        CurrentUserService currentUserService,
+        IEmailService emailService
     )
     {
         _userRepository = userRepository;
@@ -48,6 +50,7 @@ public class AuthController : ControllerBase
         _userService = userService;
         _authorizationService = authorizationService;
         _currentUserService = currentUserService;
+        _emailService = emailService;
     }
 
     [HttpGet("current-user")]
@@ -304,23 +307,66 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("reset-password")]
+    [AllowAnonymous]
     public async Task<IActionResult> ResetPassword(ResetPasswordCommand command)
     {
-        Log.Information("Password reset attempt for email: {Email}", command.Email);
+        Log.Information("Password reset attempt for email: {Email}, Token length: {TokenLength}", 
+            command.Email, 
+            command.Token?.Length ?? 0);
 
         if (!ModelState.IsValid)
         {
-            Log.Warning("Invalid model state for password reset");
-            return BadRequest(ModelState);
+            var errors = ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            
+            Log.Warning("Invalid model state for password reset: {Errors}", string.Join(", ", errors));
+            return BadRequest(new { message = "Invalid request", errors });
         }
 
         try
         {
+            // First check if the user exists
+            var user = await _userRepository.GetUserByEmailAsync(command.Email);
+            if (user == null)
+            {
+                Log.Warning("Password reset failed: User not found for email: {Email}", command.Email);
+                return BadRequest(new { message = "Invalid email or token" });
+            }
+
+            // Check if the token exists
+            if (string.IsNullOrEmpty(user.ForgotPasswordToken))
+            {
+                Log.Warning("Password reset failed: No token found for user: {Email}", command.Email);
+                return BadRequest(new { message = "No password reset request found or token expired" });
+            }
+
+            // Check if the token matches
+            Log.Information("Token comparison - Expected: {Expected}, Received: {Received}", 
+                user.ForgotPasswordToken, 
+                command.Token);
+                
+            if (user.ForgotPasswordToken != command.Token)
+            {
+                Log.Warning("Password reset failed: Token mismatch for email: {Email}. Expected: {Expected}, Received: {Received}", 
+                    command.Email, user.ForgotPasswordToken, command.Token);
+                return BadRequest(new { message = "Invalid token" });
+            }
+
+            // Check if the token has expired
+            if (!user.ForgotPasswordTokenExpiration.HasValue || user.ForgotPasswordTokenExpiration.Value < DateTime.UtcNow)
+            {
+                Log.Warning("Password reset failed: Token expired for email: {Email}. Expiration: {Expiration}", 
+                    command.Email, user.ForgotPasswordTokenExpiration);
+                return BadRequest(new { message = "Token has expired. Please request a new password reset." });
+            }
+
             var result = await _userService.ResetPasswordAsync(command);
             if (!result)
             {
                 Log.Warning("Password reset failed for email: {Email}", command.Email);
-                return BadRequest(new { message = "Invalid or expired token" });
+                return BadRequest(new { message = "Failed to reset password. Please try again." });
             }
 
             Log.Information("Password reset successful for email: {Email}", command.Email);
@@ -365,16 +411,28 @@ public class AuthController : ControllerBase
             // Generate password reset token
             var token = _jwtTokenService.GeneratePasswordResetToken(user);
 
-            // In a real implementation, you would send an email with the reset link
-            // For now, we'll just log it
-            Log.Information(
-                "Password reset token generated for email: {Email}, Token: {Token}",
-                command.Email,
-                token
-            );
+            // Store the token in the user record
+            await _userService.ForgotPasswordAsync(new ForgotPasswordCommand { Email = command.Email });
 
-            // TODO: Send email with reset link
-            // The reset link would be something like: https://yourdomain.com/reset-password?email={email}&token={token}
+            // Send email with reset link
+            try
+            {
+                _emailService.SendPasswordResetEmail(command.Email, token);
+                Log.Information(
+                    "Password reset email sent to: {Email}",
+                    command.Email
+                );
+            }
+            catch (Exception ex)
+            {
+                Log.Error(
+                    ex,
+                    "Failed to send password reset email to: {Email}. Error: {Message}",
+                    command.Email,
+                    ex.Message
+                );
+                // Don't reveal the error to the user for security reasons
+            }
 
             return Ok(
                 new
@@ -415,9 +473,27 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("update-profile")]
-    public async Task<IActionResult> UpdateProfile(UpdateProfileCommand command)
+    [Authorize]
+    public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileCommand command)
     {
-        var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+        // Log all claims for debugging
+        foreach (var claim in User.Claims)
+        {
+            Log.Information(
+                "Claim found - Type: {ClaimType}, Value: {ClaimValue}",
+                claim.Type,
+                claim.Value
+            );
+        }
+
+        // Try multiple claim types that might contain the user ID, with nameid first based on the token
+        var userIdClaim =
+            User.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value // JWT token from this app
+            ?? User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value // Standard .NET claim
+            ?? User.Claims.FirstOrDefault(c => c.Type == "sub")?.Value // JWT standard
+            ?? User.Claims.FirstOrDefault(c => c.Type == "uid")?.Value // Custom claim
+            ?? User.Claims.FirstOrDefault(c => c.Type == "id")?.Value; // Another common claim
+
         Log.Information("Profile update attempt for user ID: {UserId}", userIdClaim ?? "unknown");
 
         if (string.IsNullOrEmpty(userIdClaim))
@@ -431,11 +507,21 @@ public class AuthController : ControllerBase
         {
             return BadRequest("Invalid request");
         }
-        command.UserId = userId;
-        await _userService.UpdateProfileAsync(command);
 
-        Log.Information("Profile successfully updated for user ID: {UserId}", userId);
-        return Ok("Profile updated successfully");
+        // Set the user ID from the authenticated token
+        command.UserId = userId;
+
+        try
+        {
+            await _userService.UpdateProfileAsync(command);
+            Log.Information("Profile successfully updated for user ID: {UserId}", userId);
+            return Ok("Profile updated successfully");
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error updating profile for user ID: {UserId}", userIdClaim);
+            return StatusCode(500, "Error updating profile: " + ex.Message);
+        }
     }
 
     // requestAccountReactivation

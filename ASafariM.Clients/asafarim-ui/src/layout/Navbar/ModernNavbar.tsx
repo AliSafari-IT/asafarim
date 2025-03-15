@@ -20,6 +20,7 @@ import ASMButton from "./components/ASMButton";
 import ResponsiveDropdownMenu from "./components/ResponsiveDropdownMenu";
 import { IMenuItem } from "@/interfaces/IMenuItem";
 import { getAllMdFiles } from "@/utils/mdFilesUtils";
+import { logger } from '@/utils/logger';
 
 const ModernNavbar: React.FC = () => {
   const { authenticatedUser, authenticated, token } = useAuth();
@@ -54,8 +55,12 @@ const ModernNavbar: React.FC = () => {
       setScrolled(offset > 10);
     };
 
+    logger.log('Adding scroll event listener');
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      logger.log('Removing scroll event listener');
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   // Handle resize events to update viewWidth

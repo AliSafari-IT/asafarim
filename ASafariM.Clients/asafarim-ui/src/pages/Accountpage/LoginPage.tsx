@@ -10,6 +10,7 @@ const LoginPage = () => {
   logger.info('LoginPage component mounted');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showDeletedMessage, setShowDeletedMessage] = useState(false);
@@ -42,31 +43,59 @@ const LoginPage = () => {
     logger.info('Calling login API with email: ' + email);
   
     try {
+      // Clear any existing tokens first
+      localStorage.removeItem('auth');
+      sessionStorage.removeItem('auth');
+      
       const auth = await login({ email, password });
       logger.info('Login API call successful');
+      console.log('Login API response:', auth);
   
+      // The response is now normalized in the API function
       // Check if the user account is deleted
-      if (auth.user?.isDeleted) {
+      if (auth.authenticatedUser?.isDeleted) {
         logger.info('Attempted login to deleted account');
         setShowDeletedMessage(true);
+        setLoading(false);
         return;
       }
-  
-      if (auth.token) {
-        // Save the authenticated user and token properly
-        const authData = {
-          authenticatedUser: auth.user, // Store user details
-          token: auth.token,
-        };
-        localStorage.setItem('auth', JSON.stringify(authData));
-        window.dispatchEvent(new Event('authStateChange')); // Notify other components
-        console.log('Auth data stored:', authData);
-        const returnTo = localStorage.getItem('returnTo') || '/';
-        localStorage.removeItem('returnTo');
-        navigate(returnTo);
+      
+      // Create auth data object - using the normalized response
+      const authData = {
+        authenticated: auth.authenticated !== false, // Default to true if not explicitly false
+        authenticatedUser: auth.authenticatedUser,
+        token: auth.token,
+      };
+      
+      console.log('Storing auth data:', authData);
+      
+      // Store in appropriate storage
+      try {
+        if (rememberMe) {
+          localStorage.setItem('auth', JSON.stringify(authData));
+          console.log('Auth data stored in localStorage');
+        } else {
+          sessionStorage.setItem('auth', JSON.stringify(authData));
+          console.log('Auth data stored in sessionStorage');
+        }
+        
+        // Notify other components about auth state change
+        window.dispatchEvent(new Event('authStateChange'));
+        console.log('Auth state change event dispatched');
+        
+        // Redirect to home page
+        console.log('Redirecting to home page...');
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 500);
+      } catch (e) {
+        console.error('Error storing auth data:', e);
+        setError('Error storing authentication data');
+        setLoading(false);
       }
     } catch (err: unknown) {
       logger.error('Login error: ' + JSON.stringify(err, null, 2));
+      console.error('Login error details:', err);
   
       if (isAxiosError(err)) {
         if (err.response) {
@@ -88,33 +117,10 @@ const LoginPage = () => {
       } else {
         setError('An unexpected error occurred.');
       }
-    } finally {
       setLoading(false);
-      logger.info('Login process completed. Loading state: ' + loading);
     }
   };
   
-
-  const handleDemoLogin = async (credentials: { email: string; password: string }) => {
-    setEmail(credentials.email);
-    setPassword(credentials.password);
-    try {
-      setLoading(true);
-      logger.info('Attempting demo login with email: ' + credentials.email);
-      const auth = await login(credentials);
-      if (auth.token) {
-        localStorage.setItem('auth', JSON.stringify(auth));
-        const returnTo = localStorage.getItem('returnTo') || '/';
-        localStorage.removeItem('returnTo');
-        navigate(returnTo);
-      }
-    } catch (err) {
-      logger.error('Demo login error: ' + JSON.stringify(err, null, 2));
-      setError('Failed to login with demo account');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   if (showDeletedMessage) {
     return (
@@ -134,7 +140,6 @@ const LoginPage = () => {
             </h2>
           </div>
           <form className="mt-8 space-y-6" onSubmit={handleLogin}>
-            <input type="hidden" name="remember" value="true" />
             <div className="rounded-md shadow-sm -space-y-px">
               <div>
                 <label htmlFor="email-address" className="sr-only">
@@ -170,6 +175,35 @@ const LoginPage = () => {
               </div>
             </div>
 
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <input
+                  id="remember-me"
+                  name="remember-me"
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                />
+                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                  Remember me
+                </label>
+              </div>
+
+              <div className="text-sm">
+                <a 
+                  href="/forgot-password" 
+                  className="font-medium text-indigo-600 hover:text-indigo-500"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate('/forgot-password');
+                  }}
+                >
+                  Forgot your password?
+                </a>
+              </div>
+            </div>
+
             {error && (
               <div className="text-red-500 text-sm text-center">{error}</div>
             )}
@@ -184,12 +218,87 @@ const LoginPage = () => {
               </button>
             </div>
 
+            {/* Demo login buttons - separated from the form to prevent form submission */}
             <div className="flex flex-col space-y-2">
+              <div className="text-center text-sm text-gray-500 mb-2">Or use a demo account</div>
               {demoCredentials.map((demo, index) => (
                 <button
                   key={index}
                   type="button"
-                  onClick={() => handleDemoLogin(demo)}
+                  onClick={() => {
+                    setLoading(true);
+                    setError(null);
+                    logger.info('Attempting demo login with email: ' + demo.email);
+                    
+                    // Clear any existing tokens first
+                    localStorage.removeItem('auth');
+                    sessionStorage.removeItem('auth');
+                    
+                    // Attempt login
+                    login(demo)
+                      .then(auth => {
+                        console.log('Demo login API response:', auth);
+                        
+                        // The response is now normalized in the API function
+                        // Create auth data object - using the normalized response
+                        const authData = {
+                          authenticated: auth.authenticated !== false, // Default to true if not explicitly false
+                          authenticatedUser: auth.authenticatedUser,
+                          token: auth.token,
+                        };
+                        
+                        console.log('Storing auth data:', authData);
+                        
+                        // Store in appropriate storage
+                        try {
+                          if (rememberMe) {
+                            localStorage.setItem('auth', JSON.stringify(authData));
+                            console.log('Auth data stored in localStorage');
+                          } else {
+                            sessionStorage.setItem('auth', JSON.stringify(authData));
+                            console.log('Auth data stored in sessionStorage');
+                          }
+                          
+                          // Notify other components about auth state change
+                          window.dispatchEvent(new Event('authStateChange'));
+                          console.log('Auth state change event dispatched');
+                          
+                          // Redirect to home page
+                          console.log('Redirecting to home page...');
+                          setTimeout(() => {
+                            window.location.href = '/';
+                          }, 500);
+                        } catch (e) {
+                          console.error('Error storing auth data:', e);
+                          setError('Error storing authentication data');
+                          setLoading(false);
+                        }
+                      })
+                      .catch(err => {
+                        logger.error('Demo login error: ' + JSON.stringify(err, null, 2));
+                        console.error('Demo login error details:', err);
+                        
+                        // Display a more specific error message
+                        if (isAxiosError(err)) {
+                          if (err.response) {
+                            const { status, data } = err.response;
+                            console.error(`Demo login failed with status ${status}:`, data);
+                            setError(data?.message || `Error ${status}: ${data?.error || 'Unknown error'}`);
+                          } else if (err.request) {
+                            console.error('Demo login request made but no response received:', err.request);
+                            setError('No response received from server. Please check your connection.');
+                          } else {
+                            console.error('Demo login error during request setup:', err.message);
+                            setError(`Error setting up request: ${err.message}`);
+                          }
+                        } else {
+                          console.error('Non-Axios demo login error:', err);
+                          setError('Failed to login with demo account. Please try again.');
+                        }
+                        
+                        setLoading(false);
+                      });
+                  }}
                   disabled={loading}
                   className="group relative w-full flex justify-center py-2 px-4 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
@@ -198,8 +307,6 @@ const LoginPage = () => {
               ))}
             </div>
           </form>
-
-          {showDeletedMessage && <DeletedAccountMessage email={email} onClose={() => setShowDeletedMessage(false)}/>}
         </div>
       </div>
     </Wrapper>

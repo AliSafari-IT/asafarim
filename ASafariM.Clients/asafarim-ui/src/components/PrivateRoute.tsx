@@ -18,12 +18,14 @@ const PrivateRoute = ({ children, requireAdmin = false }: PrivateRouteProps) => 
     if (!authenticated || authenticatedUser?.isDeleted || !token) {
       console.warn("User not authenticated or deleted. Redirecting to login.");
       localStorage.removeItem('auth');
+      sessionStorage.removeItem('auth');
       window.dispatchEvent(new Event('authStateChange'));
       navigate('/login');
     }
   }, [authenticated, authenticatedUser, authenticatedUser?.isDeleted, navigate, requireAdmin, token]);
 
-  if (!authenticated) {
+  if (!authenticated || !token) {
+    console.log("PrivateRoute: Not authenticated, redirecting to login");
     return <Navigate to="/login" />;
   }
 
@@ -33,6 +35,7 @@ const PrivateRoute = ({ children, requireAdmin = false }: PrivateRouteProps) => 
     return <AccessDenied />;
   }
 
+  console.log("PrivateRoute: User is authenticated, rendering protected content");
   return children;
 };
 

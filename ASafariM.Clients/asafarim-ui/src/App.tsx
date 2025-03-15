@@ -12,6 +12,8 @@ import PostDetail from "./pages/Blog/PostDetail";
 import LogoutPage from "./pages/Accountpage/LogoutPage";
 import Register from "./pages/Accountpage/Register";
 import LoginPage from "./pages/Accountpage/LoginPage";
+import ForgotPasswordPage from "./pages/Accountpage/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/Accountpage/ResetPasswordPage";
 import UsersList from "./pages/User/UsersList";
 import CreateUser from "./pages/User/CreateUser";
 import EditUser from "./pages/User/EditUser";
@@ -371,6 +373,8 @@ function App() {
           />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
 
           <Route
             path="/users"

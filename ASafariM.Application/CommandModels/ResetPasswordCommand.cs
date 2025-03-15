@@ -10,4 +10,7 @@ public class ResetPasswordCommand
 
     [Required]
     public string NewPassword { get; set; }
+
+    [Required]
+    public string Token { get; set; }
 }

@@ -751,9 +751,23 @@ namespace ASafariM.Infrastructure.Services
             {
                 return false;
             }
+
+            // Validate the token
+            if (
+                string.IsNullOrEmpty(user.ForgotPasswordToken)
+                || user.ForgotPasswordToken != command.Token
+                || !user.ForgotPasswordTokenExpiration.HasValue
+                || user.ForgotPasswordTokenExpiration.Value < DateTime.UtcNow
+            )
+            {
+                // Token is invalid or expired
+                return false;
+            }
+
             user.PasswordHash = PasswordHasher.HashPassword(command.NewPassword);
             user.UpdatedAt = DateTime.UtcNow;
             user.ForgotPasswordToken = null;
+            user.ForgotPasswordTokenExpiration = null;
             await _userRepository.UpdateUserAsync(user);
             return true;
         }
@@ -913,8 +927,8 @@ namespace ASafariM.Infrastructure.Services
             {
                 return;
             }
-            user.Token = null; // ✅ Clear JWT access token
-            user.RefreshToken = null; // ✅ Clear Refresh Token
+            user.Token = null; // Clear JWT access token
+            user.RefreshToken = null; // Clear Refresh Token
             user.RefreshTokenExpiration = null;
             await _userRepository.UpdateUserAsync(user);
             await _userRepository.SaveChangesAsync();

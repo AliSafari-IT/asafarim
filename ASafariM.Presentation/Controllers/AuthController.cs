@@ -306,17 +306,30 @@ public class AuthController : ControllerBase
     [HttpPost("reset-password")]
     public async Task<IActionResult> ResetPassword(ResetPasswordCommand command)
     {
-        Log.Information("Password reset attempt for token: {Token}", command.NewPassword);
+        Log.Information("Password reset attempt for email: {Email}", command.Email);
+
+        if (!ModelState.IsValid)
+        {
+            Log.Warning("Invalid model state for password reset");
+            return BadRequest(ModelState);
+        }
+
         try
         {
-            // Add actual password reset logic here
-            Log.Information("Password reset successful for token: {Token}", command.NewPassword);
-            return Ok("Password reset successful");
+            var result = await _userService.ResetPasswordAsync(command);
+            if (!result)
+            {
+                Log.Warning("Password reset failed for email: {Email}", command.Email);
+                return BadRequest(new { message = "Invalid or expired token" });
+            }
+
+            Log.Information("Password reset successful for email: {Email}", command.Email);
+            return Ok(new { message = "Password reset successful" });
         }
         catch (Exception ex)
         {
-            Log.Error(ex, "Error during password reset for token: {Token}", command.NewPassword);
-            return StatusCode(500, "Internal server error");
+            Log.Error(ex, "Error during password reset for email: {Email}", command.Email);
+            return StatusCode(500, new { message = "An error occurred during password reset" });
         }
     }
 
@@ -324,11 +337,51 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> ForgotPassword(ForgotPasswordCommand command)
     {
         Log.Information("Password recovery requested for email: {Email}", command.Email);
+
+        if (!ModelState.IsValid)
+        {
+            Log.Warning("Invalid model state for forgot password request");
+            return BadRequest(ModelState);
+        }
+
         try
         {
-            // Add actual forgot password logic here
-            Log.Information("Password reset link sent to email: {Email}", command.Email);
-            return Ok("Password reset link sent successfully");
+            var user = await _userRepository.GetUserByEmailAsync(command.Email);
+            if (user == null)
+            {
+                // For security reasons, don't reveal that the email doesn't exist
+                Log.Warning(
+                    "Forgot password request for non-existent email: {Email}",
+                    command.Email
+                );
+                return Ok(
+                    new
+                    {
+                        message = "If your email exists in our system, you will receive password reset instructions",
+                    }
+                );
+            }
+
+            // Generate password reset token
+            var token = _jwtTokenService.GeneratePasswordResetToken(user);
+
+            // In a real implementation, you would send an email with the reset link
+            // For now, we'll just log it
+            Log.Information(
+                "Password reset token generated for email: {Email}, Token: {Token}",
+                command.Email,
+                token
+            );
+
+            // TODO: Send email with reset link
+            // The reset link would be something like: https://yourdomain.com/reset-password?email={email}&token={token}
+
+            return Ok(
+                new
+                {
+                    message = "If your email exists in our system, you will receive password reset instructions",
+                }
+            );
         }
         catch (Exception ex)
         {
@@ -337,7 +390,10 @@ public class AuthController : ControllerBase
                 "Error processing forgot password request for email: {Email}",
                 command.Email
             );
-            return StatusCode(500, "Internal server error");
+            return StatusCode(
+                500,
+                new { message = "An error occurred while processing your request" }
+            );
         }
     }
 

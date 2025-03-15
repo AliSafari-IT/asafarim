@@ -1,6 +1,6 @@
 // apps/frontends/asafarim-client/src/api/authapi.ts
 // 
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError, isAxiosError } from 'axios';
 import { ILoginModel } from '../interfaces/ILoginModel';
 import { IRegisterModel } from '../interfaces/IRegisterModel';
 import { logger } from '@/utils/logger';
@@ -48,12 +48,53 @@ export const register = async (model: IRegisterModel) => {
 };
 // Login a user
 export const login = async (credentials: ILoginModel) => {
-  logger.info(`Attempting to login user with credentials: ${JSON.stringify(credentials)}`);
-  const response = await api.post('auth/login', credentials, {
-      headers: { 'Content-Type': 'application/json' },
-  });
-  logger.info(`Login successful, response received: ${JSON.stringify(response.data)}`);
-  return response.data;
+  try {
+    logger.info(`Attempting to login user with credentials: ${JSON.stringify(credentials)}`);
+    console.log('Login API request:', credentials);
+    
+    const response = await api.post('auth/login', credentials, {
+        headers: { 'Content-Type': 'application/json' },
+    });
+    
+    logger.info(`Login successful, response received: ${JSON.stringify(response.data)}`);
+    console.log('Login API raw response:', response);
+    console.log('Login API response data:', response.data);
+    
+    // Normalize the response to ensure consistent property names
+    const normalizedResponse = {
+      token: response.data.Token || response.data.token,
+      authenticatedUser: response.data.AuthenticatedUser || response.data.authenticatedUser || response.data.user,
+      authenticated: response.data.Authenticated !== undefined ? response.data.Authenticated : 
+                    (response.data.authenticated !== undefined ? response.data.authenticated : true)
+    };
+    
+    console.log('Normalized login response:', normalizedResponse);
+    
+    // Validate the response structure
+    if (!normalizedResponse.token) {
+      console.error('Login API response missing token:', response.data);
+      throw new Error('Invalid response from server: missing authentication token');
+    }
+    
+    if (!normalizedResponse.authenticatedUser) {
+      console.error('Login API response missing user data:', response.data);
+      throw new Error('Invalid response from server: missing user data');
+    }
+    
+    return normalizedResponse;
+  } catch (error) {
+    console.error('Login API error:', error);
+    if (isAxiosError(error)) {
+      if (error.response) {
+        console.error('Login API error response:', error.response.data);
+      } else if (error.request) {
+        console.error('Login API no response received:', error.request);
+      } else {
+        console.error('Login API error during setup:', error.message);
+      }
+    }
+    throw error;
+  }
 };
 export const requestAccountReactivation = async (email: string) => {
   try {
@@ -81,7 +122,7 @@ export const requestAccountReactivation = async (email: string) => {
 export const requestPasswordReset = async (email: string) => {
   try {
     logger.info(`Attempting to request password reset for email: ${email}`);
-    const response = await axios.post(`${baseURL}/Users/request-password-reset`, { email });
+    const response = await axios.post(`${baseURL}/auth/forgot-password`, { email });
     logger.info(`Password reset request successful, response received: ${JSON.stringify(response.data)}`);
     return response.data;
   } catch (error) {
@@ -100,10 +141,10 @@ export const requestPasswordReset = async (email: string) => {
 };
 
 // Reset password for a user
-export const resetPassword = async (email: string, newPassword: string) => {
+export const resetPassword = async (email: string, newPassword: string, token: string) => {
   try {
     logger.info(`Attempting to reset password for email: ${email}`);
-    const response = await axios.post(`${baseURL}/Users/reset-password`, { email, newPassword });
+    const response = await axios.post(`${baseURL}/auth/reset-password`, { email, newPassword, token });
     logger.info(`Password reset successful, response received: ${JSON.stringify(response.data)}`);
     return response.data;
   } catch (error) {
@@ -169,4 +210,32 @@ export const updateUserProfile = async (user: IUserModelUpdate): Promise<IUserMo
         console.error('Error updating profile:', error);
         throw error;
     }
+};
+
+// Logout a user
+export const logout = async () => {
+  try {
+    logger.info('Attempting to logout user');
+    console.log('Logout API request sent');
+    
+    const response = await api.post('auth/logout');
+    
+    logger.info(`Logout successful, response received: ${JSON.stringify(response.data)}`);
+    console.log('Logout API response:', response.data);
+    
+    return response.data;
+  } catch (error) {
+    console.error('Logout API error:', error);
+    if (isAxiosError(error)) {
+      if (error.response) {
+        console.error('Logout API error response:', error.response.data);
+      } else if (error.request) {
+        console.error('Logout API no response received:', error.request);
+      } else {
+        console.error('Logout API error during setup:', error.message);
+      }
+    }
+    // Even if the API call fails, we should still clear local storage
+    return { message: 'Logged out locally' };
+  }
 };

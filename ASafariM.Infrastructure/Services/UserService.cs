@@ -957,6 +957,7 @@ namespace ASafariM.Infrastructure.Services
             user.Token = null; // Clear JWT access token
             user.RefreshToken = null; // Clear Refresh Token
             user.RefreshTokenExpiration = null;
+            user.IsLoggedIn = false; // Set IsLoggedIn to false when user logs out
             await _userRepository.UpdateUserAsync(user);
             await _userRepository.SaveChangesAsync();
         }

@@ -27,7 +27,9 @@ const ProjectHome: React.FC = () => {
   const { authenticated, authenticatedUser } = useAuth();
 
   // Function to check if user is admin
-  const isAdmin = authenticatedUser?.role === "Admin";
+  const isAdmin = authenticatedUser?.role === "Admin" || 
+                 authenticatedUser?.role === "SuperAdmin" || 
+                 authenticatedUser?.isAdmin === true;
 
   // Function to check if user is the owner of a project
   const isProjectOwner = (projectOwnerId: string) => {

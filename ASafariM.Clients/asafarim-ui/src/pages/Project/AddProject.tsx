@@ -18,6 +18,7 @@ import { Dropdown, IDropdownOption } from "@fluentui/react/lib/Dropdown";
 import { Add20Regular, Delete24Regular, Search24Regular, ArrowLeft24Regular, Save20Regular } from "@fluentui/react-icons";
 import axios from "axios";
 import Toolbar from "@/components/Toolbars/Toolbar";
+import useAuth from "@/hooks/useAuth";
 
 interface JwtPayload {
   nameid?: string;
@@ -32,6 +33,7 @@ const AddProject: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [repoLinks, setRepoLinks] = useState<string[]>([]);
   const [newRepoLink, setNewRepoLink] = useState("");
+  const { authenticated, authenticatedUser } = useAuth();
   
   // Form state
   const [formData, setFormData] = useState({
@@ -178,35 +180,6 @@ const AddProject: React.FC = () => {
       })
     : githubGists;
     
-  // Get user ID from JWT token
-  const getUserId = () => {
-    try {
-      const token = localStorage.getItem('auth') ? JSON.parse(localStorage.getItem('auth')!).token : null;
-      if (!token) return null;
-
-      const decoded = jwtDecode<JwtPayload>(token);
-      return decoded.nameid; // User ID is stored in nameid claim
-    } catch (error) {
-      logger.error("Error decoding JWT token:"+ error);
-      return null;
-    }
-  };
-
-  // Dropdown options
-  const visibilityOptions: IDropdownOption[] = [
-    { key: "0", text: "Public" },
-    { key: "1", text: "Members Only" },
-    { key: "2", text: "Private" },
-  ];
-
-  const statusOptions: IDropdownOption[] = [
-    { key: "0", text: "In Progress" },
-    { key: "1", text: "Completed" },
-    { key: "2", text: "Cancelled" },
-    { key: "3", text: "Paused" },
-    { key: "4", text: "Extended" },
-  ];
-
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -227,10 +200,19 @@ const AddProject: React.FC = () => {
         return;
       }
 
-      const userId = getUserId();
-      if (!userId) {
+      // Check if user is authenticated using the useAuth hook
+      if (!authenticated || !authenticatedUser) {
         logger.error("No authenticated user found");
         setError("You must be logged in to create a project");
+        setLoading(false);
+        return;
+      }
+
+      // Use the user ID from the authenticated user object
+      const userId = authenticatedUser.id;
+      if (!userId) {
+        logger.error("User ID not found in authenticated user object");
+        setError("Unable to determine user ID. Please try logging out and back in.");
         setLoading(false);
         return;
       }
@@ -355,6 +337,21 @@ const AddProject: React.FC = () => {
     { name: "budget", label: "Budget", type: "number" },
     { name: "visibility", label: "Visibility", type: "select" },
     { name: "status", label: "Status", type: "select" },
+  ];
+
+  // Dropdown options
+  const visibilityOptions: IDropdownOption[] = [
+    { key: "0", text: "Public" },
+    { key: "1", text: "Members Only" },
+    { key: "2", text: "Private" },
+  ];
+
+  const statusOptions: IDropdownOption[] = [
+    { key: "0", text: "In Progress" },
+    { key: "1", text: "Completed" },
+    { key: "2", text: "Cancelled" },
+    { key: "3", text: "Paused" },
+    { key: "4", text: "Extended" },
   ];
 
   return (

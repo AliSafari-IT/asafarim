@@ -92,51 +92,65 @@ const ModernNavbar: React.FC = () => {
     setActiveDropdown(activeDropdown === id ? null : id);
   };
 
-  // Render nested menu items
-  const renderNestedMenu = (items: IMenuItem[], level: number = 0) => {
-    return items.map((item, index) => (
-      <div key={item.id || index} className={`${level > 0 ? "ml-4" : ""}`}>
+  // Render nested menu items for mobile view
+  const renderNestedMenu = (items: IMenuItem[]) => {
+    return items.map((item, idx) => (
+      <div key={idx} className="w-full">
         {item.subMenu && item.subMenu.length > 0 ? (
-          <div className="relative">
-            <button
-              onClick={() => toggleDropdown(item.id)}
-              className={`w-full text-left flex items-center justify-between px-4 py-2 text-sm ${
-                isActive(item.to)
-                  ? "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white"
-                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+          <div className="w-full">
+            <div
+              className={`flex justify-between items-center w-full px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md text-sm font-medium cursor-pointer ${
+                activeDropdown === item.id ? "bg-gray-100 dark:bg-gray-800" : ""
               }`}
+              onClick={() => {
+                setActiveDropdown(activeDropdown === item.id ? null : item.id);
+              }}
             >
               <span className="flex items-center">
                 {item.icon && <span className="mr-2">{item.icon}</span>}
                 {item.title}
               </span>
               <ChevronDownIcon
-                className={`w-4 h-4 transition-transform ${
+                className={`h-5 w-5 transition-transform ${
                   activeDropdown === item.id ? "transform rotate-180" : ""
                 }`}
               />
-            </button>
-            <Transition
-              show={activeDropdown === item.id}
-              enter="transition ease-out duration-100"
-              enterFrom="transform opacity-0 scale-95"
-              enterTo="transform opacity-100 scale-100"
-              leave="transition ease-in duration-75"
-              leaveFrom="transform opacity-100 scale-100"
-              leaveTo="transform opacity-0 scale-95"
-            >
-              <div className="relative">
-                {renderNestedMenu(item.subMenu, level + 1)}
+            </div>
+            {activeDropdown === item.id && (
+              <div className="pl-6 mt-1 space-y-1">
+                {item.subMenu.map((subItem, subIdx) => (
+                  <div key={subIdx} className="w-full">
+                    {subItem.to ? (
+                      <Link
+                        to={subItem.to}
+                        className={`block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md ${
+                          isActive(subItem.to) ? "bg-gray-100 dark:bg-gray-800 font-semibold" : ""
+                        }`}
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          setActiveDropdown(null);
+                        }}
+                      >
+                        <span className="flex items-center">
+                          {subItem.icon && <span className="mr-2">{subItem.icon}</span>}
+                          {subItem.title}
+                        </span>
+                      </Link>
+                    ) : (
+                      <div className="w-full">
+                        {subItem.subMenu && subItem.subMenu.length > 0 && renderNestedMenu([subItem])}
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
-            </Transition>
+            )}
           </div>
-        ) : item.to ? (
+        ) : (
           <Link
             to={item.to || "#"}
-            className={`block px-4 py-2 text-sm ${
-              isActive(item.to)
-                ? "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white"
-                : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+            className={`block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md ${
+              isActive(item.to) ? "bg-gray-100 dark:bg-gray-800 font-semibold" : ""
             }`}
             onClick={() => setIsMenuOpen(false)}
           >
@@ -145,13 +159,6 @@ const ModernNavbar: React.FC = () => {
               {item.title}
             </span>
           </Link>
-        ) : (
-          <div className={`block px-4 py-2 text-sm`}>
-            <span className="flex items-center">
-              {item.icon && <span className="mr-2">{item.icon}</span>}
-              {item.title}
-            </span>
-          </div>
         )}
       </div>
     ));

@@ -36,7 +36,7 @@ const ModernNavbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [viewWidth, setViewWidth] = useState(window.innerWidth);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [activeDropdowns, setActiveDropdowns] = useState<string[]>([]);
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Check if current path matches the given path
@@ -64,7 +64,7 @@ const ModernNavbar: React.FC = () => {
       setViewWidth(window.innerWidth);
       if (window.innerWidth >= 1024) {
         setIsMenuOpen(false);
-        setActiveDropdown(null);
+        setActiveDropdowns([]);
       }
     };
 
@@ -79,7 +79,7 @@ const ModernNavbar: React.FC = () => {
         if (isMenuOpen) {
           setIsMenuOpen(false);
         }
-        setActiveDropdown(null);
+        setActiveDropdowns([]);
       }
     };
 
@@ -89,79 +89,97 @@ const ModernNavbar: React.FC = () => {
 
   // Handle dropdown toggle
   const toggleDropdown = (id: string) => {
-    setActiveDropdown(activeDropdown === id ? null : id);
+    setActiveDropdowns((prev) =>
+      prev.includes(id)
+        ? prev.filter((item) => item !== id)
+        : [...prev, id]
+    );
   };
 
   // Render nested menu items for mobile view
-  const renderNestedMenu = (items: IMenuItem[]) => {
-    return items.map((item, idx) => (
-      <div key={idx} className="w-full">
-        {item.subMenu && item.subMenu.length > 0 ? (
-          <div className="w-full">
-            <div
-              className={`flex justify-between items-center w-full px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md text-sm font-medium cursor-pointer ${
-                activeDropdown === item.id ? "bg-gray-100 dark:bg-gray-800" : ""
+  const renderNestedMenu = (items: IMenuItem[], parentPath: string = "") => {
+    return items.map((item, idx) => {
+      const itemId = item.id || `${parentPath}-${idx}`;
+      const isOpen = activeDropdowns.includes(itemId);
+
+      return (
+        <div key={itemId} className="w-full">
+          {item.subMenu && item.subMenu.length > 0 ? (
+            <div className="w-full">
+              <div
+                className={`flex justify-between items-center w-full px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md text-sm font-medium cursor-pointer ${
+                  isOpen ? "bg-gray-100 dark:bg-gray-800" : ""
+                }`}
+                onClick={() => toggleDropdown(itemId)}
+              >
+                <span className="flex items-center">
+                  {item.icon && <span className="mr-2">{item.icon}</span>}
+                  {item.title}
+                </span>
+                <ChevronDownIcon
+                  className={`h-5 w-5 transition-transform ${
+                    isOpen ? "transform rotate-180" : ""
+                  }`}
+                />
+              </div>
+              {isOpen && (
+                <div className="pl-6 mt-1 space-y-1">
+                  {item.subMenu.map((subItem, subIdx) => {
+                    const subItemId = subItem.id || `${itemId}-${subIdx}`;
+
+                    return (
+                      <div key={subItemId} className="w-full">
+                        {subItem.to ? (
+                          <Link
+                            to={subItem.to}
+                            className={`block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md ${
+                              isActive(subItem.to) ? "bg-gray-100 dark:bg-gray-800 font-semibold" : ""
+                            }`}
+                            onClick={() => {
+                              setIsMenuOpen(false);
+                              setActiveDropdowns([]);
+                            }}
+                          >
+                            <span className="flex items-center">
+                              {subItem.icon && <span className="mr-2">{subItem.icon}</span>}
+                              {subItem.title}
+                            </span>
+                          </Link>
+                        ) : subItem.subMenu && subItem.subMenu.length > 0 ? (
+                          <div className="w-full">
+                            {renderNestedMenu([subItem], subItemId)}
+                          </div>
+                        ) : (
+                          <div className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300">
+                            <span className="flex items-center">
+                              {subItem.icon && <span className="mr-2">{subItem.icon}</span>}
+                              {subItem.title}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link
+              to={item.to || "#"}
+              className={`block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md ${
+                isActive(item.to) ? "bg-gray-100 dark:bg-gray-800 font-semibold" : ""
               }`}
-              onClick={() => {
-                setActiveDropdown(activeDropdown === item.id ? null : item.id);
-              }}
+              onClick={() => setIsMenuOpen(false)}
             >
               <span className="flex items-center">
                 {item.icon && <span className="mr-2">{item.icon}</span>}
                 {item.title}
               </span>
-              <ChevronDownIcon
-                className={`h-5 w-5 transition-transform ${
-                  activeDropdown === item.id ? "transform rotate-180" : ""
-                }`}
-              />
-            </div>
-            {activeDropdown === item.id && (
-              <div className="pl-6 mt-1 space-y-1">
-                {item.subMenu.map((subItem, subIdx) => (
-                  <div key={subIdx} className="w-full">
-                    {subItem.to ? (
-                      <Link
-                        to={subItem.to}
-                        className={`block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md ${
-                          isActive(subItem.to) ? "bg-gray-100 dark:bg-gray-800 font-semibold" : ""
-                        }`}
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          setActiveDropdown(null);
-                        }}
-                      >
-                        <span className="flex items-center">
-                          {subItem.icon && <span className="mr-2">{subItem.icon}</span>}
-                          {subItem.title}
-                        </span>
-                      </Link>
-                    ) : (
-                      <div className="w-full">
-                        {subItem.subMenu && subItem.subMenu.length > 0 && renderNestedMenu([subItem])}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        ) : (
-          <Link
-            to={item.to || "#"}
-            className={`block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md ${
-              isActive(item.to) ? "bg-gray-100 dark:bg-gray-800 font-semibold" : ""
-            }`}
-            onClick={() => setIsMenuOpen(false)}
-          >
-            <span className="flex items-center">
-              {item.icon && <span className="mr-2">{item.icon}</span>}
-              {item.title}
-            </span>
-          </Link>
-        )}
-      </div>
-    ));
+            </Link>
+          )}
+        </div>
+      );
+    });
   };
 
   return (

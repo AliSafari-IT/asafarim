@@ -26,7 +26,8 @@ namespace ASafariM.Presentation.Controllers
 
         public HealthCheckController(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
+            _connectionString =
+                configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
         }
 
         [HttpGet]

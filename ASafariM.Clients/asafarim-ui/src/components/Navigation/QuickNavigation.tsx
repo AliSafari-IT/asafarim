@@ -47,7 +47,7 @@ const QuickNavigation: React.FC = () => {
       title: "Contact",
       description: "Get in touch with our support team",
       icon: "📞",
-      link: "/contact-asafarim",
+      link: "/contact",
       color: "accent",
       buttonText: "Get in Touch",
     },

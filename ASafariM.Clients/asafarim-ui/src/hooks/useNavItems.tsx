@@ -1,6 +1,5 @@
 // E:\asm-fs\apps\frontends\asafarim-client\src\hooks\useNavItems.tsx
-import { IMenuItem } from "@/interfaces/IMenuItem";
-import { getAllMdFiles } from "@/utils/mdFilesUtils";
+import { getAllMdFiles } from "../utils/mdFilesUtils";
 import {
   Teaching24Regular as IconTeaching,
   ProjectionScreenText24Regular as IconProject,
@@ -12,9 +11,9 @@ import {
   SignOut24Regular as IconLogout
 } from '@fluentui/react-icons';
 import useAuth from "./useAuth";
-import {logger} from '@/utils/logger';
+import {logger} from "../utils/logger";
 import React from "react";
-
+import { IMenuItem } from "../interfaces/IMenuItem";
 
 const logreg: IMenuItem[] = [
   {

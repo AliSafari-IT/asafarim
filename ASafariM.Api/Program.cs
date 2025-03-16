@@ -216,20 +216,38 @@ try
             name: "AllowFrontend",
             builder =>
             {
+                var corsOrigins = new List<string>
+                {
+                    "http://localhost:3000",
+                    "https://localhost:3000",
+                    "http://localhost:5000",
+                    "https://localhost:5001",
+                    "http://asafarim.com",
+                    "https://asafarim.com",
+                    "http://www.asafarim.com",
+                    "https://www.asafarim.com",
+                };
+
+                // Get the request origin from configuration if available
+                var configOrigins = builder
+                    .Configuration.GetSection("AllowedOrigins")
+                    .Get<string[]>();
+                if (configOrigins != null && configOrigins.Length > 0)
+                {
+                    corsOrigins.AddRange(configOrigins);
+                }
+
+                Log.Information(
+                    "Configured CORS origins: {Origins}",
+                    string.Join(", ", corsOrigins)
+                );
+
                 builder
-                    .WithOrigins(
-                        "http://localhost:3000",
-                        "https://localhost:3000",
-                        "http://localhost:5000",
-                        "https://localhost:5001",
-                        "http://asafarim.com",
-                        "https://asafarim.com",
-                        "http://www.asafarim.com",
-                        "https://www.asafarim.com"
-                    )
+                    .WithOrigins(corsOrigins.ToArray())
                     .AllowAnyMethod()
                     .AllowAnyHeader()
-                    .AllowCredentials();
+                    .AllowCredentials()
+                    .SetIsOriginAllowedToAllowWildcardSubdomains(); // Allow subdomains
             }
         );
     });

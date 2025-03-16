@@ -328,7 +328,7 @@ try
 
     // Health check endpoint
     Log.Information("Configuring health check endpoint...");
-    app.MapHealthChecks("/system-health");
+    app.MapHealthChecks("/api/system-health");
 
     // HTTPS redirection (disabled for local health checks)
     app.Use(
@@ -417,10 +417,6 @@ try
             }
         }
     );
-
-    // Health check endpoint
-    Log.Information("Configuring health check endpoint...");
-    app.MapHealthChecks("/api/system-health");
 
     // Start the application
     try

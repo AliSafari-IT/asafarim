@@ -338,7 +338,7 @@ try
         async (context, next) =>
         {
             if (
-                !context.Request.Path.StartsWithSegments("/api/system-health")
+                !context.Request.Path.StartsWithSegments("/api/health")
                 && !context.Request.IsLocal()
             )
             {

@@ -26,7 +26,7 @@ const HeroSection = () => {
                 View Portfolio
               </Link>
               <Link
-                to="/contact-asafarim"
+                to="/contact"
                 className="px-8 py-3 bg-transparent border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-teal-700 transition duration-300 text-lg"
               >
                 Hire Me

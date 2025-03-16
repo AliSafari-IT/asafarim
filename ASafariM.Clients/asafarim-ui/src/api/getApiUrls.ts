@@ -1,19 +1,26 @@
 import { logger } from "@/utils/logger";
 
-const apiUrls = (host: string) => {
-    const isDevelopment = import.meta.env.VITE_ENVIRONMENT === 'development';
-    logger.debug('isDevelopment:', isDevelopment, 'host:', host);
+const apiUrls = (host: string): string => {
+    try {
+        const isDevelopment = process.env.NODE_ENV === 'development';
+        logger.debug('Environment:', process.env.NODE_ENV, 'Host:', host);
 
-    // Define API URLs for production environments
-const productionUrls: { [key: string]: string } = {
-    'preview.asafarim.com': 'https://preview.asafarim.com/api',
-    'www.preview.asafarim.com': 'https://preview.asafarim.com/api',
-    'asafarim.com': 'https://asafarim.com/api',
-    'www.asafarim.com': 'https://asafarim.com/api',
-};
+        // Define API URLs for production environments
+        const productionUrls: { [key: string]: string } = {
+            'preview.asafarim.com': 'https://preview.asafarim.com/api',
+            'www.preview.asafarim.com': 'https://preview.asafarim.com/api',
+            'asafarim.com': 'https://asafarim.com/api',
+            'www.asafarim.com': 'https://asafarim.com/api',
+        };
 
-    // Return the production URL if the host matches, otherwise use the local development URL
-    return productionUrls[host] || `http://localhost:${import.meta.env.VITE_API_PORT}/api`;
+        // Return the production URL if the host matches, otherwise use the local development URL
+        const apiUrl = productionUrls[host] || `http://localhost:${process.env.REACT_APP_API_PORT || 5000}/api`;
+        logger.debug('Resolved API URL:', apiUrl);
+        return apiUrl;
+    } catch (error) {
+        logger.error('Error resolving API URL:', error);
+        return 'http://localhost:5000/api'; // Fallback URL
+    }
 };
 
 logger.log('Resolved API URL:', apiUrls(window.location.hostname), 'for host:', window.location.hostname);

@@ -1,17 +1,18 @@
 // src/utils/logger.ts
+const devMode = import.meta.env.VITE_APP_ENV !== 'production1';
 export const logger = {
   log: (...args: any[]) => {
-    if (import.meta.env.MODE !== 'production') {
+    if (devMode) {
       console.log(...args);
     }
   },
   info: (...args: any[]) => {
-    if (import.meta.env.MODE !== 'production') {
+    if (devMode) {
       console.info(...args);
     }
   },
   warn: (...args: any[]) => {
-    if (import.meta.env.MODE !== 'production') {
+    if (devMode) {
       console.warn(...args);
     }
   },
@@ -19,7 +20,7 @@ export const logger = {
     console.error(...args);
   },
   debug: (...args: any[]) => {
-    if (import.meta.env.MODE !== 'production') {
+    if (devMode) {
       console.debug(...args);
     }
   }

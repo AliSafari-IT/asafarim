@@ -251,7 +251,10 @@ try
         .AddApplicationPart(
             typeof(ASafariM.Presentation.Controllers.MarkdownFilesController).Assembly
         )
-        .AddApplicationPart(typeof(ASafariM.Presentation.Controllers.ProjectsController).Assembly);
+        .AddApplicationPart(typeof(ASafariM.Presentation.Controllers.ProjectsController).Assembly)
+        .AddApplicationPart(
+            typeof(ASafariM.Presentation.Controllers.HealthCheckController).Assembly
+        );
 
     builder.Services.AddEndpointsApiExplorer();
 
@@ -326,9 +329,9 @@ try
         });
     });
 
-    // Health check endpoint
+    // Health check endpoint - Using custom HealthCheckController instead of built-in MapHealthChecks
     Log.Information("Configuring health check endpoint...");
-    app.MapHealthChecks("/api/system-health");
+    // app.MapHealthChecks("/api/system-health"); // Commented out to avoid conflict with HealthCheckController
 
     // HTTPS redirection (disabled for local health checks)
     app.Use(

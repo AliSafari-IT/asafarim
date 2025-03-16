@@ -310,18 +310,23 @@ public class AuthController : ControllerBase
     [AllowAnonymous]
     public async Task<IActionResult> ResetPassword(ResetPasswordCommand command)
     {
-        Log.Information("Password reset attempt for email: {Email}, Token length: {TokenLength}", 
-            command.Email, 
-            command.Token?.Length ?? 0);
+        Log.Information(
+            "Password reset attempt for email: {Email}, Token length: {TokenLength}",
+            command.Email,
+            command.Token?.Length ?? 0
+        );
 
         if (!ModelState.IsValid)
         {
-            var errors = ModelState.Values
-                .SelectMany(v => v.Errors)
+            var errors = ModelState
+                .Values.SelectMany(v => v.Errors)
                 .Select(e => e.ErrorMessage)
                 .ToList();
-            
-            Log.Warning("Invalid model state for password reset: {Errors}", string.Join(", ", errors));
+
+            Log.Warning(
+                "Invalid model state for password reset: {Errors}",
+                string.Join(", ", errors)
+            );
             return BadRequest(new { message = "Invalid request", errors });
         }
 
@@ -331,35 +336,57 @@ public class AuthController : ControllerBase
             var user = await _userRepository.GetUserByEmailAsync(command.Email);
             if (user == null)
             {
-                Log.Warning("Password reset failed: User not found for email: {Email}", command.Email);
+                Log.Warning(
+                    "Password reset failed: User not found for email: {Email}",
+                    command.Email
+                );
                 return BadRequest(new { message = "Invalid email or token" });
             }
 
             // Check if the token exists
             if (string.IsNullOrEmpty(user.ForgotPasswordToken))
             {
-                Log.Warning("Password reset failed: No token found for user: {Email}", command.Email);
-                return BadRequest(new { message = "No password reset request found or token expired" });
+                Log.Warning(
+                    "Password reset failed: No token found for user: {Email}",
+                    command.Email
+                );
+                return BadRequest(
+                    new { message = "No password reset request found or token expired" }
+                );
             }
 
             // Check if the token matches
-            Log.Information("Token comparison - Expected: {Expected}, Received: {Received}", 
-                user.ForgotPasswordToken, 
-                command.Token);
-                
+            Log.Information(
+                "Token comparison - Expected: {Expected}, Received: {Received}",
+                user.ForgotPasswordToken,
+                command.Token
+            );
+
             if (user.ForgotPasswordToken != command.Token)
             {
-                Log.Warning("Password reset failed: Token mismatch for email: {Email}. Expected: {Expected}, Received: {Received}", 
-                    command.Email, user.ForgotPasswordToken, command.Token);
+                Log.Warning(
+                    "Password reset failed: Token mismatch for email: {Email}. Expected: {Expected}, Received: {Received}",
+                    command.Email,
+                    user.ForgotPasswordToken,
+                    command.Token
+                );
                 return BadRequest(new { message = "Invalid token" });
             }
 
             // Check if the token has expired
-            if (!user.ForgotPasswordTokenExpiration.HasValue || user.ForgotPasswordTokenExpiration.Value < DateTime.UtcNow)
+            if (
+                !user.ForgotPasswordTokenExpiration.HasValue
+                || user.ForgotPasswordTokenExpiration.Value < DateTime.UtcNow
+            )
             {
-                Log.Warning("Password reset failed: Token expired for email: {Email}. Expiration: {Expiration}", 
-                    command.Email, user.ForgotPasswordTokenExpiration);
-                return BadRequest(new { message = "Token has expired. Please request a new password reset." });
+                Log.Warning(
+                    "Password reset failed: Token expired for email: {Email}. Expiration: {Expiration}",
+                    command.Email,
+                    user.ForgotPasswordTokenExpiration
+                );
+                return BadRequest(
+                    new { message = "Token has expired. Please request a new password reset." }
+                );
             }
 
             var result = await _userService.ResetPasswordAsync(command);
@@ -412,16 +439,15 @@ public class AuthController : ControllerBase
             var token = _jwtTokenService.GeneratePasswordResetToken(user);
 
             // Store the token in the user record
-            await _userService.ForgotPasswordAsync(new ForgotPasswordCommand { Email = command.Email });
+            await _userService.ForgotPasswordAsync(
+                new ForgotPasswordCommand { Email = command.Email }
+            );
 
             // Send email with reset link
             try
             {
                 _emailService.SendPasswordResetEmail(command.Email, token);
-                Log.Information(
-                    "Password reset email sent to: {Email}",
-                    command.Email
-                );
+                Log.Information("Password reset email sent to: {Email}", command.Email);
             }
             catch (Exception ex)
             {
@@ -513,16 +539,18 @@ public class AuthController : ControllerBase
         }
 
         command.UserId = userId;
-        var result = await _userService.UpdateProfileAsync(command);
 
-        if (!result.Succeeded)
+        try
         {
-            Log.Error("Profile update failed: {Errors}", string.Join(", ", result.Errors));
-            return BadRequest(result.Errors);
+            await _userService.UpdateProfileAsync(command);
+            Log.Information("Profile updated successfully for user ID: {UserId}", userId);
+            return Ok();
         }
-
-        Log.Information("Profile updated successfully for user ID: {UserId}", userId);
-        return Ok();
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Profile update failed for user ID: {UserId}", userId);
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
     // requestAccountReactivation

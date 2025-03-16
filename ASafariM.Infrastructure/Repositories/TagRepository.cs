@@ -30,7 +30,7 @@ namespace ASafariM.Infrastructure.Repositories
             return tag ?? throw new NotFoundException($"Tag with ID {id} not found");
         }
 
-        public async Task<Tag> GetBySlugAsync(string slug)
+        public async Task<Tag?> GetBySlugAsync(string slug)
         {
             return await _context.Tags.FirstOrDefaultAsync(t => t.Slug == slug);
         }

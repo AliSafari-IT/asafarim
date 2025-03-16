@@ -545,27 +545,27 @@ namespace ASafariM.Infrastructure.Services
                 // Update user properties only if they are provided in the command
                 if (!string.IsNullOrEmpty(command.FirstName))
                     user.FirstName = command.FirstName;
-                
+
                 if (!string.IsNullOrEmpty(command.LastName))
                     user.LastName = command.LastName;
-                
+
                 if (!string.IsNullOrEmpty(command.Email))
                     user.Email = command.Email;
-                
+
                 if (!string.IsNullOrEmpty(command.UserName))
                     user.UserName = command.UserName;
-                
+
                 // Only update PhoneNumber if it's provided, otherwise keep the existing value
                 if (!string.IsNullOrEmpty(command.PhoneNumber))
                     user.PhoneNumber = command.PhoneNumber;
-                
+
                 // Update optional fields if provided
                 if (!string.IsNullOrEmpty(command.ProfilePicture))
                     user.ProfilePicture = command.ProfilePicture;
-                
+
                 if (!string.IsNullOrEmpty(command.Biography))
                     user.Biography = command.Biography;
-                
+
                 if (command.BirthDate.HasValue)
                     user.DateOfBirth = command.BirthDate.Value;
 

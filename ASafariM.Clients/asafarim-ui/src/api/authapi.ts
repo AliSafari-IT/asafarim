@@ -252,12 +252,6 @@ export const updateUserProfile = async (user: any): Promise<any> => {
             userId: parsedAuthData.authenticatedUser?.id
         });
         
-        const token = parsedAuthData.token;
-        if (!token) {
-            logger.error('No token found in auth data');
-            throw new Error('No authentication token found');
-        }
-
         // Create request data with all available profile fields
         const requestData = {
             userId: user.id,
@@ -274,16 +268,12 @@ export const updateUserProfile = async (user: any): Promise<any> => {
         logger.log('Updating profile with request:', {
             endpoint: 'auth/update-profile',
             method: 'POST',
-            data: requestData,
-            authHeader: `Bearer ${token.substring(0, 10)}...`
+            data: requestData
         });
 
-        const response = await api.post('auth/update-profile', requestData, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
+        // Use the api instance which already has the auth interceptor
+        // that adds the Authorization header automatically
+        const response = await api.post('auth/update-profile', requestData);
         
         logger.log('Profile update successful:', response.data);
         return response.data;

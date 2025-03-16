@@ -19,7 +19,7 @@ namespace ASafariM.Presentation.Controllers
     /// uptime, memory and CPU usage, disk space, environment details, and active threads.
     /// </remarks>
     [ApiController]
-    [Route("api/system-health")]
+    [Route("api/health")]
     public class HealthCheckController : ControllerBase
     {
         private readonly string _connectionString = string.Empty;

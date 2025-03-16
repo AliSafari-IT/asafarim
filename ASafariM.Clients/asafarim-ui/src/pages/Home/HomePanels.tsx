@@ -23,6 +23,7 @@ import * as d3 from "d3";
 import ErrorBoundary from "@/components/D3/ErrorBoundary";
 import { Hierarchy } from "@/components/D3/Hierarchy";
 import { treeMapData2 } from "@/components/D3/data/treeMapData2";
+import { logger } from "@/utils/logger";
 
 interface Data {
   date: Date | null;
@@ -239,14 +240,14 @@ const HomePanels = () => {
           URL.revokeObjectURL(url);
         };
         img.onerror = () => {
-          console.error("Failed to load the SVG as an image.");
+          logger.error("Failed to load the SVG as an image.");
         };
         img.src = url;
       } else {
-        console.error("SVG element not found in the modal content.");
+        logger.error("SVG element not found in the modal content.");
       }
     } else {
-      console.error("Component ref is null or undefined.");
+      logger.error("Component ref is null or undefined.");
     }
   };
   const dimensions = {

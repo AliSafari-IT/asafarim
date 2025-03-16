@@ -24,10 +24,10 @@ const ViewUser: React.FC = () => {
         setIsLoading(true);
         // Fetch user first since we need it to check if it exists
         const userResponse = await getUserById(id);
-        console.log('User response:', userResponse);
+        logger.debug('User response:', userResponse);
         // For single user, the response is the direct object
         const userData = userResponse;
-        console.log('Processed user data:', userData);
+        logger.debug('Processed user data:', userData);
         
         if (!userData || !userData.id) {
           throw new Error('User not found');
@@ -42,11 +42,11 @@ const ViewUser: React.FC = () => {
 
         // Fetch all roles to get the mapping
         const rolesResponse = await getRoles();
-        console.log('Roles response:', rolesResponse);
+        logger.debug('Roles response:', rolesResponse);
         const apiResponse = rolesResponse as IApiResponse<IRole>;
         const rolesArray = apiResponse.$values || apiResponse.value || rolesResponse;
         if (!Array.isArray(rolesArray)) {
-          console.error('Invalid roles data format:', rolesResponse);
+          logger.error('Invalid roles data format:', rolesResponse);
           throw new Error('Invalid roles data format');
         }
         
@@ -58,18 +58,18 @@ const ViewUser: React.FC = () => {
 
         // Fetch user roles
         const rolesResponse2 = await getRolesByUserId(id);
-        console.log('User roles response:', rolesResponse2);
+        logger.debug('User roles response:', rolesResponse2);
         const apiResponse2 = rolesResponse2 as IApiResponse<IUserRole>;
         const userRolesArray = apiResponse2.$values || apiResponse2.value || rolesResponse2;
         if (!Array.isArray(userRolesArray)) {
-          console.error('Invalid user roles data format:', rolesResponse2);
+          logger.error('Invalid user roles data format:', rolesResponse2);
           throw new Error('Invalid user roles data format');
         }
         
         setUserRoles(userRolesArray.map((role) => role.roleId) || []);
         setIsLoading(false);
       } catch (err) {
-        console.error('Error details:', err);
+        logger.error('Error details:', err);
         logger.error(`Failed to fetch user or roles: ${err}`);
         setError('Failed to load user data.');
         setIsLoading(false);

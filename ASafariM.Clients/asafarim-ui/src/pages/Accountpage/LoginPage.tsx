@@ -49,7 +49,7 @@ const LoginPage = () => {
       
       const auth = await login({ email, password });
       logger.info('Login API call successful');
-      console.log('Login API response:', auth);
+      logger.info('Login API response:', auth);
   
       // The response is now normalized in the API function
       // Check if the user account is deleted
@@ -67,35 +67,35 @@ const LoginPage = () => {
         token: auth.token,
       };
       
-      console.log('Storing auth data:', authData);
+      logger.info('Storing auth data:', authData);
       
       // Store in appropriate storage
       try {
         if (rememberMe) {
           localStorage.setItem('auth', JSON.stringify(authData));
-          console.log('Auth data stored in localStorage');
+          logger.info('Auth data stored in localStorage');
         } else {
           sessionStorage.setItem('auth', JSON.stringify(authData));
-          console.log('Auth data stored in sessionStorage');
+          logger.info('Auth data stored in sessionStorage');
         }
         
         // Notify other components about auth state change
         window.dispatchEvent(new Event('authStateChange'));
-        console.log('Auth state change event dispatched');
+        logger.info('Auth state change event dispatched');
         
         // Redirect to home page
-        console.log('Redirecting to home page...');
+        logger.info('Redirecting to home page...');
         setTimeout(() => {
           window.location.href = '/';
         }, 500);
       } catch (e) {
-        console.error('Error storing auth data:', e);
+        logger.error('Error storing auth data:', e);
         setError('Error storing authentication data');
         setLoading(false);
       }
     } catch (err: unknown) {
       logger.error('Login error: ' + JSON.stringify(err, null, 2));
-      console.error('Login error details:', err);
+      logger.error('Login error details:', err);
   
       if (isAxiosError(err)) {
         if (err.response) {
@@ -237,7 +237,7 @@ const LoginPage = () => {
                     // Attempt login
                     login(demo)
                       .then(auth => {
-                        console.log('Demo login API response:', auth);
+                        logger.info('Demo login API response:', auth);
                         
                         // The response is now normalized in the API function
                         // Create auth data object - using the normalized response
@@ -247,52 +247,52 @@ const LoginPage = () => {
                           token: auth.token,
                         };
                         
-                        console.log('Storing auth data:', authData);
+                        logger.info('Storing auth data:', authData);
                         
                         // Store in appropriate storage
                         try {
                           if (rememberMe) {
                             localStorage.setItem('auth', JSON.stringify(authData));
-                            console.log('Auth data stored in localStorage');
+                            logger.info('Auth data stored in localStorage');
                           } else {
                             sessionStorage.setItem('auth', JSON.stringify(authData));
-                            console.log('Auth data stored in sessionStorage');
+                            logger.info('Auth data stored in sessionStorage');
                           }
                           
                           // Notify other components about auth state change
                           window.dispatchEvent(new Event('authStateChange'));
-                          console.log('Auth state change event dispatched');
+                          logger.info('Auth state change event dispatched');
                           
                           // Redirect to home page
-                          console.log('Redirecting to home page...');
+                          logger.info('Redirecting to home page...');
                           setTimeout(() => {
                             window.location.href = '/';
                           }, 500);
                         } catch (e) {
-                          console.error('Error storing auth data:', e);
+                          logger.error('Error storing auth data:', e);
                           setError('Error storing authentication data');
                           setLoading(false);
                         }
                       })
                       .catch(err => {
                         logger.error('Demo login error: ' + JSON.stringify(err, null, 2));
-                        console.error('Demo login error details:', err);
+                        logger.error('Demo login error details:', err);
                         
                         // Display a more specific error message
                         if (isAxiosError(err)) {
                           if (err.response) {
                             const { status, data } = err.response;
-                            console.error(`Demo login failed with status ${status}:`, data);
+                            logger.error(`Demo login failed with status ${status}:`, data);
                             setError(data?.message || `Error ${status}: ${data?.error || 'Unknown error'}`);
                           } else if (err.request) {
-                            console.error('Demo login request made but no response received:', err.request);
+                            logger.error('Demo login request made but no response received:', err.request);
                             setError('No response received from server. Please check your connection.');
                           } else {
-                            console.error('Demo login error during request setup:', err.message);
+                            logger.error('Demo login error during request setup:', err.message);
                             setError(`Error setting up request: ${err.message}`);
                           }
                         } else {
-                          console.error('Non-Axios demo login error:', err);
+                          logger.error('Non-Axios demo login error:', err);
                           setError('Failed to login with demo account. Please try again.');
                         }
                         

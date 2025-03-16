@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import { useEffect, useRef, useState } from "react";
 import D3ChartWrapper from "./D3ChartWrapper";
+import {logger} from '@/utils/logger';
 
 interface Data {
   date: Date | string | null;
@@ -59,11 +60,11 @@ function LineChartImpl({ width, height, data }: LineChartProps) {
         .filter((line) => line.values.length > 0);
 
       setProcessedData(processedLines);
-      console.log(
+      logger.log(
         `[LineChart] Processed ${processedLines.length} lines of data`
       );
     } catch (error) {
-      console.error("[LineChart] Error processing data:", error);
+      logger.error("[LineChart] Error processing data:", error);
     }
   }, [data]);
 
@@ -72,7 +73,7 @@ function LineChartImpl({ width, height, data }: LineChartProps) {
     if (!svgRef.current || processedData.length === 0) return;
 
     try {
-      console.log("[LineChart] Rendering chart with processed data");
+      logger.log("[LineChart] Rendering chart with processed data");
 
       // Clear previous rendering
       const svg = d3.select(svgRef.current);
@@ -287,9 +288,9 @@ function LineChartImpl({ width, height, data }: LineChartProps) {
           );
         });
 
-      console.log("[LineChart] Chart rendered successfully");
+      logger.log("[LineChart] Chart rendered successfully");
     } catch (error) {
-      console.error("[LineChart] Error rendering chart:", error);
+      logger.error("[LineChart] Error rendering chart:", error);
     }
   }, [processedData, width, height]);
 

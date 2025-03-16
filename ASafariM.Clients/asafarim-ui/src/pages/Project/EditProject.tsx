@@ -121,7 +121,7 @@ const EditProject: React.FC = () => {
         const linksResponse = await entityServices.fetchEntityRepoLinks("project", id);
         setRepoLinks(linksResponse || []);
       } catch (error: any) {
-        console.error("Error fetching project data:", error);
+        logger.error("Error fetching project data:", error);
         
         // Check for authentication errors
         if (error?.response?.status === 401) {

@@ -22,6 +22,7 @@ import dashboardServices from '../../../api/entityServices';
 import Loading from '../../Loading/Loading';
 import { useTheme } from '@/contexts/ThemeContext';
 import './CardContainer.css';
+import {logger} from '@/utils/logger';
 
 const useStyles = makeStyles({
   container: {
@@ -132,17 +133,17 @@ const CardContainer: React.FC = () => {
           dashboardServices.fetchEntities('tags')
         ]);
         
-        console.log('Fetched topics:', fetchedTopics);
+        logger.log('Fetched topics:', fetchedTopics);
         setTopics(fetchedTopics);
         
-        console.log('Fetched tags:', fetchedTags);
+        logger.log('Fetched tags:', fetchedTags);
         if (Array.isArray(fetchedTags)) {
           setTags(fetchedTags);
         } else {
-          console.error('Tags data is not an array:', fetchedTags);
+          logger.error('Tags data is not an array:', fetchedTags);
         }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        logger.error('Error fetching data:', error);
       } finally {
         setIsLoading(false);
       }

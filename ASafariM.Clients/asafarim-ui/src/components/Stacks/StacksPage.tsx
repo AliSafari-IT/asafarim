@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import './StacksPage.css';
 import { Modal, SearchBox } from '@fluentui/react';
-import Header from '@/layout/Header/Header';
 import { Tooltip } from '@material-tailwind/react';
 import transformMdFilesToStackData from './transformMdFilesToStackData';
 import { IMenuItem } from '@/interfaces/IMenuItem';
@@ -10,7 +9,7 @@ import generateCategoryColors from '@/utils/categoryColors';
 import determineTextColor from '@/utils/determineTextColor';
 import { getFirstHeading } from '@/utils/mdUtils';
 import Wrapper from '@/layout/Wrapper/Wrapper';
-import Footer from '@/layout/Footer/Footer';
+import {logger} from '@/utils/logger';
 
 interface StacksPageProps {
   docBranch: string;
@@ -34,7 +33,7 @@ const StacksPage: React.FC<StacksPageProps> = ({ docBranch, stackTitle }) => {
   useEffect(() => {
     setIsLoading(true);
     const transformedData = transformMdFilesToStackData(docBranch);
-    console.log('Transformed Stack Data:', transformedData);
+    logger.log('Transformed Stack Data:', transformedData);
     setDynamicStackData(transformedData);
     setIsLoading(false);
   }, [docBranch]);
@@ -86,25 +85,25 @@ const StacksPage: React.FC<StacksPageProps> = ({ docBranch, stackTitle }) => {
     parentFolder,
   }: { selected?: IMenuItem; parentFolder?: string } = {}): void {
     if (!selected || !selected.name) {
-      console.warn("navigateToProjects: Missing selected stack or name.");
+      logger.warn("navigateToProjects: Missing selected stack or name.");
       return;
     }
 
     const slug = getSlug(selected.name);
-    console.log("Slug:", slug);
+    logger.log("Slug:", slug);
     const normalizedParentFolder = parentFolder
       ? parentFolder.replace(/\/+$/, '') // Remove trailing slashes
       : basePath;
 
     const navto = docBranch === 'changelogs' ? `${basePath}/${slug}` : `${normalizedParentFolder}/${slug}`.replace(/\/+/g, '/');
 
-    console.log("Navigate to:", navto);
+    logger.log("Navigate to:", navto);
     window.location.href = navto;
   }
 
   function getParentFolders(path: string): string {
     if (!path) {
-      console.warn('getParentFolder: Received an empty path.');
+      logger.warn('getParentFolder: Received an empty path.');
       return '';
     }
 
@@ -121,7 +120,7 @@ const StacksPage: React.FC<StacksPageProps> = ({ docBranch, stackTitle }) => {
     }
 
     if (parts.length <= 1) {
-      console.warn(`getParentFolder: Path "${path}" does not have a parent folder.`);
+      logger.warn(`getParentFolder: Path "${path}" does not have a parent folder.`);
       return basePath; // Default to basePath if no parent exists
     }
 

@@ -7,6 +7,7 @@ import dashboardServices from '../../api/entityServices';
 import { isAxiosError } from 'axios';
 import { IPost } from '@/interfaces/post-types';
 import { DifficultyLevelEnum } from '@/interfaces/DifficultyLevelEnum';
+import { logger } from "@/utils/logger";
 
 const useStyles = makeStyles({
     formContainer: {
@@ -45,7 +46,7 @@ const EditPostForm: React.FC = () => {
                 const data = await dashboardServices.fetchEntityById('posts', id) as IPost;
                 setPost(data);
             } catch (error) {
-                console.error('Error fetching post:', error);
+                logger.error('Error fetching post:', error);
                 setError(isAxiosError(error) ? (error.response?.data.message || 'Failed to fetch the post.') : 'An unexpected error occurred.');
             } finally {
                 setLoading(false);
@@ -65,7 +66,7 @@ const EditPostForm: React.FC = () => {
             alert('Post updated successfully!');
             navigate('/dashboard');
         } catch (error) {
-            console.error('Error updating post:', error);
+            logger.error('Error updating post:', error);
             setError(isAxiosError(error) ? (error.response?.data.message || 'Failed to update the post.') : 'An unexpected error occurred.');
         }
     };

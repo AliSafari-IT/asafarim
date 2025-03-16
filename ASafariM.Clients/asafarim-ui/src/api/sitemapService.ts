@@ -1,14 +1,15 @@
 import { ISitemapItem } from "@/interfaces/ISitemapItem";
 import { IRoleEnum } from "../interfaces/IRole";
 import API_URL from "./getApiUrls";
+import { logger } from "@/utils/logger";
 
 const getSitemap = async (userRole: IRoleEnum) => {
-  console.log(`Fetching sitemap for userRole: ${userRole}`);
+  logger.info(`Fetching sitemap for userRole: ${userRole}`);
   const localAuth = localStorage.getItem('auth');
 
   const {token} =localAuth ? JSON.parse(localAuth).token : {token: null};
   
-  console.log(`Token from localStorage: ${token}`);
+  logger.info(`Token from localStorage: ${token}`);
 
   if (!token) {
     throw new Error('JWT token is missing. Please login first.');
@@ -28,11 +29,11 @@ const getSitemap = async (userRole: IRoleEnum) => {
     }
 
     const data = await response.json();
-    console.log(`Sitemap response: ${JSON.stringify(data)}`);
+    logger.info(`Sitemap response: ${JSON.stringify(data)}`);
 
     return data;
   } catch (error) {
-    console.error('Failed to fetch sitemap', error);
+    logger.error('Failed to fetch sitemap', error);
     throw error;
   }
 };

@@ -12,6 +12,7 @@ import {
   SignOut24Regular as IconLogout
 } from '@fluentui/react-icons';
 import useAuth from "./useAuth";
+import {logger} from '@/utils/logger';
 
 
 const logreg: IMenuItem[] = [
@@ -173,7 +174,7 @@ const dashboardDD: IMenuItem = {
 const useNavItems = () => {
   const mdFiles = getAllMdFiles();
   const {  authenticated, token } = useAuth();
-  console.debug("useNavItems: authenticated is:", authenticated);
+  logger.debug("useNavItems: authenticated is:", authenticated);
 
   // User Account Dropdown - only this needs to change based on auth state
   const userAccountDD: IMenuItem = {

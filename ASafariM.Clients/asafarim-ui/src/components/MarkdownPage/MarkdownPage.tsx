@@ -8,6 +8,7 @@ import { Breadcrumb, IBreadcrumbItem } from "@fluentui/react/lib/Breadcrumb";
 import ScrollingButtons from "../ScrollingButtons";
 import { getFirstHeading } from "@/utils/mdUtils";
 import SortArray, { SortOrder } from "@/components/SortArray";
+import {logger} from '@/utils/logger';
 
 const BackIcon = () => (
   <svg
@@ -62,7 +63,7 @@ const MarkdownPage: React.FC<{
   // add page title
   useEffect(() => {
     document.title = pageTitle;
-    console.debug(pageTitle, description);
+    logger.debug(pageTitle, description);
   }, [description, pageTitle]);
 
   useEffect(() => {

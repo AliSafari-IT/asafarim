@@ -6,6 +6,7 @@ import Wrapper from "../../layout/Wrapper/Wrapper";
 import dashboardServices from "@/api/entityServices";
 import { ITag } from "@fluentui/react";
 import apiUrls from "@/api/getApiUrls";
+import { logger } from "@/utils/logger";
 
 const PostDetail = () => {
     const { slug } = useParams<{ slug: string }>();
@@ -14,7 +15,7 @@ const PostDetail = () => {
     const [error, setError] = useState<string | null>(null);
     const [tagNames, setTagNames] = useState<{name: string, id: string}[]>([]);
     const API_URL = apiUrls(window.location.hostname);
-    console.log(`API URL is: ${API_URL}`, `import.meta.env.VITE_API_URL is: ${import.meta.env.VITE_API_URL}`);
+    logger.info(`API URL is: ${API_URL}`);
 
     useEffect(() => {
         axios
@@ -24,7 +25,7 @@ const PostDetail = () => {
                 setLoading(false);
             })
             .catch((err) => {
-                console.error(err);
+                logger.error('Error loading post:', err);
                 setError("Failed to load the post");
                 setLoading(false);
             });

@@ -3,6 +3,7 @@ import Layout from "../../layout/Layout";
 import Footer from "../../layout/Footer/Footer";
 import apiUrls from "@/api/getApiUrls";
 import "./HealthCheck.css";
+import { logger } from "@/utils/logger";
 
 interface HealthStatus {
   status: string;
@@ -393,7 +394,7 @@ const calculateDiskUsage = (totalSpace: string, freeSpace: string): number => {
     const usedPercentage = ((totalBytes - freeBytes) / totalBytes) * 100;
     return Math.round(usedPercentage);
   } catch (error) {
-    console.error("Error calculating disk usage:", error);
+    logger.error("Error calculating disk usage:", error);
     return 0;
   }
 };

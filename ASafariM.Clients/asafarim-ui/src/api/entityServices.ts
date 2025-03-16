@@ -89,14 +89,14 @@ const hasAdminRole = (): boolean => {
     const token = getAuthToken();
     if (token) {
       const decodedToken = jwtDecode<JwtPayload>(token);
-      console.info("Decoded Token:", decodedToken);
+      logger.info("Decoded Token:", decodedToken);
 
       // Check for the ClaimTypes.NameIdentifier claim
       const userIdClaim = decodedToken[ClaimTypes.NameIdentifier];
-      console.info("User ID Claim:", userIdClaim);
+      logger.info("User ID Claim:", userIdClaim);
       return decodedToken.role === "Admin";
     } else {
-      console.error("No token found.");
+      logger.error("No token found.");
       return false; // Return false if no token is found
     }
   } catch (error) {
@@ -327,22 +327,22 @@ const fetchEntityRepoLinks = async (entityTableName: string, entityId: string) =
     // The baseURL already includes /api/, so we should NOT add it again
     const response = await api.get(`/${endpoint}/${entityId}/links`);
     logger.info(`Successfully fetched repository links: ${JSON.stringify(response.data)}`);
-    console.log('Raw API response data:', response.data);
-    console.log('Type of response data:', typeof response.data);
-    console.log('Is Array?', Array.isArray(response.data));
+    logger.log('Raw API response data:', response.data);
+    logger.log('Type of response data:', typeof response.data);
+    logger.log('Is Array?', Array.isArray(response.data));
     if (response.data && response.data.$values) {
-      console.log('Found $values property:', response.data.$values);
+      logger.log('Found $values property:', response.data.$values);
       return response.data.$values;
     }
     
     // If the response is already an array, return it
     if (Array.isArray(response.data)) {
-      console.log('Response is an array with length:', response.data.length);
+      logger.log('Response is an array with length:', response.data.length);
       return response.data;
     }
     
     // Otherwise, return an empty array
-    console.log('Returning empty array as fallback');
+    logger.log('Returning empty array as fallback');
     return [];
   } catch (error) {
     const axiosError = error as AxiosError;

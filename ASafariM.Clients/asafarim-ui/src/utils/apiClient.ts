@@ -1,10 +1,11 @@
 import axios from 'axios';
+import { logger } from "@/utils/logger";
 
 const url = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 const isDevelopment = import.meta.env.VITE_ENVIRONMENT === 'development';
 const BASE_URL = isDevelopment ? 'http://localhost:5000' : 'https://asafarim.com';
 
-console.log("apiClient url is:", url);
+logger.debug("apiClient url is:", url);
 export const apiClient = axios.create({
     baseURL: url || BASE_URL,
     headers: {

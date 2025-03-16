@@ -4,6 +4,7 @@ import Button from '../../components/Button/Button';
 import { CancelSvgIcon } from '@/assets/SvgIcons/CancelSvgIcon';
 import { IUserInfo } from '@/interfaces';
 import { deleteUser } from '@/api/userService';
+import { logger } from "@/utils/logger";
 
 const DeleteAccount: React.FC<{ currentUserInfo: IUserInfo | null }> = ({ currentUserInfo }) => {
     const [isConfirming, setIsConfirming] = useState(false);
@@ -14,7 +15,7 @@ const DeleteAccount: React.FC<{ currentUserInfo: IUserInfo | null }> = ({ curren
     const handleDeleteAccount = async () => {
         try {
             if (!currentUserInfo?.id) {
-                console.error('User ID is required to delete the account.');
+                logger.error('User ID is required to delete the account.');
                 setError('User ID is required to delete the account.');
                 return;
             }
@@ -22,7 +23,7 @@ const DeleteAccount: React.FC<{ currentUserInfo: IUserInfo | null }> = ({ curren
             setIsConfirming(true);
             setError('');
             
-            console.log("Attempting to delete user with ID:", currentUserInfo.id);
+            logger.debug("Attempting to delete user with ID:", currentUserInfo.id);
             await deleteUser(currentUserInfo.id);
             
             // Clear local storage and navigate to login
@@ -35,7 +36,7 @@ const DeleteAccount: React.FC<{ currentUserInfo: IUserInfo | null }> = ({ curren
             }, 100);
             
         } catch (err) {
-            console.error("Delete account error:", err);
+            logger.error("Delete account error:", err);
             setError(err instanceof Error ? err.message : 'Failed to delete account.');
         } finally {
             setIsConfirming(false);

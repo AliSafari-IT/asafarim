@@ -12,6 +12,7 @@ import { isAxiosError } from 'axios';
 import axios from 'axios';
 import { debounce } from 'lodash';
 import { ICreateUserModel } from '@/interfaces/ICreateUserModel';
+import { logger } from '@/utils/logger';
 
 const CreateUser: React.FC = () => {
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ const CreateUser: React.FC = () => {
         // data is assumed to have shape: { isAvailable: boolean, messages: string[] }
         setAvailability((prev) => ({ ...prev, [field]: data.isAvailable }));
       } catch (err) {
-        console.error(`Error checking ${field} availability:`, err);
+        logger.error(`Error checking ${field} availability:`, err);
       }
     }, 500),
     []
@@ -191,24 +192,25 @@ const handleSubmit = async (formData: FormData): Promise<void> => {
         isAdmin: Boolean(iFormData.isAdmin)
       };
 
-      console.log("Transformed user data before API call:", userData);
+      logger.debug("Transformed user data before API call:", userData);
       // Call addUserByAdmin API instead of createUser
       const result = await addUserByAdmin(userData);
-      console.log("User creation result:", result);
+      logger.debug("User creation result:", result);
       
       if (result && result.success) {
-        console.log("User created successfully:", result.data);
+        logger.debug("User created successfully:", result.data);
         navigate('/users');
       } else {
+        logger.debug("Failed to create user:", result);
         setError("Failed to create user. Please try again.");
       }
     } catch (error) {
       // Handle error
       if (isAxiosError(error)) {
-        console.error("Axios error:", error);
+        logger.error("Axios error:", error);
         setError(error.response?.data?.message || error.message || "Failed to create user. Please try again.");
       } else {
-        console.error("Unknown error:", error);
+        logger.error("Unknown error:", error);
         setError("Failed to create user. Please try again.");
       }
     }

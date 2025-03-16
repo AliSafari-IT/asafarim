@@ -5,6 +5,7 @@ import { TextField } from '@fluentui/react';
 import Wrapper from '../../layout/Wrapper/Wrapper';
 import dashboardServices from '../../api/entityServices';
 import { isAxiosError } from 'axios';
+import {logger} from '@/utils/logger';
 
 const useStyles = makeStyles({
     formContainer: {
@@ -49,7 +50,7 @@ const EditTagForm: React.FC = () => {
                 setTag(data);
                 setLoading(false);
             } catch (error) {
-                console.error('Error fetching tag:', error);
+                logger.error('Error fetching tag:', error);
                 if (isAxiosError(error)) {
                     setError(error.response?.data.message || 'Failed to fetch the tag. Please try again.');
                 } else {

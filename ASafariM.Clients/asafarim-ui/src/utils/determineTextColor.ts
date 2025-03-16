@@ -1,4 +1,5 @@
 import tinycolor from 'tinycolor2';
+import { logger } from "@/utils/logger";
 
 // Function to resolve CSS variable value
 const resolveCSSVariable = (color: string): string => {
@@ -10,7 +11,7 @@ const resolveCSSVariable = (color: string): string => {
     if (resolvedColor) {
       return resolvedColor;
     } else {
-      console.warn(`CSS variable ${cssVariable} is not defined or has an invalid value.`);
+      logger.warn(`CSS variable ${cssVariable} is not defined or has an invalid value.`);
       return '#000000'; // Fallback to black if the variable is not defined
     }
   }
@@ -28,7 +29,7 @@ const determineTextColor = (currentTheme: string, bgColor: string): string => {
   const darkTextColor = 'lightblue'; // White
 
   if (!parsedColor.isValid()) {
-    console.warn(`Invalid background color provided: ${bgColor}`);
+    logger.warn(`Invalid background color provided: ${bgColor}`);
     return currentTheme === 'dark' ? darkTextColor : lightTextColor; // Fallback to default theme colors
   }
 
@@ -37,7 +38,7 @@ const determineTextColor = (currentTheme: string, bgColor: string): string => {
 
   // Calculate the contrast ratio between the background and the default text color
   const contrastRatio = tinycolor.readability(resolvedColor, defaultTextColor);
-  //console.log('Contrast Ratio:', contrastRatio);
+  logger.debug('Contrast Ratio:', contrastRatio);
   // Minimum contrast ratio for WCAG AA standards
   const minContrast = 4.5;
 

@@ -5,6 +5,7 @@ import { TextField } from '@fluentui/react';
 import Wrapper from '../../layout/Wrapper/Wrapper';
 import dashboardServices from '../../api/entityServices';
 import { isAxiosError } from 'axios';
+import {logger} from '@/utils/logger';
 
 const useStyles = makeStyles({
     formContainer: {
@@ -35,11 +36,11 @@ const AddTagForm: React.FC = () => {
         try {
             // Add the tag to the database
             const newTag = await dashboardServices.addEntity('tags', { name: tagName, slug: tagSlug, description: tagDescription });
-            console.log('New tag added:', newTag); // Log the new tag for debugging
+            logger.log('New tag added:', newTag); // Log the new tag for debugging
             setError(''); // Clear the error message after successful addition
             navigate('/dashboard');
         } catch (error) {
-            console.error('Error adding tag:', error);
+            logger.error('Error adding tag:', error);
             if (isAxiosError(error)) {
                 setError(error.response?.data.message || 'Failed to add the tag. Please try again.');
             } else {

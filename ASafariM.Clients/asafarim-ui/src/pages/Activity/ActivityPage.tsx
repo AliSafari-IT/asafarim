@@ -6,6 +6,7 @@ import Footer from '../../layout/Footer/Footer';
 import axios from 'axios';
 import { trackEvent } from '../../services/analyticsService';
 import useAuth from '../../hooks/useAuth';
+import { logger } from '@/utils/logger';
 
 // Activity interface
 interface Activity {
@@ -99,7 +100,7 @@ const ActivityPage: React.FC = () => {
   const [filter, setFilter] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const { authenticated, token } = useAuth();
+  const { token } = useAuth();
 
   // Track page view
   useEffect(() => {
@@ -128,11 +129,11 @@ const ActivityPage: React.FC = () => {
           setError(null);
         } else {
           // Fallback to mock data if API response is not as expected
-          console.warn('API response format not as expected, using mock data');
+          logger.warn('API response format not as expected, using mock data');
           setActivities(mockActivities);
         }
       } catch (err) {
-        console.warn('Error fetching activities, using mock data:', err);
+        logger.warn('Error fetching activities, using mock data:', err);
         // If API call fails, use mock data
         setActivities(mockActivities);
         setError('Could not fetch real activity data. Showing mock data for demonstration.');

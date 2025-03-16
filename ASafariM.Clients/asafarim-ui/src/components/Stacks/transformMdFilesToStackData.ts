@@ -2,6 +2,7 @@ import { IMenuItem } from '@/interfaces/IMenuItem';
 import { IStackGroup } from '@/interfaces/IStack';
 import { getAllMdFiles } from '@/utils/mdFilesUtils';
 import { getFirstHeading } from '@/utils/mdUtils';
+import {logger} from '@/utils/logger';
 
 function processNestedSubMenu(subMenu: IMenuItem[]): IMenuItem[] {
     return subMenu.flatMap((item) => {
@@ -51,7 +52,7 @@ function transformMdFilesToStackData(docsBranch: string): IStackGroup {
     const docsBranchFiles = mdFiles[docsBranchKey];
     const stackData: IStackGroup = {};
 
-    console.log(docsBranch, docsBranchFiles);
+    logger.log(docsBranch, docsBranchFiles);
     
     if (docsBranch === 'changelogs') {
         // For changelogs, group all items under a single 'Change Logs' category
@@ -72,7 +73,7 @@ function transformMdFilesToStackData(docsBranch: string): IStackGroup {
         // Original logic for tech docs and other branches
         for (const [category, items] of Object.entries(docsBranchFiles)) {
             if (category === 'subMenu' && Array.isArray(items)) {
-                console.log("transformMdFilesToStackData category: " + category, items);
+                logger.log("transformMdFilesToStackData category: " + category, items);
                 items.map((item) => {
                     if (item.subMenu && Array.isArray(item.subMenu)) {
                         stackData[item.id] = processNestedSubMenu(item.subMenu);
@@ -85,7 +86,7 @@ function transformMdFilesToStackData(docsBranch: string): IStackGroup {
         }
     }
 
-    console.log("transformMdFilesToStackData stackData: " , stackData);
+    logger.log("transformMdFilesToStackData stackData: " , stackData);
     return stackData;
 }
 export default transformMdFilesToStackData;

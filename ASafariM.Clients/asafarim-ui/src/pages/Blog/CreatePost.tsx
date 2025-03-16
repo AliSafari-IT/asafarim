@@ -186,7 +186,6 @@ const CreatePost: React.FC = () => {
     try {
       const postData = processFormData();
       logger.info('Processed form data successfully: ' + JSON.stringify(postData, null, 2));
-      console.log('Sending data:', JSON.stringify(postData, null, 2));
       setLoading(true);
 
       const response = await dashboardServices.addEntity('posts', { postData });

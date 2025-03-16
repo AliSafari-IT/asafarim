@@ -6,6 +6,7 @@ import { IUser } from '@/interfaces';
 import Wrapper from '@/layout/Wrapper/Wrapper';
 import Header from '@/layout/Header/Header';
 import Footer from '@/layout/Footer/Footer';
+import { logger } from '@/utils/logger';
 
 const UserProfile: React.FC = () => {
     const [userInfo, setUserInfo] = useState<IUser | null>(null);
@@ -27,7 +28,7 @@ const UserProfile: React.FC = () => {
                 const data = await getUserById(authenticatedUser.id);
                 setUserInfo(data);
             } catch (err) {
-                console.error('Error fetching user information:', err);
+                logger.error('Error fetching user information:', err);
                 setError('Unable to fetch user information.');
             } finally {
                 setLoading(false);
@@ -40,9 +41,9 @@ const UserProfile: React.FC = () => {
     useEffect(
         () => {
             if (userInfo) {
-                console.log('UserProfile: userInfo', userInfo);
-                console.log('UserProfile: lastLogin value', userInfo.lastLogin);
-                console.log('UserProfile: lastLogin type', typeof userInfo.lastLogin);
+                logger.debug('UserProfile: userInfo', userInfo);
+                logger.debug('UserProfile: lastLogin value', userInfo.lastLogin);
+                logger.debug('UserProfile: lastLogin type', typeof userInfo.lastLogin);
                 setIsActive(userInfo.isActive ?? false);
             }
         }, [userInfo]);

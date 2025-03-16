@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
 import useAuth from "@/hooks/useAuth";
 import ContactPageLayout from "./ContactPageLayout";
+import { logger } from "@/utils/logger";
 
 const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
 const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
@@ -54,7 +55,7 @@ export const ContactForm = () => {
       message: message,
       to_name: "ASafariM Team",
     };
-    console.debug("Sending email with template params:", templateParams);
+    logger.debug("Sending email with template params:", templateParams);
 
     if (form.current) {
       emailjs
@@ -64,16 +65,16 @@ export const ContactForm = () => {
         .then(
           () => {
             alert("Message Sent, We will get back to you shortly!");
-            console.log("Email sent successfully...");
+            logger.info("Email sent successfully...");
             setMessage("");
           },
           (error) => {
-            console.error("Email send failed...", error.text);
+            logger.error("Email send failed...", error.text);
             alert("An error occurred, Please try again.");
           }
         );
     } else {
-      console.error("Form is not defined");
+      logger.error("Form is not defined");
       alert("Form is not available. Please try again.");
     }
   };

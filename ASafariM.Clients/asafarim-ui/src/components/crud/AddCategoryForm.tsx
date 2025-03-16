@@ -1,4 +1,5 @@
 import { FC, useState } from "react";
+import {logger} from '@/utils/logger';
 
 const AddCategoryForm: FC = () => {
     const [categoryName, setCategoryName] = useState('');
@@ -17,10 +18,10 @@ const AddCategoryForm: FC = () => {
             if (response.ok) {
                 setCategoryName('');
             } else {
-                console.error(data);
+                logger.error(data);
             }
         } catch (error) {
-            console.error(error);
+            logger.error(error);
         }
     };
 

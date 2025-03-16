@@ -2,6 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Text } from '@fluentui/react-components';
 import dashboardServices from '../../../api/entityServices';
 import Wrapper from '../../../layout/Wrapper/Wrapper';
+import {logger} from '@/utils/logger';
 
 const DelCard = () => {
   const { model, id } = useParams<{ model: string; id: string }>();
@@ -9,12 +10,12 @@ const DelCard = () => {
 
   const handleDelete = async () => {
     try {
-      console.log('Delete', model, 'ID:', id);
+      logger.log('Delete', model, 'ID:', id);
       await dashboardServices.deleteEntity(model??'', id!);
       alert(`${model} deleted successfully`);
       navigate(-1); // Go back after deletion
     } catch (error) {
-      console.error(`Error deleting ${model}:`, error);
+      logger.error(`Error deleting ${model}:`, error);
       alert(`Failed to delete ${model}`);
     }
   };

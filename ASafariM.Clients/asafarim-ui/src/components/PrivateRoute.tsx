@@ -2,6 +2,8 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import useAuth from '../hooks/useAuth';
 import AccessDenied from '../pages/AccessDenied';
+import {logger} from '@/utils/logger';
+
 
 interface PrivateRouteProps {
   children: JSX.Element;
@@ -13,10 +15,10 @@ const PrivateRoute = ({ children, requireAdmin = false }: PrivateRouteProps) => 
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("PrivateRoute Debug:", { authenticated, authenticatedUser, token, requireAdmin });
+    logger.log("PrivateRoute Debug:", { authenticated, authenticatedUser, token, requireAdmin });
     // If user not authenticated, or is deleted, or token is missing, log them out and redirect to login
     if (!authenticated || authenticatedUser?.isDeleted || !token) {
-      console.warn("User not authenticated or deleted. Redirecting to login.");
+      logger.warn("User not authenticated or deleted. Redirecting to login.");
       localStorage.removeItem('auth');
       sessionStorage.removeItem('auth');
       window.dispatchEvent(new Event('authStateChange'));
@@ -25,17 +27,17 @@ const PrivateRoute = ({ children, requireAdmin = false }: PrivateRouteProps) => 
   }, [authenticated, authenticatedUser, authenticatedUser?.isDeleted, navigate, requireAdmin, token]);
 
   if (!authenticated || !token) {
-    console.log("PrivateRoute: Not authenticated, redirecting to login");
+    logger.log("PrivateRoute: Not authenticated, redirecting to login");
     return <Navigate to="/login" />;
   }
 
   // Admin-only routes validation
   if (requireAdmin && !authenticatedUser?.isAdmin) {
-    console.warn("Access denied: User is not an admin.");
+    logger.warn("Access denied: User is not an admin.");
     return <AccessDenied />;
   }
 
-  console.log("PrivateRoute: User is authenticated, rendering protected content");
+  logger.log("PrivateRoute: User is authenticated, rendering protected content");
   return children;
 };
 

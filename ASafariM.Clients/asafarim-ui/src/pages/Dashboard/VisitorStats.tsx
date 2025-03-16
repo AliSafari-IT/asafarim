@@ -3,6 +3,7 @@ import { getVisitorStats } from "../../services/analyticsService";
 import "./Dashboard.css";
 import { Link } from "@fluentui/react-components";
 import { ChartMultipleRegular } from "@fluentui/react-icons";
+import { logger } from "@/utils/logger";
 
 const VisitorStats: React.FC = () => {
   const [visitorCount, setVisitorCount] = useState<number>(0);
@@ -15,7 +16,7 @@ const VisitorStats: React.FC = () => {
         const data = await getVisitorStats();
         setVisitorCount(data?.totalVisitors || 0);
       } catch (error) {
-        console.error("Error fetching visitor stats:", error);
+        logger.error("Error fetching visitor stats:", error);
       } finally {
         setLoading(false);
       }

@@ -14,7 +14,7 @@ interface ErrorResponse {
 const host = window.location.hostname;
 const baseURL = apiUrls(host);  // Get the base URL from getApiUrls
 
-console.log('Using API base URL:', baseURL);
+logger.log('Using API base URL:', baseURL);
 
 const api = axios.create({
   baseURL: baseURL,
@@ -41,7 +41,7 @@ const getAuthToken = () => {
     
     return null;
   } catch (error) {
-    console.error("Error getting auth token:", error);
+    logger.error("Error getting auth token:", error);
     return null;
   }
 };
@@ -52,13 +52,13 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.error('API Error Response:', error.message);
+    logger.error('API Error Response:', error.message);
     if (error.response) {
-      console.error('Status:', error.response.status);
-      console.error('Data:', error.response.data);
-      console.error('Headers:', error.response.headers);
+      logger.error('Status:', error.response.status);
+      logger.error('Data:', error.response.data);
+      logger.error('Headers:', error.response.headers);
     } else if (error.request) {
-      console.error('No response received:', error.request);
+      logger.error('No response received:', error.request);
     }
     return Promise.reject(error);
   }
@@ -71,14 +71,14 @@ api.interceptors.request.use(
     
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-      console.log('Added authorization header to request');
+      logger.log('Added authorization header to request');
     } else {
-      console.log('No auth token found - request will be unauthenticated');
+      logger.log('No auth token found - request will be unauthenticated');
     }
     return config;
   },
   (error) => {
-    console.error('Request error:', error);
+    logger.error('Request error:', error);
     return Promise.reject(error);
   }
 );
@@ -94,15 +94,15 @@ export const register = async (model: IRegisterModel) => {
 export const login = async (credentials: ILoginModel) => {
   try {
     logger.info(`Attempting to login user with credentials: ${JSON.stringify(credentials)}`);
-    console.log('Login API request:', credentials);
+    logger.log('Login API request:', credentials);
     
     const response = await api.post('auth/login', credentials, {
         headers: { 'Content-Type': 'application/json' },
     });
     
     logger.info(`Login successful, response received: ${JSON.stringify(response.data)}`);
-    console.log('Login API raw response:', response);
-    console.log('Login API response data:', response.data);
+    logger.log('Login API raw response:', response);
+    logger.log('Login API response data:', response.data);
     
     // Normalize the response to ensure consistent property names
     const normalizedResponse = {
@@ -112,29 +112,29 @@ export const login = async (credentials: ILoginModel) => {
                     (response.data.authenticated !== undefined ? response.data.authenticated : true)
     };
     
-    console.log('Normalized login response:', normalizedResponse);
+    logger.log('Normalized login response:', normalizedResponse);
     
     // Validate the response structure
     if (!normalizedResponse.token) {
-      console.error('Login API response missing token:', response.data);
+      logger.error('Login API response missing token:', response.data);
       throw new Error('Invalid response from server: missing authentication token');
     }
     
     if (!normalizedResponse.authenticatedUser) {
-      console.error('Login API response missing user data:', response.data);
+      logger.error('Login API response missing user data:', response.data);
       throw new Error('Invalid response from server: missing user data');
     }
     
     return normalizedResponse;
   } catch (error) {
-    console.error('Login API error:', error);
+    logger.error('Login API error:', error);
     if (isAxiosError(error)) {
       if (error.response) {
-        console.error('Login API error response:', error.response.data);
+        logger.error('Login API error response:', error.response.data);
       } else if (error.request) {
-        console.error('Login API no response received:', error.request);
+        logger.error('Login API no response received:', error.request);
       } else {
-        console.error('Login API error during setup:', error.message);
+        logger.error('Login API error during setup:', error.message);
       }
     }
     throw error;
@@ -239,13 +239,13 @@ export const updateUserProfile = async (user: any): Promise<any> => {
         const authData = localStorage.getItem('auth') || sessionStorage.getItem('auth');
         
         if (!authData) {
-            console.error('No auth data found in storage');
+            logger.error('No auth data found in storage');
             throw new Error('No authentication data found');
         }
         
         // Log the auth data for debugging (hide sensitive data)
         const parsedAuthData = JSON.parse(authData);
-        console.log('Auth data found:', {
+        logger.log('Auth data found:', {
             hasToken: !!parsedAuthData.token,
             tokenLength: parsedAuthData.token ? parsedAuthData.token.length : 0,
             hasUser: !!parsedAuthData.authenticatedUser,
@@ -254,7 +254,7 @@ export const updateUserProfile = async (user: any): Promise<any> => {
         
         const token = parsedAuthData.token;
         if (!token) {
-            console.error('No token found in auth data');
+            logger.error('No token found in auth data');
             throw new Error('No authentication token found');
         }
 
@@ -271,7 +271,7 @@ export const updateUserProfile = async (user: any): Promise<any> => {
         };
 
         // Log request details
-        console.log('Updating profile with request:', {
+        logger.log('Updating profile with request:', {
             endpoint: 'auth/update-profile',
             method: 'POST',
             data: requestData,
@@ -285,10 +285,10 @@ export const updateUserProfile = async (user: any): Promise<any> => {
             }
         });
         
-        console.log('Profile update successful:', response.data);
+        logger.log('Profile update successful:', response.data);
         return response.data;
     } catch (error) {
-        console.error('Error updating profile:', error);
+        logger.error('Error updating profile:', error);
         throw error;
     }
 };
@@ -297,23 +297,23 @@ export const updateUserProfile = async (user: any): Promise<any> => {
 export const logout = async () => {
   try {
     logger.info('Attempting to logout user');
-    console.log('Logout API request sent');
+    logger.log('Logout API request sent');
     
     const response = await api.post('auth/logout');
     
     logger.info(`Logout successful, response received: ${JSON.stringify(response.data)}`);
-    console.log('Logout API response:', response.data);
+    logger.log('Logout API response:', response.data);
     
     return response.data;
   } catch (error) {
-    console.error('Logout API error:', error);
+    logger.error('Logout API error:', error);
     if (isAxiosError(error)) {
       if (error.response) {
-        console.error('Logout API error response:', error.response.data);
+        logger.error('Logout API error response:', error.response.data);
       } else if (error.request) {
-        console.error('Logout API no response received:', error.request);
+        logger.error('Logout API no response received:', error.request);
       } else {
-        console.error('Logout API error during setup:', error.message);
+        logger.error('Logout API error during setup:', error.message);
       }
     }
     // Even if the API call fails, we should still clear local storage

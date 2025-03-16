@@ -9,6 +9,7 @@ import Wrapper from '../../layout/Wrapper/Wrapper';
 import { ISitemapItem } from '../../services/sitemapService';
 import CreateNewModal from './CreateNewModal';
 import { handleError } from '../../utils/handleError';
+import { logger } from '../../utils/logger';
 
 const SitemapPage = () => {
   const [sitemapData, setSitemapData] = useState<ISitemapItem[]>([]);
@@ -33,7 +34,7 @@ const SitemapPage = () => {
 
   const handleEdit = async (id: number) => {
     // We'll implement edit functionality in a future update
-    console.log('Edit sitemap ID:', id);
+    logger.debug('Edit sitemap ID:', id);
   };
 
   const handleDelete = async (id: number) => {

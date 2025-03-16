@@ -10,6 +10,7 @@ import remarkRehype from 'remark-rehype';
 import remarkGfm from 'remark-gfm';
 import remarkStringify from 'remark-stringify';
 import remarkParse from 'remark-parse';
+import {logger} from '@/utils/logger';
 
 interface DisplayMdProps {
   markdownContent: string;
@@ -23,7 +24,7 @@ const DisplayMd: React.FC<DisplayMdProps> = ({ markdownContent, id }) => {
   const themeContext = useTheme();
 
   useEffect(() => {
-    console.log('Theme:', themeContext.theme, "filename:", id);
+    logger.log('Theme:', themeContext.theme, "filename:", id);
     if (themeContext.theme === 'dark') {
       document.body.setAttribute('data-theme', 'dark');
     } else if (themeContext.theme === 'light') {
@@ -58,7 +59,7 @@ const DisplayMd: React.FC<DisplayMdProps> = ({ markdownContent, id }) => {
 
   const saveToFile = () => {
     const filename = id ? `${id}.md` : 'asafarim-about-me.md';
-    console.log('Saving Markdown file...', filename);
+    logger.log('Saving Markdown file...', filename);
 
     const blob = new Blob([markdownContent], { type: 'text/markdown' });
     const url = URL.createObjectURL(blob);
@@ -73,7 +74,7 @@ const DisplayMd: React.FC<DisplayMdProps> = ({ markdownContent, id }) => {
   const saveHtmlToFile = () => {
     // Get the innerHTML of the element with class "markdown-body"
     const filename = id ? `${id}.html` : 'asafarim-about-me.html';
-    console.log('Saving HTML file...', filename);
+    logger.log('Saving HTML file...', filename);
 
     const markdownBodyElement = document.querySelector('.markdown-body');
     if (markdownBodyElement) {

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Button from '../../components/Button/Button';
 import useAuth from '@/hooks/useAuth';
 import { IUserInfo } from '@/interfaces/IUserInfo';
+import { logger } from "@/utils/logger";
 
 const ExportData: React.FC<{ currentUserInfo: IUserInfo | null }> = ({ currentUserInfo }) => {
     const [isExporting, setIsExporting] = useState(false);
@@ -12,7 +13,7 @@ const ExportData: React.FC<{ currentUserInfo: IUserInfo | null }> = ({ currentUs
     useEffect(() => {
         if (authenticated && !authenticatedUser?.isDeleted) {
             // User is authenticated and not deleted, proceed with export logic
-            console.log('User is eligible to export data');
+            logger.debug('User is eligible to export data');
         } else {
             // User is not authenticated or is deleted, show error message
             setError('You are not eligible to export data.');
@@ -21,7 +22,7 @@ const ExportData: React.FC<{ currentUserInfo: IUserInfo | null }> = ({ currentUs
     }, [authenticated, authenticatedUser]);
 
     useEffect(() => {
-        console.log('ExportData Component Mounted');
+        logger.debug('ExportData Component Mounted');
     }, []);
 
     const handleExportData = async () => {
@@ -58,7 +59,7 @@ const ExportData: React.FC<{ currentUserInfo: IUserInfo | null }> = ({ currentUs
             // Clear success message after 5 seconds
             setTimeout(() => setSuccessMessage(null), 5000);
         } catch (err) {
-            console.error('Export failed:', err);
+            logger.error('Export failed:', err);
             setError(err instanceof Error ? err.message : 'An error occurred while exporting data');
 
             // Clear error message after 5 seconds

@@ -70,14 +70,14 @@ const hasAdminRole = (): boolean => {
     const token = localStorage.getItem("auth") ? JSON.parse(localStorage.getItem("auth")!).token : null;
     if (token) {
       const decodedToken = jwtDecode<JwtPayload>(token);
-      console.info("Decoded Token:", decodedToken);
+      logger.info("Decoded Token:", decodedToken);
 
       // Check for the ClaimTypes.NameIdentifier claim
       const userIdClaim = decodedToken[ClaimTypes.NameIdentifier];
-      console.info("User ID Claim:", userIdClaim);
+      logger.info("User ID Claim:", userIdClaim);
       return decodedToken.role === "Admin";
     } else {
-      console.error("No token found in localStorage.");
+      logger.error("No token found in localStorage.");
       return false; // Return false if no token is found
     }
   } catch (error) {

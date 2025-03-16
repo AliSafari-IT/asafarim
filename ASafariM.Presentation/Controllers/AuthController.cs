@@ -486,6 +486,10 @@ public class AuthController : ControllerBase
             );
         }
 
+        // Verify token validation status
+        var tokenValid = HttpContext.User.Identity?.IsAuthenticated ?? false;
+        Log.Information("Token validation status: {TokenValid}", tokenValid);
+
         // Try multiple claim types that might contain the user ID, with nameid first based on the token
         var userIdClaim =
             User.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value // JWT token from this app
@@ -498,30 +502,27 @@ public class AuthController : ControllerBase
 
         if (string.IsNullOrEmpty(userIdClaim))
         {
-            Log.Warning("Unauthorized profile update attempt - user not authenticated");
+            Log.Error("Could not determine user ID from claims");
             return Unauthorized("User not authenticated");
         }
 
-        var userId = Guid.Parse(userIdClaim);
-        if (command == null)
+        if (!Guid.TryParse(userIdClaim, out var userId))
         {
-            return BadRequest("Invalid request");
+            Log.Error("Invalid user ID format: {UserId}", userIdClaim);
+            return BadRequest("Invalid user ID format");
         }
 
-        // Set the user ID from the authenticated token
         command.UserId = userId;
+        var result = await _userService.UpdateProfileAsync(command);
 
-        try
+        if (!result.Succeeded)
         {
-            await _userService.UpdateProfileAsync(command);
-            Log.Information("Profile successfully updated for user ID: {UserId}", userId);
-            return Ok("Profile updated successfully");
+            Log.Error("Profile update failed: {Errors}", string.Join(", ", result.Errors));
+            return BadRequest(result.Errors);
         }
-        catch (Exception ex)
-        {
-            Log.Error(ex, "Error updating profile for user ID: {UserId}", userIdClaim);
-            return StatusCode(500, "Error updating profile: " + ex.Message);
-        }
+
+        Log.Information("Profile updated successfully for user ID: {UserId}", userId);
+        return Ok();
     }
 
     // requestAccountReactivation

@@ -13,6 +13,7 @@ import useAuth from '@/hooks/useAuth';
 import axios from 'axios'; // Import axios
 import Notification from '@/components/Notification/Notification';
 import { IApiResponse, IRole, IUserRole } from '@/interfaces';
+import { logger } from "@/utils/logger";
 
 const UsersList: React.FC = () => {
   const [users, setUsers] = useState<IUser[]>([]);
@@ -29,11 +30,11 @@ const UsersList: React.FC = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       setIsLoading(true);
-      console.log('Fetching users!');
+      logger.debug('Fetching users!');
       try {
-        console.log('Starting to fetch users...');
+        logger.debug('Starting to fetch users...');
         const response = await getUsers(true); // Include soft-deleted users
-        console.log('Successfully fetched users:', response);
+        logger.debug('Successfully fetched users:', response);
         
         // Handle the new API response format
         const apiResponse = response as IApiResponse<IUser>;
@@ -41,11 +42,11 @@ const UsersList: React.FC = () => {
         if (Array.isArray(usersArray)) {
           setUsers(usersArray);
         } else {
-          console.error('Invalid users data format:', response);
+          logger.error('Invalid users data format:', response);
           setError('Invalid data format received from server');
         }
       } catch (err) {
-        console.error('Error in UsersList component:', err);
+        logger.error('Error in UsersList component:', err);
         if (axios.isAxiosError(err)) {
           setError(`Failed to load users: ${err.response?.data || err.message}`);
         } else {
@@ -59,7 +60,7 @@ const UsersList: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log("UsersList => users", users);
+    logger.debug("UsersList => users", users);
   }, [users]);
 
   const fetchUserRoles = async (userId: string) => {
@@ -72,10 +73,10 @@ const UsersList: React.FC = () => {
         const roleNames = rolesArray.map(role => role.roleId);
         setUserRoles(prev => ({ ...prev, [userId]: roleNames }));
       } else {
-        console.error('Invalid user roles data format:', response);
+        logger.error('Invalid user roles data format:', response);
       }
     } catch (err) {
-      console.error('Error fetching roles for user', userId, err);
+      logger.error('Error fetching roles for user', userId, err);
     }
   };
 
@@ -99,10 +100,10 @@ const UsersList: React.FC = () => {
           }, {} as Record<string, string>);
           setRoleNamesMap(prev => ({ ...prev, ...newRoleNames }));
         } else {
-          console.error('Invalid roles data format:', response);
+          logger.error('Invalid roles data format:', response);
         }
       } catch (err) {
-        console.error('Error fetching role names:', err);
+        logger.error('Error fetching role names:', err);
       }
     };
 
@@ -129,7 +130,7 @@ const UsersList: React.FC = () => {
       ));
     } catch (err) {
       setError('Failed to soft delete the user.');
-      console.error(err);
+      logger.error(err);
     } finally {
       setDeleteDialogOpen(false);
       setSelectedUserId(null);
@@ -144,7 +145,7 @@ const UsersList: React.FC = () => {
       setUsers(prevUsers => prevUsers.filter(user => user.id !== selectedUserId));
     } catch (err) {
       setError('Failed to delete the user.');
-      console.error(err);
+      logger.error(err);
     } finally {
       setDeleteDialogOpen(false);
       setSelectedUserId(null);

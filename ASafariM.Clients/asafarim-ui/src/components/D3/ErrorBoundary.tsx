@@ -1,5 +1,6 @@
 // src/components/ErrorBoundary.tsx
 import { Component, ErrorInfo, ReactNode } from "react";
+import {logger} from '@/utils/logger';
 
 interface Props {
   children: ReactNode;
@@ -22,7 +23,7 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    console.error("Chart error caught:", error, errorInfo);
+    logger.error("Chart error caught:", error, errorInfo);
   }
 
   render(): ReactNode {

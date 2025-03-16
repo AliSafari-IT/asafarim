@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Suspense } from "react";
-import { FaEnvelope, FaKey, FaTrash, FaDownload, FaUser } from "react-icons/fa";
+import { FaKey, FaTrash, FaDownload, FaUser } from "react-icons/fa";
 import Wrapper from "@/layout/Wrapper/Wrapper";
 import Header from "@/layout/Header/Header";
 import Footer from "@/layout/Footer/Footer";
@@ -14,6 +14,7 @@ import InputField from "@/components/InputField/InputField";
 import Notification from "@/components/Notification/Notification";
 import { IUserInfo } from "@/interfaces";
 import handleUpdateProfile from "./handleUpdateProfile";
+import {logger} from '@/utils/logger';
 
 const AccountSettings: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -44,7 +45,7 @@ const AccountSettings: React.FC = () => {
         setLastName(authenticatedUser.lastName);
         setLoading(false);
       } catch (err) {
-        console.error("Error loading user data:", err);
+        logger.error("Error loading user data:", err);
         setError(
           "Failed to load user information. Please try refreshing the page."
         );
@@ -64,7 +65,7 @@ const AccountSettings: React.FC = () => {
   };
 
   const handleUpdatePassword = async () => {
-    console.log(
+    logger.log(
       "Updating password...",
       authenticatedUser,
       currentPassword,
@@ -88,7 +89,7 @@ const AccountSettings: React.FC = () => {
       setCurrentPassword("");
       setNewPassword("");
     } catch (err) {
-      console.error("Error updating password:", err);
+      logger.error("Error updating password:", err);
       setMessage({ type: "error", text: "Failed to update password." });
     } finally {
       setLoading(false);
@@ -96,7 +97,7 @@ const AccountSettings: React.FC = () => {
   };
 
   const handleTabChange = (key: string) => {
-    console.log("Tab changed to:", key);
+    logger.log("Tab changed to:", key);
   };
 
   const tabs = [

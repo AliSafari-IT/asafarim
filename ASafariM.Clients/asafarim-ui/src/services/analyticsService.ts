@@ -1,5 +1,6 @@
 import axios from "axios";
 import ReactGA from "react-ga4";
+import { logger } from "@/utils/logger";
 
 // GA4 Measurement ID from environment variables
 const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID;
@@ -10,9 +11,9 @@ const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID;
 export function initializeGA() {
   if (GA_MEASUREMENT_ID) {
     ReactGA.initialize(GA_MEASUREMENT_ID);
-    console.log("Google Analytics initialized");
+    logger.debug("Google Analytics initialized");
   } else {
-    console.warn("Google Analytics Measurement ID not found");
+    logger.warn("Google Analytics Measurement ID not found");
   }
 }
 
@@ -59,7 +60,7 @@ export async function getVisitorStats() {
     const response = await axios.get('/api/visitor/stats', { timeout: 3000 });
     return response.data;
   } catch (error) {
-    console.warn("Error fetching visitor stats from API, using mock data:", error);
+    logger.warn("Error fetching visitor stats from API, using mock data:", error);
     
     // If API call fails, return mock data
     return mockVisitorData;

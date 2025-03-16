@@ -13,7 +13,7 @@ import { ActionButton } from "@fluentui/react/lib/Button";
 import { ArrowLeft24Regular, Edit20Regular } from "@fluentui/react-icons";
 import useAuth from "@/hooks/useAuth";
 import Toolbar from "@/components/Toolbars/Toolbar";
-import { apiConfig } from "@/config/api";
+import { logger } from "@/utils/logger";
 
 const ViewProject: React.FC = () => {
   const navigate = useNavigate();
@@ -31,24 +31,24 @@ const ViewProject: React.FC = () => {
   // Function to fetch repository links
   const fetchRepoLinks = async (projectId: string) => {
     try {
-      console.log(`Attempting to fetch repository links for project ID: ${projectId}`);
+      logger.debug(`Attempting to fetch repository links for project ID: ${projectId}`);
       
       // Use the entityServices to fetch repository links
       const links = await entityServices.fetchEntityRepoLinks("project", projectId);
       
       if (links && Array.isArray(links)) {
         setRepoLinks(links);
-        console.log('Repository links fetched successfully:', links);
+        logger.debug('Repository links fetched successfully:', links);
       } else if (links && links.$values) {
         // Handle .NET serialization format if needed
         setRepoLinks(links.$values);
-        console.log('Repository links fetched successfully (from $values):', links.$values);
+        logger.debug('Repository links fetched successfully (from $values):', links.$values);
       } else {
-        console.log('No repository links found or empty response');
+        logger.debug('No repository links found or empty response');
         setRepoLinks([]);
       }
     } catch (error) {
-      console.error('Error fetching repository links:', error);
+      logger.error('Error fetching repository links:', error);
       // Don't set error state for repository links - they're optional
       setRepoLinks([]);
     }
@@ -84,7 +84,7 @@ const ViewProject: React.FC = () => {
           try {
             await fetchRepoLinks(id);
           } catch (error) {
-            console.error("Error fetching repository links for public project:", error);
+            logger.error("Error fetching repository links for public project:", error);
           }
         }
 
@@ -137,7 +137,7 @@ const ViewProject: React.FC = () => {
           await fetchRepoLinks(id);
         }
       } catch (error: any) {
-        console.error("Error fetching project data:", error);
+        logger.error("Error fetching project data:", error);
 
         // Check for authentication errors
         if (error?.response?.status === 401) {

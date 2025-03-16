@@ -1,6 +1,7 @@
 
 // E:\ASafariM\ASafariM.Clients\asafarim-ui\src\api\mdService.ts
 
+import { logger } from "@/utils/logger";
 import axios from "axios";
 
 export const createMarkdownFile = async (title: string, content: string, visibility: string) => {
@@ -16,7 +17,7 @@ export const createMarkdownFile = async (title: string, content: string, visibil
         });
         return response.data;
     } catch (error) {
-        console.error('Error creating markdown file:', error);
+        logger.error('Error creating markdown file:', error);
         throw error;
     }
 };
@@ -27,10 +28,10 @@ export const getMarkdownFileById = async (id: string) => {
         const response = await axios.get(`/api/MarkdownFiles/${id}`, {
             headers: { Authorization: `Bearer ${auth.token}` }
         });
-        console.log('Markdown file retrieved:', response.data);
+        logger.log('Markdown file retrieved:', response.data);
         return response.data;
     } catch (error) {
-        console.error('Error retrieving markdown file:', error);
+        logger.error('Error retrieving markdown file:', error);
         throw error;
     }
 };
@@ -45,10 +46,10 @@ export const updateMarkdownFile = async (id: string, title: string, content: str
         }, {
             headers: { Authorization: `Bearer ${auth.token}` }
         });
-        console.log('Markdown file updated:', response.data);
+        logger.log('Markdown file updated:', response.data);
         return response.data;
     } catch (error) {
-        console.error('Error updating markdown file:', error);
+        logger.error('Error updating markdown file:', error);
         throw error;
     }
 };
@@ -59,9 +60,9 @@ export const deleteMarkdownFile = async (id: string) => {
         const response = await axios.delete(`/api/MarkdownFiles/${id}`, {
             headers: { Authorization: `Bearer ${auth.token}` }
         });
-        console.log('Markdown file deleted:', response.data);
+        logger.log('Markdown file deleted:', response.data);
     } catch (error) {
-        console.error('Error deleting markdown file:', error);
+        logger.error('Error deleting markdown file:', error);
         throw error;
     }
 };
@@ -73,10 +74,10 @@ export const deleteMarkdownFiles = async (ids: string[]) => {
             headers: { Authorization: `Bearer ${auth.token}` },
             data: { ids }
         });
-        console.log('Markdown files deleted:', response.data);
+        logger.log('Markdown files deleted:', response.data);
         return response.data;
     } catch (error) {
-        console.error('Error deleting markdown files:', error);
+        logger.error('Error deleting markdown files:', error);
         throw error;
     }
 };

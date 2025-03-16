@@ -10,7 +10,7 @@ import axios from 'axios';
 import { Dropdown, IDropdownOption, mergeStyles } from '@fluentui/react';
 import { IApiResponse, IRole, IUserRole } from '@/interfaces';
 import useAuth from '@/hooks/useAuth';
-import { logger } from '@/utils/logger';
+import { logger } from "@/utils/logger";
 
 const EditUser: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -82,7 +82,7 @@ const EditUser: React.FC = () => {
       if (!id) return;
       try {
         const userResponse = await getUserById(id);
-        console.log('User response:', userResponse);
+        logger.debug('User response:', userResponse);
         // For single user, response is the direct object
         const userData = userResponse;
         
@@ -98,11 +98,11 @@ const EditUser: React.FC = () => {
 
         // Get user's roles
         const rolesResponse = await getRolesByUserId(id);
-        console.log('User roles response:', rolesResponse);
+        logger.debug('User roles response:', rolesResponse);
         const apiResponse = rolesResponse as IApiResponse<IUserRole>;
         const userRolesArray = apiResponse.$values || apiResponse.value || rolesResponse;
         if (!Array.isArray(userRolesArray)) {
-          console.error('Invalid user roles data format:', rolesResponse);
+          logger.error('Invalid user roles data format:', rolesResponse);
           throw new Error('Invalid user roles data format');
         }
         
@@ -110,7 +110,6 @@ const EditUser: React.FC = () => {
         logger.info(`Fetched user with roles: ${JSON.stringify(userData)}`);
         setUser(userData);
       } catch (err) {
-        console.error('Error details:', err);
         logger.error(`Failed to fetch user: ${err}`);
         setError('Failed to load user data.');
       }
@@ -119,17 +118,16 @@ const EditUser: React.FC = () => {
     const fetchRoles = async () => {
       try {
         const rolesResponse = await getRoles();
-        console.log('Roles response:', rolesResponse);
+        logger.debug('Roles response:', rolesResponse);
         const apiResponse = rolesResponse as IApiResponse<IRole>;
         const rolesArray = apiResponse.$values || apiResponse.value || rolesResponse;
         if (!Array.isArray(rolesArray)) {
-          console.error('Invalid roles data format:', rolesResponse);
+          logger.error('Invalid roles data format:', rolesResponse);
           throw new Error('Invalid roles data format');
         }
         logger.info(`Available roles: ${JSON.stringify(rolesArray)}`);
         setRoles(rolesArray);
       } catch (err) {
-        console.error('Error details:', err);
         logger.error(`Failed to fetch roles: ${err}`);
         setError('Failed to load roles.');
       }
@@ -232,7 +230,6 @@ const EditUser: React.FC = () => {
         navigate('/users/view/' + updatedUser.id);
       }
     } catch (error) {
-      console.error('Error updating user:', error);
       logger.error(`Error updating user: ${error}`);
       if (axios.isAxiosError(error)) {
         setError(`Failed to update user: ${error.response?.data?.message || error.message}`);

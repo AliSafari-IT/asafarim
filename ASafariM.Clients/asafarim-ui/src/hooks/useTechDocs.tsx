@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import {logger} from '@/utils/logger';
 
 interface MarkdownItem {
   name: string;
@@ -16,7 +17,7 @@ const useTechDocs = () => {
     fetch('/api/markdown-files') // Adjust this endpoint
       .then((response) => response.json())
       .then((data) => setTechDocs(data))
-      .catch((error) => console.error('Failed to fetch tech docs:', error));
+      .catch((error) => logger.error('Failed to fetch tech docs:', error));
   }, []);
 
   return techDocs;

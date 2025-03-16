@@ -2,7 +2,7 @@
 import { IMenuItem } from '@/interfaces/IMenuItem';
 import { ChangeLogSvgIcon } from '../assets/SvgIcons/ChangeLogSvgIcon';
 import { getCreationDate, getUpdateDate } from './mdUtils';
-
+import { logger } from './logger';
 
 // import technical documentations using Vite's glob import syntax and return them as an object
 const techDocsBranchInfo = {
@@ -223,7 +223,7 @@ function getTree(
     return dateB - dateA; // Sort descending by updatedAt
   });
 
-  // console.log('Generated Tree:', JSON.stringify(tree, null, 2));
+  logger.log('Generated Tree:', JSON.stringify(tree, null, 2));
   return tree;
 }
 

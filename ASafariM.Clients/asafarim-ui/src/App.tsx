@@ -54,6 +54,7 @@ import { trackPageView } from "./services/analyticsService";
 import AnalyticsPage from "./pages/Analytics/AnalyticsPage";
 import ActivityPage from "./pages/Activity/ActivityPage";
 import NavbarDemo from "./pages/Demo/NavbarDemo";
+import { logger } from '@/utils/logger';
 
 // const userUrl = API_URL + '/users';
 
@@ -69,7 +70,7 @@ function App() {
 
   useEffect(() => {
     if (!authenticated || authenticatedUser?.isDeleted) {
-      console.log("User is not authenticated or deleted");
+      logger.log("User is not authenticated or deleted");
     }
   }, [authenticated, authenticatedUser]);
 

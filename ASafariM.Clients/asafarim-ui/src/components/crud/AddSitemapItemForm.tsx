@@ -7,6 +7,7 @@ import { IRoleEnum } from '@/interfaces';
 import Wrapper from '@/layout/Wrapper/Wrapper';
 import { isAxiosError } from 'axios';
 import useAuth from '@/hooks/useAuth';
+import {logger} from '@/utils/logger';
 
 interface IAddSitemapItemFormProps {
     parentId?: string;
@@ -50,7 +51,7 @@ const AddSitemapItemForm: React.FC<IAddSitemapItemFormProps> = ({ parentId }) =>
                     .then(data => setParent(data as ISitemapItem));
             }
         } catch (error) {
-            console.error('Error loading parent options:', error);
+            logger.error('Error loading parent options:', error);
             setError('Failed to load parent options. Please try again later.');
         }
     }, [parentId]);
@@ -79,7 +80,7 @@ const AddSitemapItemForm: React.FC<IAddSitemapItemFormProps> = ({ parentId }) =>
             alert('Sitemap item added successfully!');
             navigate('/sitemaps');
         } catch (error) {
-            console.error('Error adding sitemap item:', error);
+            logger.error('Error adding sitemap item:', error);
             if (isAxiosError(error)) {
                 setError(error.response?.data.message || 'Failed to add the sitemap item. Please try again.');
             } else {

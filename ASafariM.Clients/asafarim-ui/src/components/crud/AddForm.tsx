@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Toolbar from '../Toolbars/Toolbar';
 import { ActionButton } from '@fluentui/react';
 import { IFormData } from '../../interfaces/IFormData';
+import {logger} from '@/utils/logger';
 
 interface AddFormProps {
     entityName: string;
@@ -36,7 +37,7 @@ const AddForm: React.FC<AddFormProps> = ({ entityName, fields, submitHandler, on
                 const errorMsg = field.validate(value);
                 setErrors(prev => ({ ...prev, [field.name]: errorMsg }));
             } else {
-                console.error(`Invalid value type for field ${field.name}. Expected string, but got ${typeof value}.`);
+                logger.error(`Invalid value type for field ${field.name}. Expected string, but got ${typeof value}.`);
             }
         }
     };
@@ -106,9 +107,9 @@ const AddForm: React.FC<AddFormProps> = ({ entityName, fields, submitHandler, on
                 }
             });
 
-            console.log("Form Data to Submit:",formDataToSubmit.entries());
+            logger.log("Form Data to Submit:",formDataToSubmit.entries());
             await submitHandler(formDataToSubmit);
-            console.log(`${entityName} added successfully`);
+            logger.log(`${entityName} added successfully`);
             
             // Reset form with initial default values
             const resetData = {
@@ -120,7 +121,7 @@ const AddForm: React.FC<AddFormProps> = ({ entityName, fields, submitHandler, on
             setFormData(resetData);
             setErrors({});
         } catch (error) {
-            console.error(`Error adding ${entityName}:`, error);
+            logger.error(`Error adding ${entityName}:`, error);
             setErrors({ submit: `Failed to add ${entityName}. Please try again.` });
         } finally {
             setSubmitting(false);

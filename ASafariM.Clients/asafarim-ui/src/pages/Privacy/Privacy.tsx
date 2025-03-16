@@ -6,6 +6,8 @@ import Button from '../../components/Button/Button';
 import eulaMd from './eula.md?raw';
 import disclaimerMd from './disclaimer.md?raw';
 import cookiesMd from './cookies.md?raw';
+import { logger } from "@/utils/logger";
+
 
 const Privacy: React.FC = () => {
   const location = useLocation();
@@ -27,7 +29,7 @@ const Privacy: React.FC = () => {
             setMdFile(eulaMd);
         }
       } catch (error) {
-        console.error('Error loading markdown content:', error);
+        logger.error('Error loading markdown content:', error);
       }
     };
 
@@ -54,7 +56,7 @@ const Privacy: React.FC = () => {
     // Get the last part after the final slash
     const parts = normalizedPath.split('/');
     const filename = parts[parts.length - 1];
-    console.log(filename);
+    logger.debug(filename);
     return filename || undefined;
   }
 

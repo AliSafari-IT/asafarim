@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import { BaseType } from 'd3';
 import d3cloud from "d3-cloud";
 import './StackedChart.css';
+import {logger} from '@/utils/logger';
 
 interface DataPoint {
     [key: string]: any;
@@ -58,7 +59,7 @@ const StackedChart: React.FC<StackedChartProps> = ({
             if (Array.isArray(data) && data.every(d => "word" in d && "count" in d)) {
                 renderWordCloud(svg, data as { word: string; count: number }[], width, height);
             } else {
-                console.error("Invalid data format for wordcloud", data);
+                logger.error("Invalid data format for wordcloud", data);
             }
             return;
         }
@@ -73,8 +74,8 @@ const StackedChart: React.FC<StackedChartProps> = ({
             [yKeys[0]]: +d[yKeys[0]] || 0, // Convert to number explicitly
         }));
 
-        console.log("Processed Data in StackedChart:", formattedData);
-        console.log("Max Y Value:", d3.max(formattedData.map(d => d[yKeys[0]])));
+        logger.log("Processed Data in StackedChart:", formattedData);
+        logger.log("Max Y Value:", d3.max(formattedData.map(d => d[yKeys[0]])));
 
         const xScale =
             (type === 'TimeSeries' || type === 'area' || type === 'scatter' || type === 'bubble')
@@ -147,7 +148,7 @@ const StackedChart: React.FC<StackedChartProps> = ({
             stackedData.forEach(series => {
                 series.forEach(point => {
                     if (isNaN(point[0]) || isNaN(point[1])) {
-                        console.error("Invalid stacked data point:", point);
+                        logger.error("Invalid stacked data point:", point);
                     }
                 });
             });
@@ -335,7 +336,7 @@ function renderTimeSeries(
         .x(d => {
             const date = new Date(d[xKey] as string); // Convert explicitly
             if (isNaN(date.getTime())) {
-                console.error("Invalid Date Detected:", d[xKey]); // Debugging
+                logger.error("Invalid Date Detected:", d[xKey]); // Debugging
                 return 0; // Default to 0 if date is invalid
             }
             return xScale(date);

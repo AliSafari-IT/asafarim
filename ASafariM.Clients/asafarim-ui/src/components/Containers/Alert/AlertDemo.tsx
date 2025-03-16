@@ -1,5 +1,6 @@
 import React from 'react';
 import Alert from './Alert';
+import {logger} from '@/utils/logger';
 
 const AlertDemo: React.FC = () => {
   return (
@@ -12,7 +13,7 @@ const AlertDemo: React.FC = () => {
         Operation completed successfully! Your changes have been saved.
       </Alert>
 
-      <Alert variant="warning" onClose={() => console.log('Warning closed')}>
+      <Alert variant="warning" onClose={() => logger.log('Warning closed')}>
         Please be careful! This action cannot be undone.
       </Alert>
 
@@ -20,7 +21,7 @@ const AlertDemo: React.FC = () => {
         You are about to delete this item permanently.
       </Alert>
 
-      <Alert variant="error" onClose={() => console.log('Error closed')}>
+      <Alert variant="error" onClose={() => logger.log('Error closed')}>
         An error occurred while processing your request. Please try again.
       </Alert>
     </div>

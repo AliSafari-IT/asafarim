@@ -2,16 +2,11 @@ import axios from "axios";
 import { IAuthorizationService } from "@/interfaces/IAuthorizationService";
 import { IUserInfo } from "@/interfaces/IUserInfo";
 import { apiConfig } from "../config/api";
-import { jwtDecode } from "jwt-decode";
+import { logger } from '@/utils/logger';
 
 const API_URL = apiConfig.baseURL;
 const authorizeUrl = `${API_URL}/auth/authorize`;
 
-interface JwtPayload {
-  nameid?: string;
-  role?: string;
-  exp?: number;
-}
 
 class AuthorizationService implements IAuthorizationService {
 
@@ -21,7 +16,7 @@ class AuthorizationService implements IAuthorizationService {
       let authData = localStorage.getItem('auth') || sessionStorage.getItem('auth');
       
       if (!authData) {
-        console.warn('No auth data found in storage');
+        logger.warn('No auth data found in storage');
         return false;
       }
       
@@ -29,7 +24,7 @@ class AuthorizationService implements IAuthorizationService {
       const token = parsedAuth.token;
       
       if (!token) {
-        console.warn('No token found in auth data');
+        logger.warn('No token found in auth data');
         return false;
       }
       
@@ -52,7 +47,7 @@ class AuthorizationService implements IAuthorizationService {
       
       return response.data.isAuthorized;
     } catch (error) {
-      console.error('Authorization failed:', error);
+      logger.error('Authorization failed:', error);
       return false;
     }
   }

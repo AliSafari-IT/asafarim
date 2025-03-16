@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { logout as apiLogout, login as apiLogin } from "../api/authapi";
 import { ILoginModel } from "@/interfaces/ILoginModel";
+import { logger } from '@/utils/logger';
 
 function useAuth() {
   const [authState, setAuthState] = useState(() => {
@@ -8,14 +9,14 @@ function useAuth() {
     const localAuth = localStorage.getItem('auth');
     const sessionAuth = sessionStorage.getItem('auth');
     
-    console.log('Initial auth check - localStorage:', localAuth ? 'present' : 'not present');
-    console.log('Initial auth check - sessionStorage:', sessionAuth ? 'present' : 'not present');
+    logger.log('Initial auth check - localStorage:', localAuth ? 'present' : 'not present');
+    logger.log('Initial auth check - sessionStorage:', sessionAuth ? 'present' : 'not present');
     
     // Prefer localStorage (remember me) over sessionStorage
     if (localAuth) {
       try {
         const parsedAuth = JSON.parse(localAuth);
-        console.log('Initial state using localStorage auth data:', parsedAuth);
+        logger.log('Initial state using localStorage auth data:', parsedAuth);
         
         // Check for case-sensitive property names
         if (parsedAuth.Token && !parsedAuth.token) {
@@ -30,13 +31,13 @@ function useAuth() {
         
         return parsedAuth;
       } catch (e) {
-        console.error('Error parsing localStorage auth data:', e);
+        logger.error('Error parsing localStorage auth data:', e);
         return { authenticated: false, authenticatedUser: null, token: null };
       }
     } else if (sessionAuth) {
       try {
         const parsedAuth = JSON.parse(sessionAuth);
-        console.log('Initial state using sessionStorage auth data:', parsedAuth);
+        logger.log('Initial state using sessionStorage auth data:', parsedAuth);
         
         // Check for case-sensitive property names
         if (parsedAuth.Token && !parsedAuth.token) {
@@ -51,11 +52,11 @@ function useAuth() {
         
         return parsedAuth;
       } catch (e) {
-        console.error('Error parsing sessionStorage auth data:', e);
+        logger.error('Error parsing sessionStorage auth data:', e);
         return { authenticated: false, authenticatedUser: null, token: null };
       }
     } else {
-      console.log('Initial state - no auth data found');
+      logger.log('Initial state - no auth data found');
       return { authenticated: false, authenticatedUser: null, token: null };
     }
   });
@@ -65,14 +66,14 @@ function useAuth() {
     const localAuth = localStorage.getItem('auth');
     const sessionAuth = sessionStorage.getItem('auth');
     
-    console.log('checkAuthState - localStorage:', localAuth ? 'present' : 'not present');
-    console.log('checkAuthState - sessionStorage:', sessionAuth ? 'present' : 'not present');
+    logger.log('checkAuthState - localStorage:', localAuth ? 'present' : 'not present');
+    logger.log('checkAuthState - sessionStorage:', sessionAuth ? 'present' : 'not present');
     
     // Prefer localStorage (remember me) over sessionStorage
     if (localAuth) {
       try {
         const parsedAuth = JSON.parse(localAuth);
-        console.log('Using localStorage auth data:', parsedAuth);
+        logger.log('Using localStorage auth data:', parsedAuth);
         
         // Check for case-sensitive property names
         if (parsedAuth.Token && !parsedAuth.token) {
@@ -87,13 +88,13 @@ function useAuth() {
         
         setAuthState(parsedAuth);
       } catch (e) {
-        console.error('Error parsing localStorage auth data:', e);
+        logger.error('Error parsing localStorage auth data:', e);
         setAuthState({ authenticated: false, authenticatedUser: null, token: null });
       }
     } else if (sessionAuth) {
       try {
         const parsedAuth = JSON.parse(sessionAuth);
-        console.log('Using sessionStorage auth data:', parsedAuth);
+        logger.log('Using sessionStorage auth data:', parsedAuth);
         
         // Check for case-sensitive property names
         if (parsedAuth.Token && !parsedAuth.token) {
@@ -108,11 +109,11 @@ function useAuth() {
         
         setAuthState(parsedAuth);
       } catch (e) {
-        console.error('Error parsing sessionStorage auth data:', e);
+        logger.error('Error parsing sessionStorage auth data:', e);
         setAuthState({ authenticated: false, authenticatedUser: null, token: null });
       }
     } else {
-      console.log('No auth data found, setting to unauthenticated state');
+      logger.log('No auth data found, setting to unauthenticated state');
       setAuthState({ authenticated: false, authenticatedUser: null, token: null });
     }
   }, []);
@@ -136,15 +137,15 @@ function useAuth() {
       
       return authData;
     } catch (error) {
-      console.error('Login failed:', error);
+      logger.error('Login failed:', error);
       throw error;
     }
   }, []);
 
   const logout = useCallback(async () => {
-    console.log('Logging out - calling backend logout API');
+    logger.log('Logging out - calling backend logout API');
     await apiLogout();
-    console.log('Logged out - clearing auth data from both storage locations');
+    logger.log('Logged out - clearing auth data from both storage locations');
     // Clear auth data from both storage locations
     localStorage.removeItem('auth');
     sessionStorage.removeItem('auth');
@@ -176,13 +177,13 @@ function useAuth() {
       sessionStorage.removeItem('auth');
       setAuthState({ authenticated: false, authenticatedUser: null, token: null });
     }
-    console.log('Auth state updated:', authState);
+    logger.log('Auth state updated:', authState);
     
     // Debug the authenticated property specifically
-    console.log('Is authenticated?', Boolean(authState?.authenticatedUser));
-    console.log('authenticated property value:', authState?.authenticated);
-    console.log('authenticatedUser value:', authState?.authenticatedUser);
-    console.log('token value:', authState?.token);
+    logger.log('Is authenticated?', Boolean(authState?.authenticatedUser));
+    logger.log('authenticated property value:', authState?.authenticated);
+    logger.log('authenticatedUser value:', authState?.authenticatedUser);
+    logger.log('token value:', authState?.token);
   }, [authState]);
 
   return {

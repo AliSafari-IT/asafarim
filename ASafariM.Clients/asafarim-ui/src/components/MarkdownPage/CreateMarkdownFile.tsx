@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { createMarkdownFile } from "@/api/mdService";
 import "./CreateMarkdownFile.css";
+import {logger} from '@/utils/logger';
 
 const CreateMarkdownFile = () => {
     const [title, setTitle] = useState("");
@@ -11,16 +12,16 @@ const CreateMarkdownFile = () => {
         e.preventDefault();
         try {
             const data = await createMarkdownFile(title, content, visibility);
-            console.log("Markdown file created:", data);
+            logger.log("Markdown file created:", data);
             // Clear the form after successful creation
             setTitle("");
             setContent("");
             setVisibility("Public");
         } catch (error: any) {
-            console.error("Error creating markdown file:", error);
+            logger.error("Error creating markdown file:", error);
             if (error.response?.data?.errors) {
                 // Handle validation errors
-                console.error("Validation errors:", error.response.data.errors);
+                logger.error("Validation errors:", error.response.data.errors);
             }
         }
     };

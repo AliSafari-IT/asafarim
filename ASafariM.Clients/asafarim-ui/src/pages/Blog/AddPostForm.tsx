@@ -1,5 +1,7 @@
+import { logger } from "@/utils/logger";
 import dashboardServices from "../../api/entityServices";
 import { useNavigate } from "react-router-dom";
+
 
 const AddPostForm: React.FC = () => {
   const navigator = useNavigate();
@@ -43,7 +45,7 @@ const AddPostForm: React.FC = () => {
       await dashboardServices.addEntity('posts', post);
       navigator('/dashboard');
     } catch (error) {
-      console.error('Error adding post:', error);
+      logger.error('Error adding post:', error);
     }
   };
 

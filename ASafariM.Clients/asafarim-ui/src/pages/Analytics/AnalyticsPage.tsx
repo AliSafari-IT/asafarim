@@ -5,6 +5,7 @@ import Header from "../../layout/Header/Header";
 import Footer from "../../layout/Footer/Footer";
 import "./AnalyticsPage.css";
 import { ChartMultipleRegular, PeopleCommunityRegular, HistoryRegular } from "@fluentui/react-icons";
+import { logger } from "@/utils/logger";
 
 interface VisitorData {
   totalVisitors: number;
@@ -21,7 +22,7 @@ const AnalyticsPage: React.FC = () => {
         const data = await getVisitorStats();
         setVisitorData({ totalVisitors: data?.totalVisitors || 0 });
       } catch (error) {
-        console.error("Error fetching analytics data:", error);
+        logger.error("Error fetching analytics data:", error);
       } finally {
         setLoading(false);
       }

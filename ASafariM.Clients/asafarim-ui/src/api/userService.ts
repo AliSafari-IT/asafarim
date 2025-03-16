@@ -3,7 +3,7 @@ import axios from 'axios';
 import { IUser } from '../interfaces/IUser';
 import { IUserModel } from '../interfaces/IUserModel';
 import { IRole, IUserModelUpdate, IUserRole } from '@/interfaces';
-
+import { logger } from '@/utils/logger';
 // in development mode use http://localhost:5000/api/users
 // in production mode use https://asafarim.com/api/users
 const isDevelopment = import.meta.env.VITE_ENVIRONMENT === 'development';
@@ -50,7 +50,7 @@ const validateUserUpdate = (user: IUserModelUpdate): UserUpdateValidation => {
   }
 
   // Log validation results for debugging
-  console.log('Validation results:', {
+  logger.debug('Validation results:', {
     user,
     errors,
     isValid: errors.length === 0
@@ -68,7 +68,7 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.message === 'Network Error') {
-      console.error('Network error occurred:', error);
+      logger.error('Network error occurred:', error);
       // Only remove auth if it's a 401 or 403
       if (error.response?.status === 401 || error.response?.status === 403) {
         localStorage.removeItem('auth');
@@ -83,14 +83,14 @@ api.interceptors.response.use(
 export const getUsers = async (includeSoftDeleted: boolean = false): Promise<IUser[]> => {
   try {
     const response = await api.get(`${USERS_URL}?includeSoftDeleted=${includeSoftDeleted}`);
-    console.log("userService => getUsers with success: response.data", response.data);
+    logger.log("userService => getUsers with success: response.data", response.data);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
-      console.error('Error fetching users:', error.response.data);
+      logger.error('Error fetching users:', error.response.data);
       throw new Error(error.response.data?.message || 'Failed to fetch users.');
     } else {
-      console.error('Unexpected error fetching users:', error);
+      logger.error('Unexpected error fetching users:', error);
       throw new Error('An unexpected error occurred while fetching users.');
     }
   }
@@ -100,13 +100,13 @@ export const getUsers = async (includeSoftDeleted: boolean = false): Promise<IUs
 export const getUserById = async (id: string): Promise<IUser> => {
   try {
     const response = await api.get(`/users/${id}`);
-    console.log("userService => getUserById: response.data", response.data);
+    logger.log("userService => getUserById: response.data", response.data);
     return response.data;
   } catch (error) {
-    console.error('Error fetching user by ID:', error);
+    logger.error('Error fetching user by ID:', error);
     // Trigger auth state change
     if (axios.isAxiosError(error) && error.response?.status === 404) {
-      console.error("User not found:", id);
+      logger.error("User not found:", id);
       throw new Error("User not found.");
     }
     throw error;
@@ -116,7 +116,7 @@ export const getUserById = async (id: string): Promise<IUser> => {
 // Get roles
 export const getRoles = async (): Promise<IRole[]> => {
   const response = await api.get(ROLES_URL);
-  console.log("userService => getRoles: response.data", response.data);
+  logger.log("userService => getRoles: response.data", response.data);
   return response.data;
 };
 
@@ -124,10 +124,10 @@ export const getRoles = async (): Promise<IRole[]> => {
 export const getRolesByUserId = async (userId: string): Promise<IUserRole[]> => {
   try {
     const response = await api.get(`${USER_ROLES_URL}/${userId}/roles`);
-    console.log('Get roles response:', response.data);
+    logger.log('Get roles response:', response.data);
     return response.data;
   } catch (error) {
-    console.error(`Failed to fetch roles for user ${userId}:`, error);
+    logger.error(`Failed to fetch roles for user ${userId}:`, error);
     return [];
   }
 };
@@ -145,46 +145,46 @@ export const getUserByEmail = async (email: string): Promise<IUser> => {
 
 // Create a new user
 export const createUser = async (user: IUserModel): Promise<IUser> => {
-  console.log("createUser", user);
+  logger.log("createUser", user);
   const response = await axios.post(USERS_URL, user);
   return response.data;
 };
 
 // Update an existing user
 export const updateUser = async (user: IUserModelUpdate): Promise<IUserModelUpdate> => {
-  console.log("updateUser - Starting update with data:", user);
+  logger.log("updateUser - Starting update with data:", user);
   const validation = validateUserUpdate(user);
   if (!validation.isValid) {
-    console.error("Validation failed:", validation.errors);
+    logger.error("Validation failed:", validation.errors);
     throw new Error(`Validation failed: ${validation.errors.join(', ')}`);
   }
 
   const targetUserUrl = `/users/${user.id}`;
-  console.log("targetUserUrl for updateUser:", targetUserUrl);
+  logger.log("targetUserUrl for updateUser:", targetUserUrl);
 
   try {
     const response = await api.put(targetUserUrl, user);
-    console.log("Update successful:", response.data);
+    logger.log("Update successful:", response.data);
     return response.data;
   } catch (error) {
-    console.error('Error updating user:', error);
+    logger.error('Error updating user:', error);
     throw error;
   }
 };
 
 // Create a new user by admin
 export const addUserByAdmin = async (user: IUserModelUpdate): Promise<IUserModelUpdate> => {
-  console.log("addUserByAdmin - User data:", user);
+  logger.log("addUserByAdmin - User data:", user);
   const targetUserUrl = `${USERS_URL}/admin`;
-  console.log("targetUserUrl for addUserByAdmin:", targetUserUrl);
+  logger.log("targetUserUrl for addUserByAdmin:", targetUserUrl);
   try {
     const response = await api.post(targetUserUrl, user);
-    console.log("userService => addUserByAdmin with success: response.data", response.data);
+    logger.log("userService => addUserByAdmin with success: response.data", response.data);
 
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
-      console.error('Error adding user:', error.response.data);
+      logger.error('Error adding user:', error.response.data);
       throw new Error(error.response.data?.message || 'Failed to add user.');
     }
     throw error;
@@ -193,28 +193,28 @@ export const addUserByAdmin = async (user: IUserModelUpdate): Promise<IUserModel
 
 // Update an existing user by admin
 export const updateUserByAdmin = async (user: IUserModelUpdate): Promise<IUserModelUpdate> => {
-  console.log("updateUserByAdmin - User data:", user);
+  logger.log("updateUserByAdmin - User data:", user);
 
   // Validate user data
   const validation = validateUserUpdate(user);
   if (!validation.isValid) {
-    console.error("Validation failed:", validation.errors);
+    logger.error("Validation failed:", validation.errors);
     throw new Error(`Validation failed: ${validation.errors.join(', ')}`);
   }
 
   const targetUserUrl = `${USERS_URL}/admin/${user.id}`;
-  console.log("targetUserUrl for updateUserByAdmin:", targetUserUrl);
+  logger.log("targetUserUrl for updateUserByAdmin:", targetUserUrl);
 
   try {
     const response = await api.put(targetUserUrl, user);
-    console.log("userService => updateUserByAdmin with success: response.data", response.data);
+    logger.log("userService => updateUserByAdmin with success: response.data", response.data);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
-      console.error('Error updating user:', error.response.data);
+      logger.error('Error updating user:', error.response.data);
       throw new Error(error.response.data?.message || 'Failed to update user.');
     } else {
-      console.error('Unexpected error updating user:', error);
+      logger.error('Unexpected error updating user:', error);
       throw new Error('An unexpected error occurred while updating the user.');
     }
   }
@@ -223,7 +223,7 @@ export const updateUserByAdmin = async (user: IUserModelUpdate): Promise<IUserMo
 // Delete a user by ID
 export const deleteUser = async (id: string): Promise<void> => {
   const deleteUrl = `${USERS_URL}/${id}`;
-  console.log("deleteUser - URL:", deleteUrl);
+  logger.log("deleteUser - URL:", deleteUrl);
   try {
     const response = await api.delete(deleteUrl, {
       headers: {
@@ -237,7 +237,7 @@ export const deleteUser = async (id: string): Promise<void> => {
       throw new Error('Failed to delete user');
     }
   } catch (error) {
-    console.error('Error deleting user:', error);
+    logger.error('Error deleting user:', error);
     throw error;
   }
 };
@@ -245,7 +245,7 @@ export const deleteUser = async (id: string): Promise<void> => {
 // Admin can Delete a user by ID 
 export const deleteUserByAdmin = async (id: string, isPermanent: boolean): Promise<void> => {
   const deleteUrl = `${USERS_URL}/admin/${id}`;
-  console.log("deleteUserByAdmin - URL:", deleteUrl);
+  logger.log("deleteUserByAdmin - URL:", deleteUrl);
   try {
     const response = await api.delete(deleteUrl, {
       headers: {
@@ -260,7 +260,7 @@ export const deleteUserByAdmin = async (id: string, isPermanent: boolean): Promi
       throw new Error('Failed to delete user');
     }
   } catch (error) {
-    console.error('Error deleting user:', error);
+    logger.error('Error deleting user:', error);
     throw error;
   }
 };
@@ -271,36 +271,36 @@ export const getUserInfo = async (userId: string) => {
     const response = await api.get(`${USERS_URL}/${userId}`);
     return response.data; // Return the user data from the response
   } catch (error) {
-    console.error('Error fetching user info:', error);
+    logger.error('Error fetching user info:', error);
     throw new Error('Error fetching user info.');
   }
 };
 
 // Assign roles to a user
 export const assignRolesToUser = async (userId: string, roleIds: string[]) => {
-  console.log('Assigning roles to user:', userId, 'with roles:', roleIds);
+  logger.log('Assigning roles to user:', userId, 'with roles:', roleIds);
   try {
     const response = await api.post(`${USER_ROLES_URL}/${userId}/roles`, roleIds);
-    console.log('Assigned roles response:', response.data);
+    logger.log('Assigned roles response:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Error assigning roles:', error);
+    logger.error('Error assigning roles:', error);
     throw error;
   }
 };
 
 // Remove roles from a user
 export const removeRolesFromUser = async (userId: string, roleIds: string[]) => {
-  console.log('Removing roles from user:', userId, 'with roles:', roleIds);
+  logger.log('Removing roles from user:', userId, 'with roles:', roleIds);
   try {
     const response = await api.delete(`${USER_ROLES_URL}/${userId}/roles`, {
       data: roleIds
     });
-    console.log('Removed roles response:', response.data);
+    logger.log('Removed roles response:', response.data);
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
-      console.error('Error removing roles:', error.response?.data || error.message);
+      logger.error('Error removing roles:', error.response?.data || error.message);
       throw new Error(`Failed to remove roles: ${error.response?.data?.message || error.message}`);
     }
     throw new Error('An unexpected error occurred while removing roles');

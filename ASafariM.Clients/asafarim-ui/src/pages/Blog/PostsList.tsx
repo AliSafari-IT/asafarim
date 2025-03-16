@@ -16,6 +16,7 @@ import Header from '@/layout/Header/Header';
 import { IPost } from '@/interfaces/post-types';
 import { Toolbar } from '@fluentui/react-components';
 import {  useNavigate } from 'react-router-dom';
+import { logger } from "@/utils/logger";
 
 const PostsList: React.FC = () => {
     const navigate = useNavigate();
@@ -92,9 +93,9 @@ const PostsList: React.FC = () => {
                         </Header>
                         <Stack horizontal tokens={{ childrenGap: 8 }}>
                             <IconButton iconProps={{ iconName: "Add" }} text="Add New" onClick={gotoAddNewPostPage} />
-                            <IconButton iconProps={{ iconName: "Edit" }} text="Edit" onClick={() => console.log('Edit button clicked')} />
-                            <IconButton iconProps={{ iconName: "Delete", style: { color: 'red' } }} text="Delete" onClick={() => console.log('Delete button clicked')} />
-                            <IconButton iconProps={{ iconName: "View" }} text="View" onClick={() => console.log('View button clicked')} />
+                            <IconButton iconProps={{ iconName: "Edit" }} text="Edit" onClick={() => logger.info('Edit button clicked')} />
+                            <IconButton iconProps={{ iconName: "Delete", style: { color: 'red' } }} text="Delete" onClick={() => logger.info('Delete button clicked')} />
+                            <IconButton iconProps={{ iconName: "View" }} text="View" onClick={() => logger.info('View button clicked')} />
                         </Stack>
                     </Stack>
                 </Toolbar>

@@ -8,6 +8,7 @@ import { isAxiosError } from 'axios';
 import { ISitemapItem } from '@/interfaces/ISitemapItem';
 import { IRoleEnum } from '@/interfaces/IRole';
 import useAuth from '@/hooks/useAuth';
+import {logger} from '@/utils/logger';
 
 const useStyles = makeStyles({
     formContainer: {
@@ -88,7 +89,7 @@ const EditSitemapItemForm: React.FC = () => {
                 setSitemapItem(data);
                 setLoading(false);
             } catch (error) {
-                console.error('Error fetching sitemap item:', error);
+                logger.error('Error fetching sitemap item:', error);
                 if (isAxiosError(error)) {
                     setError(error.response?.data.message || 'Failed to fetch the sitemap item. Please try again.');
                 } else {
@@ -113,7 +114,7 @@ const EditSitemapItemForm: React.FC = () => {
             alert('Sitemap item updated successfully!');
             navigate('/sitemaps');
         } catch (error) {
-            console.error('Error updating sitemap item:', error);
+            logger.error('Error updating sitemap item:', error);
             if (isAxiosError(error)) {
                 setError(error.response?.data.message || 'Failed to update the sitemap item. Please try again.');
             } else {

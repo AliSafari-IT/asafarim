@@ -1,5 +1,6 @@
 import { updateUserProfile } from "@/api/authapi";
 import { IUserInfo } from "@/interfaces/IUserInfo";
+import { logger} from '@/utils/logger';
 
 interface HandleUpdateProfileProps {
   authenticatedUser: IUserInfo;
@@ -14,7 +15,7 @@ const handleUpdateProfile = async (
   data: HandleUpdateProfileProps
 ) => {
   const { authenticatedUser, firstName, lastName, email, setMessage, setLoading } = data;
-  console.info("handleUpdateProfile: ", {
+  logger.info("handleUpdateProfile: ", {
     authenticatedUser,
     firstName,
     lastName,
@@ -81,7 +82,7 @@ const handleUpdateProfile = async (
     }, 1000);
     
   } catch (err) {
-    console.error("Error updating profile:", err);
+    logger.error("Error updating profile:", err);
     setMessage({ type: "error", text: "Failed to update profile." });
   } finally {
     setLoading(false);

@@ -5,6 +5,8 @@ import { Stack, TextField, VirtualizedComboBox } from "@fluentui/react";
 import dashboardServices from "../../../api/entityServices";
 import { getFluentProviderTheme } from "../../../utils/themeUtils";
 import Loading from "../../Loading/Loading";
+import {logger} from '@/utils/logger';
+
 const currentTheme = getFluentProviderTheme();
 
 const useStyles = makeStyles({
@@ -65,15 +67,15 @@ const EditCard: React.FC = () => {
 
   const fetchData = async () => {
     try {
-      console.log("Fetch data for EditCard", model, "ID:", id);
+      logger.log("Fetch data for EditCard", model, "ID:", id);
       const fetched = await dashboardServices.fetchEntityById(
         `${model}`,
         `${id}`
       );
-      console.log("Fetched in EditCard:", fetched);
+      logger.log("Fetched in EditCard:", fetched);
       setFetchedData(fetched);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      logger.error("Error fetching data:", error);
       alert("Failed to fetch data");
     }
   };
@@ -84,7 +86,7 @@ const EditCard: React.FC = () => {
 
   useEffect(() => {
     if (fetchedData) {
-      console.log("Fetched data:", fetchedData);
+      logger.log("Fetched data:", fetchedData);
       if (typeof fetchedData === "object" && fetchedData !== null) {
         setTypedData(fetchedData);
       }
@@ -92,7 +94,7 @@ const EditCard: React.FC = () => {
   }, [fetchedData]);
 
   useEffect(() => {
-    console.log("Typed data:", typedData);
+    logger.log("Typed data:", typedData);
   }, [typedData]);
 
   const handleUpdate = async () => {
@@ -116,7 +118,7 @@ const EditCard: React.FC = () => {
       alert("Update successful");
       navigate(-1); // Go back after successful update
     } catch (error) {
-      console.error("Error updating data:", error);
+      logger.error("Error updating data:", error);
       alert("Failed to update");
     }
   };
@@ -141,7 +143,7 @@ const EditCard: React.FC = () => {
                       key={key}
                       multiSelect
                       options={value.map((item: any) => {
-                        console.log("item:", item);
+                        logger.log("item:", item);
                         return {
                           key: item.id,
                           text: item.id ? item.name ?? item.title : item,

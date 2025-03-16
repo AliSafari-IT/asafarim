@@ -1,6 +1,8 @@
+import { logger } from "@/utils/logger";
+
 const apiUrls = (host: string) => {
     const isDevelopment = import.meta.env.VITE_ENVIRONMENT === 'development';
-    console.debug('isDevelopment:', isDevelopment, 'host:', host);
+    logger.debug('isDevelopment:', isDevelopment, 'host:', host);
 
     // Define API URLs for production environments
 const productionUrls: { [key: string]: string } = {
@@ -14,6 +16,6 @@ const productionUrls: { [key: string]: string } = {
     return productionUrls[host] || `http://localhost:${import.meta.env.VITE_API_PORT}/api`;
 };
 
-console.log('Resolved API URL:', apiUrls(window.location.hostname), 'for host:', window.location.hostname);
+logger.log('Resolved API URL:', apiUrls(window.location.hostname), 'for host:', window.location.hostname);
 export { apiUrls };
 export default apiUrls;

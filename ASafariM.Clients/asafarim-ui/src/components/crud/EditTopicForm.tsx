@@ -8,6 +8,7 @@ import { isAxiosError } from "axios";
 import { ITopic } from "@/interfaces/ITopic";
 import { apiUrls } from "@/api/getApiUrls";
 import Alert from '../Containers/Alert/Alert';
+import {logger} from '@/utils/logger';
 
 const topicUrl = apiUrls(window.location.hostname) + '/topics';
 
@@ -64,7 +65,7 @@ const EditTopicForm: FC = () => {
                 setParentTopicId(data?.parentTopicId?.toString() || null);
                 setLoading(false);
             } catch (error) {
-                console.error("Error fetching topic:", error);
+                logger.error("Error fetching topic:", error);
                 if (isAxiosError(error)) {
                     setError(error.response?.data?.message || "Failed to fetch the topic. Please try again.");
                 } else {
@@ -79,7 +80,7 @@ const EditTopicForm: FC = () => {
                 const response = await axios.get(topicUrl);
                 setParentTopics(response.data);
             } catch (error) {
-                console.error("Error fetching parent topics:", error);
+                logger.error("Error fetching parent topics:", error);
             }
         };
 
@@ -104,7 +105,7 @@ const EditTopicForm: FC = () => {
                 navigate("/dashboard");
             }, 3000);
         } catch (error) {
-            console.error("Error updating topic:", error);
+            logger.error("Error updating topic:", error);
             if (isAxiosError(error)) {
                 const errorMessage = error.response?.data?.message || "Failed to update the topic. Please try again.";
                 setError(errorMessage);

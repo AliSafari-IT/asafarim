@@ -1,5 +1,6 @@
 import React, { useEffect, useState, ReactNode } from 'react';
 import ErrorBoundary from '@/components/ErrorBoundary';
+import {logger} from '@/utils/logger';
 
 interface D3ChartWrapperProps {
   children: ReactNode;
@@ -28,15 +29,15 @@ const D3ChartWrapper: React.FC<D3ChartWrapperProps> = ({
     // Schedule multiple render attempts with increasing delays
     const timers = [
       setTimeout(() => {
-        console.log(`[${chartName}] First render attempt`);
+        logger.log(`[${chartName}] First render attempt`);
         setRenderAttempt(1);
       }, 50),
       setTimeout(() => {
-        console.log(`[${chartName}] Second render attempt`);
+        logger.log(`[${chartName}] Second render attempt`);
         setRenderAttempt(2);
       }, 300),
       setTimeout(() => {
-        console.log(`[${chartName}] Third render attempt`);
+        logger.log(`[${chartName}] Third render attempt`);
         setRenderAttempt(3);
       }, 1000)
     ];

@@ -62,7 +62,7 @@ const Register: React.FC = () => {
       logger.info(`Calling register API with model: ${JSON.stringify(registrationData)}`);
       const data = await register(registrationData);
       logger.info('Register API call completed');
-      console.log('Registration successful:', data);
+      logger.info('Registration successful:', data);
       setError(null);
       setSuccessMessage('Registration successful!');
       logger.info('Registration successful. Navigating to /login');
@@ -70,8 +70,7 @@ const Register: React.FC = () => {
         navigate('/login');
       }, 2000);
     } catch (error) {
-      console.error('Registration error:', error);
-      logger.error(`Registration failed: ${error}`);
+      logger.error('Registration error:', error);
       if (error instanceof Error) {
         const errorMessage = error.message;
         if (errorMessage.toLowerCase().includes('already')) {

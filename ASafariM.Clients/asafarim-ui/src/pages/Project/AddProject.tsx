@@ -99,8 +99,8 @@ const AddProject: React.FC = () => {
         new URL(newRepoLink); // Will throw if invalid URL
         const newLinks = [...repoLinks];
         newLinks.push(newRepoLink);
-        console.log('Adding manual link:', newRepoLink);
-        console.log('New links array:', newLinks);
+        logger.debug('Adding manual link:', newRepoLink);
+        logger.debug('New links array:', newLinks);
         setRepoLinks(newLinks);
         setNewRepoLink('');
       } catch (e) {
@@ -500,14 +500,14 @@ const AddProject: React.FC = () => {
                         e.preventDefault();
                         e.stopPropagation();
                         if (item) {
-                          console.log('Selected repository:', item.name);
+                          logger.debug('Selected repository:', item.name);
                           // Add the URL directly to the repoLinks array
                           const newLinks = [...repoLinks];
                           if (!newLinks.includes(item.html_url)) {
                             newLinks.push(item.html_url);
                             setRepoLinks(newLinks);
-                            console.log('Added repository:', item.name);
-                            console.log('New links array:', newLinks);
+                            logger.debug('Added repository:', item.name);
+                            logger.debug('New links array:', newLinks);
                           }
                           setIsModalOpen(false);
                         }
@@ -581,14 +581,14 @@ const AddProject: React.FC = () => {
                         e.preventDefault();
                         e.stopPropagation();
                         if (item) {
-                          console.log('Selected gist:', item.description);
+                          logger.debug('Selected gist:', item.description);
                           // Add the URL directly to the repoLinks array
                           const newLinks = [...repoLinks];
                           if (!newLinks.includes(item.html_url)) {
                             newLinks.push(item.html_url);
                             setRepoLinks(newLinks);
-                            console.log('Added gist:', item.description);
-                            console.log('New links array:', newLinks);
+                            logger.debug('Added gist:', item.description);
+                            logger.debug('New links array:', newLinks);
                           }
                           setIsGistModalOpen(false);
                         }

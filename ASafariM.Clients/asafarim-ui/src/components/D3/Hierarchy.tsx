@@ -4,6 +4,7 @@ import * as d3 from "d3";
 import styles from "./d3.module.css";
 import ChartContainer from "./ChartContainer";
 import D3ChartWrapper from "./D3ChartWrapper";
+import {logger} from '@/utils/logger';
 
 type HierarchyProps = {
   width: number;
@@ -55,7 +56,7 @@ const HierarchyImpl = ({ width, height, data }: HierarchyProps) => {
     try {
       return d3.hierarchy(data).sum((d) => d.value);
     } catch (error) {
-      console.error("Error creating hierarchy:", error);
+      logger.error("Error creating hierarchy:", error);
       return null;
     }
   }, [data]);
@@ -78,24 +79,24 @@ const HierarchyImpl = ({ width, height, data }: HierarchyProps) => {
         .padding(4);
       return treeGenerator(hierarchy);
     } catch (error) {
-      console.error("Error creating treemap:", error);
+      logger.error("Error creating treemap:", error);
       return null;
     }
   }, [hierarchy, size.width, size.height]);
 
   useEffect(() => {
     if (!root) {
-      console.warn("No root data available for Hierarchy chart");
+      logger.warn("No root data available for Hierarchy chart");
       return;
     }
 
     if (!chartRef.current) {
-      console.warn("Chart ref is null for Hierarchy chart");
+      logger.warn("Chart ref is null for Hierarchy chart");
       return;
     }
 
     try {
-      console.log("Rendering Hierarchy chart");
+      logger.log("Rendering Hierarchy chart");
       // Clear any existing SVG content
       d3.select(chartRef.current).selectAll("*").remove();
 
@@ -105,13 +106,13 @@ const HierarchyImpl = ({ width, height, data }: HierarchyProps) => {
       // Ensure leaves() exists and has data
       const leaves = root.leaves();
       if (!leaves || leaves.length === 0) {
-        console.warn("No leaf nodes found in hierarchy data");
+        logger.warn("No leaf nodes found in hierarchy data");
         return;
       }
       
       leaves.forEach((leaf) => {
         if (!leaf || leaf.x0 === undefined || leaf.y0 === undefined) {
-          console.warn("Invalid leaf node in hierarchy data", leaf);
+          logger.warn("Invalid leaf node in hierarchy data", leaf);
           return;
         }
         
@@ -149,7 +150,7 @@ const HierarchyImpl = ({ width, height, data }: HierarchyProps) => {
           .text(leaf.data.value);
       });
     } catch (error) {
-      console.error("Error rendering Hierarchy chart:", error);
+      logger.error("Error rendering Hierarchy chart:", error);
     }
   }, [root, colorScale, size]);
 

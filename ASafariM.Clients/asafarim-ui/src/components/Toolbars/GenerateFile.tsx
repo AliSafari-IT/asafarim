@@ -5,7 +5,7 @@ import 'jspdf-autotable';
 import { saveAs } from 'file-saver';
 import * as htmlToImage from 'html-to-image';
 import { Packer, Document, Paragraph } from 'docx';
-import { console } from 'inspector';
+import {logger} from '@/utils/logger';
 
 interface GenerateFileProps {
     id?: string;
@@ -63,7 +63,7 @@ const GenerateFile: React.FC<GenerateFileProps> = ({ id, title, icon, filetype, 
           link.click();
         })
         .catch((error) => {
-          console.error('Error generating PNG:', error);
+          logger.error('Error generating PNG:', error);
           alert('Failed to generate PNG');
         });
     }

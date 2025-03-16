@@ -8,52 +8,53 @@ import Loading from "../../Loading/Loading";
 import {logger} from '@/utils/logger';
 
 const currentTheme = getFluentProviderTheme();
+ const useStyles = makeStyles({
+    formContainer: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "1px",
+      padding: "20px",
+      width: "400px",
+      maxWidth: "500px",
+      minWidth: "300px",
+      margin: "auto",
+      marginTop: "20px",
+      backgroundColor: currentTheme.colorNeutralForeground1,
+      color: currentTheme.colorNeutralBackground1,
+    },
+    formField: {
+      width: "400px",
+      padding: "5px",
+      alignItems: "center",
+    },
+    button: {
+      marginTop: "20px",
+    },
+    card: {
+      margin: "auto",
+      width: "520px",
+      maxWidth: "420px",
+      boxShadow: "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(190,0,60,0.24)",
+      transition: "all 0.3s cubic-bezier(.25,.8,.25,1)",
+      color: currentTheme.colorNeutralForeground1,
+    },
+  
+    cardHover: {
+      boxShadow: "0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)",
+    },
+  
+    cardFocus: {
+      outline: "none",
+    },
+  });
 
-const useStyles = makeStyles({
-  formContainer: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: "1px",
-    padding: "20px",
-    width: "400px",
-    maxWidth: "500px",
-    minWidth: "300px",
-    margin: "auto",
-    marginTop: "20px",
-    backgroundColor: currentTheme.colorNeutralForeground1,
-    color: currentTheme.colorNeutralBackground1,
-  },
-  formField: {
-    width: "400px",
-    padding: "5px",
-    alignItems: "center",
-  },
-  button: {
-    marginTop: "20px",
-  },
-  card: {
-    margin: "auto",
-    width: "520px",
-    maxWidth: "420px",
-    boxShadow: "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(190,0,60,0.24)",
-    transition: "all 0.3s cubic-bezier(.25,.8,.25,1)",
-    color: currentTheme.colorNeutralForeground1,
-  },
-
-  cardHover: {
-    boxShadow: "0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)",
-  },
-
-  cardFocus: {
-    outline: "none",
-  },
-});
 
 const EditCard: React.FC = () => {
+  const classes = useStyles();
+
   const { model, id } = useParams();
   const navigate = useNavigate();
-  const classes = useStyles();
   const [fetchedData, setFetchedData] = useState<any>(null);
   const [typedData, setTypedData] = useState<any>();
 

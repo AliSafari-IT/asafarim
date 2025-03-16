@@ -99,7 +99,7 @@ export const getUsers = async (includeSoftDeleted: boolean = false): Promise<IUs
 // Get a single user by ID
 export const getUserById = async (id: string): Promise<IUser> => {
   try {
-    const response = await api.get(`/users/${id}`);
+    const response = await api.get(`${USERS_URL}/${id}`);
     logger.log("userService => getUserById: response.data", response.data);
     return response.data;
   } catch (error) {

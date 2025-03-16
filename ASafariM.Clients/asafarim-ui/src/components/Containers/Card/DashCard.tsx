@@ -90,9 +90,7 @@ export const DashCard: React.FC<DashCardProps> = ({
   const navigate = useNavigate();
 
   return (
-    <Card
-      className={`${styles.card} hover:${styles.cardHover} focus:${styles.cardFocus}`}
-    >
+    <Card className={`${styles.card} ${styles.cardHover} ${styles.cardFocus}`}>
       <CardHeader
         image={
           <img

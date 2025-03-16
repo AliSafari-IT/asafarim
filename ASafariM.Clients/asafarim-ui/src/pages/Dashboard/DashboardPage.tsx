@@ -24,7 +24,7 @@ const Dashboard: React.FC = () => {
                   <div className="status-icon healthy"></div>
                   <div className="status-info">
                     <p className="status-text">All systems operational</p>
-                    <Link href="/health">
+                    <Link href="/system-health">
                       <button className="view-details-button">
                         View Details
                       </button>

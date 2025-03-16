@@ -13,6 +13,7 @@ import {
 } from '@fluentui/react-icons';
 import useAuth from "./useAuth";
 import {logger} from '@/utils/logger';
+import React from "react";
 
 
 const logreg: IMenuItem[] = [
@@ -134,7 +135,7 @@ const dashboardDD: IMenuItem = {
       name: 'system-health',
       title: 'System Health Status',
       label: 'System Health Status',
-      to: '/health',
+      to: '/system-health',
       icon: <IconDashboard />,
       style: {},
       className: 'system-health'

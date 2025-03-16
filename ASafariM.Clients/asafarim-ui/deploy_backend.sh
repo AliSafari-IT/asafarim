@@ -11,7 +11,7 @@ BACKUP_DIR="$REPO_DIR/backups/backends"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 MAX_RETRIES=5
 SERVICE_NAME="asafarim-api"
-HEALTH_CHECK_URL="https://asafarim.com/api/system-health"
+HEALTH_CHECK_URL="https://asafarim.com/api/health"
 
 # Clean old backups (keep only the newest one)
 sudo mkdir -p "$BACKUP_DIR"

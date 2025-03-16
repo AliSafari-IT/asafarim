@@ -61,7 +61,7 @@ const HealthCheck: React.FC = () => {
     const fetchHealthStatus = async () => {
       const baseUrl = apiUrls(window.location.hostname);
       try {
-        const response = await fetch(`${baseUrl}/system-health`);
+        const response = await fetch(`${baseUrl}/health`);
         if (!response.ok) {
           throw new Error("Health check failed");
         }

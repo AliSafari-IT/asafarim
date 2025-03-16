@@ -8,7 +8,7 @@ BACKUP_DIR="$BASE_DIR/asafarim/backups/frontend"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 BACKUP_FILE="asafarim-frontend_backup_${TIMESTAMP}.tar.gz"
 MAX_RETRIES=5
-HEALTH_CHECK_URL="https://asafarim.com/api/system-health"
+HEALTH_CHECK_URL="https://asafarim.com/api/health"
 
 echo "🚀 Starting Frontend Deployment..."
 

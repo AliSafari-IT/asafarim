@@ -192,7 +192,7 @@ const CardContainer: React.FC = () => {
     }
   };
 
-  const goToPage = (cardType = 'topic') => {
+  const _goToPage = (cardType = 'topic') => {
     const pageNumber = parseInt(inputPage, 10);
     let totalPages;
 

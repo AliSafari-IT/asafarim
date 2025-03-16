@@ -1,3 +1,5 @@
+import React from 'react';
+
 export interface INavBase {
   id: string;
   title?: string;

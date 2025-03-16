@@ -31,6 +31,23 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     width: '100%',
   },
+  emptyState: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '3rem',
+    background: 'var(--bg-primary)',
+    borderRadius: '8px',
+    textAlign: 'center',
+    color: 'var(--text-secondary)',
+  },
+  emptyStateIcon: {
+    width: '80px',
+    height: '80px',
+    marginBottom: '1rem',
+    opacity: 0.6,
+  },
   sectionHeader: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -95,22 +112,10 @@ const useStyles = makeStyles({
       opacity: 0.5,
       cursor: 'not-allowed',
     },
-  },
-  emptyState: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '3rem',
-    background: 'var(--bg-primary)',
-    borderRadius: '8px',
-    textAlign: 'center',
-    color: 'var(--text-secondary)',
-  },
+  }
 });
 
 const CardContainer: React.FC = () => {
-  const classes = useStyles();
   const { theme: appTheme } = useTheme();
   const theme = appTheme === 'dark' ? webDarkTheme : webLightTheme;
 
@@ -123,6 +128,7 @@ const CardContainer: React.FC = () => {
   const [refreshKey, setRefreshKey] = useState<number>(0);
   const cardsPerPage = 3;
   const navigate = useNavigate();
+  const classes = useStyles();
 
   useEffect(() => {
     const loadData = async () => {

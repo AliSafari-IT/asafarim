@@ -18,7 +18,7 @@ PUBLISH_DIR="$BASE_DIR/asafarim-api"
 SERVICE_NAME="asafarim-api"
 SERVICE_FILE="/etc/systemd/system/$SERVICE_NAME.service"
 MAX_RETRIES=5
-HEALTH_CHECK_URL="http://localhost:5000/health"
+HEALTH_CHECK_URL="http://localhost:5000/api/system-health"
 LOG_DIR="/var/log/asafarim"
 
 # Ensure log directory exists

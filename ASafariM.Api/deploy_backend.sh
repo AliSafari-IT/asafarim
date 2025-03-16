@@ -11,7 +11,7 @@ BACKUP_DIR="$REPO_DIR/backups/backends"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 MAX_RETRIES=5
 SERVICE_NAME="asafarim-api"
-HEALTH_CHECK_URL="https://asafarim.com/api/health"
+HEALTH_CHECK_URL="https://asafarim.com/api/system-health"
 
 # Enhanced logging setup
 log_file="/var/www/asafarim/logs/deployment_$(date +%Y%m%d_%H%M%S).log"
@@ -211,7 +211,7 @@ ATTEMPT=0
 SERVICE_READY=false
 
 while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
-    if curl -s -o /dev/null -w "%{http_code}" http://localhost:5000/api/health | grep -q 200; then
+    if curl -s -o /dev/null -w "%{http_code}" http://localhost:5000/api/system-health | grep -q 200; then
         SERVICE_READY=true
         break
     fi

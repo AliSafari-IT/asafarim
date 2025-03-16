@@ -23,4 +23,4 @@ dotnet publish --configuration Release --output "$PUBLISH_DIR" || { echo "❌ Er
 
 # Step 5: Deployment Complete
 echo "✅ Backend deployment completed successfully!"
-echo "🌍 API should be running at https://asafarim.com/api/health"
+echo "🌍 API should be running at https://asafarim.com/api/system-health"

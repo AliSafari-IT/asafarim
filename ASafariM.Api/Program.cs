@@ -328,14 +328,14 @@ try
 
     // Health check endpoint
     Log.Information("Configuring health check endpoint...");
-    app.MapHealthChecks("/health");
+    app.MapHealthChecks("/system-health");
 
     // HTTPS redirection (disabled for local health checks)
     app.Use(
         async (context, next) =>
         {
             if (
-                !context.Request.Path.StartsWithSegments("/api/health")
+                !context.Request.Path.StartsWithSegments("/api/system-health")
                 && !context.Request.IsLocal()
             )
             {
@@ -420,7 +420,7 @@ try
 
     // Health check endpoint
     Log.Information("Configuring health check endpoint...");
-    app.MapHealthChecks("/api/health");
+    app.MapHealthChecks("/api/system-health");
 
     // Start the application
     try

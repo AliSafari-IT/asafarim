@@ -188,6 +188,7 @@ const fetchEntityById = async (entityTableName: string, id: string) => {
   try {
     // The baseURL already includes /api/, so we should NOT add it again
     const response = await api.get(`/${endpoint}/${id}`);
+    logger.info(`fetchEntityById: Raw API response for ${endpoint}/${id}: ${JSON.stringify(response.data)}`);
     return response.data;
   } catch (error) {
     logger.error(`Error fetching ${entityTableName} by id: ${error}`);

@@ -3,7 +3,6 @@ import { IField } from "@/interfaces/IField";
 import { getVisibilityLabel, getStatusLabel } from "@/interfaces/ProjectEnums";
 import { IProject } from "@/interfaces/IProject";
 import { useNavigate, useParams } from "react-router-dom";
-import entityServices from "@/api/entityServices";
 import Loading from "@/components/Loading/Loading";
 import Wrapper from "@/layout/Wrapper/Wrapper";
 import Notification from "@/components/Notification/Notification";
@@ -14,6 +13,7 @@ import { ArrowLeft24Regular, Edit20Regular } from "@fluentui/react-icons";
 import useAuth from "@/hooks/useAuth";
 import Toolbar from "@/components/Toolbars/Toolbar";
 import { logger } from "@/utils/logger";
+import entityServices from "@/api/entityServices";
 
 const ViewProject: React.FC = () => {
   const navigate = useNavigate();
@@ -31,24 +31,32 @@ const ViewProject: React.FC = () => {
   // Function to fetch repository links
   const fetchRepoLinks = async (projectId: string) => {
     try {
-      logger.debug(`Attempting to fetch repository links for project ID: ${projectId}`);
-      
+      logger.debug(
+        `Attempting to fetch repository links for project ID: ${projectId}`
+      );
+
       // Use the entityServices to fetch repository links
-      const links = await entityServices.fetchEntityRepoLinks("project", projectId);
-      
+      const links = await entityServices.fetchEntityRepoLinks(
+        "project",
+        projectId
+      );
+
       if (links && Array.isArray(links)) {
         setRepoLinks(links);
-        logger.debug('Repository links fetched successfully:', links);
+        logger.debug("Repository links fetched successfully:", links);
       } else if (links && links.$values) {
         // Handle .NET serialization format if needed
         setRepoLinks(links.$values);
-        logger.debug('Repository links fetched successfully (from $values):', links.$values);
+        logger.debug(
+          "Repository links fetched successfully (from $values):",
+          links.$values
+        );
       } else {
-        logger.debug('No repository links found or empty response');
+        logger.debug("No repository links found or empty response");
         setRepoLinks([]);
       }
     } catch (error) {
-      logger.error('Error fetching repository links:', error);
+      logger.error("Error fetching repository links:", error);
       // Don't set error state for repository links - they're optional
       setRepoLinks([]);
     }
@@ -56,19 +64,29 @@ const ViewProject: React.FC = () => {
 
   // Check authentication and project visibility on component mount
   useEffect(() => {
+    // Check if project ID is valid
     if (!id) {
       setError("Invalid project ID");
       setLoading(false);
       return;
     }
+    const projectExists = async () =>
+      await entityServices.tableExistsInDb("project");
+
+    const getProjectResponse = async () =>
+      await entityServices.fetchEntityById("project", id);
 
     const fetchProjectData = async () => {
-      try {
-        const projectResponse = await entityServices.fetchEntityById(
-          "project",
-          id
-        );
+      if (!(await projectExists())) {
+        setError("Project table not found!");
+        setLoading(false);
+        return;
+      }
 
+      // Fetch project data
+      logger.debug(`Fetching project data for project ID: ${id}`);
+      try {
+        const projectResponse = await getProjectResponse();
         // Check if project exists
         if (!projectResponse) {
           setError("Project not found");
@@ -78,63 +96,17 @@ const ViewProject: React.FC = () => {
 
         // Set the project data first
         setProject(projectResponse);
-        
-        // For public projects, always fetch and display all properties including repo links
+
+        // Always fetch repository links for public projects, regardless of authentication
         if (projectResponse.visibility === 0) {
           try {
             await fetchRepoLinks(id);
           } catch (error) {
-            logger.error("Error fetching repository links for public project:", error);
+            logger.error(
+              "Error fetching repository links for public project:",
+              error
+            );
           }
-        }
-
-        // For non-public projects, check authentication
-        if (projectResponse.visibility !== 0) {
-          // Not public
-          if (!authenticated) {
-            setShowAuthErrorNotification(true);
-            setError("Authentication required to view this project");
-
-            // Redirect to login after 3 seconds
-            const timer = setTimeout(() => {
-              navigate("/login", {
-                state: { returnUrl: `/projects/view/${id}` },
-              });
-            }, 4000);
-
-            setLoading(false);
-            return () => clearTimeout(timer);
-          }
-
-          // If user is authenticated but not admin or owner, check project visibility
-          if (
-            projectResponse.visibility !== 0 && // Not public
-            projectResponse.ownerId !== authenticatedUser?.id && // Not owner
-            authenticatedUser?.role !== "Admin"
-          ) {
-            // Not admin
-
-            // For members-only projects, check if user is a project member
-            if (projectResponse.visibility === 1) {
-              // Members only
-              // TODO: Add logic to check if user is a project member
-              // For now, we'll assume they're not a member
-              setError("You don't have permission to view this project");
-              setLoading(false);
-              return;
-            }
-
-            // For private projects
-            if (projectResponse.visibility === 2) {
-              // Private
-              setError("You don't have permission to view this project");
-              setLoading(false);
-              return;
-            }
-          }
-
-          // Fetch repo links
-          await fetchRepoLinks(id);
         }
       } catch (error: any) {
         logger.error("Error fetching project data:", error);
@@ -157,6 +129,77 @@ const ViewProject: React.FC = () => {
 
     fetchProjectData();
   }, [id, authenticated, navigate, authenticatedUser]);
+
+  useEffect(() => {
+    const getRepoLinks = async () => {
+      if (project && project.id) {
+        await fetchRepoLinks(project.id);
+      }
+    };
+
+    if (project && project.id) {
+      // For public projects, always fetch and display all properties including repo links
+      if (project.visibility === 0) {
+        try {
+          getRepoLinks();
+          return;
+        } catch (error) {
+          logger.error(
+            "Error fetching repository links for public project:",
+            error
+          );
+        }
+      }
+
+      // For non-public projects, check authentication
+      if (project.visibility !== 0) {
+        // Not public
+        if (!authenticated) {
+          setShowAuthErrorNotification(true);
+          setError("Authentication required to view this project");
+
+          // Redirect to login after 3 seconds
+          const timer = setTimeout(() => {
+            navigate("/login", {
+              state: { returnUrl: `/projects/view/${id}` },
+            });
+          }, 4000);
+
+          setLoading(false);
+          return () => clearTimeout(timer);
+        }
+
+        // If user is authenticated but not admin or owner, check project visibility
+        if (
+          project.visibility !== 0 && // Not public
+          project.ownerId !== authenticatedUser?.id && // Not owner
+          !authenticatedUser?.isAdmin
+        ) {
+          // Not admin
+
+          // For members-only projects, check if user is a project member
+          if (project.visibility === 1) {
+            // Members only
+            // TODO: Add logic to check if user is a project member
+            // For now, we'll assume they're not a member
+            setError("You don't have permission to view this project");
+            setLoading(false);
+            return;
+          }
+
+          // For private projects
+          if (project.visibility === 2) {
+            // Private
+            setError("You don't have permission to view this project");
+            setLoading(false);
+            return;
+          }
+        }
+        // Fetch repo links
+        getRepoLinks();
+      }
+    }
+  }, [project, authenticated, authenticatedUser, navigate, id]);
 
   // Define form fields
   const fields: IField[] = [
@@ -233,7 +276,11 @@ const ViewProject: React.FC = () => {
           <Notification
             text={error}
             type="error"
-            onDismiss={() => setError(null)}
+            onDismiss={() => {
+              setError(null);
+              setShowAuthErrorNotification(false);
+              navigate("/projects");
+            }}
           />
         </Stack>
       </Wrapper>
@@ -251,6 +298,11 @@ const ViewProject: React.FC = () => {
     );
   }
 
+  const isPermitted = showAuthErrorNotification ||
+    (authenticated &&
+     (authenticatedUser?.role !== "Admin" ||
+      authenticatedUser?.id !== project?.ownerId));
+
   return (
     <Wrapper>
       <div className="w-2/3 mx-auto p-6 md:p-10 bg-[var(--bg-primary)] shadow-lg rounded-xl">
@@ -264,7 +316,7 @@ const ViewProject: React.FC = () => {
 
         {/* Project Fields in Two Columns */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-          {fields.map((field) => (
+          {isPermitted ? null : fields.map((field) => (
             <div
               key={field.name}
               className="p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md"
@@ -283,7 +335,7 @@ const ViewProject: React.FC = () => {
         </div>
         {/* Repository Links Section */}
 
-        {repoLinks.length > 0 && (
+        {isPermitted ? null : repoLinks.length > 0 && (
           <div className="mt-6 p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md">
             <Text
               as="h2"
@@ -312,27 +364,29 @@ const ViewProject: React.FC = () => {
         <Toolbar
           className="flex justify-between items-center mt-8"
           children={
-            <>
-              <ActionButton
-                className="bg-lime-500 text-gray-700 hover:bg-lime-700  px-4 py-2 rounded-lg"
-                iconProps={{ iconName: "Back" }}
-                onClick={() => navigate(-1)}
-              >
-                <ArrowLeft24Regular className="mr-2" /> Back
-              </ActionButton>
+            isPermitted ? null : (
+              <>
+                <ActionButton
+                  className="bg-lime-500 text-gray-700 hover:bg-lime-700  px-4 py-2 rounded-lg"
+                  iconProps={{ iconName: "Back" }}
+                  onClick={() => navigate(-1)}
+                >
+                  <ArrowLeft24Regular className="mr-2" /> Back
+                </ActionButton>
 
-              {/* Only show Edit button for authenticated users who are admins or project owners */}
-              {authenticated &&
-                (authenticatedUser?.role === "Admin" ||
-                  authenticatedUser?.id === project?.ownerId) && (
-                  <ActionButton
-                    className="bg-teal-500 dark:text-primary hover:bg-success dark:hover:bg-success text-[var(--text-primary)]  px-4 py-2 rounded-lg"
-                    onClick={() => navigate(`/projects/edit/${id}`)}
-                  >
-                    <Edit20Regular className="mr-2" /> Edit Project
-                  </ActionButton>
-                )}
-            </>
+                {/* Only show Edit button for authenticated users who are admins or project owners */}
+                {authenticated &&
+                  (authenticatedUser?.role === "Admin" ||
+                    authenticatedUser?.id === project?.ownerId) && (
+                    <ActionButton
+                      className="bg-teal-500 dark:text-primary hover:bg-success dark:hover:bg-success text-[var(--text-primary)]  px-4 py-2 rounded-lg"
+                      onClick={() => navigate(`/projects/edit/${id}`)}
+                    >
+                      <Edit20Regular className="mr-2" /> Edit Project
+                    </ActionButton>
+                  )}
+              </>
+            )
           }
           aria-label={""}
         />

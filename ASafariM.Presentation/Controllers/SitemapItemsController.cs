@@ -19,10 +19,7 @@ namespace ASafariM.Presentation.Controllers
         private readonly ISitemapItemRepository _sitemapItemRepository;
         private readonly IMapper _mapper;
 
-        public SitemapItemsController(
-            ISitemapItemRepository sitemapItemRepository,
-            IMapper mapper
-        )
+        public SitemapItemsController(ISitemapItemRepository sitemapItemRepository, IMapper mapper)
         {
             _sitemapItemRepository = sitemapItemRepository;
             _mapper = mapper;

@@ -3,7 +3,7 @@ import { logger } from "@/utils/logger";
 const apiUrls = (host: string): string => {
     try {
         const isDevelopment = process.env.NODE_ENV === 'development';
-        logger.debug('Environment:', process.env.NODE_ENV, 'Host:', host);
+        logger.info('Environment:', process.env.NODE_ENV, 'Host:', host, 'isDevelopment:', isDevelopment);
 
         // Define API URLs for production environments
         const productionUrls: { [key: string]: string } = {
@@ -15,7 +15,7 @@ const apiUrls = (host: string): string => {
 
         // Return the production URL if the host matches, otherwise use the local development URL
         const apiUrl = productionUrls[host] || `http://localhost:${process.env.REACT_APP_API_PORT || 5000}/api`;
-        logger.debug('Resolved API URL:', apiUrl);
+        logger.info('Resolved API URL:', apiUrl);
         return apiUrl;
     } catch (error) {
         logger.error('Error resolving API URL:', error);

@@ -12,4 +12,5 @@ public interface IProjectService : IEntityService<Project>
     Task<Project> CreateAsync(Project project, List<string> repoUrls);
     Task UpdateAsync(Project project, List<string> repoUrls);
     Task<bool> ExistsAsync(Guid id); // Check if a project exists by ID
+ //   Task<Project?> GetByIdWithLinksAsync(Guid id); // Fetch project with repo links only
 }

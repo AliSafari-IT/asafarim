@@ -1,9 +1,9 @@
+using System.Text.Json;
 using ASafariM.Domain.Entities;
 using ASafariM.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Text.Json;
 
 namespace ASafariM.Presentation.Controllers;
 
@@ -34,7 +34,7 @@ public class VisitorController : ControllerBase
                 IPAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown",
                 VisitDate = DateTime.UtcNow,
                 UserAgent = Request.Headers.UserAgent.ToString(),
-                Referrer = Request.Headers.Referer.ToString()
+                Referrer = Request.Headers.Referer.ToString(),
             };
 
             _context.VisitorLogs.Add(visitor);

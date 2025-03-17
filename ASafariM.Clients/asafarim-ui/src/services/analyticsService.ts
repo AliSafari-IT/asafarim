@@ -11,7 +11,7 @@ const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID;
 export function initializeGA() {
   if (GA_MEASUREMENT_ID) {
     ReactGA.initialize(GA_MEASUREMENT_ID);
-    logger.debug("Google Analytics initialized");
+    logger.info("Google Analytics initialized");
   } else {
     logger.warn("Google Analytics Measurement ID not found");
   }

@@ -41,9 +41,9 @@ const UserProfile: React.FC = () => {
     useEffect(
         () => {
             if (userInfo) {
-                logger.debug('UserProfile: userInfo', userInfo);
-                logger.debug('UserProfile: lastLogin value', userInfo.lastLogin);
-                logger.debug('UserProfile: lastLogin type', typeof userInfo.lastLogin);
+                logger.info('UserProfile: userInfo', userInfo);
+                logger.info('UserProfile: lastLogin value', userInfo.lastLogin);
+                logger.info('UserProfile: lastLogin type', typeof userInfo.lastLogin);
                 setIsActive(userInfo.isActive ?? false);
             }
         }, [userInfo]);

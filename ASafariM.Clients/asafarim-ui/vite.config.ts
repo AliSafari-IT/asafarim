@@ -4,9 +4,7 @@ import path from 'path';
 import react from '@vitejs/plugin-react';
 import vitePluginMd from 'vite-plugin-md';
 import md from 'vite-plugin-md';
-import react from '@vitejs/plugin-react';
-import { PluginOption } from 'vite';
-
+// https://vite.dev/config/
 export default defineConfig({
   mode: process.env.NODE_ENV,
   optimizeDeps: {
@@ -51,9 +49,6 @@ export default defineConfig({
     }
   },
   css: {
-    preprocessorOptions: {
-      scss: { quietDeps: true }
-    },
     postcss: './postcss.config.js',
   },
   assetsInclude: ['**/*.md'],

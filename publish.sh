@@ -17,7 +17,7 @@ BACKEND_BACKUP_PATH="$BACKEND_BACKUP_DIR/$BACKEND_BACKUP_FILE"
 PUBLISH_DIR="$BASE_DIR/asafarim-api"
 SERVICE_NAME="asafarim-api"
 SERVICE_FILE="/etc/systemd/system/$SERVICE_NAME.service"
-MAX_RETRIES=5
+MAX_RETRIES=10
 HEALTH_CHECK_URL="http://localhost:5000/api/health"
 LOG_DIR="/var/www/asafarim/logs"
 
@@ -29,6 +29,9 @@ DEPLOY_LOG="$LOG_DIR/deploy_$(date +%Y%m%d_%H%M%S).log"
 log() {
   echo "$(date +"%Y-%m-%d %H:%M:%S") - $1" | tee -a "$DEPLOY_LOG"
 }
+
+# remove older DEPLOY_LOG files if exists except the current one
+rm -f "$LOG_DIR/deploy_*.log" || true
 
 # Error handling function
 handle_error() {
@@ -84,15 +87,15 @@ update_repo() {
 # Function to check API health
 check_health() {
   local retries=0
-  local max_retries=20
+  local max_retries=30
   log "Starting health check at $HEALTH_CHECK_URL"
   
   while [ $retries -lt $max_retries ]; do
     log "Health check attempt $((retries + 1))..."
     response=$(curl -sk "$HEALTH_CHECK_URL" 2>&1)
 
-    if [[ "$response" == *"Healthy"* ]] || [[ "$response" == *"healthy"* ]]; then
-      log "Health check passed"
+    if [[ "$response" == *"Healthy"* ]]; then
+      log "Health check passed!"
       return 0
     fi
 
@@ -192,7 +195,9 @@ create_backup() {
   log "Creating $backup_name backup..."
 
   # Ensure backup directory exists with correct permissions
-  sudo mkdir -p "$(dirname "$backup_path")"
+  sudo mkdir -p "$(dirname "$backup_path")" || true
+  sudo chown -R root:root "$(dirname "$backup_path")" || true
+  sudo chmod -R 755 "$(dirname "$backup_path")" || true
   
   # Verify source directory exists and has content
   if [ ! -d "$source_dir" ]; then
@@ -223,7 +228,7 @@ clean_old_backups() {
   local keep_count=3
   
   log "Cleaning old backups in $backup_dir, keeping newest $keep_count"
-  sudo mkdir -p "$backup_dir"
+  sudo mkdir -p "$backup_dir" || true
   
   # Count files
   file_count=$(ls -1 "$backup_dir"/*.tar.gz 2>/dev/null | wc -l)
@@ -273,11 +278,11 @@ if [ "$DEPLOY_MODE" -eq 1 ] || [ "$DEPLOY_MODE" -eq 3 ]; then
 
   # Ensure Deployment Directory Exists
   log "Ensuring deployment directory exists..."
-  sudo mkdir -p "$FRONTEND_DEPLOY_DIR"
+  sudo mkdir -p "$FRONTEND_DEPLOY_DIR" || true
 
   # Clear old files
   log "Cleaning old deployment files..."
-  sudo rm -rf "$FRONTEND_DEPLOY_DIR"/*
+  sudo rm -rf "$FRONTEND_DEPLOY_DIR"/* || true
 
   # Move new build files
   log "Deploying new build files..."
@@ -308,20 +313,14 @@ fi
 if [ "$DEPLOY_MODE" -eq 2 ] || [ "$DEPLOY_MODE" -eq 3 ]; then
   log "Starting Backend Deployment..."
 
-  # delete /var/www/asafarim/ASafariM.Api/bin & obj
-  sudo rm -rf /var/www/asafarim/ASafariM.Api/bin
-  log "Deleted /var/www/asafarim/ASafariM.Api/bin"
-  sudo rm -rf /var/www/asafarim/ASafariM.Api/obj
-  log "Deleted /var/www/asafarim/ASafariM.Api/obj"
+  # Ensure port 5000 is free
+  ensure_port_5000_free
 
   # Clean old backups
-  clean_old_backups "$BACKEND_BACKUP_DIR"
+  clean_old_backups "$BACKEND_BACKUP_DIR" || true
 
   # Create a backup of the current deployment
   create_backup "$BACKEND_DEPLOY_DIR" "$BACKEND_BACKUP_PATH" "backend"
-
-  # Ensure port 5000 is free
-  #ensure_port_5000_free
 
   # Navigate to repository directory
   cd "$REPO_DIR" || handle_error "Repository directory not found!" "exit"
@@ -340,7 +339,7 @@ if [ "$DEPLOY_MODE" -eq 2 ] || [ "$DEPLOY_MODE" -eq 3 ]; then
 
   # Ensure the publish directory exists
   log "Ensuring publish directory exists..."
-  sudo mkdir -p "$PUBLISH_DIR"
+  sudo mkdir -p "$PUBLISH_DIR" || true
 
   # Publish the backend
   log "Publishing backend..."
@@ -349,11 +348,13 @@ if [ "$DEPLOY_MODE" -eq 2 ] || [ "$DEPLOY_MODE" -eq 3 ]; then
     rollback
     handle_error "Backend publish failed" "exit"
   }
+  log "Backend published successfully to $PUBLISH_DIR"
 
   # Set correct permissions
   log "Setting correct permissions..."
-  sudo chown -R root:root "$PUBLISH_DIR"
+  sudo chown -R root:root "$PUBLISH_DIR" || true
   sudo chmod -R 755 "$PUBLISH_DIR"
+  log "Backend permissions set successfully"
 
   # Update systemd service
   log "Updating systemd service..."
@@ -361,11 +362,13 @@ if [ "$DEPLOY_MODE" -eq 2 ] || [ "$DEPLOY_MODE" -eq 3 ]; then
 
   # Reload systemd
   log "Reloading systemd daemon..."
-  sudo systemctl daemon-reload
+  sudo systemctl daemon-reload || true
+  log "Systemd daemon reloaded successfully"
 
   # Restart backend service
   log "Restarting backend service..."
   sudo systemctl restart "$SERVICE_NAME" || handle_error "Failed to restart backend service!" "exit"
+  log "Backend service restarted successfully"
 
   # Check health
   if check_health; then

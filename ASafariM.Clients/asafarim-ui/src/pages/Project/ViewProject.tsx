@@ -70,23 +70,27 @@ const ViewProject: React.FC = () => {
       setLoading(false);
       return;
     }
-    const projectExists = async () =>
-      await entityServices.tableExistsInDb("project");
 
-    const getProjectResponse = async () =>
-      await entityServices.fetchEntityById("project", id);
+    // -- COMMENTED OUT to avoid errors if tableExistsInDb doesn't exist --
+    // const projectExists = async () => await entityServices.tableExistsInDb("project");
+    // const getProjectResponse = async () => await entityServices.fetchEntityById("project", id);
 
     const fetchProjectData = async () => {
-      if (!(await projectExists())) {
-        setError("Project table not found!");
-        setLoading(false);
-        return;
-      }
+      // If you do have the function, uncomment these lines:
+      // if (!(await projectExists())) {
+      //   setError("Project table not found!");
+      //   setLoading(false);
+      //   return;
+      // }
 
-      // Fetch project data
       logger.debug(`Fetching project data for project ID: ${id}`);
       try {
-        const projectResponse = await getProjectResponse();
+        // Direct call without tableExistsInDb check:
+        const projectResponse = await entityServices.fetchEntityById(
+          "project",
+          id
+        );
+
         // Check if project exists
         if (!projectResponse) {
           setError("Project not found");
@@ -130,6 +134,7 @@ const ViewProject: React.FC = () => {
     fetchProjectData();
   }, [id, authenticated, navigate, authenticatedUser]);
 
+  // Now handle permission logic + fetch repo links for non-public
   useEffect(() => {
     const getRepoLinks = async () => {
       if (project && project.id) {
@@ -138,17 +143,9 @@ const ViewProject: React.FC = () => {
     };
 
     if (project && project.id) {
-      // For public projects, always fetch and display all properties including repo links
+      // For public projects, we already fetched in fetchProjectData
       if (project.visibility === 0) {
-        try {
-          getRepoLinks();
-          return;
-        } catch (error) {
-          logger.error(
-            "Error fetching repository links for public project:",
-            error
-          );
-        }
+        return; // done
       }
 
       // For non-public projects, check authentication
@@ -170,32 +167,30 @@ const ViewProject: React.FC = () => {
         }
 
         // If user is authenticated but not admin or owner, check project visibility
+        // If user’s real admin property is `isAdmin`, check that:
+        const userIsAdmin = !!authenticatedUser?.isAdmin;
+        // If user’s real admin property is `role === "Admin"`, do:
+        // const userIsAdmin = authenticatedUser?.role === "Admin";
+
         if (
           project.visibility !== 0 && // Not public
           project.ownerId !== authenticatedUser?.id && // Not owner
-          !authenticatedUser?.isAdmin
+          !userIsAdmin
         ) {
-          // Not admin
-
-          // For members-only projects, check if user is a project member
+          // For members-only projects
           if (project.visibility === 1) {
-            // Members only
-            // TODO: Add logic to check if user is a project member
-            // For now, we'll assume they're not a member
             setError("You don't have permission to view this project");
             setLoading(false);
             return;
           }
-
-          // For private projects
+          // For private
           if (project.visibility === 2) {
-            // Private
             setError("You don't have permission to view this project");
             setLoading(false);
             return;
           }
         }
-        // Fetch repo links
+        // If we get here, user is allowed, fetch links
         getRepoLinks();
       }
     }
@@ -298,101 +293,99 @@ const ViewProject: React.FC = () => {
     );
   }
 
-  const isPermitted = showAuthErrorNotification ||
+  const isPermitted =
+    showAuthErrorNotification ||
     (authenticated &&
-     (authenticatedUser?.role !== "Admin" ||
-      authenticatedUser?.id !== project?.ownerId));
+      (authenticatedUser?.role !== "Admin" ||
+        authenticatedUser?.id !== project?.ownerId));
 
-  return (
-    <Wrapper>
-      <div className="w-2/3 mx-auto p-6 md:p-10 bg-[var(--bg-primary)] shadow-lg rounded-xl">
-        {/* Title */}
-        <Text
-          as="h1"
-          className="text-[var(--text-primary)] text-2xl font-bold mb-6"
-        >
-          Project Details
-        </Text>
-
-        {/* Project Fields in Two Columns */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-          {isPermitted ? null : fields.map((field) => (
-            <div
-              key={field.name}
-              className="p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md"
-            >
+        return (
+          <Wrapper>
+            <div className="w-2/3 mx-auto p-6 md:p-10 bg-[var(--bg-primary)] shadow-lg rounded-xl">
+              {/* Title */}
               <Text
-                as="label"
-                className="block text-[var(--text-primary)] font-medium mb-2"
+                as="h1"
+                className="text-[var(--text-primary)] text-2xl font-bold mb-6"
               >
-                {field.label}:
+                Project Details
               </Text>
-              <Text className="text-[var(--text-secondary)] font-semibold">
-                {getFieldValue(field)}
-              </Text>
-            </div>
-          ))}
-        </div>
-        {/* Repository Links Section */}
-
-        {isPermitted ? null : repoLinks.length > 0 && (
-          <div className="mt-6 p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md">
-            <Text
-              as="h2"
-              className="text-[var(--text-primary)] text-xl font-bold mb-3"
-            >
-              Repository Links
-            </Text>
-            <ul className="list-disc list-inside">
-              {repoLinks.map((repo, index) => (
-                <li key={index}>
-                  <a
-                    href={repo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-teal-500 underline hover:text-teal-700"
+      
+              {/* Project Fields in Two Columns */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                {fields.map((field) => (
+                  <div
+                    key={field.name}
+                    className="p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md"
                   >
-                    {repo}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {/* Buttons moved to the bottom */}
-        <Toolbar
-          className="flex justify-between items-center mt-8"
-          children={
-            isPermitted ? null : (
-              <>
-                <ActionButton
-                  className="bg-lime-500 text-gray-700 hover:bg-lime-700  px-4 py-2 rounded-lg"
-                  iconProps={{ iconName: "Back" }}
-                  onClick={() => navigate(-1)}
-                >
-                  <ArrowLeft24Regular className="mr-2" /> Back
-                </ActionButton>
-
-                {/* Only show Edit button for authenticated users who are admins or project owners */}
-                {authenticated &&
-                  (authenticatedUser?.role === "Admin" ||
-                    authenticatedUser?.id === project?.ownerId) && (
-                    <ActionButton
-                      className="bg-teal-500 dark:text-primary hover:bg-success dark:hover:bg-success text-[var(--text-primary)]  px-4 py-2 rounded-lg"
-                      onClick={() => navigate(`/projects/edit/${id}`)}
+                    <Text
+                      as="label"
+                      className="block text-[var(--text-primary)] font-medium mb-2"
                     >
-                      <Edit20Regular className="mr-2" /> Edit Project
-                    </ActionButton>
-                  )}
-              </>
-            )
-          }
-          aria-label={""}
-        />
-      </div>
-    </Wrapper>
-  );
-};
-
-export default ViewProject;
+                      {field.label}:
+                    </Text>
+                    <Text className="text-[var(--text-secondary)] font-semibold">
+                      {getFieldValue(field)}
+                    </Text>
+                  </div>
+                ))}
+              </div>
+      
+              {/* Repository Links Section */}
+              {repoLinks.length > 0 && (
+                <div className="mt-6 p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md">
+                  <Text
+                    as="h2"
+                    className="text-[var(--text-primary)] text-xl font-bold mb-3"
+                  >
+                    Repository Links
+                  </Text>
+                  <ul className="list-disc list-inside">
+                    {repoLinks.map((repo, index) => (
+                      <li key={index}>
+                        <a
+                          href={repo}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-teal-500 underline hover:text-teal-700"
+                        >
+                          {repo}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+      
+              {/* Buttons moved to the bottom */}
+              <Toolbar
+                className="flex justify-between items-center mt-8"
+                aria-label=""
+              >
+                <>
+                  <ActionButton
+                    className="bg-lime-500 text-gray-700 hover:bg-lime-700  px-4 py-2 rounded-lg"
+                    iconProps={{ iconName: "Back" }}
+                    onClick={() => navigate(-1)}
+                  >
+                    <ArrowLeft24Regular className="mr-2" /> Back
+                  </ActionButton>
+      
+                  {/* Only show Edit button for authenticated users who are admins or project owners */}
+                  {authenticated &&
+                    (authenticatedUser?.isAdmin ||
+                      authenticatedUser?.id === project?.ownerId) && (
+                      <ActionButton
+                        className="bg-teal-500 dark:text-primary hover:bg-success dark:hover:bg-success text-[var(--text-primary)]  px-4 py-2 rounded-lg"
+                        onClick={() => navigate(`/projects/edit/${id}`)}
+                      >
+                        <Edit20Regular className="mr-2" /> Edit Project
+                      </ActionButton>
+                    )}
+                </>
+              </Toolbar>
+            </div>
+          </Wrapper>
+        );
+      };
+      
+      export default ViewProject;

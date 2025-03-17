@@ -19,11 +19,11 @@ SERVICE_NAME="asafarim-api"
 SERVICE_FILE="/etc/systemd/system/$SERVICE_NAME.service"
 MAX_RETRIES=5
 HEALTH_CHECK_URL="http://localhost:5000/api/health"
-LOG_DIR="/var/log/asafarim"
+LOG_DIR="/var/www/asafarim/logs"
 
 # Ensure log directory exists
 mkdir -p "$LOG_DIR"
-DEPLOY_LOG="$LOG_DIR/deploy_${TIMESTAMP}.log"
+DEPLOY_LOG="$LOG_DIR/deploy_$(date +%Y%m%d_%H%M%S).log"
 
 # Log function
 log() {
@@ -308,6 +308,12 @@ fi
 if [ "$DEPLOY_MODE" -eq 2 ] || [ "$DEPLOY_MODE" -eq 3 ]; then
   log "Starting Backend Deployment..."
 
+  # delete /var/www/asafarim/ASafariM.Api/bin & obj
+  sudo rm -rf /var/www/asafarim/ASafariM.Api/bin
+  log "Deleted /var/www/asafarim/ASafariM.Api/bin"
+  sudo rm -rf /var/www/asafarim/ASafariM.Api/obj
+  log "Deleted /var/www/asafarim/ASafariM.Api/obj"
+
   # Clean old backups
   clean_old_backups "$BACKEND_BACKUP_DIR"
 
@@ -315,7 +321,7 @@ if [ "$DEPLOY_MODE" -eq 2 ] || [ "$DEPLOY_MODE" -eq 3 ]; then
   create_backup "$BACKEND_DEPLOY_DIR" "$BACKEND_BACKUP_PATH" "backend"
 
   # Ensure port 5000 is free
-  ensure_port_5000_free
+  #ensure_port_5000_free
 
   # Navigate to repository directory
   cd "$REPO_DIR" || handle_error "Repository directory not found!" "exit"

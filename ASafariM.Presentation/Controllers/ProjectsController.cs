@@ -111,17 +111,22 @@ namespace ASafariM.Presentation.Controllers
 
                 // Get project to check visibility
                 var projectBasic = await _projectService.GetByIdAsync(id);
-                
+
                 // If project is not public, check if user is authenticated
                 if (projectBasic.Visibility != VisibilityEnum.Public)
                 {
                     // Check if user is authenticated
                     if (!User.Identity.IsAuthenticated)
                     {
-                        _logger.LogWarning("Unauthorized access attempt to non-public project links: {ProjectId}", id);
-                        return Unauthorized("Authentication required to access links for non-public projects");
+                        _logger.LogWarning(
+                            "Unauthorized access attempt to non-public project links: {ProjectId}",
+                            id
+                        );
+                        return Unauthorized(
+                            "Authentication required to access links for non-public projects"
+                        );
                     }
-                    
+
                     // For members-only or private projects, additional authorization checks could be added here
                     // TODO: Check if authenticated user is owner, admin, or member for members-only projects
                 }

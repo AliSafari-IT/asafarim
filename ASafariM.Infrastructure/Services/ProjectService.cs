@@ -90,7 +90,7 @@ namespace ASafariM.Infrastructure.Services
             });
         }
 
-        public async Task<Project> GetByIdWithLinksAsync(Guid id)
+        public async Task<Project?> GetByIdWithLinksAsync(Guid id)
         {
             var strategy = _dbContext.Database.CreateExecutionStrategy();
             return await strategy.ExecuteAsync(async () =>
@@ -436,6 +436,68 @@ namespace ASafariM.Infrastructure.Services
                 Log.Information("Fetched {ProjectCount} projects with members.", projects.Length);
                 return projects;
             });
+        }
+
+        public async Task<bool> UpdateProjectAsync(Guid id, ProjectUpdateDto projectDto)
+        {
+            try
+            {
+                var existingProject = await _dbContext.Projects.FindAsync(id);
+                if (existingProject == null)
+                {
+                    throw new NotFoundException($"Project with ID {id} not found");
+                }
+
+                // Update properties only if provided
+                if (!string.IsNullOrEmpty(projectDto.Name))
+                    existingProject.Name = projectDto.Name;
+                if (!string.IsNullOrEmpty(projectDto.Description))
+                    existingProject.Description = projectDto.Description;
+                if (projectDto.StartDate.HasValue)
+                    existingProject.StartDate = projectDto.StartDate.Value;
+                if (projectDto.EndDate.HasValue)
+                    existingProject.EndDate = projectDto.EndDate.Value;
+                if (projectDto.Budget.HasValue)
+                    existingProject.Budget = projectDto.Budget.Value;
+                if (projectDto.Status.HasValue)
+                    existingProject.Status = (StatusEnum)projectDto.Status.Value;
+                if (projectDto.Visibility.HasValue)
+                    existingProject.Visibility = (VisibilityEnum)projectDto.Visibility.Value;
+
+                existingProject.UpdatedAt = DateTime.UtcNow;
+
+                await _dbContext.SaveChangesAsync();
+                Log.Information("Project updated successfully: {ProjectId}", id);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"Error updating project with ID {id}");
+                throw new ProjectServiceException($"Error updating project with ID {id}", ex);
+            }
+        }
+
+        // Deletes a project by its ID.
+        public async Task<bool> DeleteProjectAsync(Guid id)
+        {
+            try
+            {
+                var project = await _dbContext.Projects.FindAsync(id);
+                if (project == null)
+                {
+                    throw new NotFoundException($"Project with ID {id} not found");
+                }
+
+                _dbContext.Projects.Remove(project);
+                await _dbContext.SaveChangesAsync();
+                Log.Information("Project deleted successfully: {ProjectId}", id);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"Error occurred while deleting project with ID {id}");
+                throw new ProjectServiceException($"Error deleting project with ID {id}", ex);
+            }
         }
     }
 }

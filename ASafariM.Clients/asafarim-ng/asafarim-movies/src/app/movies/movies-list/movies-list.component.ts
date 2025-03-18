@@ -1,3 +1,4 @@
+import { DatePipe, UpperCasePipe, CurrencyPipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { GenericListComponent } from "../../shared/components/generic-list/generic-list.component";
 import { MatButtonModule } from '@angular/material/button';

@@ -18,6 +18,7 @@
     "restore_dev": "powershell -File ./scripts/bash_files/dotnet-commands.ps1 restore",
     "build": "bash ./scripts/bash_files/dotnet-commands.sh build",
     "build_dev": "powershell -File ./scripts/bash_files/dotnet-commands.ps1 build",
+    "ngm": "yarn workspace asafarim-movies start",
     "ui": "yarn workspace asafarim-ui start",
     "ui:build": "yarn workspace asafarim-ui build",
     "ui:rebuild": "yarn workspace asafarim-ui rebuild",
@@ -51,9 +52,11 @@
   "workspaces": [
     "asafarim",
     "asafarim-ui",
+    "asafarim-movies",
     "asafarim-api",
     "ASafariM.Api",
-    "ASafariM.Clients/asafarim-ui"
+    "ASafariM.Clients/asafarim-ui",
+    "ASafariM.Clients/asafarim-ng/asafarim-movies"
   ],
   "dependencies": {
     "lodash": "^4.17.21"

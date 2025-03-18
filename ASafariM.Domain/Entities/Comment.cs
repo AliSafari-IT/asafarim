@@ -1,7 +1,7 @@
 using System;
-using ASafariM.Domain.Common;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using ASafariM.Domain.Common;
 
 namespace ASafariM.Domain.Entities
 {

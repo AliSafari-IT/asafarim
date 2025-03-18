@@ -1,1 +1,58 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import "../../../asafarim-ui/src/styles/theme-variables.css";
+@import "../../../asafarim-ui/src/styles/custom.css";
+@import "../../../asafarim-ui/src/index.css";
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.movies-container{
+    border: 1px solid black;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    display: flex;
+    gap: 10px;
+}
+
+h2 {
+    color: green;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.actions button {
+    background-color: transparent;
+    border: 1px solid black;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.actions button:hover {
+    background-color: black;
+    color: white;
+}
+
+.actions button:active {
+    background-color: black;
+    color: white;
+}
+
+.actions button:disabled {
+    background-color: black;
+    color: white;
+}
+
+.actions button:disabled:hover {
+    background-color: black;
+    color: white;
+}
+
+.actions button:disabled:active {
+    background-color: black;
+    color: white;
+}

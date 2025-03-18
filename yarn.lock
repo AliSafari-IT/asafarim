@@ -261,6 +261,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@angular/cdk@npm:^19.2.3":
+  version: 19.2.3
+  resolution: "@angular/cdk@npm:19.2.3"
+  dependencies:
+    parse5: "npm:^7.1.2"
+    tslib: "npm:^2.3.0"
+  peerDependencies:
+    "@angular/common": ^19.0.0 || ^20.0.0
+    "@angular/core": ^19.0.0 || ^20.0.0
+    rxjs: ^6.5.3 || ^7.4.0
+  dependenciesMeta:
+    parse5:
+      optional: true
+  checksum: 10c0/b511a9caff3d1f61895d38db80b071d91521f39f1a85512c8a3f02a7613b5b73874d9e71cb024a54ae7afab6858bd282ccee110978eab486d054213807a1eb76
+  languageName: node
+  linkType: hard
+
 "@angular/cli@npm:^19.2.3":
   version: 19.2.3
   resolution: "@angular/cli@npm:19.2.3"
@@ -360,6 +377,22 @@ __metadata:
     "@angular/platform-browser": 19.2.2
     rxjs: ^6.5.3 || ^7.4.0
   checksum: 10c0/a290f3213d720b79a0399dd2164700f8f0c3a463c9ea299e38a9942217bed1991529f12d7deb266a5dc5a3290aebd59f25db17183f978729b78f052110538d8a
+  languageName: node
+  linkType: hard
+
+"@angular/material@npm:^19.2.3":
+  version: 19.2.3
+  resolution: "@angular/material@npm:19.2.3"
+  dependencies:
+    tslib: "npm:^2.3.0"
+  peerDependencies:
+    "@angular/cdk": 19.2.3
+    "@angular/common": ^19.0.0 || ^20.0.0
+    "@angular/core": ^19.0.0 || ^20.0.0
+    "@angular/forms": ^19.0.0 || ^20.0.0
+    "@angular/platform-browser": ^19.0.0 || ^20.0.0
+    rxjs: ^6.5.3 || ^7.4.0
+  checksum: 10c0/4924b3b4fe18999a603ec29dff43a1f2ec5958f45477b17000db08aef33c7637c69db8e8fe7b90e4bd904b956ee7b211f921ed9391466b4a4b9821352ad9e779
   languageName: node
   linkType: hard
 
@@ -8597,12 +8630,14 @@ __metadata:
   resolution: "asafarim-movies@workspace:ASafariM.Clients/asafarim-ng/asafarim-movies"
   dependencies:
     "@angular-devkit/build-angular": "npm:^19.2.3"
+    "@angular/cdk": "npm:^19.2.3"
     "@angular/cli": "npm:^19.2.3"
     "@angular/common": "npm:^19.2.0"
     "@angular/compiler": "npm:^19.2.0"
     "@angular/compiler-cli": "npm:^19.2.0"
     "@angular/core": "npm:^19.2.0"
     "@angular/forms": "npm:^19.2.0"
+    "@angular/material": "npm:^19.2.3"
     "@angular/platform-browser": "npm:^19.2.0"
     "@angular/platform-browser-dynamic": "npm:^19.2.0"
     "@angular/router": "npm:^19.2.0"
@@ -11120,17 +11155,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"encodeurl@npm:^2.0.0, encodeurl@npm:~2.0.0":
-  version: 2.0.0
-  resolution: "encodeurl@npm:2.0.0"
-  checksum: 10c0/5d317306acb13e6590e28e27924c754163946a2480de11865c991a3a7eed4315cd3fba378b543ca145829569eefe9b899f3d84bb09870f675ae60bc924b01ceb
-  languageName: node
-  linkType: hard
-
-"encodeurl@npm:~1.0.2":
+"encodeurl@npm:^2.0.0, encodeurl@npm:~1.0.2":
   version: 1.0.2
   resolution: "encodeurl@npm:1.0.2"
   checksum: 10c0/f6c2387379a9e7c1156c1c3d4f9cb7bb11cf16dd4c1682e1f6746512564b053df5781029b6061296832b59fb22f459dbe250386d217c2f6e203601abb2ee0bec
+  languageName: node
+  linkType: hard
+
+"encodeurl@npm:~2.0.0":
+  version: 2.0.0
+  resolution: "encodeurl@npm:2.0.0"
+  checksum: 10c0/5d317306acb13e6590e28e27924c754163946a2480de11865c991a3a7eed4315cd3fba378b543ca145829569eefe9b899f3d84bb09870f675ae60bc924b01ceb
   languageName: node
   linkType: hard
 
@@ -15825,9 +15860,9 @@ __metadata:
   linkType: hard
 
 "mime-db@npm:>= 1.43.0 < 2":
-  version: 1.53.0
-  resolution: "mime-db@npm:1.53.0"
-  checksum: 10c0/1dcc37ba8ed5d1c179f5c6f0837e8db19371d5f2ea3690c3c2f3fa8c3858f976851d3460b172b4dee78ebd606762cbb407aa398545fbacd539e519f858cd7bf4
+  version: 1.54.0
+  resolution: "mime-db@npm:1.54.0"
+  checksum: 10c0/8d907917bc2a90fa2df842cdf5dfeaf509adc15fe0531e07bb2f6ab15992416479015828d6a74200041c492e42cce3ebf78e5ce714388a0a538ea9c53eece284
   languageName: node
   linkType: hard
 
@@ -16850,7 +16885,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"parse5@npm:^7.0.0, parse5@npm:^7.2.1":
+"parse5@npm:^7.0.0, parse5@npm:^7.1.2, parse5@npm:^7.2.1":
   version: 7.2.1
   resolution: "parse5@npm:7.2.1"
   dependencies:

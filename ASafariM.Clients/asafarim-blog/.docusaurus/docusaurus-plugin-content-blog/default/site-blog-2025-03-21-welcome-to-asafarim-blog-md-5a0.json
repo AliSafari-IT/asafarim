@@ -3,44 +3,39 @@
   "editUrl": "https://github.com/AliSafari-IT/asafarim/tree/main/ASafariM.Clients/asafarim-blog/blog/2025-03-21-welcome-to-asafarim-blog.md",
   "source": "@site/blog/2025-03-21-welcome-to-asafarim-blog.md",
   "title": "Welcome to ASafariM Blog",
-  "description": "Hello and welcome to the official ASafariM blog! This is where I'll share insights, updates, and thoughts about the ASafariM project and related technologies.",
+  "description": "Hello and welcome to the official ASafariM blog! This is where I'll be sharing my thoughts, stories, and ideas about software development, technology trends, and updates about the ASafariM project.",
   "date": "2025-03-21T00:00:00.000Z",
   "tags": [
     {
       "inline": false,
       "label": "Welcome",
       "permalink": "/asafarim-blog/blog/tags/welcome",
-      "description": "Welcome posts and announcements"
+      "description": "Welcome posts introducing new features or sections"
     },
     {
       "inline": false,
-      "label": "ASafariM",
+      "label": "Asafarim",
       "permalink": "/asafarim-blog/blog/tags/asafarim",
       "description": "Posts related to the ASafariM project"
     },
     {
       "inline": false,
       "label": "Blog",
-      "permalink": "/asafarim-blog/blog/tags/blog-tag",
-      "description": "General blog posts and updates"
+      "permalink": "/asafarim-blog/blog/tags/blog",
+      "description": "Meta posts about the blog itself"
     }
   ],
-  "readingTime": 0.74,
-  "hasTruncateMarker": false,
+  "readingTime": 0.76,
+  "hasTruncateMarker": true,
   "authors": [
     {
       "name": "Ali Safari",
-      "title": "Software Engineer & ASafariM Creator",
+      "title": "Software Engineer & Creator of ASafariM",
       "url": "https://github.com/AliSafari-IT",
-      "page": {
-        "permalink": "/asafarim-blog/blog/authors/alisafari"
-      },
-      "socials": {
-        "linkedin": "https://www.linkedin.com/in/alisafari-it/",
-        "github": "https://github.com/AliSafari-IT"
-      },
+      "email": "contact@asafarim.com",
       "imageURL": "https://github.com/AliSafari-IT.png",
-      "key": "alisafari"
+      "key": "alisafari",
+      "page": null
     }
   ],
   "frontMatter": {
@@ -55,9 +50,5 @@
       "blog"
     ]
   },
-  "unlisted": false,
-  "nextItem": {
-    "title": "Welcome",
-    "permalink": "/asafarim-blog/blog/welcome"
-  }
+  "unlisted": false
 }

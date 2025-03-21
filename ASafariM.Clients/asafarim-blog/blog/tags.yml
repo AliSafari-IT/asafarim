@@ -1,0 +1,8 @@
+welcome:
+  description: Welcome posts introducing new features or sections
+  
+asafarim:
+  description: Posts related to the ASafariM project
+  
+blog:
+  description: Meta posts about the blog itself

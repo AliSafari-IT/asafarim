@@ -1,4 +1,11 @@
 {
   "title": "Recent posts",
-  "items": []
+  "items": [
+    {
+      "title": "Welcome to ASafariM Blog",
+      "permalink": "/asafarim-blog/blog/welcome-to-asafarim-blog",
+      "unlisted": false,
+      "date": "2025-03-21T00:00:00.000Z"
+    }
+  ]
 }

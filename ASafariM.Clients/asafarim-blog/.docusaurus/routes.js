@@ -44,79 +44,19 @@ export default [
   },
   {
     path: '/asafarim-blog/docs',
-    component: ComponentCreator('/asafarim-blog/docs', 'be0'),
+    component: ComponentCreator('/asafarim-blog/docs', '4fd'),
     routes: [
       {
         path: '/asafarim-blog/docs',
-        component: ComponentCreator('/asafarim-blog/docs', '138'),
+        component: ComponentCreator('/asafarim-blog/docs', '026'),
         routes: [
           {
             path: '/asafarim-blog/docs',
-            component: ComponentCreator('/asafarim-blog/docs', '97d'),
+            component: ComponentCreator('/asafarim-blog/docs', '954'),
             routes: [
-              {
-                path: '/asafarim-blog/docs/category/tutorial---basics',
-                component: ComponentCreator('/asafarim-blog/docs/category/tutorial---basics', '189'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/asafarim-blog/docs/category/tutorial---extras',
-                component: ComponentCreator('/asafarim-blog/docs/category/tutorial---extras', '049'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
               {
                 path: '/asafarim-blog/docs/intro',
                 component: ComponentCreator('/asafarim-blog/docs/intro', '33c'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/asafarim-blog/docs/tutorial-basics/congratulations',
-                component: ComponentCreator('/asafarim-blog/docs/tutorial-basics/congratulations', '5a4'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/asafarim-blog/docs/tutorial-basics/create-a-blog-post',
-                component: ComponentCreator('/asafarim-blog/docs/tutorial-basics/create-a-blog-post', '9a0'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/asafarim-blog/docs/tutorial-basics/create-a-document',
-                component: ComponentCreator('/asafarim-blog/docs/tutorial-basics/create-a-document', 'ea7'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/asafarim-blog/docs/tutorial-basics/create-a-page',
-                component: ComponentCreator('/asafarim-blog/docs/tutorial-basics/create-a-page', '005'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/asafarim-blog/docs/tutorial-basics/deploy-your-site',
-                component: ComponentCreator('/asafarim-blog/docs/tutorial-basics/deploy-your-site', '971'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/asafarim-blog/docs/tutorial-basics/markdown-features',
-                component: ComponentCreator('/asafarim-blog/docs/tutorial-basics/markdown-features', '1d3'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/asafarim-blog/docs/tutorial-extras/manage-docs-versions',
-                component: ComponentCreator('/asafarim-blog/docs/tutorial-extras/manage-docs-versions', '4be'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/asafarim-blog/docs/tutorial-extras/translate-your-site',
-                component: ComponentCreator('/asafarim-blog/docs/tutorial-extras/translate-your-site', 'c0c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               }
@@ -125,11 +65,6 @@ export default [
         ]
       }
     ]
-  },
-  {
-    path: '/asafarim-blog/',
-    component: ComponentCreator('/asafarim-blog/', '168'),
-    exact: true
   },
   {
     path: '*',

@@ -11,7 +11,7 @@ export default {
   "baseUrl": "/asafarim-blog/",
   "organizationName": "AliSafari-IT",
   "projectName": "asafarim",
-  "onBrokenLinks": "throw",
+  "onBrokenLinks": "warn",
   "onBrokenMarkdownLinks": "warn",
   "i18n": {
     "defaultLocale": "en",

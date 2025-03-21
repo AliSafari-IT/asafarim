@@ -1,7 +1,7 @@
 {
   "id": "intro",
-  "title": "Tutorial Intro",
-  "description": "Let's discover Docusaurus in less than 5 minutes.",
+  "title": "Introduction",
+  "description": "Welcome to the ASafariM documentation!",
   "source": "@site/docs/intro.md",
   "sourceDirName": ".",
   "slug": "/intro",
@@ -15,9 +15,5 @@
   "frontMatter": {
     "sidebar_position": 1
   },
-  "sidebar": "tutorialSidebar",
-  "next": {
-    "title": "Tutorial - Basics",
-    "permalink": "/asafarim-blog/docs/category/tutorial---basics"
-  }
+  "sidebar": "tutorialSidebar"
 }

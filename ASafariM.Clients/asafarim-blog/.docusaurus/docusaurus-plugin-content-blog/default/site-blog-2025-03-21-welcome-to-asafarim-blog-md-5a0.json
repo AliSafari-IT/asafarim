@@ -1,0 +1,63 @@
+{
+  "permalink": "/asafarim-blog/blog/welcome-to-asafarim-blog",
+  "editUrl": "https://github.com/AliSafari-IT/asafarim/tree/main/ASafariM.Clients/asafarim-blog/blog/2025-03-21-welcome-to-asafarim-blog.md",
+  "source": "@site/blog/2025-03-21-welcome-to-asafarim-blog.md",
+  "title": "Welcome to ASafariM Blog",
+  "description": "Hello and welcome to the official ASafariM blog! This is where I'll share insights, updates, and thoughts about the ASafariM project and related technologies.",
+  "date": "2025-03-21T00:00:00.000Z",
+  "tags": [
+    {
+      "inline": false,
+      "label": "Welcome",
+      "permalink": "/asafarim-blog/blog/tags/welcome",
+      "description": "Welcome posts and announcements"
+    },
+    {
+      "inline": false,
+      "label": "ASafariM",
+      "permalink": "/asafarim-blog/blog/tags/asafarim",
+      "description": "Posts related to the ASafariM project"
+    },
+    {
+      "inline": false,
+      "label": "Blog",
+      "permalink": "/asafarim-blog/blog/tags/blog-tag",
+      "description": "General blog posts and updates"
+    }
+  ],
+  "readingTime": 0.74,
+  "hasTruncateMarker": false,
+  "authors": [
+    {
+      "name": "Ali Safari",
+      "title": "Software Engineer & ASafariM Creator",
+      "url": "https://github.com/AliSafari-IT",
+      "page": {
+        "permalink": "/asafarim-blog/blog/authors/alisafari"
+      },
+      "socials": {
+        "linkedin": "https://www.linkedin.com/in/alisafari-it/",
+        "github": "https://github.com/AliSafari-IT"
+      },
+      "imageURL": "https://github.com/AliSafari-IT.png",
+      "key": "alisafari"
+    }
+  ],
+  "frontMatter": {
+    "slug": "welcome-to-asafarim-blog",
+    "title": "Welcome to ASafariM Blog",
+    "authors": [
+      "alisafari"
+    ],
+    "tags": [
+      "welcome",
+      "asafarim",
+      "blog"
+    ]
+  },
+  "unlisted": false,
+  "nextItem": {
+    "title": "Welcome",
+    "permalink": "/asafarim-blog/blog/welcome"
+  }
+}

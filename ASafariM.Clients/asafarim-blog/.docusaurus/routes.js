@@ -84,20 +84,21 @@ export default [
   },
   {
     path: '/asafarim-blog/docs',
-    component: ComponentCreator('/asafarim-blog/docs', '8ee'),
+    component: ComponentCreator('/asafarim-blog/docs', '4fd'),
     routes: [
       {
         path: '/asafarim-blog/docs',
-        component: ComponentCreator('/asafarim-blog/docs', 'd7b'),
+        component: ComponentCreator('/asafarim-blog/docs', '026'),
         routes: [
           {
             path: '/asafarim-blog/docs',
-            component: ComponentCreator('/asafarim-blog/docs', 'ae8'),
+            component: ComponentCreator('/asafarim-blog/docs', '954'),
             routes: [
               {
                 path: '/asafarim-blog/docs/intro',
-                component: ComponentCreator('/asafarim-blog/docs/intro', '331'),
-                exact: true
+                component: ComponentCreator('/asafarim-blog/docs/intro', '33c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
               }
             ]
           }

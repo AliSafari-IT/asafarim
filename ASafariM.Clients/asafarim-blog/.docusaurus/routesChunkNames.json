@@ -1,165 +1,362 @@
 {
-  "/asafarim-blog/__docusaurus/debug-bd5": {
+  "/__docusaurus/debug-5ff": {
     "__comp": "__comp---theme-debug-config-23-a-2ff",
     "__context": {
-      "plugin": "plugin---asafarim-blog-docusaurus-debugb-38-4b1"
+      "plugin": "plugin---docusaurus-debugb-38-ad3"
     }
   },
-  "/asafarim-blog/__docusaurus/debug/config-785": {
+  "/__docusaurus/debug/config-5ba": {
     "__comp": "__comp---theme-debug-config-23-a-2ff",
     "__context": {
-      "plugin": "plugin---asafarim-blog-docusaurus-debugb-38-4b1"
+      "plugin": "plugin---docusaurus-debugb-38-ad3"
     }
   },
-  "/asafarim-blog/__docusaurus/debug/content-188": {
+  "/__docusaurus/debug/content-a2b": {
     "__comp": "__comp---theme-debug-contentba-8-ce7",
     "__context": {
-      "plugin": "plugin---asafarim-blog-docusaurus-debugb-38-4b1"
+      "plugin": "plugin---docusaurus-debugb-38-ad3"
     },
-    "__props": "__props---asafarim-blog-docusaurus-debug-contente-43-868"
+    "__props": "__props---docusaurus-debug-content-3-c-0-be2"
   },
-  "/asafarim-blog/__docusaurus/debug/globalData-b0b": {
+  "/__docusaurus/debug/globalData-c3c": {
     "__comp": "__comp---theme-debug-global-dataede-0fa",
     "__context": {
-      "plugin": "plugin---asafarim-blog-docusaurus-debugb-38-4b1"
+      "plugin": "plugin---docusaurus-debugb-38-ad3"
     }
   },
-  "/asafarim-blog/__docusaurus/debug/metadata-b66": {
+  "/__docusaurus/debug/metadata-156": {
     "__comp": "__comp---theme-debug-site-metadata-68-e-3d4",
     "__context": {
-      "plugin": "plugin---asafarim-blog-docusaurus-debugb-38-4b1"
+      "plugin": "plugin---docusaurus-debugb-38-ad3"
     }
   },
-  "/asafarim-blog/__docusaurus/debug/registry-7fc": {
+  "/__docusaurus/debug/registry-88c": {
     "__comp": "__comp---theme-debug-registry-679-501",
     "__context": {
-      "plugin": "plugin---asafarim-blog-docusaurus-debugb-38-4b1"
+      "plugin": "plugin---docusaurus-debugb-38-ad3"
     }
   },
-  "/asafarim-blog/__docusaurus/debug/routes-2bc": {
+  "/__docusaurus/debug/routes-000": {
     "__comp": "__comp---theme-debug-routes-946-699",
     "__context": {
-      "plugin": "plugin---asafarim-blog-docusaurus-debugb-38-4b1"
+      "plugin": "plugin---docusaurus-debugb-38-ad3"
     }
   },
-  "/asafarim-blog/blog-e0e": {
+  "/blog-23a": {
     "__comp": "__comp---theme-blog-list-pagea-6-a-7ba",
     "__context": {
-      "plugin": "plugin---asafarim-blog-blog-369-f65"
+      "plugin": "plugin---blog-369-22e"
     },
-    "sidebar": "sidebar---asafarim-blog-blog-814-3a0",
+    "sidebar": "sidebar---blog-814-8ac",
     "items": [
       {
-        "content": "content---asafarim-blog-blogb-7-e-248"
+        "content": "content---blogb-7-e-644"
+      },
+      {
+        "content": "content---blog-39-c-255"
+      },
+      {
+        "content": "content---blog-1-e-8-5cf"
       }
     ],
-    "__props": "__props---asafarim-blog-blogefe-ff7"
+    "__props": "__props---blogc-15-573"
   },
-  "/asafarim-blog/blog/archive-784": {
+  "/blog/archive-182": {
     "__comp": "__comp---theme-blog-archive-page-9-e-4-1d8",
     "__context": {
-      "plugin": "plugin---asafarim-blog-blog-369-f65"
+      "plugin": "plugin---blog-369-22e"
     },
-    "__props": "__props---asafarim-blog-blog-archiveb-56-ac3"
+    "__props": "__props---blog-archivef-81-229"
   },
-  "/asafarim-blog/blog/authors-20e": {
+  "/blog/authors-0b7": {
     "__comp": "__comp---theme-blog-pages-blog-authors-list-page-621-70c",
     "__context": {
       "data": {
-        "blogMetadata": "blogMetadata---asafarim-blog-blog-authorsace-aff"
+        "blogMetadata": "blogMetadata---blog-authorsace-e7d"
       },
-      "plugin": "plugin---asafarim-blog-blog-369-f65"
+      "plugin": "plugin---blog-369-22e"
     },
-    "sidebar": "sidebar---asafarim-blog-blog-814-3a0",
-    "__props": "__props---asafarim-blog-blog-authorsf-36-1a5"
+    "sidebar": "sidebar---blog-814-8ac",
+    "__props": "__props---blog-authorsef-8-44f"
   },
-  "/asafarim-blog/blog/tags-45c": {
-    "__comp": "__comp---theme-blog-tags-list-page-01-a-d0b",
-    "__context": {
-      "plugin": "plugin---asafarim-blog-blog-369-f65"
-    },
-    "sidebar": "sidebar---asafarim-blog-blog-814-3a0",
-    "__props": "__props---asafarim-blog-blog-tags-63-a-d27"
-  },
-  "/asafarim-blog/blog/tags/asafarim-952": {
-    "__comp": "__comp---theme-blog-tags-posts-page-687-b6c",
-    "__context": {
-      "plugin": "plugin---asafarim-blog-blog-369-f65"
-    },
-    "sidebar": "sidebar---asafarim-blog-blog-814-3a0",
-    "items": [
-      {
-        "content": "content---asafarim-blog-blogb-7-e-248"
-      }
-    ],
-    "__props": "__props---asafarim-blog-blog-tags-asafarim-6-c-0-cd7"
-  },
-  "/asafarim-blog/blog/tags/blog-085": {
-    "__comp": "__comp---theme-blog-tags-posts-page-687-b6c",
-    "__context": {
-      "plugin": "plugin---asafarim-blog-blog-369-f65"
-    },
-    "sidebar": "sidebar---asafarim-blog-blog-814-3a0",
-    "items": [
-      {
-        "content": "content---asafarim-blog-blogb-7-e-248"
-      }
-    ],
-    "__props": "__props---asafarim-blog-blog-tags-blog-5-e-6-1ae"
-  },
-  "/asafarim-blog/blog/tags/welcome-a40": {
-    "__comp": "__comp---theme-blog-tags-posts-page-687-b6c",
-    "__context": {
-      "plugin": "plugin---asafarim-blog-blog-369-f65"
-    },
-    "sidebar": "sidebar---asafarim-blog-blog-814-3a0",
-    "items": [
-      {
-        "content": "content---asafarim-blog-blogb-7-e-248"
-      }
-    ],
-    "__props": "__props---asafarim-blog-blog-tags-welcomee-1-c-e14"
-  },
-  "/asafarim-blog/blog/welcome-to-asafarim-blog-861": {
+  "/blog/lab-automation-benefits-531": {
     "__comp": "__comp---theme-blog-post-pageccc-cab",
     "__context": {
       "data": {
-        "blogMetadata": "blogMetadata---asafarim-blog-blog-authorsace-aff"
+        "blogMetadata": "blogMetadata---blog-authorsace-e7d"
       },
-      "plugin": "plugin---asafarim-blog-blog-369-f65"
+      "plugin": "plugin---blog-369-22e"
     },
-    "sidebar": "sidebar---asafarim-blog-blog-814-3a0",
-    "content": "content---asafarim-blog-blog-welcome-to-asafarim-blog-5-a-0-fde"
+    "sidebar": "sidebar---blog-814-8ac",
+    "content": "content---blog-lab-automation-benefitsdfa-2c5"
   },
-  "/asafarim-blog/markdown-page-2f1": {
+  "/blog/opening-post-fec": {
+    "__comp": "__comp---theme-blog-post-pageccc-cab",
+    "__context": {
+      "data": {
+        "blogMetadata": "blogMetadata---blog-authorsace-e7d"
+      },
+      "plugin": "plugin---blog-369-22e"
+    },
+    "sidebar": "sidebar---blog-814-8ac",
+    "content": "content---blog-opening-post-909-ac5"
+  },
+  "/blog/tags-287": {
+    "__comp": "__comp---theme-blog-tags-list-page-01-a-d0b",
+    "__context": {
+      "plugin": "plugin---blog-369-22e"
+    },
+    "sidebar": "sidebar---blog-814-8ac",
+    "__props": "__props---blog-tags-3-a-2-fa2"
+  },
+  "/blog/tags/asafarim-9a9": {
+    "__comp": "__comp---theme-blog-tags-posts-page-687-b6c",
+    "__context": {
+      "plugin": "plugin---blog-369-22e"
+    },
+    "sidebar": "sidebar---blog-814-8ac",
+    "items": [
+      {
+        "content": "content---blogb-7-e-644"
+      }
+    ],
+    "__props": "__props---blog-tags-asafarimcf-1-891"
+  },
+  "/blog/tags/automation-346": {
+    "__comp": "__comp---theme-blog-tags-posts-page-687-b6c",
+    "__context": {
+      "plugin": "plugin---blog-369-22e"
+    },
+    "sidebar": "sidebar---blog-814-8ac",
+    "items": [
+      {
+        "content": "content---blog-39-c-255"
+      }
+    ],
+    "__props": "__props---blog-tags-automationab-6-de4"
+  },
+  "/blog/tags/blog-85d": {
+    "__comp": "__comp---theme-blog-tags-posts-page-687-b6c",
+    "__context": {
+      "plugin": "plugin---blog-369-22e"
+    },
+    "sidebar": "sidebar---blog-814-8ac",
+    "items": [
+      {
+        "content": "content---blogb-7-e-644"
+      }
+    ],
+    "__props": "__props---blog-tags-blog-156-b5d"
+  },
+  "/blog/tags/data-management-309": {
+    "__comp": "__comp---theme-blog-tags-posts-page-687-b6c",
+    "__context": {
+      "plugin": "plugin---blog-369-22e"
+    },
+    "sidebar": "sidebar---blog-814-8ac",
+    "items": [
+      {
+        "content": "content---blog-39-c-255"
+      }
+    ],
+    "__props": "__props---blog-tags-data-management-1-f-2-60f"
+  },
+  "/blog/tags/programming-f25": {
+    "__comp": "__comp---theme-blog-tags-posts-page-687-b6c",
+    "__context": {
+      "plugin": "plugin---blog-369-22e"
+    },
+    "sidebar": "sidebar---blog-814-8ac",
+    "items": [
+      {
+        "content": "content---blog-1-e-8-5cf"
+      }
+    ],
+    "__props": "__props---blog-tags-programming-883-922"
+  },
+  "/blog/tags/technology-d7b": {
+    "__comp": "__comp---theme-blog-tags-posts-page-687-b6c",
+    "__context": {
+      "plugin": "plugin---blog-369-22e"
+    },
+    "sidebar": "sidebar---blog-814-8ac",
+    "items": [
+      {
+        "content": "content---blog-39-c-255"
+      }
+    ],
+    "__props": "__props---blog-tags-technology-0-fb-0bb"
+  },
+  "/blog/tags/welcome-edd": {
+    "__comp": "__comp---theme-blog-tags-posts-page-687-b6c",
+    "__context": {
+      "plugin": "plugin---blog-369-22e"
+    },
+    "sidebar": "sidebar---blog-814-8ac",
+    "items": [
+      {
+        "content": "content---blogb-7-e-644"
+      }
+    ],
+    "__props": "__props---blog-tags-welcome-436-c4b"
+  },
+  "/blog/tags/xitechnix-7f0": {
+    "__comp": "__comp---theme-blog-tags-posts-page-687-b6c",
+    "__context": {
+      "plugin": "plugin---blog-369-22e"
+    },
+    "sidebar": "sidebar---blog-814-8ac",
+    "items": [
+      {
+        "content": "content---blog-1-e-8-5cf"
+      }
+    ],
+    "__props": "__props---blog-tags-xitechnixa-9-e-70b"
+  },
+  "/blog/welcome-to-asafarim-blog-014": {
+    "__comp": "__comp---theme-blog-post-pageccc-cab",
+    "__context": {
+      "data": {
+        "blogMetadata": "blogMetadata---blog-authorsace-e7d"
+      },
+      "plugin": "plugin---blog-369-22e"
+    },
+    "sidebar": "sidebar---blog-814-8ac",
+    "content": "content---blog-welcome-to-asafarim-blog-5-a-0-d90"
+  },
+  "/markdown-page-3d7": {
     "__comp": "__comp---theme-mdx-page-1-f-3-b90",
     "__context": {
-      "plugin": "plugin---asafarim-blog-markdown-pagea-74-75d"
+      "plugin": "plugin---markdown-pagea-74-7b5"
     },
-    "content": "content---asafarim-blog-markdown-page-393-8c5"
+    "content": "content---markdown-page-393-028"
   },
-  "/asafarim-blog/docs-4fd": {
+  "/docs-e44": {
     "__comp": "__comp---theme-docs-root-5-e-9-0b6",
     "__context": {
-      "plugin": "plugin---asafarim-blog-docsaba-65c"
+      "plugin": "plugin---docsaba-d7c"
     }
   },
-  "/asafarim-blog/docs-026": {
+  "/docs-633": {
     "__comp": "__comp---theme-doc-version-roota-7-b-5de",
-    "__props": "__props---asafarim-blog-docs-8-a-4-cb1"
+    "__props": "__props---docs-005-788"
   },
-  "/asafarim-blog/docs-954": {
+  "/docs-096": {
     "__comp": "__comp---theme-doc-roota-94-67a"
   },
-  "/asafarim-blog/docs/intro-33c": {
+  "/docs/content-type-mime-244": {
     "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---asafarim-blog-docs-intro-0-e-3-5e6"
+    "content": "content---docs-content-type-mime-8-d-4-77f"
   },
-  "/asafarim-blog/-168": {
+  "/docs/deserialization-c6c": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-deserialization-9-c-2-138"
+  },
+  "/docs/design-patterns/façade-pattern-379": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-design-patterns-facade-pattern-09-e-2da"
+  },
+  "/docs/design-patterns/overview-d93": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-design-patterns-overview-29-f-526"
+  },
+  "/docs/design-patterns/singleton-pattern-50f": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-design-patterns-singleton-pattern-76-e-9b6"
+  },
+  "/docs/engineering-c9c": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-engineering-3-bf-91b"
+  },
+  "/docs/frameworks-libraries/nx-workspace/nx-Basics-8ac": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-frameworks-libraries-nx-workspace-nx-basics-25-e-19e"
+  },
+  "/docs/frameworks-libraries/site-generators/docusaurus-eab": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-frameworks-libraries-site-generators-docusaurusa-47-840"
+  },
+  "/docs/frameworks-libraries/syncfusion/syncfusion-Basics-6b6": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-frameworks-libraries-syncfusion-syncfusion-basics-738-e36"
+  },
+  "/docs/git-9f0": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-git-002-24f"
+  },
+  "/docs/git/deserialization-ffa": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-git-deserializationf-07-d22"
+  },
+  "/docs/git/fetchpull-216": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-git-fetchpullf-03-3be"
+  },
+  "/docs/git/overwriting-local-repo-1a3": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-git-overwriting-local-repo-1-de-574"
+  },
+  "/docs/git/rollback-commit-459": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-git-rollback-commit-389-63f"
+  },
+  "/docs/intro-61d": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-intro-0-e-3-be1"
+  },
+  "/docs/json/json-overview/intro-e45": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-json-json-overview-introc-5-b-57e"
+  },
+  "/docs/json/json-overview/sch-115": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-json-json-overview-sch-853-102"
+  },
+  "/docs/json/json-overview/sch-dev-293": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-json-json-overview-sch-dev-97-f-288"
+  },
+  "/docs/React/Axios/-a1e": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-react-axios-997-775"
+  },
+  "/docs/React/Basics/handle-data-from-api-d03": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-react-basics-handle-data-from-api-9-d-9-399"
+  },
+  "/docs/React/Hooks/useFetch-14e": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-react-hooks-use-fetch-812-a2e"
+  },
+  "/docs/React/Redux/Redux-Basic-Example-234": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-react-redux-redux-basic-example-9-fe-656"
+  },
+  "/docs/science-applications-a01": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-science-applications-6-cb-16e"
+  },
+  "/docs/serialization-d2b": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-serializationa-9-a-e30"
+  },
+  "/docs/technology-168": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-technology-22-b-c69"
+  },
+  "/docs/uml/userStory-userCase-344": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-uml-user-story-user-caseae-3-fd9"
+  },
+  "/docs/uml/wireframing-fda": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-uml-wireframing-307-f4c"
+  },
+  "/-e5f": {
     "__comp": "__comp---site-src-pages-index-tsx-1-df-d3e",
     "__context": {
-      "plugin": "plugin---asafarim-blog-markdown-pagea-74-75d"
+      "plugin": "plugin---markdown-pagea-74-7b5"
     },
-    "config": "config---asafarim-blog-5-e-9-b8c"
+    "config": "config---5-e-9-4f3"
   }
 }

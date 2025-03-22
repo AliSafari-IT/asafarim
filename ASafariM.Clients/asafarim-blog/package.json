@@ -4,8 +4,9 @@
   "private": true,
   "packageManager": "yarn@4.7.0",
   "scripts": {
+    "install": "echo \"Installing dependencies...\"",
     "docusaurus": "docusaurus",
-    "start": "cross-env BLOG_PORT=3001 docusaurus start --port=3001",
+    "start": "npx kill-port 3004 && cross-env BLOG_PORT=3004 docusaurus start --port=3004",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
@@ -18,19 +19,36 @@
   "dependencies": {
     "@docusaurus/core": "3.7.0",
     "@docusaurus/preset-classic": "3.7.0",
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "@mdx-js/react": "^3.0.0",
     "clsx": "^2.0.0",
     "dotenv": "^16.4.7",
-    "prism-react-renderer": "^2.3.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "emotion-theming": "^11.0.0",
+    "file-loader": "^6.2.0",
+    "mermaid": "^11.5.0",
+    "prism-react-renderer": "^2.4.1",
+    "react": "^18.2.0",
+    "react-bootstrap": "^2.10.9",
+    "react-cookie": "^8.0.1",
+    "react-cookie-consent": "^9.0.0",
+    "react-dom": "^18.2.0",
+    "react-medium-image-zoom": "^5.2.14",
+    "rebass": "^4.0.7",
+    "remark-admonitions": "^1.2.1",
+    "url-loader": "^4.1.1"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.7.0",
     "@docusaurus/tsconfig": "3.7.0",
     "@docusaurus/types": "3.7.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@types/react-medium-image-zoom": "^3.0.3",
     "cross-env": "^7.0.3",
-    "typescript": "~5.6.2"
+    "typescript": "~5.6.2",
+    "webpack": "^5.88.0"
   },
   "browserslist": {
     "production": [

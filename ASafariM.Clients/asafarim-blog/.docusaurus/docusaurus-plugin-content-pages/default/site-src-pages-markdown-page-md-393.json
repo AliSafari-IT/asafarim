@@ -1,6 +1,6 @@
 {
   "type": "mdx",
-  "permalink": "/asafarim-blog/markdown-page",
+  "permalink": "/markdown-page",
   "source": "@site/src/pages/markdown-page.md",
   "title": "Markdown Page",
   "description": "This is a markdown page example.",

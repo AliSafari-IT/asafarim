@@ -1,0 +1,27 @@
+{
+  "id": "React/Basics/handle-data-from-api",
+  "title": "Handle Data from API",
+  "description": "XMLHttpRequest &amp; Ajax",
+  "source": "@site/docs/React/Basics/handle-data-from-api.md",
+  "sourceDirName": "React/Basics",
+  "slug": "/React/Basics/handle-data-from-api",
+  "permalink": "/docs/React/Basics/handle-data-from-api",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/AliSafari-IT/asafarim/tree/main/ASafariM.Clients/asafarim-blog/docs/React/Basics/handle-data-from-api.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "sidebar_position": 1
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Rollback to a previous state",
+    "permalink": "/docs/git/rollback-commit"
+  },
+  "next": {
+    "title": "Axios",
+    "permalink": "/docs/React/Axios/"
+  }
+}

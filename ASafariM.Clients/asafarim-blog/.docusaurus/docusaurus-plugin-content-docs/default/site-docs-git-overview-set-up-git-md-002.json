@@ -1,0 +1,29 @@
+{
+  "id": "git/overview/set-up-git",
+  "title": "What is GIT",
+  "description": "Git is software for tracking changes in any set of files, usually used for coordinating work among programmers collaboratively developing source code during software development. Its goals include speed, data integrity, and support for distributed, non-linear workflows. Wikipedia",
+  "source": "@site/docs/git/overview/set-up-git.md",
+  "sourceDirName": "git/overview",
+  "slug": "/git",
+  "permalink": "/docs/git",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/AliSafari-IT/asafarim/tree/main/ASafariM.Clients/asafarim-blog/docs/git/overview/set-up-git.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 100,
+  "frontMatter": {
+    "sidebar_position": 100,
+    "title": "What is GIT",
+    "slug": "../../git"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Singleton Pattern",
+    "permalink": "/docs/design-patterns/singleton-pattern"
+  },
+  "next": {
+    "title": "Git Fetch vs Git Pull",
+    "permalink": "/docs/git/fetchpull"
+  }
+}

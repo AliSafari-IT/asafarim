@@ -1,0 +1,29 @@
+{
+  "id": "git/how-to/rollback",
+  "title": "Rollback to a previous state",
+  "description": "Reverting a Git repository to an earlier commit",
+  "source": "@site/docs/git/how-to/rollback.md",
+  "sourceDirName": "git/how-to",
+  "slug": "/git/rollback-commit",
+  "permalink": "/docs/git/rollback-commit",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/AliSafari-IT/asafarim/tree/main/ASafariM.Clients/asafarim-blog/docs/git/how-to/rollback.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 18550,
+  "frontMatter": {
+    "sidebar_position": 18550,
+    "title": "Rollback to a previous state",
+    "slug": "../rollback-commit"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Remove last changes",
+    "permalink": "/docs/git/deserialization"
+  },
+  "next": {
+    "title": "Handle Data from API",
+    "permalink": "/docs/React/Basics/handle-data-from-api"
+  }
+}

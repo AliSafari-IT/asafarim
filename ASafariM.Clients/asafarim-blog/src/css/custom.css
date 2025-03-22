@@ -3,6 +3,13 @@
  * bundles Infima by default. Infima is a CSS framework designed to
  * work well for content-centric websites.
  */
+ @import url("https://fonts.googleapis.com/css2?family=Monoton&display=swap");
+ @import url("https://fonts.googleapis.com/css2?family=Kirang+Haerang&family=Lobster&display=swap");
+ @import url("https://fonts.googleapis.com/css2?family=Acme&family=Architects+Daughter&family=Cabin+Sketch:wght@700&family=Carter+One&family=Chewy&family=Concert+One&family=Fugaz+One&family=Gloria+Hallelujah&family=Kaushan+Script&family=Knewave&family=Londrina+Solid:wght@900&family=Pacifico&family=Permanent+Marker&family=Skranji:wght@700&display=swap");
+
+ @import url("../../../asafarim-ui/src/styles/theme-variables.css");
+ @import url("../../../asafarim-ui/src/styles/sitemap-page.css");
+ @import url("../../../asafarim-ui/src/styles/custom.css");
 
 /* You can override the default Infima variables here. */
 :root {
@@ -15,6 +22,7 @@
   --ifm-color-primary-lightest: #3cad6e;
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
@@ -27,4 +35,176 @@
   --ifm-color-primary-lighter: #32d8b4;
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+.containerdouglas {
+  position: relative;
+  width: 50%;
+}
+
+.imagedouglas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.overlaydouglas {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  background-color: #495eb8;
+  overflow: hidden;
+  width: 100%;
+  height: 0;
+  transition: 0.5s ease;
+}
+
+.containerdouglas:hover .overlaydouglas {
+  bottom: 0;
+  height: 100%;
+}
+
+.textdouglas {
+  white-space: nowrap;
+  color: white;
+  font-size: 20px;
+  position: absolute;
+  overflow: hidden;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+}
+
+.docusaurus-highlight-code-line {
+  background-color: rgb(72, 79, 99);
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+}
+
+.docusaurus-highlight-code-line {
+  background-color: rgba(0, 0, 0, 0.1);
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+}
+
+html[data-theme="dark"] .docusaurus-highlight-code-line {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+
+.docusaurus-highlight-code-line {
+  background-color: rgb(72, 77, 91);
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+}
+
+.navbar-sidebar .menu {
+  --ifm-menu-color: rgb(209, 250, 246);
+}
+
+pre {
+  border-color: var(--ifm-color-emphasis-300);
+  border-radius: var(--ifm-pagination-nav-border-radius);
+  border-style: solid;
+  border-width: 1px;
+}
+
+header h1 {
+  font-family: Sen, var(--ifm-font-family-base);
+  font-size: 2.5em;
+  margin-bottom: 0;
+}
+
+.learn-more {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.contents {
+  font-size: 0.95rem;
+}
+
+.cta-btn {
+  border-radius: 2em;
+  margin-right: 1em;
+  min-width: 240px;
+}
+
+@media (max-width: 480px) {
+  .cta-btn {
+    margin-right: 0;
+    margin-top: 0.5em;
+  }
+}
+
+figure {
+  display: block;
+  margin-top: 1em;
+  margin-bottom: 2em;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+figcaption {
+  text-align: center;
+  color: var(--ifm-menu-color);
+}
+
+figcaption::before {
+  content: "🔎";
+}
+
+footer .footer__link-item {
+  opacity: 0.5;
+  text-decoration: none;
+  transition: opacity 0.2s linear;
+  font-weight: 400;
+}
+
+footer .container .text {
+  color: rgb(229, 243, 32);
+  font-weight: 700;
+}
+
+.red {
+  color: red;
+}
+.bold {
+  font-weight: bold;
+}
+
+/* Fix for images in dark mode */
+[data-theme='dark'] img:not([src*='.svg']) {
+  filter: brightness(0.8) contrast(1.2);
+  background-color: var(--bg-secondary);
+  border-radius: var(--border-radius-medium);
+  padding: var(--spacing-medium);
+  box-shadow: var(--shadow-medium);
+}
+
+/* Specific fix for diagrams and screenshots */
+[data-theme='dark'] .markdown img {
+  background-color: var(--bg-inverted);
+  padding: var(--spacing-large);
+  border-radius: var(--border-radius-large);
+  border: 1px solid var(--border-secondary);
+  transition: all 0.3s ease;
+}
+
+[data-theme='dark'] .markdown img:hover {
+  transform: scale(1.01);
+  box-shadow: 0 0 15px var(--accent-primary);
+}
+
+/* Caption styling */
+.image-caption {
+  text-align: center;
+  font-style: italic;
+  margin-top: var(--spacing-medium);
+  color: var(--text-secondary);
 }

@@ -6,3 +6,18 @@ asafarim:
   
 blog:
   description: Meta posts about the blog itself
+
+automation:
+  description: Posts about automation and automated processes
+
+technology:
+  description: Posts related to technology trends and innovations
+
+data-management:
+  description: Posts about data management techniques and tools
+
+xitechnix:
+  description: Posts related to XiTechniX projects and technologies
+
+programming:
+  description: Posts about programming languages, techniques, and best practices

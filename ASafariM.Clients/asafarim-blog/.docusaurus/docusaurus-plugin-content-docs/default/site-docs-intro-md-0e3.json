@@ -1,11 +1,11 @@
 {
   "id": "intro",
-  "title": "Introduction",
-  "description": "Welcome to the ASafariM documentation!",
+  "title": "Topics Intro",
+  "description": "Topics that are covered in this section are as follows.",
   "source": "@site/docs/intro.md",
   "sourceDirName": ".",
   "slug": "/intro",
-  "permalink": "/asafarim-blog/docs/intro",
+  "permalink": "/docs/intro",
   "draft": false,
   "unlisted": false,
   "editUrl": "https://github.com/AliSafari-IT/asafarim/tree/main/ASafariM.Clients/asafarim-blog/docs/intro.md",
@@ -15,5 +15,9 @@
   "frontMatter": {
     "sidebar_position": 1
   },
-  "sidebar": "tutorialSidebar"
+  "sidebar": "tutorialSidebar",
+  "next": {
+    "title": "Json: Intro",
+    "permalink": "/docs/json/json-overview/intro"
+  }
 }

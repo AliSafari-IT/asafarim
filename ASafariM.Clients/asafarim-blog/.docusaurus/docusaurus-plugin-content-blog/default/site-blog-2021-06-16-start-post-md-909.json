@@ -1,0 +1,51 @@
+{
+  "permalink": "/blog/opening-post",
+  "editUrl": "https://github.com/AliSafari-IT/asafarim/tree/main/ASafariM.Clients/asafarim-blog/blog/2021-06-16-StartPost.md",
+  "source": "@site/blog/2021-06-16-StartPost.md",
+  "title": "Computer coding for science",
+  "description": "The statistical package R for many researchers is their first experience to the programming world. This free and popular statistical language is available in online repositories. R can perform powerful data manipulation as well as data visualization.",
+  "date": "2021-06-16T00:00:00.000Z",
+  "tags": [
+    {
+      "inline": false,
+      "label": "Xitechnix",
+      "permalink": "/blog/tags/xitechnix",
+      "description": "Posts related to XiTechniX projects and technologies"
+    },
+    {
+      "inline": false,
+      "label": "Programming",
+      "permalink": "/blog/tags/programming",
+      "description": "Posts about programming languages, techniques, and best practices"
+    }
+  ],
+  "readingTime": 1.16,
+  "hasTruncateMarker": true,
+  "authors": [
+    {
+      "name": "Ali Safari",
+      "title": "Full-Stack Software Engineer | Clean Architecture | AI & Data Enthusiast",
+      "url": "https://github.com/AliSafari-IT",
+      "email": "contact@asafarim.com",
+      "imageURL": "https://avatars.githubusercontent.com/u/58768873?s=300&v=4",
+      "key": "alisafari",
+      "page": null
+    }
+  ],
+  "frontMatter": {
+    "slug": "opening-post",
+    "title": "Computer coding for science",
+    "authors": [
+      "alisafari"
+    ],
+    "tags": [
+      "xitechnix",
+      "programming"
+    ]
+  },
+  "unlisted": false,
+  "prevItem": {
+    "title": "Some general benefits of lab automation",
+    "permalink": "/blog/lab-automation-benefits"
+  }
+}

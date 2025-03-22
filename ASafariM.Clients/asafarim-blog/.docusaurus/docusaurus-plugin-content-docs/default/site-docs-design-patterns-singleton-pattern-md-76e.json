@@ -1,0 +1,28 @@
+{
+  "id": "design-patterns/singleton-pattern",
+  "title": "Singleton Pattern",
+  "description": "Singleton is a creational design pattern that restricts the instantiation of a class to one \"single\" instance by providing a single point of access to the class for any other code. This is useful when exactly one object is needed to coordinate actions across the system, but it is frequently used in scenarios where it is not beneficial, introduces unnecessary restrictions in situations where a sole instance of a class is not actually required. This makes the singleton as an antipattern architecture. That's why, its usage trend is declining.",
+  "source": "@site/docs/design-patterns/singleton-pattern.md",
+  "sourceDirName": "design-patterns",
+  "slug": "/design-patterns/singleton-pattern",
+  "permalink": "/docs/design-patterns/singleton-pattern",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/AliSafari-IT/asafarim/tree/main/ASafariM.Clients/asafarim-blog/docs/design-patterns/singleton-pattern.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "sidebar_position": 2,
+    "title": "Singleton Pattern"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Façade Pattern",
+    "permalink": "/docs/design-patterns/façade-pattern"
+  },
+  "next": {
+    "title": "What is GIT",
+    "permalink": "/docs/git"
+  }
+}

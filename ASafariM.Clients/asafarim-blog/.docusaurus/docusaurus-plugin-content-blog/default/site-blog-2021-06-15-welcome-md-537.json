@@ -1,0 +1,49 @@
+{
+  "permalink": "/blog/welcome",
+  "editUrl": "https://github.com/AliSafari-IT/asafarim/tree/main/ASafariM.Clients/asafarim-blog/blog/2021-06-15-welcome.md",
+  "source": "@site/blog/2021-06-15-welcome.md",
+  "title": "Welcome!",
+  "description": "Hi there!",
+  "date": "2021-06-15T00:00:00.000Z",
+  "tags": [
+    {
+      "inline": true,
+      "label": "Docusaurus",
+      "permalink": "/blog/tags/docusaurus"
+    },
+    {
+      "inline": true,
+      "label": "Static Site Generator",
+      "permalink": "/blog/tags/static-site-generator"
+    }
+  ],
+  "readingTime": 0.285,
+  "hasTruncateMarker": true,
+  "authors": [
+    {
+      "name": "Ali Safari",
+      "title": "Sci. App Dev. @ XiTechniX",
+      "url": "https://github.com/AliSafari-IT",
+      "imageURL": "https://avatars.githubusercontent.com/u/58768873?s=300&v=4",
+      "key": null,
+      "page": null
+    }
+  ],
+  "frontMatter": {
+    "slug": "welcome",
+    "title": "Welcome!",
+    "author": "Ali Safari",
+    "author_title": "Sci. App Dev. @ XiTechniX",
+    "author_url": "https://github.com/AliSafari-IT",
+    "author_image_url": "https://avatars.githubusercontent.com/u/58768873?s=300&v=4",
+    "tags": [
+      "Docusaurus",
+      "Static Site Generator"
+    ]
+  },
+  "unlisted": false,
+  "prevItem": {
+    "title": "Computer coding for science",
+    "permalink": "/blog/opening-post"
+  }
+}

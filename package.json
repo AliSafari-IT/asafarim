@@ -20,6 +20,10 @@
     "build_dev": "powershell -File ./scripts/bash_files/dotnet-commands.ps1 build",
     "ui": "yarn workspace asafarim-ui start",
     "ui:build": "yarn workspace asafarim-ui build",
+    "bl": "yarn workspace asafarim-blog start --port 3001",
+    "bl:install": "yarn && yarn workspace asafarim-blog install",
+    "blb": "yarn workspace asafarim-blog build",
+    "bls": "yarn workspace asafarim-blog serve",
     "ui:rebuild": "yarn workspace asafarim-ui rebuild",
     "ui:reinstall": "yarn workspace asafarim-ui reinstall",
     "docs:build": "yarn workspace asafarim-docs build",
@@ -53,7 +57,10 @@
     "asafarim-ui",
     "asafarim-api",
     "ASafariM.Api",
-    "ASafariM.Clients/asafarim-ui"
+    "asafarim-blog",
+    "ASafariM.Clients",
+    "ASafariM.Clients/asafarim-ui",
+    "ASafariM.Clients/asafarim-blog"
   ],
   "dependencies": {
     "lodash": "^4.17.21"

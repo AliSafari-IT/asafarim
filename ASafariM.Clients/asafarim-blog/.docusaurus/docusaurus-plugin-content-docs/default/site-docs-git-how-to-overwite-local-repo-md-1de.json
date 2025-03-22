@@ -1,0 +1,29 @@
+{
+  "id": "git/how-to/overwite-local-repo",
+  "title": "Overwriting local with remote repo",
+  "description": "How to overwrite local repository with remote repo",
+  "source": "@site/docs/git/how-to/overwite-local-repo.md",
+  "sourceDirName": "git/how-to",
+  "slug": "/git/overwriting-local-repo",
+  "permalink": "/docs/git/overwriting-local-repo",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/AliSafari-IT/asafarim/tree/main/ASafariM.Clients/asafarim-blog/docs/git/how-to/overwite-local-repo.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 15500,
+  "frontMatter": {
+    "sidebar_position": 15500,
+    "title": "Overwriting local with remote repo",
+    "slug": "../overwriting-local-repo"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Git Fetch vs Git Pull",
+    "permalink": "/docs/git/fetchpull"
+  },
+  "next": {
+    "title": "Remove last changes",
+    "permalink": "/docs/git/deserialization"
+  }
+}

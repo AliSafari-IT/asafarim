@@ -1,0 +1,24 @@
+.box {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: var(--ifm-background-surface-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.box:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Dark mode specific styling */
+[data-theme='dark'] .box {
+  background-color: var(--ifm-background-color);
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.05);
+}
+
+[data-theme='dark'] .box:hover {
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+}

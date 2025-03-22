@@ -1,0 +1,23 @@
+{
+  "title": "Recent posts",
+  "items": [
+    {
+      "title": "Welcome to ASafariM Blog",
+      "permalink": "/blog/welcome-to-asafarim-blog",
+      "unlisted": false,
+      "date": "2025-03-21T00:00:00.000Z"
+    },
+    {
+      "title": "Some general benefits of lab automation",
+      "permalink": "/blog/lab-automation-benefits",
+      "unlisted": false,
+      "date": "2023-05-12T00:00:00.000Z"
+    },
+    {
+      "title": "Computer coding for science",
+      "permalink": "/blog/opening-post",
+      "unlisted": false,
+      "date": "2021-06-16T00:00:00.000Z"
+    }
+  ]
+}

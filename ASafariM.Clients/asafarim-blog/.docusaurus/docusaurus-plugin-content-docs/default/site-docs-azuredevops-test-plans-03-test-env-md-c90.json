@@ -1,0 +1,28 @@
+{
+  "id": "azuredevops/test-plans/test-env",
+  "title": "Test environment",
+  "description": "Steps to Run Test Suites in Azure Test Plans",
+  "source": "@site/docs/azuredevops/test-plans/03-test-env.md",
+  "sourceDirName": "azuredevops/test-plans",
+  "slug": "/azuredevops/test-plans/test-env",
+  "permalink": "/docs/azuredevops/test-plans/test-env",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/AliSafari-IT/asafarim/tree/main/ASafariM.Clients/asafarim-blog/docs/azuredevops/test-plans/03-test-env.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "sidebar_position": 2,
+    "title": "Test environment"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Create test cases",
+    "permalink": "/docs/azuredevops/test-plans/create-testcases"
+  },
+  "next": {
+    "title": "What, Why and How of Nx",
+    "permalink": "/docs/frameworks-libraries/nx-workspace/nx-Basics"
+  }
+}

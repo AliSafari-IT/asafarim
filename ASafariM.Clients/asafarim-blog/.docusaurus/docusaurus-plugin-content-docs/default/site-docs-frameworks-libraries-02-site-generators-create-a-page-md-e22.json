@@ -1,0 +1,28 @@
+{
+  "id": "frameworks-libraries/site-generators/create-a-page",
+  "title": "Create a page",
+  "description": "Create a page",
+  "source": "@site/docs/frameworks-libraries/02-site-generators/create-a-page.md",
+  "sourceDirName": "frameworks-libraries/02-site-generators",
+  "slug": "/frameworks-libraries/site-generators/create-a-page",
+  "permalink": "/docs/frameworks-libraries/site-generators/create-a-page",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/AliSafari-IT/asafarim/tree/main/ASafariM.Clients/asafarim-blog/docs/frameworks-libraries/02-site-generators/create-a-page.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "sidebar_position": 2,
+    "title": "Create a page"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Docusaurus",
+    "permalink": "/docs/frameworks-libraries/site-generators/docusaurus"
+  },
+  "next": {
+    "title": "Syncfusion",
+    "permalink": "/docs/frameworks-libraries/syncfusion/syncfusion-Basics"
+  }
+}

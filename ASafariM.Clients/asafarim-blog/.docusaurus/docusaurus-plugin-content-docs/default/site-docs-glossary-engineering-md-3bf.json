@@ -1,0 +1,29 @@
+{
+  "id": "Glossary/engineering",
+  "title": "Engineering",
+  "description": "Engineering is a systematic and often iterative approach to designing objects, processes, and systems to meet human needs and wants.",
+  "source": "@site/docs/Glossary/engineering.md",
+  "sourceDirName": "Glossary",
+  "slug": "/engineering",
+  "permalink": "/docs/engineering",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/AliSafari-IT/asafarim/tree/main/ASafariM.Clients/asafarim-blog/docs/Glossary/engineering.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 5050,
+  "frontMatter": {
+    "sidebar_position": 5050,
+    "title": "Engineering",
+    "slug": "../engineering"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "JSON Deserialization",
+    "permalink": "/docs/deserialization"
+  },
+  "next": {
+    "title": "MIME/Media/Content Type",
+    "permalink": "/docs/content-type-mime"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "id": "json/json-overview/json-schema",
+  "title": "Json: Schema",
+  "description": "What is JSON Schema?",
+  "source": "@site/docs/json/json-overview/02-json-schema.md",
+  "sourceDirName": "json/json-overview",
+  "slug": "/json/json-overview/sch",
+  "permalink": "/docs/json/json-overview/sch",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/AliSafari-IT/asafarim/tree/main/ASafariM.Clients/asafarim-blog/docs/json/json-overview/02-json-schema.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "sidebar_position": 2,
+    "title": "Json: Schema",
+    "slug": "sch"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Json: Intro",
+    "permalink": "/docs/json/json-overview/intro"
+  },
+  "next": {
+    "title": "Schema-Driven Development",
+    "permalink": "/docs/json/json-overview/sch-dev"
+  }
+}

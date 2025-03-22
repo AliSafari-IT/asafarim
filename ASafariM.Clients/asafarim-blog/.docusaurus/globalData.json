@@ -1,0 +1,218 @@
+{
+  "docusaurus-plugin-content-docs": {
+    "default": {
+      "path": "/docs",
+      "versions": [
+        {
+          "name": "current",
+          "label": "Next",
+          "isLast": true,
+          "path": "/docs",
+          "mainDocId": "intro",
+          "docs": [
+            {
+              "id": "azuredevops/azure-devops-services",
+              "path": "/docs/azuredevops/azure-devops-services",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "azuredevops/azure-pipelines",
+              "path": "/docs/azuredevops/azure-pipelines",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "azuredevops/intro",
+              "path": "/docs/azuredevops/intro",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "azuredevops/test-pipeline",
+              "path": "/docs/azuredevops/test-pipeline",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "azuredevops/test-plans/create-testcases",
+              "path": "/docs/azuredevops/test-plans/create-testcases",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "azuredevops/test-plans/test-env",
+              "path": "/docs/azuredevops/test-plans/test-env",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "azuredevops/test-plans/test-plans",
+              "path": "/docs/azuredevops/test-plans/test-plans",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "azuredevops/yamlscripts/agent",
+              "path": "/docs/azuredevops/yamlscripts/agent",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "azuredevops/yamlscripts/print-dir-contents",
+              "path": "/docs/azuredevops/yamlscripts/print-dir-contents",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "azuredevops/yamlscripts/reuse-template",
+              "path": "/docs/azuredevops/yamlscripts/reuse-template",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "azuredevops/yamlscripts/triggers",
+              "path": "/docs/azuredevops/yamlscripts/triggers",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "azuredevops/yamlscripts/Yaml-templates",
+              "path": "/docs/azuredevops/yamlscripts/Yaml-templates",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "design-patterns/façade-pattern",
+              "path": "/docs/design-patterns/façade-pattern",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "design-patterns/overview",
+              "path": "/docs/design-patterns/overview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "design-patterns/singleton-pattern",
+              "path": "/docs/design-patterns/singleton-pattern",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "frameworks-libraries/nx-workspace/nx-Basics",
+              "path": "/docs/frameworks-libraries/nx-workspace/nx-Basics",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "frameworks-libraries/syncfusion/syncfusion-Basics",
+              "path": "/docs/frameworks-libraries/syncfusion/syncfusion-Basics",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "git/how-to/overwite-local-repo",
+              "path": "/docs/git/overwriting-local-repo",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "git/how-to/remove-last-changes",
+              "path": "/docs/git/deserialization",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "git/how-to/rollback",
+              "path": "/docs/git/rollback-commit",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "git/overview/fetch-pull",
+              "path": "/docs/git/fetchpull",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "git/overview/set-up-git",
+              "path": "/docs/git",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "Glossary/applications-of-science",
+              "path": "/docs/science-applications",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "Glossary/deserialization",
+              "path": "/docs/deserialization",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "Glossary/engineering",
+              "path": "/docs/engineering",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "Glossary/MIME-type",
+              "path": "/docs/content-type-mime",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "Glossary/Serialization",
+              "path": "/docs/serialization",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "Glossary/technology",
+              "path": "/docs/technology",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "intro",
+              "path": "/docs/intro",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "json/json-overview/json",
+              "path": "/docs/json/json-overview/intro",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "json/json-overview/json-schema",
+              "path": "/docs/json/json-overview/sch",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "json/json-overview/Schema-Driven-Development",
+              "path": "/docs/json/json-overview/sch-dev",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "React/Axios/axios",
+              "path": "/docs/React/Axios/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "React/Basics/handle-data-from-api",
+              "path": "/docs/React/Basics/handle-data-from-api",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "React/Hooks/useFetch",
+              "path": "/docs/React/Hooks/useFetch",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "React/Redux/Redux-Basic-Example",
+              "path": "/docs/React/Redux/Redux-Basic-Example",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "uml/userStory-userCase",
+              "path": "/docs/uml/userStory-userCase",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "uml/wireframing",
+              "path": "/docs/uml/wireframing",
+              "sidebar": "tutorialSidebar"
+            }
+          ],
+          "draftIds": [],
+          "sidebars": {
+            "tutorialSidebar": {
+              "link": {
+                "path": "/docs/intro",
+                "label": "intro"
+              }
+            }
+          }
+        }
+      ],
+      "breadcrumbs": true
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "permalink": "/blog/lab-automation-benefits",
+  "editUrl": "https://github.com/AliSafari-IT/asafarim/tree/main/ASafariM.Clients/asafarim-blog/blog/2023-05-12-LabAutomationBenefits.md",
+  "source": "@site/blog/2023-05-12-LabAutomationBenefits.md",
+  "title": "Some general benefits of lab automation",
+  "description": "Lab automation is the process of using technology to automate laboratory processes and workflows. Here are some general benefits of lab automation:",
+  "date": "2023-05-12T00:00:00.000Z",
+  "tags": [
+    {
+      "inline": false,
+      "label": "Automation",
+      "permalink": "/blog/tags/tags/automation-tag",
+      "description": "Posts about automation and automated processes"
+    },
+    {
+      "inline": false,
+      "label": "Technology",
+      "permalink": "/blog/tags/tags/technology-tag",
+      "description": "Posts related to technology trends and innovations"
+    },
+    {
+      "inline": false,
+      "label": "Data management",
+      "permalink": "/blog/tags/tags/data-management-capitalized-tag",
+      "description": "Posts about data management techniques and tools"
+    }
+  ],
+  "readingTime": 0.95,
+  "hasTruncateMarker": true,
+  "authors": [
+    {
+      "name": "Ali Safari",
+      "title": "Full-Stack Software Engineer | Clean Architecture | AI & Data Enthusiast",
+      "url": "https://github.com/AliSafari-IT",
+      "email": "contact@asafarim.com",
+      "imageURL": "https://avatars.githubusercontent.com/u/58768873?s=300&v=4",
+      "key": "alisafari",
+      "page": null
+    }
+  ],
+  "frontMatter": {
+    "slug": "lab-automation-benefits",
+    "title": "Some general benefits of lab automation",
+    "authors": [
+      "alisafari"
+    ],
+    "tags": [
+      "automation",
+      "technology",
+      "Data Management"
+    ]
+  },
+  "unlisted": false,
+  "prevItem": {
+    "title": "Welcome to ASafariM Blog",
+    "permalink": "/blog/welcome-to-asafarim-blog"
+  },
+  "nextItem": {
+    "title": "Computer coding for science",
+    "permalink": "/blog/opening-post"
+  }
+}

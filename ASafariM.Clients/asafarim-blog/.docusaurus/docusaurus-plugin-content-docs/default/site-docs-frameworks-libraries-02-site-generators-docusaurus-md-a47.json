@@ -1,0 +1,28 @@
+{
+  "id": "frameworks-libraries/site-generators/docusaurus",
+  "title": "Docusaurus",
+  "description": "Docusaurus is open-source and can be used for free under the MIT License. It has a growing community of contributors and users, and is actively maintained and developed.",
+  "source": "@site/docs/frameworks-libraries/02-site-generators/docusaurus.md",
+  "sourceDirName": "frameworks-libraries/02-site-generators",
+  "slug": "/frameworks-libraries/site-generators/docusaurus",
+  "permalink": "/docs/frameworks-libraries/site-generators/docusaurus",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/AliSafari-IT/asafarim/tree/main/ASafariM.Clients/asafarim-blog/docs/frameworks-libraries/02-site-generators/docusaurus.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "sidebar_position": 1,
+    "title": "Docusaurus"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "What, Why and How of Nx",
+    "permalink": "/docs/frameworks-libraries/nx-workspace/nx-Basics"
+  },
+  "next": {
+    "title": "Create a page",
+    "permalink": "/docs/frameworks-libraries/site-generators/create-a-page"
+  }
+}

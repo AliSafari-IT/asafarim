@@ -1,0 +1,28 @@
+{
+  "id": "React/Axios/axios",
+  "title": "Axios",
+  "description": "Axios library",
+  "source": "@site/docs/React/Axios/axios.md",
+  "sourceDirName": "React/Axios",
+  "slug": "/React/Axios/",
+  "permalink": "/docs/React/Axios/",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/AliSafari-IT/asafarim/tree/main/ASafariM.Clients/asafarim-blog/docs/React/Axios/axios.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "sidebar_position": 1,
+    "title": "Axios"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Handle Data from API",
+    "permalink": "/docs/React/Basics/handle-data-from-api"
+  },
+  "next": {
+    "title": "Learn Redux",
+    "permalink": "/docs/React/Redux/Redux-Basic-Example"
+  }
+}

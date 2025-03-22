@@ -1,0 +1,28 @@
+{
+  "id": "design-patterns/façade-pattern",
+  "title": "Façade Pattern",
+  "description": "Façade is a structural design pattern that presents a simplified interface to a library, a framework, or any other complex set of classes.",
+  "source": "@site/docs/design-patterns/façade-pattern.md",
+  "sourceDirName": "design-patterns",
+  "slug": "/design-patterns/façade-pattern",
+  "permalink": "/docs/design-patterns/façade-pattern",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/AliSafari-IT/asafarim/tree/main/ASafariM.Clients/asafarim-blog/docs/design-patterns/façade-pattern.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "sidebar_position": 2,
+    "title": "Façade Pattern"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Overview",
+    "permalink": "/docs/design-patterns/overview"
+  },
+  "next": {
+    "title": "Singleton Pattern",
+    "permalink": "/docs/design-patterns/singleton-pattern"
+  }
+}

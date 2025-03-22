@@ -1,0 +1,29 @@
+{
+  "id": "Glossary/deserialization",
+  "title": "JSON Deserialization",
+  "description": "In brief",
+  "source": "@site/docs/Glossary/deserialization.md",
+  "sourceDirName": "Glossary",
+  "slug": "/deserialization",
+  "permalink": "/docs/deserialization",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/AliSafari-IT/asafarim/tree/main/ASafariM.Clients/asafarim-blog/docs/Glossary/deserialization.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 4050,
+  "frontMatter": {
+    "sidebar_position": 4050,
+    "title": "JSON Deserialization",
+    "slug": "../deserialization"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Applications of Science",
+    "permalink": "/docs/science-applications"
+  },
+  "next": {
+    "title": "Engineering",
+    "permalink": "/docs/engineering"
+  }
+}

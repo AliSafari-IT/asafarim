@@ -1,9 +1,58 @@
-Read these files first:
+1. My apps are already running in @terminal_selection 
+2. do not run my apps until you are asked to
+3. do not install dependencies until you are asked to
+4. do not build until you are asked to
+5. do not publish until you are asked to
+6. do not deploy until you are asked to
+7. Read these files first:
 D:\repos\ASafariM\README.md
 D:\repos\ASafariM\ASafariM.Api\README.md
+D:\repos\ASafariM\ASafariM.Clients\asafarim-ui\README.md
+D:\repos\ASafariM\ASafariM.Clients\asafarim-blog\README.md
 
-Read files on the server:
+8. Read files on the server:
 /var/www/asafarim/readme.md
 /var/www/asafarim/ASafariM.Clients/asafarim-ui/README.md
+/var/www/asafarim/ASafariM.Clients/asafarim-blog/README.md
 
-My app is always running in @terminal_selection 
+9. frontend apps:
+D:\repos\ASafariM\ASafariM.Clients\asafarim-ui
+D:\repos\ASafariM\ASafariM.Clients\asafarim-blog
+
+10. backend app:
+D:\repos\ASafariM\ASafariM.Api
+
+11. backend clean architecture layers:
+D:\repos\ASafariM\ASafariM.Application\
+D:\repos\ASafariM\ASafariM.Domain\
+D:\repos\ASafariM\ASafariM.Infrastructure\
+D:\repos\ASafariM\ASafariM.Presentation\
+D:\repos\ASafariM\ASafariM.Test\
+
+12. api controllers:
+D:\repos\ASafariM\ASafariM.Presentation\Controllers\
+
+13. api services:
+D:\repos\ASafariM\ASafariM.Application\Services\
+D:\repos\ASafariM\ASafariM.Infrastructure\Services\
+
+14. api repositories:
+D:\repos\ASafariM\ASafariM.Infrastructure\Repositories\
+
+15. Db Context:
+D:\repos\ASafariM\ASafariM.Infrastructure\Persistence\
+
+16. Interfaces:
+D:\repos\ASafariM\ASafariM.Domain\Interfaces\
+D:\repos\ASafariM\ASafariM.Application\Interfaces\
+
+17. Do not run terminal commands until asked to:
+- run commands
+- install dependencies
+- build
+- publish
+- deploy
+- npm run serve
+- npm run build
+- yarn bl
+- yarn blb

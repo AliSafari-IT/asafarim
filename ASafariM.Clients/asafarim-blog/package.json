@@ -6,7 +6,7 @@
   "scripts": {
     "install": "echo \"Installing dependencies...\"",
     "docusaurus": "docusaurus",
-    "start": "npx kill-port 3004 && cross-env BLOG_PORT=3004 docusaurus start --port=3004",
+    "start": "npx kill-port 3001 && cross-env BLOG_PORT=3001 docusaurus start --port=3001",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",

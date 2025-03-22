@@ -1,38 +1,7 @@
 import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
-import path from "path";
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
-
-const getIntlVars = {
-  defaultLocale: "en",
-  locales: ["en", "nl", "fa"],
-  path: "i18n",
-  localeConfigs: {
-    en: {
-      label: "English",
-      direction: "ltr",
-      htmlLang: "en-US",
-      calendar: "gregory",
-      path: "en",
-    },
-    nl: {
-      label: "Nederlands",
-      direction: "ltr",
-      htmlLang: "nl-NL",
-      calendar: "gregory",
-      path: "nl",
-    },
-    fa: {
-      label: "فارسی",
-      direction: "rtl",
-      htmlLang: "fa-IR",
-      calendar: "persian",
-      path: "fa",
-    },
-  },
-};
-
 const config: Config = { 
   title: 'Blog | ASafariM',
   tagline: 'Thoughts, stories and ideas from Ali Safari',
@@ -97,6 +66,8 @@ const config: Config = {
       logo: {
         alt: 'ASafariM Logo',
         src: 'img/logoT.svg',
+        srcDark: 'img/logoT.svg',
+        href: 'https://asafarim.com',
       },
       items: [
         {

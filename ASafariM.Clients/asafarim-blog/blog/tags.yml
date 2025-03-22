@@ -1,23 +1,35 @@
 welcome:
   description: Welcome posts introducing new features or sections
-  
+  permalink: /tags/welcome-tag
+
 asafarim:
   description: Posts related to the ASafariM project
-  
+  permalink: /tags/asafarim-tag
+
 blog:
   description: Meta posts about the blog itself
+  permalink: /tags/blog-tag
 
 automation:
   description: Posts about automation and automated processes
+  permalink: /tags/automation-tag
 
 technology:
   description: Posts related to technology trends and innovations
-
+  permalink: /tags/technology-tag
+  
 data-management:
   description: Posts about data management techniques and tools
+  permalink: /tags/data-management-tag
+
+"Data Management":
+  description: Posts about data management techniques and tools
+  permalink: /tags/data-management-capitalized-tag
 
 xitechnix:
   description: Posts related to XiTechniX projects and technologies
+  permalink: /tags/xitechnix-tag
 
 programming:
   description: Posts about programming languages, techniques, and best practices
+  permalink: /tags/programming-tag

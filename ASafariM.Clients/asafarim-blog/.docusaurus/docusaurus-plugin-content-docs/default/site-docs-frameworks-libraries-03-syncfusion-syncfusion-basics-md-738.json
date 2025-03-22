@@ -18,8 +18,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Docusaurus",
-    "permalink": "/docs/frameworks-libraries/site-generators/docusaurus"
+    "title": "What, Why and How of Nx",
+    "permalink": "/docs/frameworks-libraries/nx-workspace/nx-Basics"
   },
   "next": {
     "title": "Applications of Science",

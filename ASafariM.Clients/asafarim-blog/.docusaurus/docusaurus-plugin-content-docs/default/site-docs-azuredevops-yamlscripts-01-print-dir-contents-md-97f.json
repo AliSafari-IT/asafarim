@@ -1,0 +1,28 @@
+{
+  "id": "azuredevops/yamlscripts/print-dir-contents",
+  "title": "Print directory contents",
+  "description": "info",
+  "source": "@site/docs/azuredevops/yamlscripts/01-print-dir-contents.md",
+  "sourceDirName": "azuredevops/yamlscripts",
+  "slug": "/azuredevops/yamlscripts/print-dir-contents",
+  "permalink": "/docs/azuredevops/yamlscripts/print-dir-contents",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/AliSafari-IT/asafarim/tree/main/ASafariM.Clients/asafarim-blog/docs/azuredevops/yamlscripts/01-print-dir-contents.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "sidebar_position": 1,
+    "title": "Print directory contents"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Azure Pipelines",
+    "permalink": "/docs/azuredevops/azure-pipelines"
+  },
+  "next": {
+    "title": "Triggers in YAML pipelines",
+    "permalink": "/docs/azuredevops/yamlscripts/triggers"
+  }
+}

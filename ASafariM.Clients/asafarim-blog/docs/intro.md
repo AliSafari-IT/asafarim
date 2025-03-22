@@ -18,15 +18,14 @@ What is use of `JSON-Schema`?
  --------------------------------
 
 ##### **NX Workspace**
-**[What, Why and How of NX](/docs/nx-workspace/nx-Basics)**
+**[What, Why and How of NX](/docs/frameworks-libraries/01-nx-workspace/nx-Basics)**
  --------------------------------
 
 ##### **React**
-• **[Axios](/docs/react/axios)**
+• **[Axios](/docs/React/Axios/axios)**
  --------------------------------
 
 ##### **Azure DevOps**
 -    **[Azure DevOps Server](/docs/azuredevops/intro)**
 -    **[Azure DevOps Services](/docs/azuredevops/azure-devops-services)**
 -    **[Azure Pipelines](/docs/azuredevops/azure-pipelines)**
-

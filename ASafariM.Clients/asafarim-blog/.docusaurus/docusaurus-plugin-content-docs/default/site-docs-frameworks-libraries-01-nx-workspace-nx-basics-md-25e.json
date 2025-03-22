@@ -17,11 +17,11 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Wireframing",
-    "permalink": "/docs/uml/wireframing"
+    "title": "Test environment",
+    "permalink": "/docs/azuredevops/test-plans/test-env"
   },
   "next": {
-    "title": "Docusaurus",
-    "permalink": "/docs/frameworks-libraries/site-generators/docusaurus"
+    "title": "Syncfusion",
+    "permalink": "/docs/frameworks-libraries/syncfusion/syncfusion-Basics"
   }
 }

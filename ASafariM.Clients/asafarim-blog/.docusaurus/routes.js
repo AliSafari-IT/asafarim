@@ -3,41 +3,6 @@ import ComponentCreator from '@docusaurus/ComponentCreator';
 
 export default [
   {
-    path: '/__docusaurus/debug',
-    component: ComponentCreator('/__docusaurus/debug', '5ff'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/config',
-    component: ComponentCreator('/__docusaurus/debug/config', '5ba'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/content',
-    component: ComponentCreator('/__docusaurus/debug/content', 'a2b'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/globalData',
-    component: ComponentCreator('/__docusaurus/debug/globalData', 'c3c'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/metadata',
-    component: ComponentCreator('/__docusaurus/debug/metadata', '156'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/registry',
-    component: ComponentCreator('/__docusaurus/debug/registry', '88c'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/routes',
-    component: ComponentCreator('/__docusaurus/debug/routes', '000'),
-    exact: true
-  },
-  {
     path: '/blog',
     component: ComponentCreator('/blog', '23a'),
     exact: true
@@ -68,43 +33,43 @@ export default [
     exact: true
   },
   {
-    path: '/blog/tags/asafarim',
-    component: ComponentCreator('/blog/tags/asafarim', '9a9'),
+    path: '/blog/tags/tags/asafarim-tag',
+    component: ComponentCreator('/blog/tags/tags/asafarim-tag', '4ef'),
     exact: true
   },
   {
-    path: '/blog/tags/automation',
-    component: ComponentCreator('/blog/tags/automation', '346'),
+    path: '/blog/tags/tags/automation-tag',
+    component: ComponentCreator('/blog/tags/tags/automation-tag', '84d'),
     exact: true
   },
   {
-    path: '/blog/tags/blog',
-    component: ComponentCreator('/blog/tags/blog', '85d'),
+    path: '/blog/tags/tags/blog-tag',
+    component: ComponentCreator('/blog/tags/tags/blog-tag', '691'),
     exact: true
   },
   {
-    path: '/blog/tags/data-management',
-    component: ComponentCreator('/blog/tags/data-management', '309'),
+    path: '/blog/tags/tags/data-management-capitalized-tag',
+    component: ComponentCreator('/blog/tags/tags/data-management-capitalized-tag', 'c60'),
     exact: true
   },
   {
-    path: '/blog/tags/programming',
-    component: ComponentCreator('/blog/tags/programming', 'f25'),
+    path: '/blog/tags/tags/programming-tag',
+    component: ComponentCreator('/blog/tags/tags/programming-tag', 'c81'),
     exact: true
   },
   {
-    path: '/blog/tags/technology',
-    component: ComponentCreator('/blog/tags/technology', 'd7b'),
+    path: '/blog/tags/tags/technology-tag',
+    component: ComponentCreator('/blog/tags/tags/technology-tag', '65f'),
     exact: true
   },
   {
-    path: '/blog/tags/welcome',
-    component: ComponentCreator('/blog/tags/welcome', 'edd'),
+    path: '/blog/tags/tags/welcome-tag',
+    component: ComponentCreator('/blog/tags/tags/welcome-tag', '3cf'),
     exact: true
   },
   {
-    path: '/blog/tags/xitechnix',
-    component: ComponentCreator('/blog/tags/xitechnix', '7f0'),
+    path: '/blog/tags/tags/xitechnix-tag',
+    component: ComponentCreator('/blog/tags/tags/xitechnix-tag', 'b5f'),
     exact: true
   },
   {
@@ -119,16 +84,88 @@ export default [
   },
   {
     path: '/docs',
-    component: ComponentCreator('/docs', 'e44'),
+    component: ComponentCreator('/docs', 'a3c'),
     routes: [
       {
         path: '/docs',
-        component: ComponentCreator('/docs', '633'),
+        component: ComponentCreator('/docs', '95a'),
         routes: [
           {
             path: '/docs',
-            component: ComponentCreator('/docs', '096'),
+            component: ComponentCreator('/docs', '94f'),
             routes: [
+              {
+                path: '/docs/azuredevops/azure-devops-services',
+                component: ComponentCreator('/docs/azuredevops/azure-devops-services', 'c68'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/docs/azuredevops/azure-pipelines',
+                component: ComponentCreator('/docs/azuredevops/azure-pipelines', '710'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/docs/azuredevops/intro',
+                component: ComponentCreator('/docs/azuredevops/intro', '5bf'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/docs/azuredevops/test-pipeline',
+                component: ComponentCreator('/docs/azuredevops/test-pipeline', '113'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/docs/azuredevops/test-plans/create-testcases',
+                component: ComponentCreator('/docs/azuredevops/test-plans/create-testcases', 'fc2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/docs/azuredevops/test-plans/test-env',
+                component: ComponentCreator('/docs/azuredevops/test-plans/test-env', '623'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/docs/azuredevops/test-plans/test-plans',
+                component: ComponentCreator('/docs/azuredevops/test-plans/test-plans', '710'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/docs/azuredevops/yamlscripts/agent',
+                component: ComponentCreator('/docs/azuredevops/yamlscripts/agent', 'f57'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/docs/azuredevops/yamlscripts/print-dir-contents',
+                component: ComponentCreator('/docs/azuredevops/yamlscripts/print-dir-contents', 'b50'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/docs/azuredevops/yamlscripts/reuse-template',
+                component: ComponentCreator('/docs/azuredevops/yamlscripts/reuse-template', '75a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/docs/azuredevops/yamlscripts/triggers',
+                component: ComponentCreator('/docs/azuredevops/yamlscripts/triggers', 'b52'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/docs/azuredevops/yamlscripts/Yaml-templates',
+                component: ComponentCreator('/docs/azuredevops/yamlscripts/Yaml-templates', '08a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
               {
                 path: '/docs/content-type-mime',
                 component: ComponentCreator('/docs/content-type-mime', '244'),
@@ -168,12 +205,6 @@ export default [
               {
                 path: '/docs/frameworks-libraries/nx-workspace/nx-Basics',
                 component: ComponentCreator('/docs/frameworks-libraries/nx-workspace/nx-Basics', '8ac'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/docs/frameworks-libraries/site-generators/docusaurus',
-                component: ComponentCreator('/docs/frameworks-libraries/site-generators/docusaurus', 'eab'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

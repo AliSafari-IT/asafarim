@@ -1,0 +1,28 @@
+{
+  "id": "azuredevops/intro",
+  "title": "Azure DevOps Server",
+  "description": "In brief",
+  "source": "@site/docs/azuredevops/intro.md",
+  "sourceDirName": "azuredevops",
+  "slug": "/azuredevops/intro",
+  "permalink": "/docs/azuredevops/intro",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/AliSafari-IT/asafarim/tree/main/ASafariM.Clients/asafarim-blog/docs/azuredevops/intro.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "sidebar_position": 1,
+    "title": "Azure DevOps Server"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Wireframing",
+    "permalink": "/docs/uml/wireframing"
+  },
+  "next": {
+    "title": "Azure DevOps Services",
+    "permalink": "/docs/azuredevops/azure-devops-services"
+  }
+}

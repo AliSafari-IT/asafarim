@@ -11,8 +11,8 @@ export default {
   "baseUrl": "/",
   "organizationName": "AliSafari-IT",
   "projectName": "asafarim",
-  "onBrokenLinks": "warn",
-  "onBrokenMarkdownLinks": "warn",
+  "onBrokenLinks": "ignore",
+  "onBrokenMarkdownLinks": "ignore",
   "i18n": {
     "defaultLocale": "en",
     "locales": [
@@ -52,7 +52,7 @@ export default {
   "themeConfig": {
     "image": "img/logoT.svg",
     "navbar": {
-      "title": "ASafariM",
+      "title": "Blog | ASafariM",
       "hideOnScroll": false,
       "style": "dark",
       "logo": {

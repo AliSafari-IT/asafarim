@@ -49,8 +49,8 @@ const config: Config = {
   organizationName: 'AliSafari-IT', // Usually your GitHub org/user name.
   projectName: 'asafarim', // Usually your repo name.
 
-  onBrokenLinks: 'warn', 
-  onBrokenMarkdownLinks: 'warn',
+  onBrokenLinks: 'ignore', 
+  onBrokenMarkdownLinks: 'ignore',
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
@@ -91,7 +91,7 @@ const config: Config = {
   themeConfig: {
     image: 'img/logoT.svg',
     navbar: {
-      title: 'ASafariM',
+      title: 'Blog | ASafariM',
       hideOnScroll: false,
       style: 'dark',
       logo: {

@@ -1,0 +1,28 @@
+{
+  "id": "azuredevops/yamlscripts/Yaml-templates",
+  "title": "YAML templates",
+  "description": "Pipeline structure and configuration",
+  "source": "@site/docs/azuredevops/yamlscripts/03-Yaml-templates.md",
+  "sourceDirName": "azuredevops/yamlscripts",
+  "slug": "/azuredevops/yamlscripts/Yaml-templates",
+  "permalink": "/docs/azuredevops/yamlscripts/Yaml-templates",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/AliSafari-IT/asafarim/tree/main/ASafariM.Clients/asafarim-blog/docs/azuredevops/yamlscripts/03-Yaml-templates.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "sidebar_position": 3,
+    "title": "YAML templates"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Triggers in YAML pipelines",
+    "permalink": "/docs/azuredevops/yamlscripts/triggers"
+  },
+  "next": {
+    "title": "Re-use YAML templates",
+    "permalink": "/docs/azuredevops/yamlscripts/reuse-template"
+  }
+}

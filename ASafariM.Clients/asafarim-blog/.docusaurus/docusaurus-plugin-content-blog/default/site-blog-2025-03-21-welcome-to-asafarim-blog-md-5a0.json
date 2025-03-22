@@ -9,19 +9,19 @@
     {
       "inline": false,
       "label": "Welcome",
-      "permalink": "/blog/tags/welcome",
+      "permalink": "/blog/tags/tags/welcome-tag",
       "description": "Welcome posts introducing new features or sections"
     },
     {
       "inline": false,
       "label": "Asafarim",
-      "permalink": "/blog/tags/asafarim",
+      "permalink": "/blog/tags/tags/asafarim-tag",
       "description": "Posts related to the ASafariM project"
     },
     {
       "inline": false,
       "label": "Blog",
-      "permalink": "/blog/tags/blog",
+      "permalink": "/blog/tags/tags/blog-tag",
       "description": "Meta posts about the blog itself"
     }
   ],

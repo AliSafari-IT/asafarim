@@ -23,6 +23,7 @@
     "bl": "yarn workspace asafarim-blog start --port 3001",
     "bl:install": "yarn && yarn workspace asafarim-blog install",
     "blb": "yarn workspace asafarim-blog build",
+    "bls": "yarn workspace asafarim-blog serve",
     "ui:rebuild": "yarn workspace asafarim-ui rebuild",
     "ui:reinstall": "yarn workspace asafarim-ui reinstall",
     "docs:build": "yarn workspace asafarim-docs build",

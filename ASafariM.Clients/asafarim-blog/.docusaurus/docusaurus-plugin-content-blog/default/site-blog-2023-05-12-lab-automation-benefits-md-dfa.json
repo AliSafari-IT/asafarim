@@ -9,19 +9,20 @@
     {
       "inline": false,
       "label": "Automation",
-      "permalink": "/blog/tags/automation",
+      "permalink": "/blog/tags/tags/automation-tag",
       "description": "Posts about automation and automated processes"
     },
     {
       "inline": false,
       "label": "Technology",
-      "permalink": "/blog/tags/technology",
+      "permalink": "/blog/tags/tags/technology-tag",
       "description": "Posts related to technology trends and innovations"
     },
     {
-      "inline": true,
-      "label": "Data Management",
-      "permalink": "/blog/tags/data-management"
+      "inline": false,
+      "label": "Data management",
+      "permalink": "/blog/tags/tags/data-management-capitalized-tag",
+      "description": "Posts about data management techniques and tools"
     }
   ],
   "readingTime": 0.95,

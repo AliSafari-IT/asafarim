@@ -1,0 +1,28 @@
+{
+  "id": "azuredevops/yamlscripts/triggers",
+  "title": "Triggers in YAML pipelines",
+  "description": "info",
+  "source": "@site/docs/azuredevops/yamlscripts/02-triggers.md",
+  "sourceDirName": "azuredevops/yamlscripts",
+  "slug": "/azuredevops/yamlscripts/triggers",
+  "permalink": "/docs/azuredevops/yamlscripts/triggers",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/AliSafari-IT/asafarim/tree/main/ASafariM.Clients/asafarim-blog/docs/azuredevops/yamlscripts/02-triggers.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "sidebar_position": 2,
+    "title": "Triggers in YAML pipelines"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Print directory contents",
+    "permalink": "/docs/azuredevops/yamlscripts/print-dir-contents"
+  },
+  "next": {
+    "title": "YAML templates",
+    "permalink": "/docs/azuredevops/yamlscripts/Yaml-templates"
+  }
+}

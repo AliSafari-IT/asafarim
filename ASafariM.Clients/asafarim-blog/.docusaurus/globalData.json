@@ -11,6 +11,66 @@
           "mainDocId": "intro",
           "docs": [
             {
+              "id": "azuredevops/azure-devops-services",
+              "path": "/docs/azuredevops/azure-devops-services",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "azuredevops/azure-pipelines",
+              "path": "/docs/azuredevops/azure-pipelines",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "azuredevops/intro",
+              "path": "/docs/azuredevops/intro",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "azuredevops/test-pipeline",
+              "path": "/docs/azuredevops/test-pipeline",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "azuredevops/test-plans/create-testcases",
+              "path": "/docs/azuredevops/test-plans/create-testcases",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "azuredevops/test-plans/test-env",
+              "path": "/docs/azuredevops/test-plans/test-env",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "azuredevops/test-plans/test-plans",
+              "path": "/docs/azuredevops/test-plans/test-plans",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "azuredevops/yamlscripts/agent",
+              "path": "/docs/azuredevops/yamlscripts/agent",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "azuredevops/yamlscripts/print-dir-contents",
+              "path": "/docs/azuredevops/yamlscripts/print-dir-contents",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "azuredevops/yamlscripts/reuse-template",
+              "path": "/docs/azuredevops/yamlscripts/reuse-template",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "azuredevops/yamlscripts/triggers",
+              "path": "/docs/azuredevops/yamlscripts/triggers",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "azuredevops/yamlscripts/Yaml-templates",
+              "path": "/docs/azuredevops/yamlscripts/Yaml-templates",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "design-patterns/façade-pattern",
               "path": "/docs/design-patterns/façade-pattern",
               "sidebar": "tutorialSidebar"
@@ -28,11 +88,6 @@
             {
               "id": "frameworks-libraries/nx-workspace/nx-Basics",
               "path": "/docs/frameworks-libraries/nx-workspace/nx-Basics",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "frameworks-libraries/site-generators/docusaurus",
-              "path": "/docs/frameworks-libraries/site-generators/docusaurus",
               "sidebar": "tutorialSidebar"
             },
             {

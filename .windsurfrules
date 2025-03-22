@@ -46,3 +46,13 @@ D:\repos\ASafariM\ASafariM.Infrastructure\Persistence\
 D:\repos\ASafariM\ASafariM.Domain\Interfaces\
 D:\repos\ASafariM\ASafariM.Application\Interfaces\
 
+17. Do not run terminal commands until asked to:
+- run commands
+- install dependencies
+- build
+- publish
+- deploy
+- npm run serve
+- npm run build
+- yarn bl
+- yarn blb

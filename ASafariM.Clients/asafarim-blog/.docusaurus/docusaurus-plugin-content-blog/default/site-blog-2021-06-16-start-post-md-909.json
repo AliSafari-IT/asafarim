@@ -9,13 +9,13 @@
     {
       "inline": false,
       "label": "Xitechnix",
-      "permalink": "/blog/tags/xitechnix",
+      "permalink": "/blog/tags/tags/xitechnix-tag",
       "description": "Posts related to XiTechniX projects and technologies"
     },
     {
       "inline": false,
       "label": "Programming",
-      "permalink": "/blog/tags/programming",
+      "permalink": "/blog/tags/tags/programming-tag",
       "description": "Posts about programming languages, techniques, and best practices"
     }
   ],

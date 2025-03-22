@@ -1,0 +1,28 @@
+{
+  "id": "azuredevops/test-pipeline",
+  "title": "Testing pipeline",
+  "description": "How to test a pipeline  in Azure DevOps",
+  "source": "@site/docs/azuredevops/test-pipeline.md",
+  "sourceDirName": "azuredevops",
+  "slug": "/azuredevops/test-pipeline",
+  "permalink": "/docs/azuredevops/test-pipeline",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/AliSafari-IT/asafarim/tree/main/ASafariM.Clients/asafarim-blog/docs/azuredevops/test-pipeline.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "sidebar_position": 2,
+    "title": "Testing pipeline"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Azure DevOps Services",
+    "permalink": "/docs/azuredevops/azure-devops-services"
+  },
+  "next": {
+    "title": "Azure Pipelines",
+    "permalink": "/docs/azuredevops/azure-pipelines"
+  }
+}

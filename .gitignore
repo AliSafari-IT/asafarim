@@ -131,6 +131,10 @@ ASafariM.Api/Properties/launchSettings.json
 # Ignore ASafariM.Clients/asafarim-blog
 ASafariM.Clients/asafarim-blog/stats.html
 **/.docusaurus/*
+ASafariM.Clients/asafarim-blog/.docusaurus/client-manifest.json
+ASafariM.Clients/asafarim-blog/.docusaurus/client-modules.js
+ASafariM.Clients/asafarim-blog/.docusaurus/docusaurus.config.mjs
+ASafariM.Clients/asafarim-blog/.docusaurus/docusaurus-plugin-content-blog/default/p/*.json
 
 # Ignore ASafariM.Clients/asafarim-ui
 ASafariM.Clients/asafarim-ui/stats.html

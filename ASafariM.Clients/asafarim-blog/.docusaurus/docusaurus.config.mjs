@@ -4,7 +4,7 @@
  * Modify the docusaurus.config.js file at your site's root instead.
  */
 export default {
-  "title": "ASafariM Blog",
+  "title": "ASafariM",
   "tagline": "Thoughts, stories and ideas from Ali Safari",
   "favicon": "img/favicon.ico",
   "url": "https://asafarim.com",

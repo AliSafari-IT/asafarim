@@ -60,7 +60,7 @@ const config: Config = {
   themeConfig: {
     image: 'img/logoT.svg',
     navbar: {
-      title: 'Blog | ASafariM',
+      title: 'ASafariM',
       hideOnScroll: false,
       style: 'dark',
       logo: {
@@ -68,6 +68,8 @@ const config: Config = {
         src: 'img/logoT.svg',
         srcDark: 'img/logoT.svg',
         href: 'https://asafarim.com',
+        target: '_self',
+        className: 'text-[var(--primary)] dark:text-[var(--primary)] transition-all duration-200 ease-in-out group',
       },
       items: [
         {
@@ -75,12 +77,14 @@ const config: Config = {
           sidebarId: 'tutorialSidebar',
           position: 'left',
           label: 'Articles',
+          className: 'text-[var(--primary)] dark:text-[var(--primary)] transition-all duration-200 ease-in-out group',
         },
         {to: '/blog', label: 'Blog', position: 'left'},
         {
           href: 'https://github.com/AliSafari-IT/asafarim',
           label: 'GitHub',
           position: 'right',
+          className: 'text-[var(--primary)] dark:text-[var(--primary)] transition-all duration-200 ease-in-out group',
         },
       ],
     },

@@ -11,7 +11,7 @@ import ChangeLogsDropdown from "./ChangeLogsDropdown";
 import useAuth from "@/hooks/useAuth";
 import ASMButton from "./components/ASMButton";
 import { Menu, MenuItem, MenuButton } from '@headlessui/react';
-import { ChevronDownIcon } from '@heroicons/react/24/outline';
+import { ChevronDownIcon, DocumentTextIcon } from '@heroicons/react/24/outline';
 
 const Navbar: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const { authenticatedUser, authenticated, token } = useAuth();
@@ -188,6 +188,17 @@ const Navbar: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
             </div>
           )}
           {viewWidth > 400 && <ThemeToggler {...togglerProps} />}
+          {/* Blog Button */}
+          <a 
+            href="https://blog.asafarim.com/blog" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="flex items-center text-[var(--text-secondary)] hover:bg-[var(--bg-tertiary)] hover:text-[var(--text-primary)] px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+            title="Visit Blog"
+          >
+            <DocumentTextIcon className="w-5 h-5 mr-1" />
+            <span className={`${viewWidth < 640 ? 'hidden' : 'inline'}`}>Blog</span>
+          </a>
           <ChangeLogsDropdown mobileView={isMenuOpen} />
         </div>
       </div>

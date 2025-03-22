@@ -11,7 +11,6 @@ import {
   SunIcon,
   HomeIcon,
 } from "@heroicons/react/24/outline";
-import { Transition } from "@headlessui/react";
 import ChangeLogsDropdown from "./ChangeLogsDropdown";
 import UserDropdown from "@/components/user/UserDropdown";
 import "./ModernNavbar.css";
@@ -21,6 +20,7 @@ import ResponsiveDropdownMenu from "./components/ResponsiveDropdownMenu";
 import { IMenuItem } from "@/interfaces/IMenuItem";
 import { getAllMdFiles } from "@/utils/mdFilesUtils";
 import { logger } from '@/utils/logger';
+import { Transition } from "@headlessui/react";
 
 const ModernNavbar: React.FC = () => {
   const { authenticatedUser, authenticated, token } = useAuth();
@@ -273,6 +273,33 @@ const ModernNavbar: React.FC = () => {
                 )}
               </button>
 
+              {/* Blog Link */}
+              <a
+                href="https://blog.asafarim.com/blog"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 px-3 py-2 rounded-md text-sm font-medium flex items-center group"
+                title="Visit Blog"
+              >
+                <svg 
+                  xmlns="http://www.w3.org/2000/svg" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="1.5" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  className="h-5 w-5 mr-1 group-hover:animate-pulse"
+                >
+                  <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5z" />
+                  <path d="M8 7h8" />
+                  <path d="M8 11h8" />
+                  <path d="M8 15h5" />
+                  <circle cx="16" cy="16" r="2" className="fill-current group-hover:fill-[var(--primary)]" />
+                </svg>
+                <span className="group-hover:text-[var(--primary)] transition-colors duration-200">Blog</span>
+              </a>
+
               {/* Changelogs */}
               <ChangeLogsDropdown mobileView={false} />
 
@@ -312,6 +339,32 @@ const ModernNavbar: React.FC = () => {
                   <MoonIcon className="h-6 w-6" aria-hidden="true" />
                 )}
               </button>
+
+              {/* Blog Link for Mobile */}
+              <a
+                href="https://blog.asafarim.com/blog"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white p-2 rounded-full focus:outline-none mr-2 group"
+                title="Visit Blog"
+              >
+                <svg 
+                  xmlns="http://www.w3.org/2000/svg" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="1.5" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  className="h-6 w-6 group-hover:animate-pulse"
+                >
+                  <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5z" />
+                  <path d="M8 7h8" />
+                  <path d="M8 11h8" />
+                  <path d="M8 15h5" />
+                  <circle cx="16" cy="16" r="2" className="fill-current group-hover:fill-[var(--primary)]" />
+                </svg>
+              </a>
 
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -396,6 +449,35 @@ const ModernNavbar: React.FC = () => {
                   <ASMButton />
                 </div>
               )}
+
+              {/* Blog Link for Mobile Menu */}
+              <div className="px-4 py-2">
+                <a
+                  href="https://blog.asafarim.com/blog"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 px-3 py-2 rounded-md text-sm font-medium flex items-center group"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="1.5" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    className="h-5 w-5 mr-2 group-hover:animate-pulse"
+                  >
+                    <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5z" />
+                    <path d="M8 7h8" />
+                    <path d="M8 11h8" />
+                    <path d="M8 15h5" />
+                    <circle cx="16" cy="16" r="2" className="fill-current group-hover:fill-[var(--primary)]" />
+                  </svg>
+                  <span className="group-hover:text-[var(--primary)] transition-colors duration-200">Blog</span>
+                </a>
+              </div>
 
               {/* Changelogs for Mobile */}
               <ChangeLogsDropdown mobileView={true} />

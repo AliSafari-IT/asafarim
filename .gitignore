@@ -123,10 +123,17 @@ log-*.txt
 yarn.lock
 yarn.lock
 
-ASafariM.Clients/asafarim-ui/stats.html
-ASafariM.Clients/asafarim-ui/stats.html
-ASafariM.Clients/asafarim-ui/stats.html
-ASafariM.Clients/asafarim-ui/stats.html
+# Ignore ASafariM.Api
 ASafariM.Api/Properties/launchSettings.Development.json
 ASafariM.Api/Properties/launchSettings.production.json
 ASafariM.Api/Properties/launchSettings.json
+
+# Ignore ASafariM.Clients/asafarim-blog
+ASafariM.Clients/asafarim-blog/stats.html
+**/.docusaurus/*
+
+# Ignore ASafariM.Clients/asafarim-ui
+ASafariM.Clients/asafarim-ui/stats.html
+
+
+

@@ -8,14 +8,11 @@ using Serilog;
 
 namespace ASafariM.Presentation.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
     /// <summary>
     /// This controller handles operations related to roles in the application.
     /// </summary>
-    /// <remarks>
-    /// This controller provides endpoints for managing roles in the application.
-    /// </remarks>
+    [Route("api/[controller]")]
+    [ApiController]
     public class RolesController : Controller
     {
         private readonly IRoleService _roleService;
@@ -29,7 +26,10 @@ namespace ASafariM.Presentation.Controllers
             _roleService = roleService;
         }
 
-        // Get roles
+        /// <summary>
+        /// Gets all roles.
+        /// </summary>
+        /// <returns>A list of roles.</returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Role>>> GetRoles()
         {
@@ -47,7 +47,6 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
-        // GET ROLE NAMES
         /// <summary>
         /// Gets the name of the role by its unique identifier.
         /// </summary>

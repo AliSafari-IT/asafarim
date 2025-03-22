@@ -15,4 +15,34 @@ D:\repos\ASafariM\ASafariM.Clients\asafarim-blog\README.md
 /var/www/asafarim/ASafariM.Clients/asafarim-ui/README.md
 /var/www/asafarim/ASafariM.Clients/asafarim-blog/README.md
 
+9. frontend apps:
+D:\repos\ASafariM\ASafariM.Clients\asafarim-ui
+D:\repos\ASafariM\ASafariM.Clients\asafarim-blog
+
+10. backend app:
+D:\repos\ASafariM\ASafariM.Api
+
+11. backend clean architecture layers:
+D:\repos\ASafariM\ASafariM.Application\
+D:\repos\ASafariM\ASafariM.Domain\
+D:\repos\ASafariM\ASafariM.Infrastructure\
+D:\repos\ASafariM\ASafariM.Presentation\
+D:\repos\ASafariM\ASafariM.Test\
+
+12. api controllers:
+D:\repos\ASafariM\ASafariM.Presentation\Controllers\
+
+13. api services:
+D:\repos\ASafariM\ASafariM.Application\Services\
+D:\repos\ASafariM\ASafariM.Infrastructure\Services\
+
+14. api repositories:
+D:\repos\ASafariM\ASafariM.Infrastructure\Repositories\
+
+15. Db Context:
+D:\repos\ASafariM\ASafariM.Infrastructure\Persistence\
+
+16. Interfaces:
+D:\repos\ASafariM\ASafariM.Domain\Interfaces\
+D:\repos\ASafariM\ASafariM.Application\Interfaces\
 

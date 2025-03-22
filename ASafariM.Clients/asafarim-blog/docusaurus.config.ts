@@ -34,7 +34,7 @@ const getIntlVars = {
 };
 
 const config: Config = { 
-  title: 'ASafariM',
+  title: 'Blog | ASafariM',
   tagline: 'Thoughts, stories and ideas from Ali Safari',
   favicon: 'img/favicon.ico',
 
@@ -89,19 +89,21 @@ const config: Config = {
   ],
 
   themeConfig: {
-    image: 'img/docusaurus-social-card.jpg',
+    image: 'img/logoT.svg',
     navbar: {
-      title: 'ASafariM Blog',
+      title: 'ASafariM',
+      hideOnScroll: false,
+      style: 'dark',
       logo: {
         alt: 'ASafariM Logo',
-        src: 'img/logo.svg',
+        src: 'img/logoT.svg',
       },
       items: [
         {
           type: 'docSidebar',
           sidebarId: 'tutorialSidebar',
           position: 'left',
-          label: 'Docs',
+          label: 'Articles',
         },
         {to: '/blog', label: 'Blog', position: 'left'},
         {
@@ -112,7 +114,7 @@ const config: Config = {
       ],
     },
     footer: {
-      style: 'dark',
+      style: 'light',
       links: [
         {
           title: 'Docs',
@@ -132,7 +134,7 @@ const config: Config = {
             },
             {
               label: 'LinkedIn',
-              href: 'https://linkedin.com/in/alisafari-it',
+              href: 'https://www.linkedin.com/in/ali-safari-m/',
             },
           ],
         },

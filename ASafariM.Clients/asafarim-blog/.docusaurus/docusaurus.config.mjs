@@ -4,7 +4,7 @@
  * Modify the docusaurus.config.js file at your site's root instead.
  */
 export default {
-  "title": "ASafariM",
+  "title": "Blog | ASafariM",
   "tagline": "Thoughts, stories and ideas from Ali Safari",
   "favicon": "img/favicon.ico",
   "url": "https://blog.asafarim.com",
@@ -50,19 +50,21 @@ export default {
     ]
   ],
   "themeConfig": {
-    "image": "img/docusaurus-social-card.jpg",
+    "image": "img/logoT.svg",
     "navbar": {
-      "title": "ASafariM Blog",
+      "title": "ASafariM",
+      "hideOnScroll": false,
+      "style": "dark",
       "logo": {
         "alt": "ASafariM Logo",
-        "src": "img/logo.svg"
+        "src": "img/logoT.svg"
       },
       "items": [
         {
           "type": "docSidebar",
           "sidebarId": "tutorialSidebar",
           "position": "left",
-          "label": "Docs"
+          "label": "Articles"
         },
         {
           "to": "/blog",
@@ -74,11 +76,10 @@ export default {
           "label": "GitHub",
           "position": "right"
         }
-      ],
-      "hideOnScroll": false
+      ]
     },
     "footer": {
-      "style": "dark",
+      "style": "light",
       "links": [
         {
           "title": "Docs",
@@ -98,7 +99,7 @@ export default {
             },
             {
               "label": "LinkedIn",
-              "href": "https://linkedin.com/in/alisafari-it"
+              "href": "https://www.linkedin.com/in/ali-safari-m/"
             }
           ]
         },

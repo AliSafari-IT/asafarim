@@ -157,7 +157,7 @@ check_health() {
     response=$(curl -sk "$HEALTH_CHECK_URL" -v 2>&1)
     curl_status=$?
 
-    if [[ "$response" == *"Healthy"* ]]; then
+    if [[ "$response" == *"healthy"* ]] || [[ "$response" == *"Healthy"* ]]; then
       log "Health check passed!"
       return 0
     fi

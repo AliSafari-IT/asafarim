@@ -5,19 +5,24 @@ BASE_DIR="/var/www"
 REPO_DIR="$BASE_DIR/asafarim"
 FRONTEND_DIR="$REPO_DIR/ASafariM.Clients/asafarim-ui"
 BLOG_DIR="$REPO_DIR/ASafariM.Clients/asafarim-blog"
+BIBLIOGRAPHY_DIR="$REPO_DIR/ASafariM.Clients/asafarim-bibliography"
 BACKEND_DIR="$REPO_DIR/ASafariM.Api"
 FRONTEND_DEPLOY_DIR="$BASE_DIR/asafarim-com/public_html"
 FRONTEND_BACKUP_DIR="$REPO_DIR/backups/frontends"
 BLOG_DEPLOY_DIR="$BASE_DIR/asafarim-blog"
 BLOG_BACKUP_DIR="$REPO_DIR/backups/blogs"
+BIBLIOGRAPHY_DEPLOY_DIR="$BASE_DIR/asafarim-bibliography"
+BIBLIOGRAPHY_BACKUP_DIR="$REPO_DIR/backups/bibliography"
 BACKEND_DEPLOY_DIR="$BASE_DIR/asafarim-api"
 BACKEND_BACKUP_DIR="$REPO_DIR/backups/backends"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 FRONTEND_BACKUP_FILE="asafarim-frontend_backup_${TIMESTAMP}.tar.gz"
 BLOG_BACKUP_FILE="asafarim-blog_backup_${TIMESTAMP}.tar.gz"
+BIBLIOGRAPHY_BACKUP_FILE="asafarim-bibliography_backup_${TIMESTAMP}.tar.gz"
 BACKEND_BACKUP_FILE="asafarim-backend_backup_${TIMESTAMP}.tar.gz"
 FRONTEND_BACKUP_PATH="$FRONTEND_BACKUP_DIR/$FRONTEND_BACKUP_FILE"
 BLOG_BACKUP_PATH="$BLOG_BACKUP_DIR/$BLOG_BACKUP_FILE"
+BIBLIOGRAPHY_BACKUP_PATH="$BIBLIOGRAPHY_BACKUP_DIR/$BIBLIOGRAPHY_BACKUP_FILE"
 BACKEND_BACKUP_PATH="$BACKEND_BACKUP_DIR/$BACKEND_BACKUP_FILE"
 PUBLISH_DIR="$BASE_DIR/asafarim-api"
 SERVICE_NAME="asafarim-api"
@@ -55,6 +60,7 @@ echo "1: Frontend"
 echo "2: Backend"
 echo "3: Both"
 echo "4: Blog"
+echo "5: Bibliography"
 echo "0: Exit"
 echo ""
 read -p "Enter deploy mode: " DEPLOY_MODE
@@ -434,6 +440,56 @@ if [ "$DEPLOY_MODE" -eq 4 ]; then
   sudo systemctl restart nginx || handle_error "Failed to restart Nginx!" "exit"
 
   log "Blog deployment completed successfully!"
+fi
+
+# *********************************************************************
+# Bibliography Deployment
+if [ "$DEPLOY_MODE" -eq 5 ]; then
+  log "Starting Bibliography Deployment..."
+
+  # Clean old backups
+  clean_old_backups "$BIBLIOGRAPHY_BACKUP_DIR"
+
+  # Create a backup of the current deployment
+  create_backup "$BIBLIOGRAPHY_DEPLOY_DIR" "$BIBLIOGRAPHY_BACKUP_PATH" "bibliography"
+
+  # Navigate to bibliography project
+  cd "$BIBLIOGRAPHY_DIR" || handle_error "Bibliography directory not found!" "exit"
+
+  # Build the bibliography app
+  log "Building bibliography app..."
+  yarn build || handle_error "Bibliography build failed!" "exit"
+
+  # Ensure Deployment Directory Exists
+  log "Ensuring deployment directory exists..."
+  sudo mkdir -p "$BIBLIOGRAPHY_DEPLOY_DIR" || true
+
+  # Clear old files
+  log "Cleaning old deployment files..."
+  sudo rm -rf "$BIBLIOGRAPHY_DEPLOY_DIR"/* || true
+
+  # Move new build files
+  log "Deploying new build files..."
+  if [ -d "dist" ]; then
+    sudo cp -r dist/* "$BIBLIOGRAPHY_DEPLOY_DIR"/ || {
+      log "Error: Moving files failed, rolling back..."
+      sudo tar -xzf "$BIBLIOGRAPHY_BACKUP_PATH" -C "$BIBLIOGRAPHY_DEPLOY_DIR"
+      handle_error "Bibliography deployment failed" "exit"
+    }
+  else
+    handle_error "Build directory 'dist' not found" "exit"
+  fi
+
+  # Set correct permissions
+  log "Setting correct file permissions..."
+  sudo chown -R www-data:www-data "$BIBLIOGRAPHY_DEPLOY_DIR"
+  sudo chmod -R 755 "$BIBLIOGRAPHY_DEPLOY_DIR"
+
+  # Restart Nginx
+  log "Restarting Nginx..."
+  sudo systemctl restart nginx || handle_error "Failed to restart Nginx!" "exit"
+
+  log "Bibliography deployment completed successfully!"
 fi
 
 # **Deployment Complete**

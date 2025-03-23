@@ -40,8 +40,36 @@ log() {
   echo "$(date +"%Y-%m-%d %H:%M:%S") - $1" | tee -a "$DEPLOY_LOG"
 }
 
-# remove older DEPLOY_LOG files if exists except the current one
-rm -f "$LOG_DIR/deploy_*.log" || true
+# Clean old log files function
+clean_old_logs() {
+  local log_dir=$1
+  local keep_count=2
+  
+  log "Cleaning old log files in $log_dir, keeping newest $keep_count for each type"
+  
+  # Get unique log file prefixes (everything before the timestamp)
+  local prefixes=$(find "$log_dir" -type f -name "*.log" | sed -E 's/(.*)_[0-9]{8}_[0-9]{6}.log$/\1/' | sort -u)
+  
+  # For each prefix, keep only the most recent files
+  for prefix in $prefixes; do
+    local base_prefix=$(basename "$prefix")
+    log "Processing logs with prefix: $base_prefix"
+    
+    # Count files for this prefix
+    local file_count=$(find "$log_dir" -type f -name "${base_prefix}_*.log" | wc -l)
+    
+    if [ "$file_count" -gt "$keep_count" ]; then
+      log "Keeping $keep_count of $file_count ${base_prefix} logs"
+      find "$log_dir" -type f -name "${base_prefix}_*.log" | sort -r | tail -n +$((keep_count+1)) | xargs -r rm
+      log "Removed $(($file_count-$keep_count)) old ${base_prefix} logs"
+    else
+      log "No old ${base_prefix} logs to remove (found $file_count)"
+    fi
+  done
+}
+
+# Clean old logs after creating new log file
+clean_old_logs "$LOG_DIR"
 
 # Error handling function
 handle_error() {
@@ -52,27 +80,33 @@ handle_error() {
   fi
 }
 
-# Deploy Mode (1: Frontend, 2: Backend, 3: Both)
+# Deploy Mode (multiple options can be selected with comma separation)
 log "******* Deploying ASafariM Application *******"
 echo ""
 echo " ******* Deploying ASafariM Application *******"
 echo "1: Frontend"
 echo "2: Backend"
-echo "3: Both"
+echo "3: Both (Frontend & Backend)"
 echo "4: Blog"
 echo "5: Bibliography"
 echo "0: Exit"
 echo ""
-read -p "Enter deploy mode: " DEPLOY_MODE
+echo "You can select multiple options using commas (e.g., '1,4,5' to deploy Frontend, Blog, and Bibliography)"
+read -p "Enter deploy mode(s): " DEPLOY_MODES
 
 # Database Migration prompt
 echo " ******* Database Migration update *******"
 read -p "Apply database migration? (y/n): " DB_MODE
 
-if [ "$DEPLOY_MODE" -eq 0 ]; then
+# Check if user wants to exit
+if [[ "$DEPLOY_MODES" == "0" ]]; then
   log "Exiting..."
   exit 0
 fi
+
+# Convert comma-separated input to array
+IFS=',' read -ra DEPLOY_MODE_ARRAY <<< "$DEPLOY_MODES"
+log "Selected deployment modes: $DEPLOY_MODES"
 
 # Function to check if a git pull is needed
 update_repo() {
@@ -272,7 +306,8 @@ fi
 
 # *********************************************************************
 # Frontend Deployment
-if [ "$DEPLOY_MODE" -eq 1 ] || [ "$DEPLOY_MODE" -eq 3 ]; then
+# Check if frontend deployment (mode 1 or 3) is selected
+if [[ " ${DEPLOY_MODE_ARRAY[*]} " =~ " 1 " ]] || [[ " ${DEPLOY_MODE_ARRAY[*]} " =~ " 3 " ]]; then
   log "Starting Frontend Deployment..."
 
   # Clean old backups
@@ -322,7 +357,8 @@ fi
 
 # *********************************************************************
 # Backend Deployment
-if [ "$DEPLOY_MODE" -eq 2 ] || [ "$DEPLOY_MODE" -eq 3 ]; then
+# Check if backend deployment (mode 2 or 3) is selected
+if [[ " ${DEPLOY_MODE_ARRAY[*]} " =~ " 2 " ]] || [[ " ${DEPLOY_MODE_ARRAY[*]} " =~ " 3 " ]]; then
   log "Starting Backend Deployment..."
 
   # Ensure port 5000 is free
@@ -394,7 +430,8 @@ fi
 
 # *********************************************************************
 # Blog Deployment
-if [ "$DEPLOY_MODE" -eq 4 ]; then
+# Check if blog deployment (mode 4) is selected
+if [[ " ${DEPLOY_MODE_ARRAY[*]} " =~ " 4 " ]]; then
   log "Starting Blog Deployment..."
 
   # Clean old backups
@@ -444,7 +481,8 @@ fi
 
 # *********************************************************************
 # Bibliography Deployment
-if [ "$DEPLOY_MODE" -eq 5 ]; then
+# Check if bibliography deployment (mode 5) is selected
+if [[ " ${DEPLOY_MODE_ARRAY[*]} " =~ " 5 " ]]; then
   log "Starting Bibliography Deployment..."
 
   # Clean old backups

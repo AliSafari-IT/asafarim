@@ -24,6 +24,10 @@
     "bl:install": "yarn && yarn workspace asafarim-blog install",
     "blb": "yarn workspace asafarim-blog build",
     "bls": "yarn workspace asafarim-blog serve",
+    "bib": "yarn workspace asafarim-bibliography start",
+    "bib:build": "yarn workspace asafarim-bibliography build",
+    "bib:serve": "yarn workspace asafarim-bibliography serve",
+    "bib:install": "yarn && yarn workspace asafarim-bibliography install",
     "ui:rebuild": "yarn workspace asafarim-ui rebuild",
     "ui:reinstall": "yarn workspace asafarim-ui reinstall",
     "docs:build": "yarn workspace asafarim-docs build",
@@ -58,8 +62,10 @@
     "asafarim-api",
     "ASafariM.Api",
     "asafarim-blog",
+    "asafarim-bibliography",
     "ASafariM.Clients",
     "ASafariM.Clients/asafarim-ui",
+    "ASafariM.Clients/asafarim-bibliography",
     "ASafariM.Clients/asafarim-blog"
   ],
   "dependencies": {

@@ -14,6 +14,17 @@ Redux follows three fundamental principles:
 2. **State is Read-Only**: The only way to change the state is to emit an action, which describes what happened.
 3. **Changes are Made with Pure Functions**: Reducers are pure functions that take the previous state and an action, and return the next state.
 
+## Real-world Implementation: ASafariM Bibliography
+
+You can see a live implementation of Redux in our [ASafariM Bibliography application](https://bibliography.asafarim.com). This application demonstrates:
+
+- Redux Toolkit with TypeScript
+- Async thunks for API communication
+- Error handling and loading states
+- Database initialization and error recovery
+
+The application showcases how Redux helps manage complex state in a real-world scenario, particularly when dealing with external API calls and error handling.
+
 ### Redux Flow
 
 #### Redux Flow as Mermaid
@@ -120,16 +131,29 @@ src/
 
 ```typescript
 // src/types/Book.ts
-export interface Book {
+export interface BaseEntity {
   id: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date;
+  createdBy: string;
+  updatedBy?: string;
+  deletedBy?: string;
+  isActive: boolean;
+  isDeleted: boolean;
+  deletedMessage?: string;
+}
+
+export interface Book extends BaseEntity {
   title: string;
   author: string;
   year: number;
   genre: string;
   isRead: boolean;
+  attachmentId?: string;
 }
 
-export type BookFormData = Omit<Book, 'id'>;
+export type BookFormData = Omit<Book, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'updatedBy' | 'deletedBy' | 'isDeleted' | 'deletedMessage' | 'attachmentId'>;
 ```
 
 ### Create Redux Slice
@@ -138,7 +162,6 @@ export type BookFormData = Omit<Book, 'id'>;
 // src/store/slices/bookSlice.ts
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { Book, BookFormData } from '../../types/Book';
-import { v4 as uuidv4 } from 'uuid';
 
 interface BookState {
   books: Book[];
@@ -159,12 +182,25 @@ export const fetchBooks = createAsyncThunk(
   'books/fetchBooks',
   async (_, { rejectWithValue }) => {
     try {
-      // Simulate API call
-      const response = await fetch('/api/books');
-      if (!response.ok) throw new Error('Failed to fetch books');
-      return await response.json();
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+      
+      const response = await fetch('/api/books', {
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || 'Failed to fetch books');
+      }
+      
+      const data = await response.json();
+      // Handle API response format with $values
+      return data.$values || data;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error.message || 'An unknown error occurred');
     }
   }
 );
@@ -174,16 +210,26 @@ export const addBook = createAsyncThunk(
   'books/addBook',
   async (book: BookFormData, { rejectWithValue }) => {
     try {
-      // Simulate API call
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+      
       const response = await fetch('/api/books', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...book, id: uuidv4() }),
+        body: JSON.stringify(book),
+        signal: controller.signal
       });
-      if (!response.ok) throw new Error('Failed to add book');
+      
+      clearTimeout(timeoutId);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || 'Failed to add book');
+      }
+      
       return await response.json();
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error.message || 'An unknown error occurred');
     }
   }
 );
@@ -279,32 +325,45 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 ```tsx
 // src/components/BookList.tsx
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { fetchBooks, selectBook } from '../store/slices/bookSlice';
+import DatabaseErrorMessage from './DatabaseErrorMessage';
 
 const BookList: React.FC = () => {
   const dispatch = useAppDispatch();
   const { books, loading, error } = useAppSelector(state => state.books);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     dispatch(fetchBooks());
-  }, [dispatch]);
+  }, [dispatch, retryCount]);
 
-  if (loading) return <div>Loading books...</div>;
-  if (error) return <div>Error: {error}</div>;
+  const handleRetry = () => {
+    setRetryCount(prev => prev + 1);
+  };
+
+  if (loading) return <div className="text-center py-4">Loading books...</div>;
+  
+  if (error) {
+    return <DatabaseErrorMessage error={error} onRetry={handleRetry} />;
+  }
 
   return (
     <div className="book-list">
-      <h2>My Bibliography</h2>
+      <h2 className="text-2xl font-bold mb-4">My Bibliography</h2>
       {books.length === 0 ? (
-        <p>No books in your bibliography yet.</p>
+        <p className="text-gray-400">No books in your bibliography yet.</p>
       ) : (
-        <ul>
+        <ul className="space-y-2">
           {books.map(book => (
-            <li key={book.id} onClick={() => dispatch(selectBook(book.id))}>
+            <li 
+              key={book.id} 
+              onClick={() => dispatch(selectBook(book.id))}
+              className="p-3 bg-gray-800 rounded cursor-pointer hover:bg-gray-700"
+            >
               <strong>{book.title}</strong> by {book.author} ({book.year})
-              <span className={`status ${book.isRead ? 'read' : 'unread'}`}>
+              <span className={`ml-2 px-2 py-1 rounded text-xs ${book.isRead ? 'bg-green-700' : 'bg-yellow-700'}`}>
                 {book.isRead ? 'Read' : 'Unread'}
               </span>
             </li>
@@ -365,3 +424,14 @@ For smaller applications or simpler state requirements, consider using React's b
 3. **Normalize Complex State**: Use normalized state structure for collections of items.
 4. **Avoid Deep Nesting**: Keep state structure flat for easier updates.
 5. **Use Selectors**: Create reusable selectors for accessing and computing derived state.
+
+## Explore the Live Example
+
+Visit our [ASafariM Bibliography application](https://bibliography.asafarim.com) to see Redux in action. The application demonstrates all the concepts discussed in this guide, including:
+
+- Redux store configuration
+- Async thunks for API calls
+- Error handling with retry mechanisms
+- TypeScript integration
+
+For more information on data fetching patterns, check out our [useFetch hook documentation](/asafarim-blog/docs/React/Hooks/useFetch) and [API data handling guide](/asafarim-blog/docs/React/Basics/handle-data-from-api).

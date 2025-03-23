@@ -70,6 +70,9 @@ public class AppDbContext : DbContext
     // Visitor tracking
     public DbSet<VisitorLog> VisitorLogs { get; set; }
 
+    // Bibliography-related sets
+    public DbSet<BibliographyItem> BibliographyItems { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         var configuration = new ConfigurationBuilder()
@@ -274,19 +277,28 @@ public class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // Configure ProjectMember entity
+        modelBuilder.Entity<Link>(entity =>
+        {
+            entity.ToTable("Links");
+        });
+
         modelBuilder.Entity<ProjectMember>(entity =>
         {
-            entity.HasKey(pm => pm.Id);
+            entity.HasKey(pm => new { pm.UserId, pm.ProjectId });
 
             entity
                 .HasOne(pm => pm.User)
                 .WithMany(u => u.ProjectMemberships)
                 .HasForeignKey(pm => pm.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            entity
+                .HasOne(pm => pm.Project)
+                .WithMany()
+                .HasForeignKey(pm => pm.ProjectId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // Configure MarkdownFile entity
         modelBuilder.Entity<MarkdownFile>(entity =>
         {
             entity.HasKey(mf => mf.Id);
@@ -309,7 +321,6 @@ public class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // Configure MarkdownFileHistory entity
         modelBuilder.Entity<MarkdownFileHistory>(entity =>
         {
             entity.HasKey(mfh => mfh.Id);
@@ -317,7 +328,6 @@ public class AppDbContext : DbContext
             entity.Property(mfh => mfh.ChangedAt).HasColumnType("datetime(6)").IsRequired();
         });
 
-        // Configure MarkdownFileUser entity
         modelBuilder.Entity<MarkdownFileUser>(entity =>
         {
             entity.HasKey(mfu => new { mfu.MarkdownFileId, mfu.UserId });
@@ -335,7 +345,6 @@ public class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // Configure Country entity
         modelBuilder.Entity<Country>(entity =>
         {
             entity.HasKey(c => c.Id);
@@ -348,7 +357,6 @@ public class AppDbContext : DbContext
             entity.HasIndex(c => c.IsoCode3).IsUnique();
         });
 
-        // Configure TimeZone entity
         modelBuilder.Entity<TimeZone>(entity =>
         {
             entity.HasKey(tz => tz.Id);
@@ -360,7 +368,6 @@ public class AppDbContext : DbContext
             entity.HasIndex(tz => tz.StandardName).IsUnique();
         });
 
-        // Configure DateFormat entity
         modelBuilder.Entity<DateFormat>(entity =>
         {
             entity.HasKey(df => df.Id);
@@ -371,7 +378,6 @@ public class AppDbContext : DbContext
             entity.HasIndex(df => df.Format).IsUnique();
         });
 
-        // Configure Currency entity
         modelBuilder.Entity<Currency>(entity =>
         {
             entity.HasKey(c => c.Id);
@@ -382,7 +388,6 @@ public class AppDbContext : DbContext
             entity.HasIndex(c => c.Code).IsUnique();
         });
 
-        // Configure FileFormat entity
         modelBuilder.Entity<FileFormat>(entity =>
         {
             entity.HasKey(ff => ff.Id);
@@ -395,7 +400,6 @@ public class AppDbContext : DbContext
             entity.HasIndex(ff => ff.MimeType).IsUnique();
         });
 
-        // Configure PaginationSettings entity
         modelBuilder.Entity<PaginationSettings>(entity =>
         {
             entity.HasKey(ps => ps.Id);
@@ -403,7 +407,6 @@ public class AppDbContext : DbContext
             entity.Property(ps => ps.PageSizeOptions).HasMaxLength(100).IsRequired();
         });
 
-        // Configure GeographicalPreference entity
         modelBuilder.Entity<GeographicalPreference>(entity =>
         {
             entity.HasKey(gp => gp.Id);
@@ -433,7 +436,6 @@ public class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        // Configure MiscellaneousPreference entity
         modelBuilder.Entity<MiscellaneousPreference>(entity =>
         {
             entity.HasKey(mp => mp.Id);
@@ -451,14 +453,12 @@ public class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        // Configure other preference entities
         modelBuilder.Entity<AccessibilityPreference>().HasKey(ap => ap.Id);
         modelBuilder.Entity<LanguagePreference>().HasKey(lp => lp.Id);
         modelBuilder.Entity<NotificationPreference>().HasKey(np => np.Id);
         modelBuilder.Entity<PrivacyPreference>().HasKey(pp => pp.Id);
         modelBuilder.Entity<ThemePreference>().HasKey(tp => tp.Id);
 
-        // Configure ProgressHistory entity
         modelBuilder.Entity<ProgressHistory>(entity =>
         {
             entity.HasKey(ph => ph.Id);
@@ -471,6 +471,22 @@ public class AppDbContext : DbContext
         });
 
         modelBuilder.Entity<ProgressHistory>().HasIndex(ph => ph.StatusReason).IsUnique();
+
+        modelBuilder.Entity<BibliographyItem>(entity =>
+        {
+            entity.ToTable("BibliographyItems");
+            
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Title).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Author).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.Genre).HasMaxLength(50);
+
+            entity
+                .HasOne(b => b.Attachment)
+                .WithMany()
+                .HasForeignKey(b => b.AttachmentId)
+                .OnDelete(DeleteBehavior.SetNull);
+        });
 
         // Seed User
         var userId = Guid.Parse("8048da39-cdaf-47a9-9fb1-960d81dd704a");

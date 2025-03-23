@@ -12,7 +12,7 @@ sidebar_position: 1
 Fetch API is Promise based, resulting a more concise syntax compared to the ajax method.  
 A basic fetch request is really simple to set up. Have a look at the following code:
 ```javascript title="Fetch basic request"
-fetch('http://example.com/movies.json')
+fetch('http://localhost:5000/api/books')
   .then(response => response.json())
   .then(data => console.log(data));
 
@@ -27,8 +27,8 @@ By default, `fetch()` will not send or receive any ***cookies*** from the server
 ### Supplying request options
 The *fetch()* method can optionally accept a second parameter, an `init` object that allows you to control a number of different settings:
 
-``` javascript title="An example of POST method implementation"
-async function postData(url = '', data = {}) {
+``` javascript title="An example of POST method implementation for adding a book"
+async function addBook(url = 'http://localhost:5000/api/books', bookData = {}) {
   // Default options are marked with *
   const response = await fetch(url, {
     method: 'POST', // *GET, POST, PUT, DELETE, etc.
@@ -41,14 +41,33 @@ async function postData(url = '', data = {}) {
     },
     redirect: 'follow', // manual, *follow, error
     referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-    body: JSON.stringify(data) // body data type must match "Content-Type" header
+    body: JSON.stringify(bookData) // body data type must match "Content-Type" header
   });
   return response.json(); // parses JSON response into native JavaScript objects
 }
 
-postData('https://example.com/answer', { answer: 42 })
+addBook('http://localhost:5000/api/books', { 
+  title: 'Clean Code',
+  author: 'Robert C. Martin',
+  year: 2008,
+  genre: 'Programming',
+  isRead: true,
+  createdBy: 'Frontend User',
+  isActive: true
+})
   .then(data => {
     console.log(data); // JSON data parsed by `data.json()` call
   });
 
 ```
+
+## Real-world Example: ASafariM Bibliography
+
+For a real-world implementation, check out our [Bibliography application](https://bibliography.asafarim.com) which uses Redux Toolkit with TypeScript to manage API calls. The application demonstrates:
+
+1. Handling loading states
+2. Error management
+3. Data transformation
+4. Retry mechanisms
+
+You can find detailed documentation about the Redux implementation in our [Redux Basics guide](/asafarim-blog/docs/React/Redux/Redux-Basic-Example) and the custom `useFetch` hook in our [useFetch guide](/asafarim-blog/docs/React/Hooks/useFetch).

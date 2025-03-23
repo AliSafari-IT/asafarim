@@ -56,3 +56,6 @@ D:\repos\ASafariM\ASafariM.Application\Interfaces\
 - npm run build
 - yarn bl
 - yarn blb
+- yarn api
+
+18. When a port is in use, never run the command again on a new port until asked to.

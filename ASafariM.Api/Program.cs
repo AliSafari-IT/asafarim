@@ -25,7 +25,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using MySqlConnector; // Add this line
+using MySqlConnector; 
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Serilog;
 using Serilog.Context;
@@ -50,7 +50,7 @@ if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ASPNETCORE_URLS")))
 {
     Environment.SetEnvironmentVariable(
         "ASPNETCORE_URLS",
-        "http://localhost:5000;https://localhost:5001"
+        "http://localhost:5000;https://localhost:5001;http://localhost:3005"
     );
 }
 
@@ -199,6 +199,9 @@ try
     // Register application services
     try
     {
+        // Register the database initialization service
+        builder.Services.AddScoped<DatabaseInitializationService>();
+        
         ServiceRegistration.RegisterServices(builder);
         Log.Information("Services registered successfully");
     }
@@ -220,6 +223,16 @@ try
                     .WithOrigins(
                         "http://localhost:3000",
                         "https://localhost:3000",
+                        "http://localhost:3001",
+                        "https://localhost:3001",
+                        "http://localhost:3002",
+                        "https://localhost:3002",
+                        "http://localhost:3003",
+                        "https://localhost:3003",
+                        "http://localhost:3004",
+                        "https://localhost:3004",
+                        "http://localhost:3005",
+                        "https://localhost:3005",
                         "http://localhost:5000",
                         "https://localhost:5001",
                         "http://asafarim.com",
@@ -276,6 +289,22 @@ try
     // Build the application
     Log.Information("Building the application...");
     var app = builder.Build();
+
+    // Initialize the database on startup
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbInitService = scope.ServiceProvider.GetRequiredService<DatabaseInitializationService>();
+        try
+        {
+            Log.Information("Initializing database...");
+            dbInitService.InitializeDatabaseAsync().Wait();
+            Log.Information("Database initialization completed successfully.");
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "An error occurred while initializing the database.");
+        }
+    }
 
     // Configure the HTTP request pipeline
     Log.Information("Configuring the HTTP request pipeline...");

@@ -27,9 +27,9 @@ BACKEND_BACKUP_PATH="$BACKEND_BACKUP_DIR/$BACKEND_BACKUP_FILE"
 PUBLISH_DIR="$BASE_DIR/asafarim-api"
 SERVICE_NAME="asafarim-api"
 SERVICE_FILE="/etc/systemd/system/$SERVICE_NAME.service"
-MAX_RETRIES=10
+MAX_RETRIES=5
 HEALTH_CHECK_URL="http://localhost:5000/api/health"
-LOG_DIR="/var/www/asafarim/logs"
+LOG_DIR="/var/www/asafarim/Logs"
 
 # Ensure log directory exists
 mkdir -p "$LOG_DIR"
@@ -157,8 +157,15 @@ check_health() {
     response=$(curl -sk "$HEALTH_CHECK_URL" -v 2>&1)
     curl_status=$?
 
-    if [[ "$response" == *"healthy"* ]] || [[ "$response" == *"Healthy"* ]]; then
-      log "Health check passed!"
+    # Check for HTTP 200 status code in the response
+    if [[ "$response" == *"HTTP/1.1 200"* ]] || [[ "$response" == *"HTTP/2 200"* ]]; then
+      log "Health check passed! (HTTP 200 OK received)"
+      return 0
+    fi
+    
+    # Also check for the healthy status in JSON as a fallback
+    if [[ "$response" == *"\"status\":\"healthy\""* ]] || [[ "$response" == *"\"status\":\"Healthy\""* ]]; then
+      log "Health check passed! (healthy status found in response)"
       return 0
     fi
 

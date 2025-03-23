@@ -20,7 +20,7 @@ First, create the necessary directories on the server:
 ssh user@your-server
 
 # Create the bibliography directory
-sudo mkdir -p /var/www/asafarim-bibliography
+sudo mkdir -p /var/www/asafarim-bibliography/public_html
 sudo mkdir -p /var/www/asafarim/backups/bibliography
 
 # Set proper permissions
@@ -34,11 +34,11 @@ Copy the Nginx configuration file to the server:
 
 ```bash
 # From your local machine
-scp D:/repos/ASafariM/nginx/bibliography.asafarim.com.conf user@your-server:/tmp/
+scp D:/repos/ASafariM/nginx/asafarim-bibliography.conf user@your-server:/tmp/
 
 # On the server
-sudo mv /tmp/bibliography.asafarim.com.conf /etc/nginx/sites-available/
-sudo ln -s /etc/nginx/sites-available/bibliography.asafarim.com.conf /etc/nginx/sites-enabled/
+sudo mv /tmp/asafarim-bibliography.conf /etc/nginx/sites-available/
+sudo ln -s /etc/nginx/sites-available/asafarim-bibliography.conf /etc/nginx/sites-enabled/
 ```
 
 ### 3. Set Up SSL Certificate (if needed)
@@ -149,4 +149,3 @@ sudo chmod -R 755 /var/www/asafarim-bibliography
 
 # Restart Nginx
 sudo systemctl restart nginx
-```

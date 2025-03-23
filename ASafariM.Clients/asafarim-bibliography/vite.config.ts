@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   base: '/', // Set base path for production deployment to bibliography.asafarim.com
   server: {
-    port: 3005,
+    port: 3002,
     open: true,
     proxy: {
       '/api': {

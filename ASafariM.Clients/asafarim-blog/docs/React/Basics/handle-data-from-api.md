@@ -70,4 +70,4 @@ For a real-world implementation, check out our [Bibliography application](https:
 3. Data transformation
 4. Retry mechanisms
 
-You can find detailed documentation about the Redux implementation in our [Redux Basics guide](/asafarim-blog/docs/React/Redux/Redux-Basic-Example) and the custom `useFetch` hook in our [useFetch guide](/asafarim-blog/docs/React/Hooks/useFetch).
+You can find detailed documentation about the Redux implementation in our [Redux Basics guide](/docs/React/Redux/Redux-Basic-Example) and the custom `useFetch` hook in our [useFetch guide](/docs/React/Hooks/useFetch).

@@ -4,14 +4,14 @@ sidebar_position: 1
 
 # useFetch()
 
-The `useFetch` hook is a custom React hook that simplifies data fetching in functional components. It handles loading states, errors, and provides a clean interface for making HTTP requests.
+The `useFetch` hook is a custom React hook that simplifies data fetching in functional components. It handles loading states, errors, and provides a clean interface for making HTTP requests. This hook is used in our [ASafariM Bibliography application](https://bibliography.asafarim.com) to handle API requests for book data.
 
 ## Basic Implementation
 
 Here's a TypeScript implementation of the `useFetch` hook that can be used in our ASafariM Bibliography project:
 
 ```typescript
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 interface UseFetchState<T> {
   data: T | null;
@@ -38,7 +38,19 @@ function useFetch<T = any>(url: string, options: UseFetchOptions = {}) {
 
   const [fetchCount, setFetchCount] = useState(0);
 
+  const controllerRef = useRef<AbortController | null>(null);
+
   const fetchData = useCallback(async (fetchOptions: UseFetchOptions = {}) => {
+    // Abort any in-flight requests
+    if (controllerRef.current) {
+      controllerRef.current.abort();
+    }
+
+    // Create a new AbortController instance
+    const controller = new AbortController();
+    controllerRef.current = controller;
+    const signal = controller.signal;
+    
     // Combine the original options with any new options
     const combinedOptions = { ...options, ...fetchOptions };
     
@@ -57,6 +69,7 @@ function useFetch<T = any>(url: string, options: UseFetchOptions = {}) {
         credentials: combinedOptions.credentials,
         cache: combinedOptions.cache,
         mode: combinedOptions.mode,
+        signal // Add the signal to the fetch options
       };
 
       // Add body for non-GET requests
@@ -116,6 +129,15 @@ function useFetch<T = any>(url: string, options: UseFetchOptions = {}) {
     setFetchCount(count => count + 1);
     return fetchData(fetchOptions);
   }, [fetchData]);
+
+  // Clean up function to abort any in-flight requests when the component unmounts
+  useEffect(() => {
+    return () => {
+      if (controllerRef.current) {
+        controllerRef.current.abort();
+      }
+    };
+  }, []);
 
   return {
     ...state,
@@ -193,15 +215,22 @@ export const fetchBooks = createAsyncThunk(
 
 ### 1. Request Cancellation
 
-We can enhance our `useFetch` hook to support request cancellation using AbortController:
+We can enhance our `useFetch` hook to support request cancellation using AbortController, which is particularly useful in our Bibliography app when users navigate between pages quickly:
 
 ```typescript
 function useFetch<T = any>(url: string, options: UseFetchOptions = {}) {
   // ... existing code
+  const controllerRef = useRef<AbortController | null>(null);
 
   const fetchData = useCallback(async (fetchOptions: UseFetchOptions = {}) => {
-    // Create an AbortController instance
+    // Abort any in-flight requests
+    if (controllerRef.current) {
+      controllerRef.current.abort();
+    }
+
+    // Create a new AbortController instance
     const controller = new AbortController();
+    controllerRef.current = controller;
     const signal = controller.signal;
     
     // Combine options
@@ -220,7 +249,9 @@ function useFetch<T = any>(url: string, options: UseFetchOptions = {}) {
   // Clean up function to abort any in-flight requests when the component unmounts
   useEffect(() => {
     return () => {
-      // Logic to abort any pending requests
+      if (controllerRef.current) {
+        controllerRef.current.abort();
+      }
     };
   }, []);
 
@@ -230,7 +261,7 @@ function useFetch<T = any>(url: string, options: UseFetchOptions = {}) {
 
 ### 2. Caching
 
-We can add a simple caching mechanism to avoid redundant requests:
+In our Bibliography app, we implement caching to reduce API calls when viewing the same book multiple times:
 
 ```typescript
 // A simple cache outside the hook
@@ -240,8 +271,11 @@ function useFetch<T = any>(url: string, options: UseFetchOptions = {}) {
   // ... existing code
 
   const fetchData = useCallback(async (fetchOptions: UseFetchOptions = {}) => {
+    // Combine options first
+    const combinedOptions = { ...options, ...fetchOptions };
+    
     // Check cache if caching is enabled
-    if (options.cache === 'force-cache' || options.cache === 'default') {
+    if (combinedOptions.cache === 'force-cache' || combinedOptions.cache === 'default') {
       const cacheKey = `${url}-${JSON.stringify(combinedOptions)}`;
       const cachedData = cache.get(cacheKey);
       
@@ -269,9 +303,20 @@ function useFetch<T = any>(url: string, options: UseFetchOptions = {}) {
 }
 ```
 
+## Real-world Example: ASafariM Bibliography
+
+Our [ASafariM Bibliography application](https://bibliography.asafarim.com) demonstrates how the `useFetch` hook works in a production environment. The application showcases:
+
+1. **Efficient Data Fetching**: Using the hook to load book data with minimal code
+2. **Loading States**: Displaying loading indicators while data is being fetched
+3. **Error Handling**: Gracefully handling API errors with user-friendly messages
+4. **TypeScript Integration**: Full type safety with generics for request and response data
+
+When you visit the Bibliography app, you can see these patterns in action as you browse and interact with the book collection.
+
 ## Integration with the Bibliography Project
 
-In our ASafariM Bibliography project, we can use the `useFetch` hook in multiple ways:
+In our ASafariM Bibliography project at [bibliography.asafarim.com](https://bibliography.asafarim.com), we use the `useFetch` hook in multiple ways:
 
 ### 1. Fetching Book Details
 
@@ -384,3 +429,9 @@ The `useFetch` hook provides a clean, reusable way to handle API requests in Rea
 4. **TypeScript Integration**: Full type safety with generics for request and response data
 
 This approach gives you flexibility in your ASafariM Bibliography project, allowing you to choose the right tool for each specific data fetching need.
+
+For more information on related topics, check out:
+- [Axios Integration](/docs/React/Axios/axios)
+- [React with Axios](/docs/React/Axios/react-axios)
+- [Handling API Data](/docs/React/Basics/handle-data-from-api)
+- [Redux Basics](/docs/React/Redux/Redux-Basic-Example)

@@ -70,4 +70,29 @@ For a real-world implementation, check out our [Bibliography application](https:
 3. Data transformation
 4. Retry mechanisms
 
-You can find detailed documentation about the Redux implementation in our [Redux Basics guide](/docs/React/Redux/Redux-Basic-Example) and the custom `useFetch` hook in our [useFetch guide](/docs/React/Hooks/useFetch).
+In our Bibliography application, we use a combination of Fetch API, Axios, and Redux Toolkit to handle data fetching and state management. You can see how we implement these patterns by exploring the [live application](https://bibliography.asafarim.com).
+
+For example, our book listing page uses Redux Toolkit's `createAsyncThunk` to fetch data from the API:
+
+```typescript title="Example from Bibliography App"
+// Simplified version of our actual implementation
+export const fetchBooks = createAsyncThunk(
+  'books/fetchBooks',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetch('/api/books');
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      return data.$values || data; // Handle API response format
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+```
+
+You can find detailed documentation about the Redux implementation in our [Redux Basics guide](/docs/React/Redux/Redux-Basic-Example), the custom `useFetch` hook in our [useFetch guide](/docs/React/Hooks/useFetch), and Axios integration in our [React Axios guide](/docs/React/Axios/react-axios).

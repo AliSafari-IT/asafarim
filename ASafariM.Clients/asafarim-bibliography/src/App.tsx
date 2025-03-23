@@ -5,6 +5,8 @@ import BookDetails from './components/BookDetails'
 import './App.css'
 import Navbar from './layout/Navbar'
 import BookForm from './components/BookForm'
+import AppInfo from './components/AppInfo'
+import './components/AppInfo.css'
 
 function App() {
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null)
@@ -29,13 +31,16 @@ function App() {
                   </div>
                 )}
               </div>
+              <div className="app-info-wrapper">
+                <AppInfo />
+              </div>
             </div>
           } />
           <Route path="/add" element={<BookForm />} />
         </Routes>
       </main>
       <footer className="app-footer">
-        <p>© {new Date().getFullYear()} ASafariM Bibliography</p>
+        <p> {new Date().getFullYear()} ASafariM Bibliography</p>
       </footer>
     </div>
   )

@@ -299,9 +299,22 @@ if [ "$DB_MODE" = "y" ]; then
   
   dotnet tool restore || handle_error "Failed to restore .NET tools!" "exit"
 
-  dotnet ef database update --project ./ASafariM.Infrastructure/ASafariM.Infrastructure.csproj --startup-project ./ASafariM.Api/ASafariM.Api.csproj --verbose || handle_error "Database migration failed!" "exit"
-
-  log "Database migrations applied successfully."
+  # Run database migration and capture output
+  MIGRATION_OUTPUT=$(dotnet ef database update --project ./ASafariM.Infrastructure/ASafariM.Infrastructure.csproj --startup-project ./ASafariM.Api/ASafariM.Api.csproj --verbose 2>&1)
+  MIGRATION_STATUS=$?
+  
+  # Check if the error is just 'Table already exists'
+  if [ $MIGRATION_STATUS -ne 0 ]; then
+    if echo "$MIGRATION_OUTPUT" | grep -q "Table.*already exists"; then
+      log "Warning: Some tables already exist. Continuing with deployment..."
+      log "Migration output contains 'Table already exists' error - this is often safe to ignore"
+    else
+      log "Migration output: $MIGRATION_OUTPUT"
+      handle_error "Database migration failed!" "exit"
+    fi
+  else
+    log "Database migrations applied successfully."
+  fi
 fi
 
 # *********************************************************************

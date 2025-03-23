@@ -136,19 +136,48 @@ check_health() {
   local max_retries=30
   log "Starting health check at $HEALTH_CHECK_URL"
   
+  # First check if the service is actually running
+  local service_status=$(systemctl is-active $SERVICE_NAME)
+  if [ "$service_status" != "active" ]; then
+    log "ERROR: Service $SERVICE_NAME is not running (status: $service_status)"
+    log "Attempting to start the service..."
+    sudo systemctl start $SERVICE_NAME
+    sleep 5
+  fi
+  
+  # Check if port 5000 is actually in use
+  if ! sudo lsof -i :5000 > /dev/null 2>&1; then
+    log "WARNING: Nothing is listening on port 5000!"
+    log "Checking service status again..."
+    sudo systemctl status $SERVICE_NAME --no-pager >> "$DEPLOY_LOG"
+  fi
+  
   while [ $retries -lt $max_retries ]; do
     log "Health check attempt $((retries + 1))..."
-    response=$(curl -sk "$HEALTH_CHECK_URL" 2>&1)
+    response=$(curl -sk "$HEALTH_CHECK_URL" -v 2>&1)
+    curl_status=$?
 
     if [[ "$response" == *"Healthy"* ]]; then
       log "Health check passed!"
       return 0
     fi
 
+    # Log curl error codes for better diagnostics
+    if [ $curl_status -ne 0 ]; then
+      log "Curl failed with status $curl_status"
+      case $curl_status in
+        7) log "Failed to connect to host or proxy" ;;
+        28) log "Operation timeout" ;;
+        *) log "Curl error: $curl_status" ;;
+      esac
+    fi
+
     # Only show logs every 5 attempts to reduce noise
     if [ $((retries % 5)) -eq 0 ]; then
       log "Recent application logs:"
-      sudo journalctl -u $SERVICE_NAME -n 10 --no-pager >> "$DEPLOY_LOG"
+      sudo journalctl -u $SERVICE_NAME -n 20 --no-pager >> "$DEPLOY_LOG"
+      log "Checking if service is still running..."
+      sudo systemctl status $SERVICE_NAME --no-pager | head -n 3 >> "$DEPLOY_LOG"
     fi
 
     # Wait longer between retries as attempts increase
@@ -159,6 +188,10 @@ check_health() {
   done
 
   log "Health check failed after $max_retries attempts"
+  log "Final diagnostics:"
+  log "Service status: $(systemctl is-active $SERVICE_NAME)"
+  log "Port 5000 in use: $(if sudo lsof -i :5000 > /dev/null 2>&1; then echo 'Yes'; else echo 'No'; fi)"
+  log "Last curl response: $response"
   return 1
 }
 
@@ -166,13 +199,30 @@ check_health() {
 rollback() {
   log "Rolling back deployment..."
   if [ -f "$BACKEND_BACKUP_PATH" ]; then
-    rm -rf "$BACKEND_DEPLOY_DIR"/*
+    log "Found backup at $BACKEND_BACKUP_PATH"
+    log "Stopping service before rollback..."
+    sudo systemctl stop $SERVICE_NAME
+    sleep 3
+    
+    log "Clearing deployment directory..."
+    rm -rf "$BACKEND_DEPLOY_DIR"/* || log "Warning: Failed to clear deployment directory"
+    
+    log "Extracting backup..."
     sudo tar -xzf "$BACKEND_BACKUP_PATH" -C "$BACKEND_DEPLOY_DIR" || handle_error "Failed to extract backup" "exit"
+    
+    log "Setting correct permissions..."
+    sudo chown -R www-data:www-data "$BACKEND_DEPLOY_DIR"
+    
     log "Restarting service after rollback..."
-    systemctl restart $SERVICE_NAME
+    sudo systemctl daemon-reload
+    sudo systemctl start $SERVICE_NAME
+    sleep 5
+    
     if check_health; then
       log "Rollback successful"
     else
+      log "WARNING: Rollback health check failed. Checking service status:"
+      sudo systemctl status $SERVICE_NAME --no-pager >> "$DEPLOY_LOG"
       handle_error "Rollback failed - manual intervention required" "exit"
     fi
   else

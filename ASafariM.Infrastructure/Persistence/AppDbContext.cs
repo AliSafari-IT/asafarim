@@ -475,7 +475,7 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<BibliographyItem>(entity =>
         {
             entity.ToTable("BibliographyItems");
-            
+
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Title).IsRequired().HasMaxLength(200);
             entity.Property(e => e.Author).IsRequired().HasMaxLength(100);
@@ -1092,6 +1092,133 @@ public class AppDbContext : DbContext
                 {
                     Id = Guid.NewGuid(),
                     ParentTopicId = topicId,
+                }
+            );
+
+        // Seed 10 IT .Net and OOP related books to BibliographyItem
+        modelBuilder
+            .Entity<BibliographyItem>()
+            .HasData(
+                new BibliographyItem
+                {
+                    Id = Guid.Parse("61c5d8f0-e3f5-4e7a-9cbb-6b178b2f5e7a"),
+                    Title = "Clean Code: A Handbook of Agile Software Craftsmanship",
+                    Author = "Robert C. Martin",
+                    Year = 2008,
+                    Genre = "Software Development",
+                    IsRead = true,
+                    CreatedAt = DateTime.UtcNow,
+                    IsActive = true,
+                    IsDeleted = false,
+                },
+                new BibliographyItem
+                {
+                    Id = Guid.Parse("71c5d8f0-e3f5-4e7a-9cbb-6b178b2f5e7a"),
+                    Title = "The Pragmatic Programmer",
+                    Author = "Andrew Hunt, David Thomas",
+                    Year = 1999,
+                    Genre = "Software Development",
+                    IsRead = true,
+                    CreatedAt = DateTime.UtcNow,
+                    IsActive = true,
+                    IsDeleted = false,
+                },
+                new BibliographyItem
+                {
+                    Id = Guid.Parse("81c5d8f0-e3f5-4e7a-9cbb-6b178b2f5e7a"),
+                    Title = "Design Patterns: Elements of Reusable Object-Oriented Software",
+                    Author = "Erich Gamma, Richard Helm, Ralph Johnson, John Vlissides",
+                    Year = 1994,
+                    Genre = "Object-Oriented Programming",
+                    IsRead = true,
+                    CreatedAt = DateTime.UtcNow,
+                    IsActive = true,
+                    IsDeleted = false,
+                },
+                new BibliographyItem
+                {
+                    Id = Guid.Parse("91c5d8f0-e3f5-4e7a-9cbb-6b178b2f5e7a"),
+                    Title = "C# in Depth",
+                    Author = "Jon Skeet",
+                    Year = 2019,
+                    Genre = ".NET",
+                    IsRead = false,
+                    CreatedAt = DateTime.UtcNow,
+                    IsActive = true,
+                    IsDeleted = false,
+                },
+                new BibliographyItem
+                {
+                    Id = Guid.Parse("a1c5d8f0-e3f5-4e7a-9cbb-6b178b2f5e7a"),
+                    Title = "ASP.NET Core in Action",
+                    Author = "Andrew Lock",
+                    Year = 2021,
+                    Genre = ".NET",
+                    IsRead = false,
+                    CreatedAt = DateTime.UtcNow,
+                    IsActive = true,
+                    IsDeleted = false,
+                },
+                new BibliographyItem
+                {
+                    Id = Guid.Parse("b1c5d8f0-e3f5-4e7a-9cbb-6b178b2f5e7a"),
+                    Title = "Domain-Driven Design: Tackling Complexity in the Heart of Software",
+                    Author = "Eric Evans",
+                    Year = 2003,
+                    Genre = "Software Architecture",
+                    IsRead = true,
+                    CreatedAt = DateTime.UtcNow,
+                    IsActive = true,
+                    IsDeleted = false,
+                },
+                new BibliographyItem
+                {
+                    Id = Guid.Parse("c1c5d8f0-e3f5-4e7a-9cbb-6b178b2f5e7a"),
+                    Title = "Refactoring: Improving the Design of Existing Code",
+                    Author = "Martin Fowler",
+                    Year = 2018,
+                    Genre = "Software Development",
+                    IsRead = false,
+                    CreatedAt = DateTime.UtcNow,
+                    IsActive = true,
+                    IsDeleted = false,
+                },
+                new BibliographyItem
+                {
+                    Id = Guid.Parse("d1c5d8f0-e3f5-4e7a-9cbb-6b178b2f5e7a"),
+                    Title = "Entity Framework Core in Action",
+                    Author = "Jon P Smith",
+                    Year = 2018,
+                    Genre = ".NET",
+                    IsRead = true,
+                    CreatedAt = DateTime.UtcNow,
+                    IsActive = true,
+                    IsDeleted = false,
+                },
+                new BibliographyItem
+                {
+                    Id = Guid.Parse("e1c5d8f0-e3f5-4e7a-9cbb-6b178b2f5e7a"),
+                    Title =
+                        "Clean Architecture: A Craftsman's Guide to Software Structure and Design",
+                    Author = "Robert C. Martin",
+                    Year = 2017,
+                    Genre = "Software Architecture",
+                    IsRead = true,
+                    CreatedAt = DateTime.UtcNow,
+                    IsActive = true,
+                    IsDeleted = false,
+                },
+                new BibliographyItem
+                {
+                    Id = Guid.Parse("f1c5d8f0-e3f5-4e7a-9cbb-6b178b2f5e7a"),
+                    Title = "Patterns of Enterprise Application Architecture",
+                    Author = "Martin Fowler",
+                    Year = 2002,
+                    Genre = "Software Architecture",
+                    IsRead = false,
+                    CreatedAt = DateTime.UtcNow,
+                    IsActive = true,
+                    IsDeleted = false,
                 }
             );
 

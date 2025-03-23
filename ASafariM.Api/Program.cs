@@ -25,7 +25,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using MySqlConnector; 
+using MySqlConnector;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Serilog;
 using Serilog.Context;
@@ -201,7 +201,7 @@ try
     {
         // Register the database initialization service
         builder.Services.AddScoped<DatabaseInitializationService>();
-        
+
         ServiceRegistration.RegisterServices(builder);
         Log.Information("Services registered successfully");
     }
@@ -266,6 +266,9 @@ try
         )
         .AddApplicationPart(typeof(ASafariM.Presentation.Controllers.ProjectsController).Assembly)
         .AddApplicationPart(
+            typeof(ASafariM.Presentation.Controllers.BibliographyController).Assembly
+        )
+        .AddApplicationPart(
             typeof(ASafariM.Presentation.Controllers.HealthCheckController).Assembly
         );
 
@@ -293,7 +296,8 @@ try
     // Initialize the database on startup
     using (var scope = app.Services.CreateScope())
     {
-        var dbInitService = scope.ServiceProvider.GetRequiredService<DatabaseInitializationService>();
+        var dbInitService =
+            scope.ServiceProvider.GetRequiredService<DatabaseInitializationService>();
         try
         {
             Log.Information("Initializing database...");

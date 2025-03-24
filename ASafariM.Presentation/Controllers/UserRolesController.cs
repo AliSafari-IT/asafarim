@@ -12,6 +12,9 @@ using Serilog;
 
 namespace ASafariM.Presentation.Controllers
 {
+    /// <summary>
+    /// Controller for managing user roles
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class UserRolesController : ControllerBase
@@ -31,6 +34,12 @@ namespace ASafariM.Presentation.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Assigns roles to a user.
+        /// </summary>
+        /// <param name="userId">ID of the user</param>
+        /// <param name="roleIds">Collection of role IDs to assign</param>
+        /// <returns>Result of the assignment</returns>
         [HttpPost("{userId}/roles")]
         public async Task<IActionResult> AssignRolesToUser(
             string userId,
@@ -87,6 +96,12 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Removes roles from a user.
+        /// </summary>
+        /// <param name="userId">ID of the user</param>
+        /// <param name="roleIds">Collection of role IDs to remove</param>
+        /// <returns>Result of the removal</returns>
         [HttpDelete("{userId}/roles")]
         public async Task<IActionResult> RemoveRolesFromUser(
             string userId,
@@ -150,6 +165,12 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Checks if a user has a specific role.
+        /// </summary>
+        /// <param name="userId">ID of the user</param>
+        /// <param name="roleId">ID of the role</param>
+        /// <returns>Result of the check</returns>
         [HttpGet("{userId}/roles/{roleId}")]
         public async Task<IActionResult> UserHasRole(Guid userId, Guid roleId)
         {
@@ -182,6 +203,11 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Retrieves roles associated with a user.
+        /// </summary>
+        /// <param name="userId">ID of the user</param>
+        /// <returns>Collection of roles associated with the user</returns>
         [HttpGet("{userId}/roles")]
         public async Task<ActionResult<UserRoleDto[]>> GetRolesByUserIdAsync(string userId)
         {

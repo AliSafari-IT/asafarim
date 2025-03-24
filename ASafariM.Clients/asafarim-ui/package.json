@@ -17,7 +17,7 @@
     "rebuild": "yarn install && vite build",
     "clean": "rm -rf node_modules .yarn yarn.lock && yarn cache clean --all",
     "reinstall": "echo \" 📦 Clearing cache and installing dependencies...\" && yarn clean && yarn install",
-    "start": "vite",
+    "start": "vite --port 3000",
     "build:prod": "yarn reinstall && tsc --noEmit && echo \" ⚙️  Starting production build...\" && vite build",
     "build:dev": "yarn install --check-files && tsc --noEmit && vite build",
     "build": "cross-env NODE_ENV=production npx vite build",

@@ -8,6 +8,9 @@ using Microsoft.Extensions.Logging;
 
 namespace ASafariM.Presentation.Controllers
 {
+    /// <summary>
+    /// Controller for managing bibliography items
+    /// </summary>
     [ApiController]
     [Route("api/books")]
     public class BibliographyController : ControllerBase
@@ -15,6 +18,11 @@ namespace ASafariM.Presentation.Controllers
         private readonly IBibliographyService _bibliographyService;
         private readonly ILogger<BibliographyController> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BibliographyController"/> class
+        /// </summary>
+        /// <param name="bibliographyService">Bibliography service</param>
+        /// <param name="logger">Logger instance</param>
         public BibliographyController(
             IBibliographyService bibliographyService,
             ILogger<BibliographyController> logger
@@ -24,6 +32,10 @@ namespace ASafariM.Presentation.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Gets all bibliography items
+        /// </summary>
+        /// <returns>List of bibliography items</returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BibliographyItem>>> GetAllBibliographyItems()
         {
@@ -50,6 +62,11 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets a bibliography item by ID
+        /// </summary>
+        /// <param name="id">Bibliography item ID</param>
+        /// <returns>Bibliography item</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<BibliographyItem>> GetBibliographyItemById(Guid id)
         {
@@ -83,6 +100,11 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Adds a new bibliography item
+        /// </summary>
+        /// <param name="item">Bibliography item to add</param>
+        /// <returns>Created bibliography item</returns>
         [HttpPost]
         public async Task<ActionResult<BibliographyItem>> AddBibliographyItem(
             [FromBody] BibliographyItem item
@@ -120,6 +142,12 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Updates an existing bibliography item
+        /// </summary>
+        /// <param name="id">Bibliography item ID</param>
+        /// <param name="item">Updated bibliography item</param>
+        /// <returns>Updated bibliography item</returns>
         [HttpPut("{id}")]
         public async Task<ActionResult<BibliographyItem>> UpdateBibliographyItem(
             Guid id,
@@ -166,6 +194,11 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes a bibliography item
+        /// </summary>
+        /// <param name="id">Bibliography item ID</param>
+        /// <returns>No content if successful</returns>
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteBibliographyItem(Guid id)
         {
@@ -199,6 +232,11 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Searches bibliography items
+        /// </summary>
+        /// <param name="searchTerm">Search term</param>
+        /// <returns>List of matching bibliography items</returns>
         [HttpGet("search")]
         public async Task<ActionResult<IEnumerable<BibliographyItem>>> SearchBibliographyItems(
             [FromQuery] string searchTerm

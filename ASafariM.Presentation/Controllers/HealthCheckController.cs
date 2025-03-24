@@ -30,6 +30,10 @@ namespace ASafariM.Presentation.Controllers
                 configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
         }
 
+        /// <summary>
+        /// Retrieves health status information for the application.
+        /// </summary>
+        /// <returns>Health status information</returns>
         [HttpGet]
         public IActionResult GetHealthStatus()
         {
@@ -70,6 +74,10 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Retrieves the uptime of the application.
+        /// </summary>
+        /// <returns>The uptime of the application</returns>
         private string GetUptime()
         {
             try
@@ -87,6 +95,10 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Retrieves the memory usage of the application.
+        /// </summary>
+        /// <returns>The memory usage of the application</returns>
         private object GetMemoryUsage()
         {
             try
@@ -110,6 +122,10 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Retrieves the CPU usage of the application.
+        /// </summary>
+        /// <returns>The CPU usage of the application</returns>
         private object GetCpuUsage()
         {
             try
@@ -136,6 +152,10 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Retrieves the disk space of the application.
+        /// </summary>
+        /// <returns>The disk space of the application</returns>
         private object GetDiskSpace()
         {
             try
@@ -164,6 +184,10 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Retrieves the environment details of the application.
+        /// </summary>
+        /// <returns>The environment details of the application</returns>
         private object GetEnvironmentDetails()
         {
             try
@@ -195,6 +219,10 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Retrieves the active thread count of the application.
+        /// </summary>
+        /// <returns>The active thread count of the application</returns>
         private object GetActiveThreads()
         {
             try
@@ -210,6 +238,10 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Checks the health of the database.
+        /// </summary>
+        /// <returns>Health status of the database</returns>
         private string CheckDatabaseHealth()
         {
             if (string.IsNullOrEmpty(_connectionString))
@@ -260,18 +292,30 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Checks the health of the cache.
+        /// </summary>
+        /// <returns>Health status of the cache</returns>
         private string CheckCacheHealth()
         {
             Log.Debug("Cache health check not implemented");
             return "healthy";
         }
 
+        /// <summary>
+        /// Checks the health of the session.
+        /// </summary>
+        /// <returns>Health status of the session</returns>
         private string CheckSessionHealth()
         {
             Log.Debug("Session health check not implemented");
             return "healthy";
         }
 
+        /// <summary>
+        /// Retrieves the build date of the application.
+        /// </summary>
+        /// <returns>The build date of the application</returns>
         private string GetBuildDate()
         {
             var date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
@@ -279,6 +323,10 @@ namespace ASafariM.Presentation.Controllers
             return date;
         }
 
+        /// <summary>
+        /// Retrieves the Git commit hash of the application.
+        /// </summary>
+        /// <returns>The Git commit hash of the application</returns>
         private string GetGitCommitHash()
         {
             try

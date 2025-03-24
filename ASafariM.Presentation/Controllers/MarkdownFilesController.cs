@@ -7,6 +7,9 @@ using Serilog;
 
 namespace ASafariM.Presentation.Controllers;
 
+/// <summary>
+/// Provides access to markdown files.
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class MarkdownFilesController : ControllerBase
@@ -21,6 +24,10 @@ public class MarkdownFilesController : ControllerBase
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
+    /// <summary>
+    /// Retrieves all markdown files.
+    /// </summary>
+    /// <returns>Collection of markdown files</returns>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<MarkdownFileResponseDto>>> GetAllMarkdownFiles()
     {
@@ -42,6 +49,11 @@ public class MarkdownFilesController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Retrieves a markdown file by ID.
+    /// </summary>
+    /// <param name="id">ID of the markdown file</param>
+    /// <returns>Markdown file</returns>
     [HttpGet("{id}")]
     public async Task<ActionResult<MarkdownFileResponseDto>> GetMarkdownFileById(Guid id)
     {
@@ -66,6 +78,11 @@ public class MarkdownFilesController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Creates a new markdown file.
+    /// </summary>
+    /// <param name="createDto">Create markdown file request</param>
+    /// <returns>Created markdown file</returns>
     [HttpPost]
     public async Task<ActionResult<MarkdownFileResponseDto>> CreateMarkdownFile(
         [FromBody] CreateMarkdownFileDto createDto
@@ -109,6 +126,12 @@ public class MarkdownFilesController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Updates an existing markdown file.
+    /// </summary>
+    /// <param name="id">ID of the markdown file to update</param>
+    /// <param name="updateDto">Update markdown file request</param>
+    /// <returns>Updated markdown file</returns>
     [HttpPut("{id}")]
     public async Task<ActionResult<MarkdownFileResponseDto>> UpdateMarkdownFile(
         Guid id,
@@ -139,6 +162,11 @@ public class MarkdownFilesController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Deletes a markdown file by ID.
+    /// </summary>
+    /// <param name="id">ID of the markdown file to delete</param>
+    /// <returns>Response indicating success or failure</returns>
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteMarkdownFile(Guid id)
     {
@@ -164,6 +192,11 @@ public class MarkdownFilesController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Deletes multiple markdown files by IDs.
+    /// </summary>
+    /// <param name="ids">Collection of IDs of markdown files to delete</param>
+    /// <returns>Response indicating success or failure</returns>
     [HttpDelete]
     [Route("delete-many")]
     public async Task<IActionResult> DeleteMarkdownFiles([FromBody] IEnumerable<Guid> ids)

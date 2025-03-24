@@ -1,13 +1,13 @@
 {
   "name": "asafarim",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "packageManager": "yarn@4.7.0",
   "repository": "https://github.com/AliSafari-IT/asafarim.git",
   "private": true,
   "type": "module",
   "author": "Ali Safari <asafarim@gmail.com>",
   "scripts": {
-    "runAll": "yarn prepare:dev && yarn stop && concurrently \"yarn workspace asafarim-api start\" \"yarn workspace asafarim-ui start\" \"yarn workspace asafarim-bibliography start\" \"yarn workspace asafarim-blog start --port 3004\"",
+    "runAll": "yarn prepare:dev && concurrently \"yarn workspace asafarim-api start\" \"yarn workspace asafarim-ui start\" \"yarn workspace asafarim-bibliography start\" \"yarn workspace asafarim-blog start --port 3004\"",
     "co": "git add . && python .github/scripts/generate_commit_message.py && git push",
     "asafarim-api:publish": "bash -c 'set -e && cd /var/www/asafarim && git pull origin main && sudo rm -rf /var/www/asafarim-api/* && dotnet publish ASafariM.Api/ASafariM.Api.csproj -c Release -o /var/www/asafarim-api && sudo chown -R www-data:www-data /var/www/asafarim-api && sudo chmod -R 755 /var/www/asafarim-api && sudo systemctl restart asafarim-api'",
     "asafarim-ui:publish": "bash -c 'set -e && cd /var/www/asafarim && git pull origin main && yarn workspace asafarim-ui build && sudo rm -rf /var/www/asafarim-com/public_html/* && sudo cp -r /var/www/asafarim/ASafariM.Clients/asafarim-ui/dist/* /var/www/asafarim-com/public_html/ && sudo chown -R www-data:www-data /var/www/asafarim-com/public_html && sudo chmod -R 755 /var/www/asafarim-com/public_html && sudo systemctl restart nginx'",
@@ -51,7 +51,6 @@
     "mig_dev": "powershell -File ./scripts/bash_files/dotnet-ef.ps1",
     "test:backend": "dotnet test D:/repos/ASafariM/ASafariM.Test/ASafariM.Test.csproj --logger \"trx;LogFileName=D:/repos/ASafariM/ASafariM.Test/TestResults/test_results.trx\"",
     "test:backend:watch": "cd D:/repos/ASafariM/ASafariM.Test && dotnet watch test --logger \"trx;LogFileName=D:/repos/ASafariM/ASafariM.Test/TestResults/test_results.trx\"",
-    "stop": "npx kill-port 3000 && npx kill-port 3001 && npx kill-port 3002 && npx kill-port 3003 && npx kill-port 3004 && npx kill-port 3005 && npx kill-port 5000 && npx kill-port 5001",
     "tbw": "yarn test:backend:watch",
     "test:frontend": "vitest run",
     "test": "vitest",

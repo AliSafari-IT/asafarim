@@ -12,6 +12,9 @@ using Serilog;
 
 namespace ASafariM.Presentation.Controllers
 {
+    /// <summary>
+    /// Controller for managing topics
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class TopicsController : ControllerBase
@@ -19,12 +22,21 @@ namespace ASafariM.Presentation.Controllers
         private readonly ITopicRepository _topicRepository;
         private readonly IMapper _mapper;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TopicsController"/> class
+        /// </summary>
+        /// <param name="topicRepository">The topic repository</param>
+        /// <param name="mapper">The AutoMapper instance</param>
         public TopicsController(ITopicRepository topicRepository, IMapper mapper)
         {
             _topicRepository = topicRepository;
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Gets all topics
+        /// </summary>
+        /// <returns>List of topics</returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TopicDto>>> GetTopics()
         {
@@ -35,6 +47,11 @@ namespace ASafariM.Presentation.Controllers
             return Ok(_mapper.Map<IEnumerable<TopicDto>>(topics));
         }
 
+        /// <summary>
+        /// Gets a topic by ID
+        /// </summary>
+        /// <param name="id">The topic ID</param>
+        /// <returns>The topic</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<TopicDto>> GetTopic(Guid id)
         {
@@ -45,6 +62,11 @@ namespace ASafariM.Presentation.Controllers
             return Ok(_mapper.Map<TopicDto>(topic));
         }
 
+        /// <summary>
+        /// Gets a topic by slug
+        /// </summary>
+        /// <param name="slug">The topic slug</param>
+        /// <returns>The topic</returns>
         [HttpGet("slug/{slug}")]
         public async Task<ActionResult<TopicDto>> GetTopicBySlug(string slug)
         {
@@ -55,6 +77,11 @@ namespace ASafariM.Presentation.Controllers
             return Ok(_mapper.Map<TopicDto>(topic));
         }
 
+        /// <summary>
+        /// Gets child topics for a parent topic
+        /// </summary>
+        /// <param name="id">The parent topic ID</param>
+        /// <returns>List of child topics</returns>
         [HttpGet("{id}/children")]
         public async Task<ActionResult<IEnumerable<TopicDto>>> GetChildTopics(Guid id)
         {
@@ -65,6 +92,11 @@ namespace ASafariM.Presentation.Controllers
             return Ok(_mapper.Map<IEnumerable<TopicDto>>(topics));
         }
 
+        /// <summary>
+        /// Creates a new topic
+        /// </summary>
+        /// <param name="command">The topic creation command</param>
+        /// <returns>The created topic</returns>
         [HttpPost]
         public async Task<ActionResult<TopicDto>> CreateTopic(CreateTopicCommand command)
         {
@@ -90,6 +122,12 @@ namespace ASafariM.Presentation.Controllers
             );
         }
 
+        /// <summary>
+        /// Updates an existing topic
+        /// </summary>
+        /// <param name="id">The topic ID</param>
+        /// <param name="command">The topic update command</param>
+        /// <returns>The updated topic</returns>
         [HttpPut("{id}")]
         public async Task<ActionResult<TopicDto>> UpdateTopic(Guid id, UpdateTopicCommand command)
         {
@@ -121,6 +159,11 @@ namespace ASafariM.Presentation.Controllers
             return Ok(_mapper.Map<TopicDto>(existingTopic));
         }
 
+        /// <summary>
+        /// Deletes a topic
+        /// </summary>
+        /// <param name="id">The topic ID</param>
+        /// <returns>No content if successful</returns>
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteTopic(Guid id)
         {

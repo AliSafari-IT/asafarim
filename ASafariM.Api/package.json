@@ -1,7 +1,7 @@
 {
   "name": "asafarim-api",
   "description": "ASafariM API",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "packageManager": "yarn@4.7.0",
   "repository": "https://github.com/AliSafari-IT/asafarim.git",
   "private": true,
@@ -13,7 +13,7 @@
     "test": "dotnet test --project ./ASafariM.Api.csproj",
     "publish": "dotnet publish --project ./ASafariM.Api.csproj",
     "clean": "dotnet clean --project ./ASafariM.Api.csproj",
-    "ui": "cd .. && yarn workspace asafarim-ui start",
+    "ui": "cd .. && yarn workspace asafarim-ui start --port 3000",
     "api": "yarn start",
     "api_force": "taskkill /F /IM ASafariM.Api.exe 2>nul; cd .. && dotnet watch run --project ASafariM.Api/ASafariM.Api.csproj",
     "api_bat": "scripts/bash_files/taskkill.bat; cd .. && dotnet watch run --project ASafariM.Api/ASafariM.Api.csproj",

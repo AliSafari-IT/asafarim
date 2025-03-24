@@ -30,7 +30,7 @@ const Footer: React.FC = () => {
                             <li className="text-[var(--text-info)] font-bold font-landing">|</li>
                             <li>
                                 <Link 
-                                    to="/contact-asafarim" 
+                                    to="/contact" 
                                     className="text-sm hover:text-[var(--text-warning)] hover:underline transition-colors"
                                 >
                                     Contact

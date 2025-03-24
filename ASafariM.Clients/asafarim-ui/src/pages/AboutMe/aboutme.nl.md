@@ -30,7 +30,7 @@ Ik ben altijd geïnteresseerd in nieuwe kansen en samenwerkingen. U kunt mij ber
 - **LinkedIn**: [linkedin.com/in/ali-safari-m](https://www.linkedin.com/in/ali-safari-m/)
 - **GitHub**: [github.com/AliSafari-IT](https://github.com/AliSafari-IT)
 
-Of stuur mij een bericht via ons [contactformulier](/contact-asafarim).
+Of stuur mij een bericht via ons [contactformulier](/contact).
 
 Met vriendelijke groet,
 Alireza Safari

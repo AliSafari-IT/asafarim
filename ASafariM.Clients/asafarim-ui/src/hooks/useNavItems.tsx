@@ -100,7 +100,7 @@ const homeDD: IMenuItem = {
           id: 'contact-us',
           name: 'contact-us',
           title: 'Contact Us',
-          to: '/contact-asafarim',
+          to: '/contact',
           icon: <IconContact />,
           label: 'Contact Us',
           description: 'Contact ASafariM for any questions or feedback.',

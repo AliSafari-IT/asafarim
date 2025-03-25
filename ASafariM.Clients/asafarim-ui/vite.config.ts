@@ -57,6 +57,7 @@ export default defineConfig({
     emptyOutDir: true,
     sourcemap: true,
     minify: 'terser',
+    chunkSizeWarningLimit: 1000, // Increased from default 500kb to 1000kb
     terserOptions: {
       // Preserve function and class names for D3
       keep_fnames: true,
@@ -68,9 +69,19 @@ export default defineConfig({
           'd3': ['d3'],
           'vendor': [
             'react',
-            'react-dom',
+            'react-dom'
+          ],
+          'fluentui': [
             '@fluentui/react-components',
-            '@fluentui/react'
+            '@fluentui/react',
+            '@fluentui/react-icons'
+          ],
+          'charts': [
+            'd3-selection',
+            'd3-scale',
+            'd3-shape',
+            'd3-axis',
+            'd3-time-format'
           ]
         },
       },

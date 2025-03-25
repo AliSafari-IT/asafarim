@@ -1,607 +1,206 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TestRun id="20071d2f-9cf3-4be3-b60d-6133c39d56fe" name="User@DESKTOP-H9KSCV9 2025-03-04 18:20:51" runUser="DESKTOP-H9KSCV9\User" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
-  <Times creation="2025-03-04T18:20:51.5945246+01:00" queuing="2025-03-04T18:20:51.5945249+01:00" start="2025-03-04T18:20:49.0342588+01:00" finish="2025-03-04T18:20:54.4967233+01:00" />
-  <TestSettings name="default" id="5223fe20-b8c1-4212-80f2-f929c03d781d">
-    <Deployment runDeploymentRoot="User_DESKTOP-H9KSCV9_2025-03-04_18_20_51" />
+<TestRun id="b80c7a8b-1910-44ec-a21e-f27e76906c84" name="User@DESKTOP-H9KSCV9 2025-03-25 14:45:02" runUser="DESKTOP-H9KSCV9\User" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2025-03-25T14:45:02.1347662+01:00" queuing="2025-03-25T14:45:02.1347667+01:00" start="2025-03-25T14:44:55.4267728+01:00" finish="2025-03-25T14:45:02.7070120+01:00" />
+  <TestSettings name="default" id="4c3541fc-9750-4d64-a173-5f3914417036">
+    <Deployment runDeploymentRoot="User_DESKTOP-H9KSCV9_2025-03-25_14_45_02" />
   </TestSettings>
   <Results>
-    <UnitTestResult executionId="da7475e1-9219-4123-a5ea-5d4a3af24035" testId="c0c47d89-bbbe-d55f-688c-61e9a03495d4" testName="GetUserByEmailAsync_ShouldReturnUser_WhenUserExists" computerName="DESKTOP-H9KSCV9" duration="00:00:02.3352958" startTime="2025-03-04T18:20:51.6675020+01:00" endTime="2025-03-04T18:20:54.0030098+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="da7475e1-9219-4123-a5ea-5d4a3af24035">
-      <Output>
-        <ErrorInfo>
-          <Message>Test method ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests.GetUserByEmailAsync_ShouldReturnUser_WhenUserExists threw exception: &#xD;
-Microsoft.EntityFrameworkCore.DbUpdateException: Required properties '{'FirstName', 'LastName', 'PasswordHash', 'UserName'}' are missing for the instance of entity type 'User'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see the entity key value.</Message>
-          <StackTrace>    at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryTable`1.ThrowNullabilityErrorException(IUpdateEntry entry, IList`1 nullabilityErrors)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryTable`1.Create(IUpdateEntry entry, IDiagnosticsLogger`1 updateLogger)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryStore.ExecuteTransaction(IList`1 entries, IDiagnosticsLogger`1 updateLogger)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at ASafariM.Infrastructure.Repositories.UserRepository.AddUserAsync(User user) in D:\repos\ASafariM\ASafariM.Infrastructure\Repositories\UserRepository.cs:line 89&#xD;
-   at ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests.GetUserByEmailAsync_ShouldReturnUser_WhenUserExists() in D:\repos\ASafariM\ASafariM.Test\InfrastructureTests\Repository\UserRepositoryTests.cs:line 94&#xD;
-</StackTrace>
-        </ErrorInfo>
-      </Output>
-    </UnitTestResult>
-    <UnitTestResult executionId="6e5e306a-5b4f-4fbf-b828-57e4a6f798bf" testId="73db3971-f82f-de3f-8734-b8990916c7f3" testName="initialize_mock_logger_for_user_repository" computerName="DESKTOP-H9KSCV9" duration="00:00:00.1506344" startTime="2025-03-04T18:20:51.4986117+01:00" endTime="2025-03-04T18:20:51.6495234+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6e5e306a-5b4f-4fbf-b828-57e4a6f798bf" />
-    <UnitTestResult executionId="a6c9f8d2-e61d-42fc-a30a-4c9db526483b" testId="4e24bf9f-0eea-ab65-b8b4-60c80bf74219" testName="GetUserByPhoneNumberAsync_ShouldReturnUser_WhenUserExists" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0066974" startTime="2025-03-04T18:20:54.3470121+01:00" endTime="2025-03-04T18:20:54.3538435+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a6c9f8d2-e61d-42fc-a30a-4c9db526483b">
-      <Output>
-        <ErrorInfo>
-          <Message>Test method ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests.GetUserByPhoneNumberAsync_ShouldReturnUser_WhenUserExists threw exception: &#xD;
-Microsoft.EntityFrameworkCore.DbUpdateException: Required properties '{'FirstName', 'LastName', 'PasswordHash', 'UserName'}' are missing for the instance of entity type 'User'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see the entity key value.</Message>
-          <StackTrace>    at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryTable`1.ThrowNullabilityErrorException(IUpdateEntry entry, IList`1 nullabilityErrors)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryTable`1.Create(IUpdateEntry entry, IDiagnosticsLogger`1 updateLogger)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryStore.ExecuteTransaction(IList`1 entries, IDiagnosticsLogger`1 updateLogger)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at ASafariM.Infrastructure.Repositories.UserRepository.AddUserAsync(User user) in D:\repos\ASafariM\ASafariM.Infrastructure\Repositories\UserRepository.cs:line 89&#xD;
-   at ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests.GetUserByPhoneNumberAsync_ShouldReturnUser_WhenUserExists() in D:\repos\ASafariM\ASafariM.Test\InfrastructureTests\Repository\UserRepositoryTests.cs:line 237&#xD;
-</StackTrace>
-        </ErrorInfo>
-      </Output>
-    </UnitTestResult>
-    <UnitTestResult executionId="8e81d95d-822e-4a91-aa93-17568c5dc7ab" testId="6e9ac420-203d-ac82-511b-8145260abdee" testName="CheckAvailability_UsernameAvailable_ReturnsNoMessages" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0004715" startTime="2025-03-04T18:20:51.3373938+01:00" endTime="2025-03-04T18:20:51.3380125+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8e81d95d-822e-4a91-aa93-17568c5dc7ab">
-      <Output>
-        <ErrorInfo>
-          <Message>Initialization method ASafariM.Test.PresentationTests.Controllers.UsersControllerTests.Setup threw exception. System.ArgumentNullException: Value cannot be null. (Parameter 'databaseName').</Message>
-          <StackTrace>    at Microsoft.EntityFrameworkCore.Utilities.Check.NotEmpty(String value, String parameterName)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase(DbContextOptionsBuilder optionsBuilder, String databaseName, InMemoryDatabaseRoot databaseRoot, Action`1 inMemoryOptionsAction)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase(DbContextOptionsBuilder optionsBuilder, String databaseName, Action`1 inMemoryOptionsAction)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase[TContext](DbContextOptionsBuilder`1 optionsBuilder, String databaseName, Action`1 inMemoryOptionsAction)&#xD;
-   at ASafariM.Test.TestBase.Setup() in D:\repos\ASafariM\ASafariM.Test\TestBase.cs:line 30&#xD;
-   at ASafariM.Test.PresentationTests.Controllers.UsersControllerTests.Setup() in D:\repos\ASafariM\ASafariM.Test\PresentationTests\Controllers\UsersControllerTests.cs:line 28&#xD;
-   at InvokeStub_UsersControllerTests.Setup(Object, Object, IntPtr*)&#xD;
-   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
-</StackTrace>
-        </ErrorInfo>
-      </Output>
-    </UnitTestResult>
-    <UnitTestResult executionId="fbb5466b-7278-4042-94c9-b9d3c6e53a86" testId="fd5701a1-d9c5-0923-867b-cc0967647b90" testName="GetUserByEmailAsync_ShouldReturnUser_WhenUserExists" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0009541" startTime="2025-03-04T18:20:54.4083106+01:00" endTime="2025-03-04T18:20:54.4094439+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fbb5466b-7278-4042-94c9-b9d3c6e53a86">
-      <Output>
-        <ErrorInfo>
-          <Message>Initialization method ASafariM.Test.DomainTests.Persistence.AppDbContextTests.Setup threw exception. System.ArgumentNullException: Value cannot be null. (Parameter 'databaseName').</Message>
-          <StackTrace>    at Microsoft.EntityFrameworkCore.Utilities.Check.NotEmpty(String value, String parameterName)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase(DbContextOptionsBuilder optionsBuilder, String databaseName, InMemoryDatabaseRoot databaseRoot, Action`1 inMemoryOptionsAction)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase(DbContextOptionsBuilder optionsBuilder, String databaseName, Action`1 inMemoryOptionsAction)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase[TContext](DbContextOptionsBuilder`1 optionsBuilder, String databaseName, Action`1 inMemoryOptionsAction)&#xD;
-   at ASafariM.Test.TestBase.Setup() in D:\repos\ASafariM\ASafariM.Test\TestBase.cs:line 30&#xD;
-   at ASafariM.Test.DomainTests.Persistence.AppDbContextTests.Setup() in D:\repos\ASafariM\ASafariM.Test\InfrastructureTests\Persistance\AppDbContextTests.cs:line 22&#xD;
-   at InvokeStub_AppDbContextTests.Setup(Object, Object, IntPtr*)&#xD;
-   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
-</StackTrace>
-        </ErrorInfo>
-      </Output>
-    </UnitTestResult>
-    <UnitTestResult executionId="f5c024ca-fb7d-473f-86e1-f0b62ae23a59" testId="cd877712-f446-be07-90ba-7be95dd82230" testName="CascadeDelete_ShouldRemoveUserRoles_WhenUserIsDeleted" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0164864" startTime="2025-03-04T18:20:51.3164829+01:00" endTime="2025-03-04T18:20:51.3334787+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f5c024ca-fb7d-473f-86e1-f0b62ae23a59">
-      <Output>
-        <ErrorInfo>
-          <Message>Initialization method ASafariM.Test.PresentationTests.Controllers.UserRolesControllerIntegrationTests.Setup threw exception. System.ArgumentNullException: Value cannot be null. (Parameter 'databaseName').</Message>
-          <StackTrace>    at Microsoft.EntityFrameworkCore.Utilities.Check.NotEmpty(String value, String parameterName)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase(DbContextOptionsBuilder optionsBuilder, String databaseName, InMemoryDatabaseRoot databaseRoot, Action`1 inMemoryOptionsAction)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase(DbContextOptionsBuilder optionsBuilder, String databaseName, Action`1 inMemoryOptionsAction)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase[TContext](DbContextOptionsBuilder`1 optionsBuilder, String databaseName, Action`1 inMemoryOptionsAction)&#xD;
-   at ASafariM.Test.TestBase.Setup() in D:\repos\ASafariM\ASafariM.Test\TestBase.cs:line 30&#xD;
-   at ASafariM.Test.PresentationTests.Controllers.UserRolesControllerIntegrationTests.Setup() in D:\repos\ASafariM\ASafariM.Test\PresentationTests\Controllers\UserRolesControllerIntegrationTests.cs:line 30&#xD;
-   at InvokeStub_UserRolesControllerIntegrationTests.Setup(Object, Object, IntPtr*)&#xD;
-   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
-</StackTrace>
-        </ErrorInfo>
-      </Output>
-    </UnitTestResult>
-    <UnitTestResult executionId="c69bafd2-df24-4513-b108-0c703a496186" testId="6c84fd6b-b951-9caf-b632-ed552763edfd" testName="HandleDuplicateInitializationOfUserRepository" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0003480" startTime="2025-03-04T18:20:54.4125799+01:00" endTime="2025-03-04T18:20:54.4130329+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c69bafd2-df24-4513-b108-0c703a496186">
-      <Output>
-        <ErrorInfo>
-          <Message>Initialization method ASafariM.Test.DomainTests.Persistence.AppDbContextTests.Setup threw exception. System.ArgumentNullException: Value cannot be null. (Parameter 'databaseName').</Message>
-          <StackTrace>    at Microsoft.EntityFrameworkCore.Utilities.Check.NotEmpty(String value, String parameterName)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase(DbContextOptionsBuilder optionsBuilder, String databaseName, InMemoryDatabaseRoot databaseRoot, Action`1 inMemoryOptionsAction)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase(DbContextOptionsBuilder optionsBuilder, String databaseName, Action`1 inMemoryOptionsAction)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase[TContext](DbContextOptionsBuilder`1 optionsBuilder, String databaseName, Action`1 inMemoryOptionsAction)&#xD;
-   at ASafariM.Test.TestBase.Setup() in D:\repos\ASafariM\ASafariM.Test\TestBase.cs:line 30&#xD;
-   at ASafariM.Test.DomainTests.Persistence.AppDbContextTests.Setup() in D:\repos\ASafariM\ASafariM.Test\InfrastructureTests\Persistance\AppDbContextTests.cs:line 22&#xD;
-   at InvokeStub_AppDbContextTests.Setup(Object, Object, IntPtr*)&#xD;
-   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
-</StackTrace>
-        </ErrorInfo>
-      </Output>
-    </UnitTestResult>
-    <UnitTestResult executionId="ac9a6886-2fc0-4333-b9dc-ad89b3ce6b3e" testId="ba20961b-6799-d652-45b7-03c3d3864402" testName="DeleteUserAsync_ShouldCallRepository_WhenUserExists" computerName="DESKTOP-H9KSCV9" duration="00:00:00.1047389" startTime="2025-03-04T18:20:51.3380818+01:00" endTime="2025-03-04T18:20:51.4430563+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ac9a6886-2fc0-4333-b9dc-ad89b3ce6b3e">
-      <Output>
-        <ErrorInfo>
-          <Message>Initialization method ASafariM.Test.InfrastructureTests.Services.UserServiceTests.Setup threw exception. System.ArgumentNullException: Value cannot be null. (Parameter 'databaseName').</Message>
-          <StackTrace>    at Microsoft.EntityFrameworkCore.Utilities.Check.NotEmpty(String value, String parameterName)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase(DbContextOptionsBuilder optionsBuilder, String databaseName, InMemoryDatabaseRoot databaseRoot, Action`1 inMemoryOptionsAction)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase(DbContextOptionsBuilder optionsBuilder, String databaseName, Action`1 inMemoryOptionsAction)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase[TContext](DbContextOptionsBuilder`1 optionsBuilder, String databaseName, Action`1 inMemoryOptionsAction)&#xD;
-   at ASafariM.Test.TestBase.Setup() in D:\repos\ASafariM\ASafariM.Test\TestBase.cs:line 30&#xD;
-   at ASafariM.Test.InfrastructureTests.Services.UserServiceTests.Setup() in D:\repos\ASafariM\ASafariM.Test\InfrastructureTests\Services\UserServiceTests.cs:line 51&#xD;
-   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
-   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
-</StackTrace>
-        </ErrorInfo>
-      </Output>
-    </UnitTestResult>
-    <UnitTestResult executionId="ceda1ea9-490f-4291-a0f4-ff2c81a9bc3c" testId="c8b082a5-27d2-f23a-d277-2904cd3a52e9" testName="CheckAvailability_UsernameTaken_ReturnsMessages" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0009577" startTime="2025-03-04T18:20:51.3361791+01:00" endTime="2025-03-04T18:20:51.3373104+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ceda1ea9-490f-4291-a0f4-ff2c81a9bc3c">
-      <Output>
-        <ErrorInfo>
-          <Message>Initialization method ASafariM.Test.PresentationTests.Controllers.UsersControllerTests.Setup threw exception. System.ArgumentNullException: Value cannot be null. (Parameter 'databaseName').</Message>
-          <StackTrace>    at Microsoft.EntityFrameworkCore.Utilities.Check.NotEmpty(String value, String parameterName)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase(DbContextOptionsBuilder optionsBuilder, String databaseName, InMemoryDatabaseRoot databaseRoot, Action`1 inMemoryOptionsAction)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase(DbContextOptionsBuilder optionsBuilder, String databaseName, Action`1 inMemoryOptionsAction)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase[TContext](DbContextOptionsBuilder`1 optionsBuilder, String databaseName, Action`1 inMemoryOptionsAction)&#xD;
-   at ASafariM.Test.TestBase.Setup() in D:\repos\ASafariM\ASafariM.Test\TestBase.cs:line 30&#xD;
-   at ASafariM.Test.PresentationTests.Controllers.UsersControllerTests.Setup() in D:\repos\ASafariM\ASafariM.Test\PresentationTests\Controllers\UsersControllerTests.cs:line 28&#xD;
-   at InvokeStub_UsersControllerTests.Setup(Object, Object, IntPtr*)&#xD;
-   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
-</StackTrace>
-        </ErrorInfo>
-      </Output>
-    </UnitTestResult>
-    <UnitTestResult executionId="0e1dbce5-c881-4f0a-8c2f-1e5f3908c3bb" testId="89640849-ce9a-7557-fb0e-f8647c1da9e3" testName="InitializeMockLoggerForUserRepository" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0003605" startTime="2025-03-04T18:20:54.4135753+01:00" endTime="2025-03-04T18:20:54.4150583+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0e1dbce5-c881-4f0a-8c2f-1e5f3908c3bb">
-      <Output>
-        <ErrorInfo>
-          <Message>Initialization method ASafariM.Test.DomainTests.Persistence.AppDbContextTests.Setup threw exception. System.ArgumentNullException: Value cannot be null. (Parameter 'databaseName').</Message>
-          <StackTrace>    at Microsoft.EntityFrameworkCore.Utilities.Check.NotEmpty(String value, String parameterName)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase(DbContextOptionsBuilder optionsBuilder, String databaseName, InMemoryDatabaseRoot databaseRoot, Action`1 inMemoryOptionsAction)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase(DbContextOptionsBuilder optionsBuilder, String databaseName, Action`1 inMemoryOptionsAction)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase[TContext](DbContextOptionsBuilder`1 optionsBuilder, String databaseName, Action`1 inMemoryOptionsAction)&#xD;
-   at ASafariM.Test.TestBase.Setup() in D:\repos\ASafariM\ASafariM.Test\TestBase.cs:line 30&#xD;
-   at ASafariM.Test.DomainTests.Persistence.AppDbContextTests.Setup() in D:\repos\ASafariM\ASafariM.Test\InfrastructureTests\Persistance\AppDbContextTests.cs:line 22&#xD;
-   at InvokeStub_AppDbContextTests.Setup(Object, Object, IntPtr*)&#xD;
-   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
-</StackTrace>
-        </ErrorInfo>
-      </Output>
-    </UnitTestResult>
-    <UnitTestResult executionId="8eb98336-a5ee-4b89-b642-0cbca6b26b2f" testId="7df8e149-97c1-4416-d662-56097ab8526a" testName="GetRolesByUserIdAsync_ShouldReturnEmptyList_WhenUserHasNoRoles" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0066047" startTime="2025-03-04T18:20:54.3996518+01:00" endTime="2025-03-04T18:20:54.4064090+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8eb98336-a5ee-4b89-b642-0cbca6b26b2f">
-      <Output>
-        <ErrorInfo>
-          <Message>Test method ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests.GetRolesByUserIdAsync_ShouldReturnEmptyList_WhenUserHasNoRoles threw exception: &#xD;
-Microsoft.EntityFrameworkCore.DbUpdateException: Required properties '{'FirstName', 'LastName', 'PasswordHash', 'UserName'}' are missing for the instance of entity type 'User'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see the entity key value.</Message>
-          <StackTrace>    at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryTable`1.ThrowNullabilityErrorException(IUpdateEntry entry, IList`1 nullabilityErrors)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryTable`1.Create(IUpdateEntry entry, IDiagnosticsLogger`1 updateLogger)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryStore.ExecuteTransaction(IList`1 entries, IDiagnosticsLogger`1 updateLogger)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at ASafariM.Infrastructure.Repositories.UserRepository.AddUserAsync(User user) in D:\repos\ASafariM\ASafariM.Infrastructure\Repositories\UserRepository.cs:line 89&#xD;
-   at ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests.GetRolesByUserIdAsync_ShouldReturnEmptyList_WhenUserHasNoRoles() in D:\repos\ASafariM\ASafariM.Test\InfrastructureTests\Repository\UserRepositoryTests.cs:line 358&#xD;
-</StackTrace>
-        </ErrorInfo>
-      </Output>
-    </UnitTestResult>
-    <UnitTestResult executionId="0bea9d3f-de72-4aee-a24d-4453cedb4605" testId="45bae863-9364-c702-6f6a-3938e34061ee" testName="RemoveRolesFromUserAsync_ShouldRemoveRoles_WhenRolesExist" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0077442" startTime="2025-03-04T18:20:54.3839922+01:00" endTime="2025-03-04T18:20:54.3919138+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0bea9d3f-de72-4aee-a24d-4453cedb4605">
-      <Output>
-        <ErrorInfo>
-          <Message>Test method ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests.RemoveRolesFromUserAsync_ShouldRemoveRoles_WhenRolesExist threw exception: &#xD;
-Microsoft.EntityFrameworkCore.DbUpdateException: Required properties '{'FirstName', 'LastName', 'PasswordHash', 'UserName'}' are missing for the instance of entity type 'User'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see the entity key value.</Message>
-          <StackTrace>    at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryTable`1.ThrowNullabilityErrorException(IUpdateEntry entry, IList`1 nullabilityErrors)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryTable`1.Create(IUpdateEntry entry, IDiagnosticsLogger`1 updateLogger)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryStore.ExecuteTransaction(IList`1 entries, IDiagnosticsLogger`1 updateLogger)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at ASafariM.Infrastructure.Repositories.UserRepository.AddUserAsync(User user) in D:\repos\ASafariM\ASafariM.Infrastructure\Repositories\UserRepository.cs:line 89&#xD;
-   at ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests.RemoveRolesFromUserAsync_ShouldRemoveRoles_WhenRolesExist() in D:\repos\ASafariM\ASafariM.Test\InfrastructureTests\Repository\UserRepositoryTests.cs:line 302&#xD;
-</StackTrace>
-        </ErrorInfo>
-      </Output>
-    </UnitTestResult>
-    <UnitTestResult executionId="b61c31cf-e9b2-482c-bf25-15ab7237c5c7" testId="749d4f59-99a8-c257-0f06-d901dbb280e1" testName="handle_invalid_database_name_throws_exception" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0063175" startTime="2025-03-04T18:20:51.6609139+01:00" endTime="2025-03-04T18:20:51.6674208+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b61c31cf-e9b2-482c-bf25-15ab7237c5c7" />
-    <UnitTestResult executionId="c0ee3e26-5138-4d73-9b19-4e9c0c50e459" testId="52e5d5a0-6b82-6d43-8752-2e9943a58242" testName="ContextInitializesWithInMemoryDatabase" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0002861" startTime="2025-03-04T18:20:54.4106492+01:00" endTime="2025-03-04T18:20:54.4110164+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c0ee3e26-5138-4d73-9b19-4e9c0c50e459">
-      <Output>
-        <ErrorInfo>
-          <Message>Initialization method ASafariM.Test.DomainTests.Persistence.AppDbContextTests.Setup threw exception. System.ArgumentNullException: Value cannot be null. (Parameter 'databaseName').</Message>
-          <StackTrace>    at Microsoft.EntityFrameworkCore.Utilities.Check.NotEmpty(String value, String parameterName)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase(DbContextOptionsBuilder optionsBuilder, String databaseName, InMemoryDatabaseRoot databaseRoot, Action`1 inMemoryOptionsAction)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase(DbContextOptionsBuilder optionsBuilder, String databaseName, Action`1 inMemoryOptionsAction)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase[TContext](DbContextOptionsBuilder`1 optionsBuilder, String databaseName, Action`1 inMemoryOptionsAction)&#xD;
-   at ASafariM.Test.TestBase.Setup() in D:\repos\ASafariM\ASafariM.Test\TestBase.cs:line 30&#xD;
-   at ASafariM.Test.DomainTests.Persistence.AppDbContextTests.Setup() in D:\repos\ASafariM\ASafariM.Test\InfrastructureTests\Persistance\AppDbContextTests.cs:line 22&#xD;
-   at InvokeStub_AppDbContextTests.Setup(Object, Object, IntPtr*)&#xD;
-   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
-</StackTrace>
-        </ErrorInfo>
-      </Output>
-    </UnitTestResult>
-    <UnitTestResult executionId="f6e986d1-d606-49ba-93ae-4b1d038681d9" testId="baef49de-de00-6939-72cd-64a39497f822" testName="GetUserByEmailAsync_ShouldReturnNull_WhenUserDoesNotExist" computerName="DESKTOP-H9KSCV9" duration="00:00:00.2456131" startTime="2025-03-04T18:20:54.0031166+01:00" endTime="2025-03-04T18:20:54.2489309+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f6e986d1-d606-49ba-93ae-4b1d038681d9" />
-    <UnitTestResult executionId="eb5d4064-b3a7-42a5-af1c-e75f581e5cd9" testId="751e710e-fc0d-d3ba-d75a-78632f7f2eb7" testName="AddUserAsync_ShouldLogAndSaveChanges" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0014112" startTime="2025-03-04T18:20:54.4064933+01:00" endTime="2025-03-04T18:20:54.4082362+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="eb5d4064-b3a7-42a5-af1c-e75f581e5cd9">
-      <Output>
-        <ErrorInfo>
-          <Message>Initialization method ASafariM.Test.DomainTests.Persistence.AppDbContextTests.Setup threw exception. System.ArgumentNullException: Value cannot be null. (Parameter 'databaseName').</Message>
-          <StackTrace>    at Microsoft.EntityFrameworkCore.Utilities.Check.NotEmpty(String value, String parameterName)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase(DbContextOptionsBuilder optionsBuilder, String databaseName, InMemoryDatabaseRoot databaseRoot, Action`1 inMemoryOptionsAction)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase(DbContextOptionsBuilder optionsBuilder, String databaseName, Action`1 inMemoryOptionsAction)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase[TContext](DbContextOptionsBuilder`1 optionsBuilder, String databaseName, Action`1 inMemoryOptionsAction)&#xD;
-   at ASafariM.Test.TestBase.Setup() in D:\repos\ASafariM\ASafariM.Test\TestBase.cs:line 30&#xD;
-   at ASafariM.Test.DomainTests.Persistence.AppDbContextTests.Setup() in D:\repos\ASafariM\ASafariM.Test\InfrastructureTests\Persistance\AppDbContextTests.cs:line 22&#xD;
-   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
-   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
-</StackTrace>
-        </ErrorInfo>
-      </Output>
-    </UnitTestResult>
-    <UnitTestResult executionId="75645a6f-1b63-41c2-a9e0-4126a7433e2b" testId="36291326-1b1c-e4a2-a519-44282bcfec4d" testName="AssignRolesToUserAsync_ShouldAssignRoles_WhenRolesExist" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0081217" startTime="2025-03-04T18:20:54.3539079+01:00" endTime="2025-03-04T18:20:54.3621655+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="75645a6f-1b63-41c2-a9e0-4126a7433e2b">
-      <Output>
-        <ErrorInfo>
-          <Message>Test method ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests.AssignRolesToUserAsync_ShouldAssignRoles_WhenRolesExist threw exception: &#xD;
-Microsoft.EntityFrameworkCore.DbUpdateException: Required properties '{'FirstName', 'LastName', 'PasswordHash', 'UserName'}' are missing for the instance of entity type 'User'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see the entity key value.</Message>
-          <StackTrace>    at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryTable`1.ThrowNullabilityErrorException(IUpdateEntry entry, IList`1 nullabilityErrors)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryTable`1.Create(IUpdateEntry entry, IDiagnosticsLogger`1 updateLogger)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryStore.ExecuteTransaction(IList`1 entries, IDiagnosticsLogger`1 updateLogger)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at ASafariM.Infrastructure.Repositories.UserRepository.AddUserAsync(User user) in D:\repos\ASafariM\ASafariM.Infrastructure\Repositories\UserRepository.cs:line 89&#xD;
-   at ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests.AssignRolesToUserAsync_ShouldAssignRoles_WhenRolesExist() in D:\repos\ASafariM\ASafariM.Test\InfrastructureTests\Repository\UserRepositoryTests.cs:line 257&#xD;
-</StackTrace>
-        </ErrorInfo>
-      </Output>
-    </UnitTestResult>
-    <UnitTestResult executionId="6c59e226-d032-4ff9-99e0-bfba26688818" testId="1ba3a6a2-3048-ee98-8cac-456578ce17bc" testName="handle_null_context_options_throws_exception" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0108698" startTime="2025-03-04T18:20:51.6496539+01:00" endTime="2025-03-04T18:20:51.6608235+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6c59e226-d032-4ff9-99e0-bfba26688818" />
-    <UnitTestResult executionId="045c4e01-b527-43bc-ab29-99d340dc509f" testId="d7c4a17f-0b3c-a153-e347-4a402c9def8b" testName="GetRolesByUserIdAsync_ShouldReturnRoles_WhenUserHasRoles" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0073641" startTime="2025-03-04T18:20:54.3920260+01:00" endTime="2025-03-04T18:20:54.3995764+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="045c4e01-b527-43bc-ab29-99d340dc509f">
-      <Output>
-        <ErrorInfo>
-          <Message>Test method ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests.GetRolesByUserIdAsync_ShouldReturnRoles_WhenUserHasRoles threw exception: &#xD;
-Microsoft.EntityFrameworkCore.DbUpdateException: Required properties '{'FirstName', 'LastName', 'PasswordHash', 'UserName'}' are missing for the instance of entity type 'User'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see the entity key value.</Message>
-          <StackTrace>    at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryTable`1.ThrowNullabilityErrorException(IUpdateEntry entry, IList`1 nullabilityErrors)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryTable`1.Create(IUpdateEntry entry, IDiagnosticsLogger`1 updateLogger)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryStore.ExecuteTransaction(IList`1 entries, IDiagnosticsLogger`1 updateLogger)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at ASafariM.Infrastructure.Repositories.UserRepository.AddUserAsync(User user) in D:\repos\ASafariM\ASafariM.Infrastructure\Repositories\UserRepository.cs:line 89&#xD;
-   at ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests.GetRolesByUserIdAsync_ShouldReturnRoles_WhenUserHasRoles() in D:\repos\ASafariM\ASafariM.Test\InfrastructureTests\Repository\UserRepositoryTests.cs:line 330&#xD;
-</StackTrace>
-        </ErrorInfo>
-      </Output>
-    </UnitTestResult>
-    <UnitTestResult executionId="214ac8bd-06b3-49c0-ad40-ea13a814100e" testId="a9bbc64b-6c36-56f8-8fe3-cf9770a86971" testName="GetUserByIdAsync_ShouldReturnUser_WhenUserExists" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0266466" startTime="2025-03-04T18:20:54.2490200+01:00" endTime="2025-03-04T18:20:54.2758347+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="214ac8bd-06b3-49c0-ad40-ea13a814100e">
-      <Output>
-        <ErrorInfo>
-          <Message>Test method ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests.GetUserByIdAsync_ShouldReturnUser_WhenUserExists threw exception: &#xD;
-Microsoft.EntityFrameworkCore.DbUpdateException: Required properties '{'FirstName', 'LastName', 'PasswordHash', 'UserName'}' are missing for the instance of entity type 'User'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see the entity key value.</Message>
-          <StackTrace>    at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryTable`1.ThrowNullabilityErrorException(IUpdateEntry entry, IList`1 nullabilityErrors)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryTable`1.Create(IUpdateEntry entry, IDiagnosticsLogger`1 updateLogger)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryStore.ExecuteTransaction(IList`1 entries, IDiagnosticsLogger`1 updateLogger)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at ASafariM.Infrastructure.Repositories.UserRepository.AddUserAsync(User user) in D:\repos\ASafariM\ASafariM.Infrastructure\Repositories\UserRepository.cs:line 89&#xD;
-   at ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests.GetUserByIdAsync_ShouldReturnUser_WhenUserExists() in D:\repos\ASafariM\ASafariM.Test\InfrastructureTests\Repository\UserRepositoryTests.cs:line 125&#xD;
-</StackTrace>
-        </ErrorInfo>
-      </Output>
-    </UnitTestResult>
-    <UnitTestResult executionId="51a03b81-2263-450a-8e1e-821c4092b21a" testId="f9143d72-d4ae-f69b-d07f-62ccd78b6213" testName="GetAllUsers_ReturnsOkWithUsers" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0016058" startTime="2025-03-04T18:20:51.3341831+01:00" endTime="2025-03-04T18:20:51.3360822+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="51a03b81-2263-450a-8e1e-821c4092b21a">
-      <Output>
-        <ErrorInfo>
-          <Message>Initialization method ASafariM.Test.PresentationTests.Controllers.UsersControllerTests.Setup threw exception. System.ArgumentNullException: Value cannot be null. (Parameter 'databaseName').</Message>
-          <StackTrace>    at Microsoft.EntityFrameworkCore.Utilities.Check.NotEmpty(String value, String parameterName)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase(DbContextOptionsBuilder optionsBuilder, String databaseName, InMemoryDatabaseRoot databaseRoot, Action`1 inMemoryOptionsAction)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase(DbContextOptionsBuilder optionsBuilder, String databaseName, Action`1 inMemoryOptionsAction)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase[TContext](DbContextOptionsBuilder`1 optionsBuilder, String databaseName, Action`1 inMemoryOptionsAction)&#xD;
-   at ASafariM.Test.TestBase.Setup() in D:\repos\ASafariM\ASafariM.Test\TestBase.cs:line 30&#xD;
-   at ASafariM.Test.PresentationTests.Controllers.UsersControllerTests.Setup() in D:\repos\ASafariM\ASafariM.Test\PresentationTests\Controllers\UsersControllerTests.cs:line 28&#xD;
-   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
-   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
-</StackTrace>
-        </ErrorInfo>
-      </Output>
-    </UnitTestResult>
-    <UnitTestResult executionId="4dddff74-9219-4009-a9cf-f2f358227d56" testId="d95c0fc3-5b9b-5346-b441-627830ae2b68" testName="UpdateUserAsync_ShouldUpdateUser" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0072383" startTime="2025-03-04T18:20:54.3304664+01:00" endTime="2025-03-04T18:20:54.3378983+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4dddff74-9219-4009-a9cf-f2f358227d56">
-      <Output>
-        <ErrorInfo>
-          <Message>Test method ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests.UpdateUserAsync_ShouldUpdateUser threw exception: &#xD;
-Microsoft.EntityFrameworkCore.DbUpdateException: Required properties '{'FirstName', 'LastName', 'PasswordHash', 'UserName'}' are missing for the instance of entity type 'User'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see the entity key value.</Message>
-          <StackTrace>    at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryTable`1.ThrowNullabilityErrorException(IUpdateEntry entry, IList`1 nullabilityErrors)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryTable`1.Create(IUpdateEntry entry, IDiagnosticsLogger`1 updateLogger)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryStore.ExecuteTransaction(IList`1 entries, IDiagnosticsLogger`1 updateLogger)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at ASafariM.Infrastructure.Repositories.UserRepository.AddUserAsync(User user) in D:\repos\ASafariM\ASafariM.Infrastructure\Repositories\UserRepository.cs:line 89&#xD;
-   at ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests.UpdateUserAsync_ShouldUpdateUser() in D:\repos\ASafariM\ASafariM.Test\InfrastructureTests\Repository\UserRepositoryTests.cs:line 193&#xD;
-</StackTrace>
-        </ErrorInfo>
-      </Output>
-    </UnitTestResult>
-    <UnitTestResult executionId="970fc0c1-9b0f-4b66-a1da-f511c7bc9971" testId="97ec3dce-d371-19ac-021e-38edd5c10edf" testName="CompleteRoleManagementFlow_ShouldSucceed" computerName="DESKTOP-H9KSCV9" duration="00:00:00.2040522" startTime="2025-03-04T18:20:51.0783313+01:00" endTime="2025-03-04T18:20:51.3098156+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="970fc0c1-9b0f-4b66-a1da-f511c7bc9971">
-      <Output>
-        <ErrorInfo>
-          <Message>Initialization method ASafariM.Test.PresentationTests.Controllers.UserRolesControllerIntegrationTests.Setup threw exception. System.ArgumentNullException: Value cannot be null. (Parameter 'databaseName').</Message>
-          <StackTrace>    at Microsoft.EntityFrameworkCore.Utilities.Check.NotEmpty(String value, String parameterName)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase(DbContextOptionsBuilder optionsBuilder, String databaseName, InMemoryDatabaseRoot databaseRoot, Action`1 inMemoryOptionsAction)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase(DbContextOptionsBuilder optionsBuilder, String databaseName, Action`1 inMemoryOptionsAction)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase[TContext](DbContextOptionsBuilder`1 optionsBuilder, String databaseName, Action`1 inMemoryOptionsAction)&#xD;
-   at ASafariM.Test.TestBase.Setup() in D:\repos\ASafariM\ASafariM.Test\TestBase.cs:line 30&#xD;
-   at ASafariM.Test.PresentationTests.Controllers.UserRolesControllerIntegrationTests.Setup() in D:\repos\ASafariM\ASafariM.Test\PresentationTests\Controllers\UserRolesControllerIntegrationTests.cs:line 30&#xD;
-   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
-   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
-</StackTrace>
-        </ErrorInfo>
-      </Output>
-    </UnitTestResult>
-    <UnitTestResult executionId="ea7cb02a-511c-4860-a315-30007083bbd2" testId="ca3cefb5-cdf1-d311-b21a-39e4d7aaec90" testName="GetAllUsersAsync_ShouldReturnAllUsers" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0075673" startTime="2025-03-04T18:20:54.2759114+01:00" endTime="2025-03-04T18:20:54.2836585+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ea7cb02a-511c-4860-a315-30007083bbd2">
-      <Output>
-        <ErrorInfo>
-          <Message>Test method ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests.GetAllUsersAsync_ShouldReturnAllUsers threw exception: &#xD;
-Microsoft.EntityFrameworkCore.DbUpdateException: Required properties '{'FirstName', 'LastName', 'PasswordHash', 'UserName'}' are missing for the instance of entity type 'User'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see the entity key value.</Message>
-          <StackTrace>    at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryTable`1.ThrowNullabilityErrorException(IUpdateEntry entry, IList`1 nullabilityErrors)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryTable`1.Create(IUpdateEntry entry, IDiagnosticsLogger`1 updateLogger)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryStore.ExecuteTransaction(IList`1 entries, IDiagnosticsLogger`1 updateLogger)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at ASafariM.Infrastructure.Repositories.UserRepository.AddUserAsync(User user) in D:\repos\ASafariM\ASafariM.Infrastructure\Repositories\UserRepository.cs:line 89&#xD;
-   at ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests.GetAllUsersAsync_ShouldReturnAllUsers() in D:\repos\ASafariM\ASafariM.Test\InfrastructureTests\Repository\UserRepositoryTests.cs:line 151&#xD;
-</StackTrace>
-        </ErrorInfo>
-      </Output>
-    </UnitTestResult>
-    <UnitTestResult executionId="141e432f-eef7-4a1c-a55e-5b3b423c9951" testId="d804816e-265f-e41e-74cb-89ab5435acd9" testName="HandleInvalidDatabaseName_ThrowsException" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0003601" startTime="2025-03-04T18:20:54.4130728+01:00" endTime="2025-03-04T18:20:54.4135260+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="141e432f-eef7-4a1c-a55e-5b3b423c9951">
-      <Output>
-        <ErrorInfo>
-          <Message>Initialization method ASafariM.Test.DomainTests.Persistence.AppDbContextTests.Setup threw exception. System.ArgumentNullException: Value cannot be null. (Parameter 'databaseName').</Message>
-          <StackTrace>    at Microsoft.EntityFrameworkCore.Utilities.Check.NotEmpty(String value, String parameterName)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase(DbContextOptionsBuilder optionsBuilder, String databaseName, InMemoryDatabaseRoot databaseRoot, Action`1 inMemoryOptionsAction)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase(DbContextOptionsBuilder optionsBuilder, String databaseName, Action`1 inMemoryOptionsAction)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase[TContext](DbContextOptionsBuilder`1 optionsBuilder, String databaseName, Action`1 inMemoryOptionsAction)&#xD;
-   at ASafariM.Test.TestBase.Setup() in D:\repos\ASafariM\ASafariM.Test\TestBase.cs:line 30&#xD;
-   at ASafariM.Test.DomainTests.Persistence.AppDbContextTests.Setup() in D:\repos\ASafariM\ASafariM.Test\InfrastructureTests\Persistance\AppDbContextTests.cs:line 22&#xD;
-   at InvokeStub_AppDbContextTests.Setup(Object, Object, IntPtr*)&#xD;
-   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
-</StackTrace>
-        </ErrorInfo>
-      </Output>
-    </UnitTestResult>
-    <UnitTestResult executionId="4668fe6e-daa9-4791-b499-57ab8894a577" testId="57b7cf17-8b55-af5c-84a8-a7b50c2d2678" testName="GetUserByEmailAsync_ShouldReturnNull_WhenUserDoesNotExist" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0004597" startTime="2025-03-04T18:20:54.4095227+01:00" endTime="2025-03-04T18:20:54.4101224+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4668fe6e-daa9-4791-b499-57ab8894a577">
-      <Output>
-        <ErrorInfo>
-          <Message>Initialization method ASafariM.Test.DomainTests.Persistence.AppDbContextTests.Setup threw exception. System.ArgumentNullException: Value cannot be null. (Parameter 'databaseName').</Message>
-          <StackTrace>    at Microsoft.EntityFrameworkCore.Utilities.Check.NotEmpty(String value, String parameterName)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase(DbContextOptionsBuilder optionsBuilder, String databaseName, InMemoryDatabaseRoot databaseRoot, Action`1 inMemoryOptionsAction)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase(DbContextOptionsBuilder optionsBuilder, String databaseName, Action`1 inMemoryOptionsAction)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase[TContext](DbContextOptionsBuilder`1 optionsBuilder, String databaseName, Action`1 inMemoryOptionsAction)&#xD;
-   at ASafariM.Test.TestBase.Setup() in D:\repos\ASafariM\ASafariM.Test\TestBase.cs:line 30&#xD;
-   at ASafariM.Test.DomainTests.Persistence.AppDbContextTests.Setup() in D:\repos\ASafariM\ASafariM.Test\InfrastructureTests\Persistance\AppDbContextTests.cs:line 22&#xD;
-   at InvokeStub_AppDbContextTests.Setup(Object, Object, IntPtr*)&#xD;
-   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
-</StackTrace>
-        </ErrorInfo>
-      </Output>
-    </UnitTestResult>
-    <UnitTestResult executionId="efcc1a7c-02b0-419f-a6b8-9738a95132a2" testId="a752dc08-217a-04bb-facb-9aac2ec3e88b" testName="SaveChangesAsync_CompletesSuccessfully" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0003338" startTime="2025-03-04T18:20:54.4101805+01:00" endTime="2025-03-04T18:20:54.4106134+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="efcc1a7c-02b0-419f-a6b8-9738a95132a2">
-      <Output>
-        <ErrorInfo>
-          <Message>Initialization method ASafariM.Test.DomainTests.Persistence.AppDbContextTests.Setup threw exception. System.ArgumentNullException: Value cannot be null. (Parameter 'databaseName').</Message>
-          <StackTrace>    at Microsoft.EntityFrameworkCore.Utilities.Check.NotEmpty(String value, String parameterName)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase(DbContextOptionsBuilder optionsBuilder, String databaseName, InMemoryDatabaseRoot databaseRoot, Action`1 inMemoryOptionsAction)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase(DbContextOptionsBuilder optionsBuilder, String databaseName, Action`1 inMemoryOptionsAction)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions.UseInMemoryDatabase[TContext](DbContextOptionsBuilder`1 optionsBuilder, String databaseName, Action`1 inMemoryOptionsAction)&#xD;
-   at ASafariM.Test.TestBase.Setup() in D:\repos\ASafariM\ASafariM.Test\TestBase.cs:line 30&#xD;
-   at ASafariM.Test.DomainTests.Persistence.AppDbContextTests.Setup() in D:\repos\ASafariM\ASafariM.Test\InfrastructureTests\Persistance\AppDbContextTests.cs:line 22&#xD;
-   at InvokeStub_AppDbContextTests.Setup(Object, Object, IntPtr*)&#xD;
-   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
-</StackTrace>
-        </ErrorInfo>
-      </Output>
-    </UnitTestResult>
-    <UnitTestResult executionId="369baf45-444b-4459-87e0-b7557ebb2c48" testId="d5b473e6-9454-2cf2-3a3c-92deae82e5b9" testName="AddUserAsync_ShouldAddUser" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0464621" startTime="2025-03-04T18:20:54.2837403+01:00" endTime="2025-03-04T18:20:54.3303693+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="369baf45-444b-4459-87e0-b7557ebb2c48" />
-    <UnitTestResult executionId="cd309bfd-2af9-4b4a-bb02-ce4b77ba250e" testId="ca9ddfba-3d81-f766-9da2-67005f62daeb" testName="GetUserByUserNameAsync_ShouldReturnUser_WhenUserExists" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0088447" startTime="2025-03-04T18:20:54.3379652+01:00" endTime="2025-03-04T18:20:54.3469364+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="cd309bfd-2af9-4b4a-bb02-ce4b77ba250e">
-      <Output>
-        <ErrorInfo>
-          <Message>Test method ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests.GetUserByUserNameAsync_ShouldReturnUser_WhenUserExists threw exception: &#xD;
-Microsoft.EntityFrameworkCore.DbUpdateException: Required properties '{'FirstName', 'LastName', 'PasswordHash'}' are missing for the instance of entity type 'User'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see the entity key value.</Message>
-          <StackTrace>    at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryTable`1.ThrowNullabilityErrorException(IUpdateEntry entry, IList`1 nullabilityErrors)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryTable`1.Create(IUpdateEntry entry, IDiagnosticsLogger`1 updateLogger)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryStore.ExecuteTransaction(IList`1 entries, IDiagnosticsLogger`1 updateLogger)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at ASafariM.Infrastructure.Repositories.UserRepository.AddUserAsync(User user) in D:\repos\ASafariM\ASafariM.Infrastructure\Repositories\UserRepository.cs:line 89&#xD;
-   at ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests.GetUserByUserNameAsync_ShouldReturnUser_WhenUserExists() in D:\repos\ASafariM\ASafariM.Test\InfrastructureTests\Repository\UserRepositoryTests.cs:line 216&#xD;
-</StackTrace>
-        </ErrorInfo>
-      </Output>
-    </UnitTestResult>
-    <UnitTestResult executionId="34124726-a14a-4811-ae3e-d121fa692fe7" testId="b40d2ee4-eff1-c0b6-107b-21589dc6cf09" testName="AssignRolesToUserAsync_ShouldThrowException_WhenRoleDoesNotExist" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0101695" startTime="2025-03-04T18:20:54.3692932+01:00" endTime="2025-03-04T18:20:54.3839162+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="34124726-a14a-4811-ae3e-d121fa692fe7">
-      <Output>
-        <ErrorInfo>
-          <Message>Test method threw exception Microsoft.EntityFrameworkCore.DbUpdateException, but exception System.InvalidOperationException was expected. Exception message: Microsoft.EntityFrameworkCore.DbUpdateException: Required properties '{'FirstName', 'LastName', 'PasswordHash', 'UserName'}' are missing for the instance of entity type 'User'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see the entity key value.</Message>
-          <StackTrace>   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryTable`1.ThrowNullabilityErrorException(IUpdateEntry entry, IList`1 nullabilityErrors)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryTable`1.Create(IUpdateEntry entry, IDiagnosticsLogger`1 updateLogger)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryStore.ExecuteTransaction(IList`1 entries, IDiagnosticsLogger`1 updateLogger)&#xD;
-   at Microsoft.EntityFrameworkCore.InMemory.Storage.Internal.InMemoryDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
-   at ASafariM.Infrastructure.Repositories.UserRepository.AddUserAsync(User user) in D:\repos\ASafariM\ASafariM.Infrastructure\Repositories\UserRepository.cs:line 89&#xD;
-   at ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests.AssignRolesToUserAsync_ShouldThrowException_WhenRoleDoesNotExist() in D:\repos\ASafariM\ASafariM.Test\InfrastructureTests\Repository\UserRepositoryTests.cs:line 284&#xD;
-</StackTrace>
-        </ErrorInfo>
-      </Output>
-    </UnitTestResult>
+    <UnitTestResult executionId="2090c55f-3237-40a6-b8e3-d0101f4ffd94" testId="52e5d5a0-6b82-6d43-8752-2e9943a58242" testName="ContextInitializesWithInMemoryDatabase" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0002588" startTime="2025-03-25T14:45:02.5584214+01:00" endTime="2025-03-25T14:45:02.5587777+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2090c55f-3237-40a6-b8e3-d0101f4ffd94" />
+    <UnitTestResult executionId="83e4d0c3-587b-4da2-a448-331d9d668fd6" testId="c0c47d89-bbbe-d55f-688c-61e9a03495d4" testName="GetUserByEmailAsync_ShouldReturnUser_WhenUserExists" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0529514" startTime="2025-03-25T14:45:02.2914107+01:00" endTime="2025-03-25T14:45:02.3445067+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="83e4d0c3-587b-4da2-a448-331d9d668fd6" />
+    <UnitTestResult executionId="f957cdbf-5039-48a0-92ec-387a333b6c32" testId="c8b082a5-27d2-f23a-d277-2904cd3a52e9" testName="CheckAvailability_UsernameTaken_ReturnsMessages" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0067961" startTime="2025-03-25T14:45:02.2229313+01:00" endTime="2025-03-25T14:45:02.2299120+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f957cdbf-5039-48a0-92ec-387a333b6c32" />
+    <UnitTestResult executionId="c2e4a586-130e-4ac7-b66f-b3dc62de334a" testId="97ec3dce-d371-19ac-021e-38edd5c10edf" testName="CompleteRoleManagementFlow_ShouldSucceed" computerName="DESKTOP-H9KSCV9" duration="00:00:03.8119818" startTime="2025-03-25T14:44:58.2408416+01:00" endTime="2025-03-25T14:45:02.0840639+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c2e4a586-130e-4ac7-b66f-b3dc62de334a" />
+    <UnitTestResult executionId="2aadda01-727e-410a-80ef-c4eae75defa6" testId="b40d2ee4-eff1-c0b6-107b-21589dc6cf09" testName="AssignRolesToUserAsync_ShouldThrowException_WhenRoleDoesNotExist" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0026781" startTime="2025-03-25T14:45:02.4930559+01:00" endTime="2025-03-25T14:45:02.4958713+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2aadda01-727e-410a-80ef-c4eae75defa6" />
+    <UnitTestResult executionId="fed174e0-6699-4b4a-a7a6-6addf3909590" testId="f9143d72-d4ae-f69b-d07f-62ccd78b6213" testName="GetAllUsers_ReturnsOkWithUsers" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0385238" startTime="2025-03-25T14:45:02.1839010+01:00" endTime="2025-03-25T14:45:02.2227642+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fed174e0-6699-4b4a-a7a6-6addf3909590" />
+    <UnitTestResult executionId="ed717491-a117-4199-b249-d173d01ad595" testId="d95c0fc3-5b9b-5346-b441-627830ae2b68" testName="UpdateUserAsync_ShouldUpdateUser" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0302803" startTime="2025-03-25T14:45:02.4129212+01:00" endTime="2025-03-25T14:45:02.4433602+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ed717491-a117-4199-b249-d173d01ad595" />
+    <UnitTestResult executionId="55114320-fe78-4b33-aa7e-6dd33a448ca8" testId="ca9ddfba-3d81-f766-9da2-67005f62daeb" testName="GetUserByUserNameAsync_ShouldReturnUser_WhenUserExists" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0206638" startTime="2025-03-25T14:45:02.4434489+01:00" endTime="2025-03-25T14:45:02.4642759+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="55114320-fe78-4b33-aa7e-6dd33a448ca8" />
+    <UnitTestResult executionId="2d1eb11e-b264-407d-a938-d8cb23811fc0" testId="89640849-ce9a-7557-fb0e-f8647c1da9e3" testName="InitializeMockLoggerForUserRepository" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0005070" startTime="2025-03-25T14:45:02.6084834+01:00" endTime="2025-03-25T14:45:02.6091610+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2d1eb11e-b264-407d-a938-d8cb23811fc0" />
+    <UnitTestResult executionId="3781ff6b-6a49-415d-bf5a-0944e4259e64" testId="45bae863-9364-c702-6f6a-3938e34061ee" testName="RemoveRolesFromUserAsync_ShouldRemoveRoles_WhenRolesExist" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0059069" startTime="2025-03-25T14:45:02.4971269+01:00" endTime="2025-03-25T14:45:02.5031813+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3781ff6b-6a49-415d-bf5a-0944e4259e64" />
+    <UnitTestResult executionId="f7d6cd39-2742-4d8c-a358-3cb7de6755c0" testId="ca3cefb5-cdf1-d311-b21a-39e4d7aaec90" testName="GetAllUsersAsync_ShouldReturnAllUsers" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0188954" startTime="2025-03-25T14:45:02.3743192+01:00" endTime="2025-03-25T14:45:02.3933790+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f7d6cd39-2742-4d8c-a358-3cb7de6755c0" />
+    <UnitTestResult executionId="af335e79-9bc7-47eb-b622-29c6cdcb976e" testId="a752dc08-217a-04bb-facb-9aac2ec3e88b" testName="SaveChangesAsync_CompletesSuccessfully" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0013591" startTime="2025-03-25T14:45:02.5568704+01:00" endTime="2025-03-25T14:45:02.5583681+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="af335e79-9bc7-47eb-b622-29c6cdcb976e" />
+    <UnitTestResult executionId="6b727246-9b79-4725-8031-bf44433a40a1" testId="d804816e-265f-e41e-74cb-89ab5435acd9" testName="HandleInvalidDatabaseName_ThrowsException" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0008602" startTime="2025-03-25T14:45:02.6073585+01:00" endTime="2025-03-25T14:45:02.6084017+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6b727246-9b79-4725-8031-bf44433a40a1" />
+    <UnitTestResult executionId="3d842188-3290-4e81-b6f8-7c4dd9aa378c" testId="ba20961b-6799-d652-45b7-03c3d3864402" testName="DeleteUserAsync_ShouldCallRepository_WhenUserExists" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0537415" startTime="2025-03-25T14:45:02.2330361+01:00" endTime="2025-03-25T14:45:02.2871594+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3d842188-3290-4e81-b6f8-7c4dd9aa378c" />
+    <UnitTestResult executionId="1e718306-1712-4c03-ae56-b5e934bb8b6a" testId="d7c4a17f-0b3c-a153-e347-4a402c9def8b" testName="GetRolesByUserIdAsync_ShouldReturnRoles_WhenUserHasRoles" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0030816" startTime="2025-03-25T14:45:02.5032501+01:00" endTime="2025-03-25T14:45:02.5064870+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1e718306-1712-4c03-ae56-b5e934bb8b6a" />
+    <UnitTestResult executionId="91731c5b-46dd-4374-8561-cf3256fa8031" testId="57b7cf17-8b55-af5c-84a8-a7b50c2d2678" testName="GetUserByEmailAsync_ShouldReturnNull_WhenUserDoesNotExist" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0177258" startTime="2025-03-25T14:45:02.5389277+01:00" endTime="2025-03-25T14:45:02.5567916+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="91731c5b-46dd-4374-8561-cf3256fa8031" />
+    <UnitTestResult executionId="af868b1a-f74d-473a-afcc-33f962600e11" testId="baef49de-de00-6939-72cd-64a39497f822" testName="GetUserByEmailAsync_ShouldReturnNull_WhenUserDoesNotExist" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0013703" startTime="2025-03-25T14:45:02.3465698+01:00" endTime="2025-03-25T14:45:02.3481217+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="af868b1a-f74d-473a-afcc-33f962600e11" />
+    <UnitTestResult executionId="d41911a6-1887-4190-80d4-66211f209398" testId="751e710e-fc0d-d3ba-d75a-78632f7f2eb7" testName="AddUserAsync_ShouldLogAndSaveChanges" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0277859" startTime="2025-03-25T14:45:02.5083168+01:00" endTime="2025-03-25T14:45:02.5363071+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d41911a6-1887-4190-80d4-66211f209398" />
+    <UnitTestResult executionId="62a8c04e-22bb-49e2-9edf-c0f0d07cb709" testId="7df8e149-97c1-4416-d662-56097ab8526a" testName="GetRolesByUserIdAsync_ShouldReturnEmptyList_WhenUserHasNoRoles" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0015964" startTime="2025-03-25T14:45:02.5065491+01:00" endTime="2025-03-25T14:45:02.5082661+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="62a8c04e-22bb-49e2-9edf-c0f0d07cb709" />
+    <UnitTestResult executionId="835fbbad-30f8-456a-a947-f241e4767974" testId="d5b473e6-9454-2cf2-3a3c-92deae82e5b9" testName="AddUserAsync_ShouldAddUser" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0192248" startTime="2025-03-25T14:45:02.3934578+01:00" endTime="2025-03-25T14:45:02.4128444+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="835fbbad-30f8-456a-a947-f241e4767974" />
+    <UnitTestResult executionId="4e8e503a-dd05-4bb0-a495-8eb08938bb65" testId="4e24bf9f-0eea-ab65-b8b4-60c80bf74219" testName="GetUserByPhoneNumberAsync_ShouldReturnUser_WhenUserExists" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0226146" startTime="2025-03-25T14:45:02.4643669+01:00" endTime="2025-03-25T14:45:02.4871435+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4e8e503a-dd05-4bb0-a495-8eb08938bb65" />
+    <UnitTestResult executionId="17cded3b-90ee-4769-9e52-b61856219d9f" testId="73db3971-f82f-de3f-8734-b8990916c7f3" testName="initialize_mock_logger_for_user_repository" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0008083" startTime="2025-03-25T14:45:02.2872391+01:00" endTime="2025-03-25T14:45:02.2882828+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="17cded3b-90ee-4769-9e52-b61856219d9f" />
+    <UnitTestResult executionId="133b7066-0be4-4c87-a1c6-337570aadfd8" testId="6c84fd6b-b951-9caf-b632-ed552763edfd" testName="HandleDuplicateInitializationOfUserRepository" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0471786" startTime="2025-03-25T14:45:02.5588117+01:00" endTime="2025-03-25T14:45:02.6061013+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="133b7066-0be4-4c87-a1c6-337570aadfd8" />
+    <UnitTestResult executionId="cd78f1f9-bf80-4507-b5ff-e62ec79f2723" testId="a9bbc64b-6c36-56f8-8fe3-cf9770a86971" testName="GetUserByIdAsync_ShouldReturnUser_WhenUserExists" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0258805" startTime="2025-03-25T14:45:02.3481822+01:00" endTime="2025-03-25T14:45:02.3742193+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="cd78f1f9-bf80-4507-b5ff-e62ec79f2723" />
+    <UnitTestResult executionId="21c4d5df-9a03-4c2b-8de6-d0bac7f93927" testId="1ba3a6a2-3048-ee98-8cac-456578ce17bc" testName="handle_null_context_options_throws_exception" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0014874" startTime="2025-03-25T14:45:02.2883352+01:00" endTime="2025-03-25T14:45:02.2899993+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="21c4d5df-9a03-4c2b-8de6-d0bac7f93927" />
+    <UnitTestResult executionId="3790190f-bf72-4d08-890a-3b3693caa038" testId="fd5701a1-d9c5-0923-867b-cc0967647b90" testName="GetUserByEmailAsync_ShouldReturnUser_WhenUserExists" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0023478" startTime="2025-03-25T14:45:02.5363839+01:00" endTime="2025-03-25T14:45:02.5388729+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3790190f-bf72-4d08-890a-3b3693caa038" />
+    <UnitTestResult executionId="6efd9fab-bf35-4ec7-9821-3e0909f684d3" testId="36291326-1b1c-e4a2-a519-44282bcfec4d" testName="AssignRolesToUserAsync_ShouldAssignRoles_WhenRolesExist" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0056021" startTime="2025-03-25T14:45:02.4872239+01:00" endTime="2025-03-25T14:45:02.4929831+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6efd9fab-bf35-4ec7-9821-3e0909f684d3" />
+    <UnitTestResult executionId="f9db8784-cdd7-437f-bc28-24dd3dd69ca4" testId="7615bce3-50ff-8355-99b8-9b8228116f41" testName="AutoMapper_Configuration_IsValid" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0005303" startTime="2025-03-25T14:45:02.6092554+01:00" endTime="2025-03-25T14:45:02.6112662+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f9db8784-cdd7-437f-bc28-24dd3dd69ca4" />
+    <UnitTestResult executionId="fd8c293a-0e26-4ba0-9be3-bfcd33a05913" testId="cd877712-f446-be07-90ba-7be95dd82230" testName="CascadeDelete_ShouldRemoveUserRoles_WhenUserIsDeleted" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0759711" startTime="2025-03-25T14:45:02.1054632+01:00" endTime="2025-03-25T14:45:02.1827926+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fd8c293a-0e26-4ba0-9be3-bfcd33a05913" />
+    <UnitTestResult executionId="4bf0dd37-2866-40d6-abe8-7e484fc8649b" testId="6e9ac420-203d-ac82-511b-8145260abdee" testName="CheckAvailability_UsernameAvailable_ReturnsNoMessages" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0026069" startTime="2025-03-25T14:45:02.2300193+01:00" endTime="2025-03-25T14:45:02.2328810+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4bf0dd37-2866-40d6-abe8-7e484fc8649b" />
+    <UnitTestResult executionId="40d5b8a1-a8d4-414e-a0b6-2d090d86958c" testId="749d4f59-99a8-c257-0f06-d901dbb280e1" testName="handle_invalid_database_name_throws_exception" computerName="DESKTOP-H9KSCV9" duration="00:00:00.0012013" startTime="2025-03-25T14:45:02.2900462+01:00" endTime="2025-03-25T14:45:02.2913609+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="40d5b8a1-a8d4-414e-a0b6-2d090d86958c" />
   </Results>
   <TestDefinitions>
-    <UnitTest name="GetUserByEmailAsync_ShouldReturnUser_WhenUserExists" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="c0c47d89-bbbe-d55f-688c-61e9a03495d4">
-      <Execution id="da7475e1-9219-4123-a5ea-5d4a3af24035" />
-      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="GetUserByEmailAsync_ShouldReturnUser_WhenUserExists" />
-    </UnitTest>
-    <UnitTest name="handle_invalid_database_name_throws_exception" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="749d4f59-99a8-c257-0f06-d901dbb280e1">
-      <Execution id="b61c31cf-e9b2-482c-bf25-15ab7237c5c7" />
-      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="handle_invalid_database_name_throws_exception" />
-    </UnitTest>
-    <UnitTest name="GetUserByIdAsync_ShouldReturnUser_WhenUserExists" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="a9bbc64b-6c36-56f8-8fe3-cf9770a86971">
-      <Execution id="214ac8bd-06b3-49c0-ad40-ea13a814100e" />
-      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="GetUserByIdAsync_ShouldReturnUser_WhenUserExists" />
-    </UnitTest>
-    <UnitTest name="UpdateUserAsync_ShouldUpdateUser" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="d95c0fc3-5b9b-5346-b441-627830ae2b68">
-      <Execution id="4dddff74-9219-4009-a9cf-f2f358227d56" />
-      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="UpdateUserAsync_ShouldUpdateUser" />
-    </UnitTest>
-    <UnitTest name="AddUserAsync_ShouldAddUser" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="d5b473e6-9454-2cf2-3a3c-92deae82e5b9">
-      <Execution id="369baf45-444b-4459-87e0-b7557ebb2c48" />
-      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="AddUserAsync_ShouldAddUser" />
-    </UnitTest>
-    <UnitTest name="AddUserAsync_ShouldLogAndSaveChanges" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="751e710e-fc0d-d3ba-d75a-78632f7f2eb7">
-      <Execution id="eb5d4064-b3a7-42a5-af1c-e75f581e5cd9" />
-      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.DomainTests.Persistence.AppDbContextTests" name="AddUserAsync_ShouldLogAndSaveChanges" />
-    </UnitTest>
-    <UnitTest name="GetRolesByUserIdAsync_ShouldReturnRoles_WhenUserHasRoles" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="d7c4a17f-0b3c-a153-e347-4a402c9def8b">
-      <Execution id="045c4e01-b527-43bc-ab29-99d340dc509f" />
-      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="GetRolesByUserIdAsync_ShouldReturnRoles_WhenUserHasRoles" />
-    </UnitTest>
-    <UnitTest name="SaveChangesAsync_CompletesSuccessfully" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="a752dc08-217a-04bb-facb-9aac2ec3e88b">
-      <Execution id="efcc1a7c-02b0-419f-a6b8-9738a95132a2" />
-      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.DomainTests.Persistence.AppDbContextTests" name="SaveChangesAsync_CompletesSuccessfully" />
-    </UnitTest>
-    <UnitTest name="GetUserByPhoneNumberAsync_ShouldReturnUser_WhenUserExists" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="4e24bf9f-0eea-ab65-b8b4-60c80bf74219">
-      <Execution id="a6c9f8d2-e61d-42fc-a30a-4c9db526483b" />
-      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="GetUserByPhoneNumberAsync_ShouldReturnUser_WhenUserExists" />
-    </UnitTest>
-    <UnitTest name="GetRolesByUserIdAsync_ShouldReturnEmptyList_WhenUserHasNoRoles" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="7df8e149-97c1-4416-d662-56097ab8526a">
-      <Execution id="8eb98336-a5ee-4b89-b642-0cbca6b26b2f" />
-      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="GetRolesByUserIdAsync_ShouldReturnEmptyList_WhenUserHasNoRoles" />
-    </UnitTest>
-    <UnitTest name="DeleteUserAsync_ShouldCallRepository_WhenUserExists" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="ba20961b-6799-d652-45b7-03c3d3864402">
-      <Execution id="ac9a6886-2fc0-4333-b9dc-ad89b3ce6b3e" />
-      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Services.UserServiceTests" name="DeleteUserAsync_ShouldCallRepository_WhenUserExists" />
-    </UnitTest>
-    <UnitTest name="HandleInvalidDatabaseName_ThrowsException" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="d804816e-265f-e41e-74cb-89ab5435acd9">
-      <Execution id="141e432f-eef7-4a1c-a55e-5b3b423c9951" />
-      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.DomainTests.Persistence.AppDbContextTests" name="HandleInvalidDatabaseName_ThrowsException" />
-    </UnitTest>
-    <UnitTest name="InitializeMockLoggerForUserRepository" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="89640849-ce9a-7557-fb0e-f8647c1da9e3">
-      <Execution id="0e1dbce5-c881-4f0a-8c2f-1e5f3908c3bb" />
-      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.DomainTests.Persistence.AppDbContextTests" name="InitializeMockLoggerForUserRepository" />
-    </UnitTest>
-    <UnitTest name="GetUserByUserNameAsync_ShouldReturnUser_WhenUserExists" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="ca9ddfba-3d81-f766-9da2-67005f62daeb">
-      <Execution id="cd309bfd-2af9-4b4a-bb02-ce4b77ba250e" />
-      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="GetUserByUserNameAsync_ShouldReturnUser_WhenUserExists" />
-    </UnitTest>
-    <UnitTest name="GetAllUsersAsync_ShouldReturnAllUsers" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="ca3cefb5-cdf1-d311-b21a-39e4d7aaec90">
-      <Execution id="ea7cb02a-511c-4860-a315-30007083bbd2" />
-      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="GetAllUsersAsync_ShouldReturnAllUsers" />
-    </UnitTest>
-    <UnitTest name="AssignRolesToUserAsync_ShouldAssignRoles_WhenRolesExist" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="36291326-1b1c-e4a2-a519-44282bcfec4d">
-      <Execution id="75645a6f-1b63-41c2-a9e0-4126a7433e2b" />
-      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="AssignRolesToUserAsync_ShouldAssignRoles_WhenRolesExist" />
-    </UnitTest>
-    <UnitTest name="ContextInitializesWithInMemoryDatabase" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="52e5d5a0-6b82-6d43-8752-2e9943a58242">
-      <Execution id="c0ee3e26-5138-4d73-9b19-4e9c0c50e459" />
-      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.DomainTests.Persistence.AppDbContextTests" name="ContextInitializesWithInMemoryDatabase" />
-    </UnitTest>
-    <UnitTest name="CascadeDelete_ShouldRemoveUserRoles_WhenUserIsDeleted" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="cd877712-f446-be07-90ba-7be95dd82230">
-      <Execution id="f5c024ca-fb7d-473f-86e1-f0b62ae23a59" />
-      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.PresentationTests.Controllers.UserRolesControllerIntegrationTests" name="CascadeDelete_ShouldRemoveUserRoles_WhenUserIsDeleted" />
-    </UnitTest>
     <UnitTest name="CheckAvailability_UsernameAvailable_ReturnsNoMessages" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="6e9ac420-203d-ac82-511b-8145260abdee">
-      <Execution id="8e81d95d-822e-4a91-aa93-17568c5dc7ab" />
+      <Execution id="4bf0dd37-2866-40d6-abe8-7e484fc8649b" />
       <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.PresentationTests.Controllers.UsersControllerTests" name="CheckAvailability_UsernameAvailable_ReturnsNoMessages" />
     </UnitTest>
-    <UnitTest name="GetUserByEmailAsync_ShouldReturnNull_WhenUserDoesNotExist" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="baef49de-de00-6939-72cd-64a39497f822">
-      <Execution id="f6e986d1-d606-49ba-93ae-4b1d038681d9" />
-      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="GetUserByEmailAsync_ShouldReturnNull_WhenUserDoesNotExist" />
-    </UnitTest>
-    <UnitTest name="AssignRolesToUserAsync_ShouldThrowException_WhenRoleDoesNotExist" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="b40d2ee4-eff1-c0b6-107b-21589dc6cf09">
-      <Execution id="34124726-a14a-4811-ae3e-d121fa692fe7" />
-      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="AssignRolesToUserAsync_ShouldThrowException_WhenRoleDoesNotExist" />
-    </UnitTest>
-    <UnitTest name="GetAllUsers_ReturnsOkWithUsers" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="f9143d72-d4ae-f69b-d07f-62ccd78b6213">
-      <Execution id="51a03b81-2263-450a-8e1e-821c4092b21a" />
-      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.PresentationTests.Controllers.UsersControllerTests" name="GetAllUsers_ReturnsOkWithUsers" />
-    </UnitTest>
-    <UnitTest name="HandleDuplicateInitializationOfUserRepository" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="6c84fd6b-b951-9caf-b632-ed552763edfd">
-      <Execution id="c69bafd2-df24-4513-b108-0c703a496186" />
-      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.DomainTests.Persistence.AppDbContextTests" name="HandleDuplicateInitializationOfUserRepository" />
-    </UnitTest>
-    <UnitTest name="CheckAvailability_UsernameTaken_ReturnsMessages" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="c8b082a5-27d2-f23a-d277-2904cd3a52e9">
-      <Execution id="ceda1ea9-490f-4291-a0f4-ff2c81a9bc3c" />
-      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.PresentationTests.Controllers.UsersControllerTests" name="CheckAvailability_UsernameTaken_ReturnsMessages" />
-    </UnitTest>
-    <UnitTest name="RemoveRolesFromUserAsync_ShouldRemoveRoles_WhenRolesExist" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="45bae863-9364-c702-6f6a-3938e34061ee">
-      <Execution id="0bea9d3f-de72-4aee-a24d-4453cedb4605" />
-      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="RemoveRolesFromUserAsync_ShouldRemoveRoles_WhenRolesExist" />
-    </UnitTest>
-    <UnitTest name="GetUserByEmailAsync_ShouldReturnNull_WhenUserDoesNotExist" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="57b7cf17-8b55-af5c-84a8-a7b50c2d2678">
-      <Execution id="4668fe6e-daa9-4791-b499-57ab8894a577" />
-      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.DomainTests.Persistence.AppDbContextTests" name="GetUserByEmailAsync_ShouldReturnNull_WhenUserDoesNotExist" />
-    </UnitTest>
     <UnitTest name="GetUserByEmailAsync_ShouldReturnUser_WhenUserExists" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="fd5701a1-d9c5-0923-867b-cc0967647b90">
-      <Execution id="fbb5466b-7278-4042-94c9-b9d3c6e53a86" />
+      <Execution id="3790190f-bf72-4d08-890a-3b3693caa038" />
       <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.DomainTests.Persistence.AppDbContextTests" name="GetUserByEmailAsync_ShouldReturnUser_WhenUserExists" />
     </UnitTest>
     <UnitTest name="handle_null_context_options_throws_exception" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="1ba3a6a2-3048-ee98-8cac-456578ce17bc">
-      <Execution id="6c59e226-d032-4ff9-99e0-bfba26688818" />
+      <Execution id="21c4d5df-9a03-4c2b-8de6-d0bac7f93927" />
       <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="handle_null_context_options_throws_exception" />
     </UnitTest>
-    <UnitTest name="initialize_mock_logger_for_user_repository" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="73db3971-f82f-de3f-8734-b8990916c7f3">
-      <Execution id="6e5e306a-5b4f-4fbf-b828-57e4a6f798bf" />
-      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="initialize_mock_logger_for_user_repository" />
+    <UnitTest name="CheckAvailability_UsernameTaken_ReturnsMessages" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="c8b082a5-27d2-f23a-d277-2904cd3a52e9">
+      <Execution id="f957cdbf-5039-48a0-92ec-387a333b6c32" />
+      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.PresentationTests.Controllers.UsersControllerTests" name="CheckAvailability_UsernameTaken_ReturnsMessages" />
+    </UnitTest>
+    <UnitTest name="GetUserByEmailAsync_ShouldReturnNull_WhenUserDoesNotExist" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="57b7cf17-8b55-af5c-84a8-a7b50c2d2678">
+      <Execution id="91731c5b-46dd-4374-8561-cf3256fa8031" />
+      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.DomainTests.Persistence.AppDbContextTests" name="GetUserByEmailAsync_ShouldReturnNull_WhenUserDoesNotExist" />
+    </UnitTest>
+    <UnitTest name="GetAllUsersAsync_ShouldReturnAllUsers" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="ca3cefb5-cdf1-d311-b21a-39e4d7aaec90">
+      <Execution id="f7d6cd39-2742-4d8c-a358-3cb7de6755c0" />
+      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="GetAllUsersAsync_ShouldReturnAllUsers" />
+    </UnitTest>
+    <UnitTest name="CascadeDelete_ShouldRemoveUserRoles_WhenUserIsDeleted" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="cd877712-f446-be07-90ba-7be95dd82230">
+      <Execution id="fd8c293a-0e26-4ba0-9be3-bfcd33a05913" />
+      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.PresentationTests.Controllers.UserRolesControllerIntegrationTests" name="CascadeDelete_ShouldRemoveUserRoles_WhenUserIsDeleted" />
+    </UnitTest>
+    <UnitTest name="ContextInitializesWithInMemoryDatabase" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="52e5d5a0-6b82-6d43-8752-2e9943a58242">
+      <Execution id="2090c55f-3237-40a6-b8e3-d0101f4ffd94" />
+      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.DomainTests.Persistence.AppDbContextTests" name="ContextInitializesWithInMemoryDatabase" />
+    </UnitTest>
+    <UnitTest name="DeleteUserAsync_ShouldCallRepository_WhenUserExists" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="ba20961b-6799-d652-45b7-03c3d3864402">
+      <Execution id="3d842188-3290-4e81-b6f8-7c4dd9aa378c" />
+      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Services.UserServiceTests" name="DeleteUserAsync_ShouldCallRepository_WhenUserExists" />
+    </UnitTest>
+    <UnitTest name="AssignRolesToUserAsync_ShouldAssignRoles_WhenRolesExist" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="36291326-1b1c-e4a2-a519-44282bcfec4d">
+      <Execution id="6efd9fab-bf35-4ec7-9821-3e0909f684d3" />
+      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="AssignRolesToUserAsync_ShouldAssignRoles_WhenRolesExist" />
+    </UnitTest>
+    <UnitTest name="GetUserByUserNameAsync_ShouldReturnUser_WhenUserExists" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="ca9ddfba-3d81-f766-9da2-67005f62daeb">
+      <Execution id="55114320-fe78-4b33-aa7e-6dd33a448ca8" />
+      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="GetUserByUserNameAsync_ShouldReturnUser_WhenUserExists" />
+    </UnitTest>
+    <UnitTest name="SaveChangesAsync_CompletesSuccessfully" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="a752dc08-217a-04bb-facb-9aac2ec3e88b">
+      <Execution id="af335e79-9bc7-47eb-b622-29c6cdcb976e" />
+      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.DomainTests.Persistence.AppDbContextTests" name="SaveChangesAsync_CompletesSuccessfully" />
+    </UnitTest>
+    <UnitTest name="InitializeMockLoggerForUserRepository" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="89640849-ce9a-7557-fb0e-f8647c1da9e3">
+      <Execution id="2d1eb11e-b264-407d-a938-d8cb23811fc0" />
+      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.DomainTests.Persistence.AppDbContextTests" name="InitializeMockLoggerForUserRepository" />
+    </UnitTest>
+    <UnitTest name="GetRolesByUserIdAsync_ShouldReturnEmptyList_WhenUserHasNoRoles" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="7df8e149-97c1-4416-d662-56097ab8526a">
+      <Execution id="62a8c04e-22bb-49e2-9edf-c0f0d07cb709" />
+      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="GetRolesByUserIdAsync_ShouldReturnEmptyList_WhenUserHasNoRoles" />
     </UnitTest>
     <UnitTest name="CompleteRoleManagementFlow_ShouldSucceed" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="97ec3dce-d371-19ac-021e-38edd5c10edf">
-      <Execution id="970fc0c1-9b0f-4b66-a1da-f511c7bc9971" />
+      <Execution id="c2e4a586-130e-4ac7-b66f-b3dc62de334a" />
       <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.PresentationTests.Controllers.UserRolesControllerIntegrationTests" name="CompleteRoleManagementFlow_ShouldSucceed" />
+    </UnitTest>
+    <UnitTest name="GetAllUsers_ReturnsOkWithUsers" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="f9143d72-d4ae-f69b-d07f-62ccd78b6213">
+      <Execution id="fed174e0-6699-4b4a-a7a6-6addf3909590" />
+      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.PresentationTests.Controllers.UsersControllerTests" name="GetAllUsers_ReturnsOkWithUsers" />
+    </UnitTest>
+    <UnitTest name="GetRolesByUserIdAsync_ShouldReturnRoles_WhenUserHasRoles" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="d7c4a17f-0b3c-a153-e347-4a402c9def8b">
+      <Execution id="1e718306-1712-4c03-ae56-b5e934bb8b6a" />
+      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="GetRolesByUserIdAsync_ShouldReturnRoles_WhenUserHasRoles" />
+    </UnitTest>
+    <UnitTest name="AddUserAsync_ShouldLogAndSaveChanges" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="751e710e-fc0d-d3ba-d75a-78632f7f2eb7">
+      <Execution id="d41911a6-1887-4190-80d4-66211f209398" />
+      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.DomainTests.Persistence.AppDbContextTests" name="AddUserAsync_ShouldLogAndSaveChanges" />
+    </UnitTest>
+    <UnitTest name="HandleInvalidDatabaseName_ThrowsException" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="d804816e-265f-e41e-74cb-89ab5435acd9">
+      <Execution id="6b727246-9b79-4725-8031-bf44433a40a1" />
+      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.DomainTests.Persistence.AppDbContextTests" name="HandleInvalidDatabaseName_ThrowsException" />
+    </UnitTest>
+    <UnitTest name="GetUserByPhoneNumberAsync_ShouldReturnUser_WhenUserExists" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="4e24bf9f-0eea-ab65-b8b4-60c80bf74219">
+      <Execution id="4e8e503a-dd05-4bb0-a495-8eb08938bb65" />
+      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="GetUserByPhoneNumberAsync_ShouldReturnUser_WhenUserExists" />
+    </UnitTest>
+    <UnitTest name="AssignRolesToUserAsync_ShouldThrowException_WhenRoleDoesNotExist" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="b40d2ee4-eff1-c0b6-107b-21589dc6cf09">
+      <Execution id="2aadda01-727e-410a-80ef-c4eae75defa6" />
+      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="AssignRolesToUserAsync_ShouldThrowException_WhenRoleDoesNotExist" />
+    </UnitTest>
+    <UnitTest name="GetUserByEmailAsync_ShouldReturnUser_WhenUserExists" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="c0c47d89-bbbe-d55f-688c-61e9a03495d4">
+      <Execution id="83e4d0c3-587b-4da2-a448-331d9d668fd6" />
+      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="GetUserByEmailAsync_ShouldReturnUser_WhenUserExists" />
+    </UnitTest>
+    <UnitTest name="GetUserByIdAsync_ShouldReturnUser_WhenUserExists" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="a9bbc64b-6c36-56f8-8fe3-cf9770a86971">
+      <Execution id="cd78f1f9-bf80-4507-b5ff-e62ec79f2723" />
+      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="GetUserByIdAsync_ShouldReturnUser_WhenUserExists" />
+    </UnitTest>
+    <UnitTest name="UpdateUserAsync_ShouldUpdateUser" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="d95c0fc3-5b9b-5346-b441-627830ae2b68">
+      <Execution id="ed717491-a117-4199-b249-d173d01ad595" />
+      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="UpdateUserAsync_ShouldUpdateUser" />
+    </UnitTest>
+    <UnitTest name="RemoveRolesFromUserAsync_ShouldRemoveRoles_WhenRolesExist" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="45bae863-9364-c702-6f6a-3938e34061ee">
+      <Execution id="3781ff6b-6a49-415d-bf5a-0944e4259e64" />
+      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="RemoveRolesFromUserAsync_ShouldRemoveRoles_WhenRolesExist" />
+    </UnitTest>
+    <UnitTest name="HandleDuplicateInitializationOfUserRepository" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="6c84fd6b-b951-9caf-b632-ed552763edfd">
+      <Execution id="133b7066-0be4-4c87-a1c6-337570aadfd8" />
+      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.DomainTests.Persistence.AppDbContextTests" name="HandleDuplicateInitializationOfUserRepository" />
+    </UnitTest>
+    <UnitTest name="handle_invalid_database_name_throws_exception" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="749d4f59-99a8-c257-0f06-d901dbb280e1">
+      <Execution id="40d5b8a1-a8d4-414e-a0b6-2d090d86958c" />
+      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="handle_invalid_database_name_throws_exception" />
+    </UnitTest>
+    <UnitTest name="AddUserAsync_ShouldAddUser" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="d5b473e6-9454-2cf2-3a3c-92deae82e5b9">
+      <Execution id="835fbbad-30f8-456a-a947-f241e4767974" />
+      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="AddUserAsync_ShouldAddUser" />
+    </UnitTest>
+    <UnitTest name="AutoMapper_Configuration_IsValid" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="7615bce3-50ff-8355-99b8-9b8228116f41">
+      <Execution id="f9db8784-cdd7-437f-bc28-24dd3dd69ca4" />
+      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.ApplicationTests.Mappings.AutoMapperProfileTests" name="AutoMapper_Configuration_IsValid" />
+    </UnitTest>
+    <UnitTest name="initialize_mock_logger_for_user_repository" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="73db3971-f82f-de3f-8734-b8990916c7f3">
+      <Execution id="17cded3b-90ee-4769-9e52-b61856219d9f" />
+      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="initialize_mock_logger_for_user_repository" />
+    </UnitTest>
+    <UnitTest name="GetUserByEmailAsync_ShouldReturnNull_WhenUserDoesNotExist" storage="d:\repos\asafarim\asafarim.test\bin\debug\net9.0\asafarim.test.dll" id="baef49de-de00-6939-72cd-64a39497f822">
+      <Execution id="af868b1a-f74d-473a-afcc-33f962600e11" />
+      <TestMethod codeBase="D:\repos\ASafariM\ASafariM.Test\bin\Debug\net9.0\ASafariM.Test.dll" adapterTypeName="executor://mstestadapter/v2" className="ASafariM.Test.InfrastructureTests.Repository.UserRepositoryTests" name="GetUserByEmailAsync_ShouldReturnNull_WhenUserDoesNotExist" />
     </UnitTest>
   </TestDefinitions>
   <TestEntries>
-    <TestEntry testId="c0c47d89-bbbe-d55f-688c-61e9a03495d4" executionId="da7475e1-9219-4123-a5ea-5d4a3af24035" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="73db3971-f82f-de3f-8734-b8990916c7f3" executionId="6e5e306a-5b4f-4fbf-b828-57e4a6f798bf" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="4e24bf9f-0eea-ab65-b8b4-60c80bf74219" executionId="a6c9f8d2-e61d-42fc-a30a-4c9db526483b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="6e9ac420-203d-ac82-511b-8145260abdee" executionId="8e81d95d-822e-4a91-aa93-17568c5dc7ab" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="fd5701a1-d9c5-0923-867b-cc0967647b90" executionId="fbb5466b-7278-4042-94c9-b9d3c6e53a86" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="cd877712-f446-be07-90ba-7be95dd82230" executionId="f5c024ca-fb7d-473f-86e1-f0b62ae23a59" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="6c84fd6b-b951-9caf-b632-ed552763edfd" executionId="c69bafd2-df24-4513-b108-0c703a496186" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="ba20961b-6799-d652-45b7-03c3d3864402" executionId="ac9a6886-2fc0-4333-b9dc-ad89b3ce6b3e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="c8b082a5-27d2-f23a-d277-2904cd3a52e9" executionId="ceda1ea9-490f-4291-a0f4-ff2c81a9bc3c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="89640849-ce9a-7557-fb0e-f8647c1da9e3" executionId="0e1dbce5-c881-4f0a-8c2f-1e5f3908c3bb" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="7df8e149-97c1-4416-d662-56097ab8526a" executionId="8eb98336-a5ee-4b89-b642-0cbca6b26b2f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="45bae863-9364-c702-6f6a-3938e34061ee" executionId="0bea9d3f-de72-4aee-a24d-4453cedb4605" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="749d4f59-99a8-c257-0f06-d901dbb280e1" executionId="b61c31cf-e9b2-482c-bf25-15ab7237c5c7" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="52e5d5a0-6b82-6d43-8752-2e9943a58242" executionId="c0ee3e26-5138-4d73-9b19-4e9c0c50e459" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="baef49de-de00-6939-72cd-64a39497f822" executionId="f6e986d1-d606-49ba-93ae-4b1d038681d9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="751e710e-fc0d-d3ba-d75a-78632f7f2eb7" executionId="eb5d4064-b3a7-42a5-af1c-e75f581e5cd9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="36291326-1b1c-e4a2-a519-44282bcfec4d" executionId="75645a6f-1b63-41c2-a9e0-4126a7433e2b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="1ba3a6a2-3048-ee98-8cac-456578ce17bc" executionId="6c59e226-d032-4ff9-99e0-bfba26688818" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="d7c4a17f-0b3c-a153-e347-4a402c9def8b" executionId="045c4e01-b527-43bc-ab29-99d340dc509f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="a9bbc64b-6c36-56f8-8fe3-cf9770a86971" executionId="214ac8bd-06b3-49c0-ad40-ea13a814100e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="f9143d72-d4ae-f69b-d07f-62ccd78b6213" executionId="51a03b81-2263-450a-8e1e-821c4092b21a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="d95c0fc3-5b9b-5346-b441-627830ae2b68" executionId="4dddff74-9219-4009-a9cf-f2f358227d56" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="97ec3dce-d371-19ac-021e-38edd5c10edf" executionId="970fc0c1-9b0f-4b66-a1da-f511c7bc9971" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="ca3cefb5-cdf1-d311-b21a-39e4d7aaec90" executionId="ea7cb02a-511c-4860-a315-30007083bbd2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="d804816e-265f-e41e-74cb-89ab5435acd9" executionId="141e432f-eef7-4a1c-a55e-5b3b423c9951" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="57b7cf17-8b55-af5c-84a8-a7b50c2d2678" executionId="4668fe6e-daa9-4791-b499-57ab8894a577" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="a752dc08-217a-04bb-facb-9aac2ec3e88b" executionId="efcc1a7c-02b0-419f-a6b8-9738a95132a2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="d5b473e6-9454-2cf2-3a3c-92deae82e5b9" executionId="369baf45-444b-4459-87e0-b7557ebb2c48" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="ca9ddfba-3d81-f766-9da2-67005f62daeb" executionId="cd309bfd-2af9-4b4a-bb02-ce4b77ba250e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="b40d2ee4-eff1-c0b6-107b-21589dc6cf09" executionId="34124726-a14a-4811-ae3e-d121fa692fe7" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="52e5d5a0-6b82-6d43-8752-2e9943a58242" executionId="2090c55f-3237-40a6-b8e3-d0101f4ffd94" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c0c47d89-bbbe-d55f-688c-61e9a03495d4" executionId="83e4d0c3-587b-4da2-a448-331d9d668fd6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c8b082a5-27d2-f23a-d277-2904cd3a52e9" executionId="f957cdbf-5039-48a0-92ec-387a333b6c32" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="97ec3dce-d371-19ac-021e-38edd5c10edf" executionId="c2e4a586-130e-4ac7-b66f-b3dc62de334a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b40d2ee4-eff1-c0b6-107b-21589dc6cf09" executionId="2aadda01-727e-410a-80ef-c4eae75defa6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f9143d72-d4ae-f69b-d07f-62ccd78b6213" executionId="fed174e0-6699-4b4a-a7a6-6addf3909590" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d95c0fc3-5b9b-5346-b441-627830ae2b68" executionId="ed717491-a117-4199-b249-d173d01ad595" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ca9ddfba-3d81-f766-9da2-67005f62daeb" executionId="55114320-fe78-4b33-aa7e-6dd33a448ca8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="89640849-ce9a-7557-fb0e-f8647c1da9e3" executionId="2d1eb11e-b264-407d-a938-d8cb23811fc0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="45bae863-9364-c702-6f6a-3938e34061ee" executionId="3781ff6b-6a49-415d-bf5a-0944e4259e64" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ca3cefb5-cdf1-d311-b21a-39e4d7aaec90" executionId="f7d6cd39-2742-4d8c-a358-3cb7de6755c0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a752dc08-217a-04bb-facb-9aac2ec3e88b" executionId="af335e79-9bc7-47eb-b622-29c6cdcb976e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d804816e-265f-e41e-74cb-89ab5435acd9" executionId="6b727246-9b79-4725-8031-bf44433a40a1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ba20961b-6799-d652-45b7-03c3d3864402" executionId="3d842188-3290-4e81-b6f8-7c4dd9aa378c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d7c4a17f-0b3c-a153-e347-4a402c9def8b" executionId="1e718306-1712-4c03-ae56-b5e934bb8b6a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="57b7cf17-8b55-af5c-84a8-a7b50c2d2678" executionId="91731c5b-46dd-4374-8561-cf3256fa8031" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="baef49de-de00-6939-72cd-64a39497f822" executionId="af868b1a-f74d-473a-afcc-33f962600e11" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="751e710e-fc0d-d3ba-d75a-78632f7f2eb7" executionId="d41911a6-1887-4190-80d4-66211f209398" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7df8e149-97c1-4416-d662-56097ab8526a" executionId="62a8c04e-22bb-49e2-9edf-c0f0d07cb709" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d5b473e6-9454-2cf2-3a3c-92deae82e5b9" executionId="835fbbad-30f8-456a-a947-f241e4767974" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4e24bf9f-0eea-ab65-b8b4-60c80bf74219" executionId="4e8e503a-dd05-4bb0-a495-8eb08938bb65" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="73db3971-f82f-de3f-8734-b8990916c7f3" executionId="17cded3b-90ee-4769-9e52-b61856219d9f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6c84fd6b-b951-9caf-b632-ed552763edfd" executionId="133b7066-0be4-4c87-a1c6-337570aadfd8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a9bbc64b-6c36-56f8-8fe3-cf9770a86971" executionId="cd78f1f9-bf80-4507-b5ff-e62ec79f2723" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1ba3a6a2-3048-ee98-8cac-456578ce17bc" executionId="21c4d5df-9a03-4c2b-8de6-d0bac7f93927" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="fd5701a1-d9c5-0923-867b-cc0967647b90" executionId="3790190f-bf72-4d08-890a-3b3693caa038" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="36291326-1b1c-e4a2-a519-44282bcfec4d" executionId="6efd9fab-bf35-4ec7-9821-3e0909f684d3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7615bce3-50ff-8355-99b8-9b8228116f41" executionId="f9db8784-cdd7-437f-bc28-24dd3dd69ca4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="cd877712-f446-be07-90ba-7be95dd82230" executionId="fd8c293a-0e26-4ba0-9be3-bfcd33a05913" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6e9ac420-203d-ac82-511b-8145260abdee" executionId="4bf0dd37-2866-40d6-abe8-7e484fc8649b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="749d4f59-99a8-c257-0f06-d901dbb280e1" executionId="40d5b8a1-a8d4-414e-a0b6-2d090d86958c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
   </TestEntries>
   <TestLists>
     <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
     <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
   </TestLists>
-  <ResultSummary outcome="Failed">
-    <Counters total="30" executed="30" passed="5" failed="25" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+  <ResultSummary outcome="Completed">
+    <Counters total="31" executed="31" passed="31" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
   </ResultSummary>
 </TestRun>

@@ -12,8 +12,16 @@ namespace ASafariM.Infrastructure.Persistence;
 
 public class AppDbContext : DbContext
 {
+    private readonly IConfiguration _configuration;
+
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options) { }
+
+    public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration)
+        : base(options) 
+    {
+        _configuration = configuration;
+    }
 
     // User-related sets
     public DbSet<User> Users { get; set; }
@@ -75,15 +83,31 @@ public class AppDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        var configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json")
-            .Build();
-        optionsBuilder.UseMySql(
-            configuration.GetConnectionString("DefaultConnection"),
-            ServerVersion.AutoDetect(configuration.GetConnectionString("DefaultConnection")),
-            options => options.EnableStringComparisonTranslations()
-        );
+        if (optionsBuilder.IsConfigured)
+            return;
+
+        IConfiguration configuration;
+        if (_configuration != null)
+        {
+            configuration = _configuration;
+        }
+        else
+        {
+            configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
+        }
+
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
+        if (!string.IsNullOrEmpty(connectionString))
+        {
+            optionsBuilder.UseMySql(
+                connectionString,
+                ServerVersion.AutoDetect(connectionString),
+                options => options.EnableStringComparisonTranslations()
+            );
+        }
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

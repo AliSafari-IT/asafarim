@@ -61,6 +61,9 @@ namespace ASafariM.Test.PresentationTests.Controllers
             {
                 Email = "test@example.com",
                 UserName = "testuser",
+                FirstName = "Test",
+                LastName = "User",
+                PasswordHash = "hashedpassword123",
                 ConcurrencyStamp = Guid.NewGuid().ToString(),
                 SecurityStamp = Guid.NewGuid().ToString(),
             };
@@ -123,6 +126,9 @@ namespace ASafariM.Test.PresentationTests.Controllers
             {
                 Email = "test@example.com",
                 UserName = "testuser",
+                FirstName = "Test",
+                LastName = "User",
+                PasswordHash = "hashedpassword123",
                 ConcurrencyStamp = Guid.NewGuid().ToString(),
                 SecurityStamp = Guid.NewGuid().ToString(),
             };

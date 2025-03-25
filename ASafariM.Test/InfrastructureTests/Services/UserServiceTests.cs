@@ -26,22 +26,25 @@ namespace ASafariM.Test.InfrastructureTests.Services
         private readonly Mock<IUserRepository> _userRepositoryMock = new Mock<IUserRepository>();
         private readonly Mock<ILogger<UserService>> _loggerMock = new Mock<ILogger<UserService>>();
         private readonly Mock<IMapper> _mapperMock = new Mock<IMapper>();
-        private readonly Mock<IConfiguration> _configurationMock = new Mock<IConfiguration>();
         private readonly Mock<IAuthorizationService> _authorizationServiceMock =
             new Mock<IAuthorizationService>();
         private readonly Mock<IEmailService> _emailServiceMock = new Mock<IEmailService>();
+        private readonly JwtTokenService _jwtTokenService;
         private readonly UserService _userService;
 
         public UserServiceTests()
         {
+            // Create a real JwtTokenService instance instead of a mock
+            _jwtTokenService = new JwtTokenService(Configuration);
+            
             _userService = new UserService(
                 _userRepositoryMock.Object,
                 _mapperMock.Object,
                 Context,
-                _loggerMock.Object,
                 _authorizationServiceMock.Object,
-                _configurationMock.Object,
-                _emailServiceMock.Object
+                Configuration,
+                _emailServiceMock.Object,
+                _jwtTokenService
             );
         }
 
@@ -77,6 +80,10 @@ namespace ASafariM.Test.InfrastructureTests.Services
             var user = new User
             {
                 Id = userId,
+                FirstName = "Test",
+                LastName = "User",
+                UserName = "testuser",
+                Email = "test@example.com",
                 PasswordHash = PasswordHasher.HashPassword(password),
             };
 
@@ -88,7 +95,5 @@ namespace ASafariM.Test.InfrastructureTests.Services
             // Assert
             _userRepositoryMock.Verify(repo => repo.DeleteUserAsync(userId), Times.Once);
         }
-
-        
     }
 }

@@ -18,6 +18,22 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    sourcemap: true
+    sourcemap: true,
+    chunkSizeWarningLimit: 1000, // Increased from default 500kb to 1000kb
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor': [
+            'react',
+            'react-dom',
+            'react-router-dom'
+          ],
+          'ui-components': [
+            '@mui/material',
+            '@mui/icons-material'
+          ]
+        }
+      }
+    }
   }
 })

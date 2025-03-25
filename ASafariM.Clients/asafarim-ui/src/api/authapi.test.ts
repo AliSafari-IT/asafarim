@@ -1,10 +1,18 @@
 import { describe, it, expect, vi } from 'vitest';
 import axios from 'axios';
 import { register, login, requestAccountReactivation } from './authapi';
+
 const {auth} = JSON.parse(localStorage.getItem('auth') || '{}');
 vi.mock('axios');
-
-const mockedAxios = vi.mocked(axios, true); // Pass true to enable type-safe mocking
+vi.mock('../utils/logger', () => ({
+  logger: {
+    log: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    debug: vi.fn()
+  }
+}));
 
 describe('Auth API', () => {
   it('should register a user successfully', async () => {
@@ -16,6 +24,7 @@ describe('Auth API', () => {
       userName: 'johndoe'
     };
 
+    const mockedAxios = vi.mocked(axios, true); 
     mockedAxios.post.mockResolvedValue({ data: { token: auth.token } });
     const response = await register(model);
     expect(response).toEqual({ token: auth.token });
@@ -27,6 +36,7 @@ describe('Auth API', () => {
       email: 'test@example.com',
       password: 'securePassword123'
     };
+    const mockedAxios = vi.mocked(axios, true); 
     mockedAxios.post.mockResolvedValue({ data: { token: auth.token } });
 
     const response = await login(credentials);
@@ -36,6 +46,7 @@ describe('Auth API', () => {
 
   it('should request account reactivation successfully', async () => {
     const email = 'test@example.com';
+    const mockedAxios = vi.mocked(axios, true); 
     mockedAxios.post.mockResolvedValue({ data: { success: true } });
 
     const response = await requestAccountReactivation(email);

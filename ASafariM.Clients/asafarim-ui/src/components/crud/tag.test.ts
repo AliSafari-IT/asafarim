@@ -1,5 +1,5 @@
-import dashboardServices from "@/api/entityServices";
-import apiUrls from "@/api/getApiUrls";
+import dashboardServices from "../../api/entityServices";
+import apiUrls from "../../api/getApiUrls";
 import axios from "axios";
 import { expect, it, vi } from "vitest";
 
@@ -30,4 +30,3 @@ it('should successfully update a tag entity when given valid id and data', async
         data: mockResponse.data
     });
 });
-

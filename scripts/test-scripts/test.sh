@@ -9,15 +9,21 @@ echo "Starting ASafariM test process..."
 
 # Variables
 TEST_RESULTS_DIR="$PROJECT_ROOT/ASafariM.Test/TestResults"
-TEST_RESULTS_FILE="$TEST_RESULTS_DIR/test_results.trx"
 
 # Create test results directory if it doesn't exist
 mkdir -p "$TEST_RESULTS_DIR"
+
+# Get timestamped test results filename
+TEST_RESULTS_FILE=$("$SCRIPT_DIR/manage-test-results.sh" get-filename)
+echo "Test results will be saved to: $TEST_RESULTS_FILE"
 
 # Run backend tests
 echo "Running backend tests..."
 dotnet test "$PROJECT_ROOT/ASafariM.Test/ASafariM.Test.csproj" --logger "trx;LogFileName=$TEST_RESULTS_FILE"
 BACKEND_TEST_RESULT=$?
+
+# Clean up old test results
+"$SCRIPT_DIR/manage-test-results.sh" cleanup
 
 # Check if backend tests passed
 if [ $BACKEND_TEST_RESULT -eq 0 ]; then

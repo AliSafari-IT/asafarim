@@ -1,5 +1,4 @@
-// apps/frontends/asafarim-client/src/api/authapi.ts
-// 
+// D:\repos\ASafariM\ASafariM.Clients\asafarim-ui\src\api\authapi.ts
 import axios, { AxiosError, isAxiosError } from 'axios';
 import { ILoginModel } from '../interfaces/ILoginModel';
 import { IRegisterModel } from '../interfaces/IRegisterModel';
@@ -140,6 +139,7 @@ export const login = async (credentials: ILoginModel) => {
     throw error;
   }
 };
+
 export const requestAccountReactivation = async (email: string) => {
   try {
     logger.info(`Attempting to request account reactivation for email: ${email}`);

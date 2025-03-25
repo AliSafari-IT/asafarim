@@ -7,17 +7,23 @@ Write-Host "Starting ASafariM test process..." -ForegroundColor Cyan
 
 # Variables
 $testResultsDir = "$projectRoot\ASafariM.Test\TestResults"
-$testResultsFile = "$testResultsDir\test_results.trx"
 
 # Create test results directory if it doesn't exist
 if (-not (Test-Path $testResultsDir)) {
     New-Item -ItemType Directory -Path $testResultsDir | Out-Null
 }
 
+# Get timestamped test results filename
+$testResultsFile = & "$scriptDir\Manage-TestResults.ps1" -Action "get-filename"
+Write-Host "Test results will be saved to: $testResultsFile" -ForegroundColor Cyan
+
 # Run backend tests
 Write-Host "Running backend tests..." -ForegroundColor Cyan
 dotnet test "$projectRoot\ASafariM.Test\ASafariM.Test.csproj" --logger "trx;LogFileName=$testResultsFile"
 $backendTestResult = $LASTEXITCODE
+
+# Clean up old test results
+& "$scriptDir\Manage-TestResults.ps1" -Action "cleanup"
 
 # Check if backend tests passed
 if ($backendTestResult -eq 0) {

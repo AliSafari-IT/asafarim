@@ -19,7 +19,7 @@
     "build": "bash ./scripts/bash_files/dotnet-commands.sh build",
     "ui": "yarn workspace asafarim-ui start",
     "ui:build": "yarn workspace asafarim-ui build",
-    "bl": "yarn workspace asafarim-blog start --port 3001",
+    "bl": "yarn workspace asafarim-blog start",
     "bl:install": "yarn && yarn workspace asafarim-blog install",
     "blb": "yarn workspace asafarim-blog build",
     "bls": "yarn workspace asafarim-blog serve",
@@ -52,17 +52,19 @@
     "test:frontend:ui": "yarn workspace asafarim-ui test",
     "test:frontend:blog": "yarn workspace asafarim-blog test",
     "test:frontend:bibliography": "yarn workspace asafarim-bibliography test",
-    "test:frontend": "yarn test:frontend:ui && yarn test:frontend:blog && yarn test:frontend:bibliography",
-    "test": "yarn test:backend",
+    "test:frontend": "concurrently \"yarn test:frontend:ui\" \"yarn test:frontend:blog\" \"yarn test:frontend:bibliography\"",
+    "test": "node --max-old-space-size=4096 node_modules/vitest/vitest.mjs run --reporter=verbose --no-coverage",
+    "test:blog": "vitest --include ASafariM.Clients/asafarim-blog/**/*.test.tsx",
+    "test:bibliography": "vitest --include ASafariM.Clients/asafarim-bibliography/**/*.test.tsx",
     "test:all": "yarn test:backend && yarn test:frontend",
     "tbw": "yarn test:backend:watch",
     "test:backend:watch": "cd ASafariM.Test && dotnet watch test --logger \"trx;LogFileName=TestResults/test_results.trx\""
   },
   "workspaces": [
     "asafarim",
-    "asafarim-ui",
     "asafarim-api",
     "ASafariM.Api",
+    "asafarim-ui",
     "asafarim-blog",
     "asafarim-bibliography",
     "ASafariM.Clients",
@@ -74,6 +76,17 @@
     "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "concurrently": "^9.1.2"
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^16.2.0",
+    "@testing-library/react-hooks": "^8.0.1",
+    "@types/jest": "^29.5.14",
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
+    "jest": "^29.7.0",
+    "react-test-renderer": "^19.0.0",
+    "ts-jest": "^29.3.0",
+    "vite": "^5.0.0",
+    "vitest": "^1.0.0"
   }
 }

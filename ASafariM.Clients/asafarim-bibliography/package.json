@@ -7,12 +7,14 @@
   "scripts": {
     "co": "cd ../.. && yarn co",
     "preinstall": "npx only-allow yarn",
+    "clean": "rm -rf node_modules && yarn install",
     "start": "yarn stop && vite --port 3004",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "stop": "npx kill-port 3004",
-    "rs": "yarn stop && yarn start"
+    "rs": "yarn stop && yarn start",
+    "test": "vitest"
   },
   "browserslist": {
     "production": [
@@ -42,6 +44,7 @@
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "@vitejs/plugin-react": "^4.2.1",
+    "@vitest/ui": "^3.0.7",
     "autoprefixer": "^10.4.16",
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.0",

@@ -2,7 +2,7 @@
 
 # Script to verify test results and determine if deployment can proceed
 # Default test results file path
-TEST_RESULTS_FILE="${1:-$PWD/ASafariM.Test/TestResults/test_results.trx}"
+TEST_RESULTS_FILE="${1:-$PWD/tests/backend/backend_test_results.trx}"
 
 # Function to log with timestamp
 log() {

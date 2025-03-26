@@ -1,0 +1,432 @@
+{
+    "numTotalTestSuites": 18,
+    "numPassedTestSuites": 18,
+    "numFailedTestSuites": 0,
+    "numPendingTestSuites": 0,
+    "numTotalTests": 31,
+    "numPassedTests": 31,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTodoTests": 0,
+    "startTime": 1743008044485,
+    "success": true,
+    "testResults": [
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": [
+                        "",
+                        "DefaultHeader"
+                    ],
+                    "fullName": " DefaultHeader should render successfully",
+                    "status": "passed",
+                    "title": "should render successfully",
+                    "duration": 1,
+                    "failureMessages": []
+                }
+            ],
+            "startTime": 1743008047831,
+            "endTime": 1743008047832,
+            "status": "passed",
+            "message": "",
+            "name": "D:/repos/ASafariM/ASafariM.Clients/asafarim-ui/src/layout/Header/DefaultHeader.spec.tsx"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": [
+                        "",
+                        "Basic Test"
+                    ],
+                    "fullName": " Basic Test should pass",
+                    "status": "passed",
+                    "title": "should pass",
+                    "duration": 0,
+                    "failureMessages": []
+                }
+            ],
+            "startTime": 1743008047850,
+            "endTime": 1743008047850,
+            "status": "passed",
+            "message": "",
+            "name": "D:/repos/ASafariM/ASafariM.Clients/asafarim-bibliography/src/basic.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": [
+                        "",
+                        "AppInfo Component"
+                    ],
+                    "fullName": " AppInfo Component should render collapsed by default",
+                    "status": "passed",
+                    "title": "should render collapsed by default",
+                    "duration": 35,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "AppInfo Component"
+                    ],
+                    "fullName": " AppInfo Component expands on header click",
+                    "status": "passed",
+                    "title": "expands on header click",
+                    "duration": 58,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "AppInfo Component"
+                    ],
+                    "fullName": " AppInfo Component toggles collapse and expand on click",
+                    "status": "passed",
+                    "title": "toggles collapse and expand on click",
+                    "duration": 18,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "AppInfo Component"
+                    ],
+                    "fullName": " AppInfo Component renders all tabs and switches active tab on click",
+                    "status": "passed",
+                    "title": "renders all tabs and switches active tab on click",
+                    "duration": 23,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "AppInfo Component"
+                    ],
+                    "fullName": " AppInfo Component renders correct example code per tab",
+                    "status": "passed",
+                    "title": "renders correct example code per tab",
+                    "duration": 26,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "AppInfo Component"
+                    ],
+                    "fullName": " AppInfo Component applies fade-in and fade-out classes when toggling",
+                    "status": "passed",
+                    "title": "applies fade-in and fade-out classes when toggling",
+                    "duration": 20,
+                    "failureMessages": []
+                }
+            ],
+            "startTime": 1743008046755,
+            "endTime": 1743008046935,
+            "status": "passed",
+            "message": "",
+            "name": "D:/repos/ASafariM/ASafariM.Clients/asafarim-bibliography/src/components/AppInfo.spec.tsx"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": [
+                        "",
+                        "Redux Hooks",
+                        "useAppDispatch"
+                    ],
+                    "fullName": " Redux Hooks useAppDispatch should return a dispatch function",
+                    "status": "passed",
+                    "title": "should return a dispatch function",
+                    "duration": 27,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "Redux Hooks",
+                        "useAppDispatch"
+                    ],
+                    "fullName": " Redux Hooks useAppDispatch should correctly dispatch actions",
+                    "status": "passed",
+                    "title": "should correctly dispatch actions",
+                    "duration": 8,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "Redux Hooks",
+                        "useAppDispatch"
+                    ],
+                    "fullName": " Redux Hooks useAppDispatch should dispatch actions with payloads",
+                    "status": "passed",
+                    "title": "should dispatch actions with payloads",
+                    "duration": 5,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "Redux Hooks",
+                        "useAppSelector"
+                    ],
+                    "fullName": " Redux Hooks useAppSelector should select loading state from the store",
+                    "status": "passed",
+                    "title": "should select loading state from the store",
+                    "duration": 8,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "Redux Hooks",
+                        "useAppSelector"
+                    ],
+                    "fullName": " Redux Hooks useAppSelector should select books array from the store",
+                    "status": "passed",
+                    "title": "should select books array from the store",
+                    "duration": 4,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "Redux Hooks",
+                        "useAppSelector"
+                    ],
+                    "fullName": " Redux Hooks useAppSelector should select error state from the store",
+                    "status": "passed",
+                    "title": "should select error state from the store",
+                    "duration": 6,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "Redux Hooks",
+                        "useAppSelector"
+                    ],
+                    "fullName": " Redux Hooks useAppSelector should select selectedBook from the store",
+                    "status": "passed",
+                    "title": "should select selectedBook from the store",
+                    "duration": 4,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "Redux Hooks",
+                        "useAppSelector"
+                    ],
+                    "fullName": " Redux Hooks useAppSelector should handle complex selectors with derived data",
+                    "status": "passed",
+                    "title": "should handle complex selectors with derived data",
+                    "duration": 28,
+                    "failureMessages": []
+                }
+            ],
+            "startTime": 1743008046262,
+            "endTime": 1743008046353,
+            "status": "passed",
+            "message": "",
+            "name": "D:/repos/ASafariM/ASafariM.Clients/asafarim-bibliography/src/hooks/reduxHooks.spec.tsx"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": [
+                        "",
+                        "Navbar component"
+                    ],
+                    "fullName": " Navbar component renders navbar with navigation links",
+                    "status": "passed",
+                    "title": "renders navbar with navigation links",
+                    "duration": 27,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "Navbar component"
+                    ],
+                    "fullName": " Navbar component activates \"Bibliography\" link by default",
+                    "status": "passed",
+                    "title": "activates \"Bibliography\" link by default",
+                    "duration": 12,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "Navbar component"
+                    ],
+                    "fullName": " Navbar component activates clicked navigation item",
+                    "status": "passed",
+                    "title": "activates clicked navigation item",
+                    "duration": 19,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "Navbar component"
+                    ],
+                    "fullName": " Navbar component toggles mobile menu when Disclosure button is clicked",
+                    "status": "passed",
+                    "title": "toggles mobile menu when Disclosure button is clicked",
+                    "duration": 20,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "Navbar component"
+                    ],
+                    "fullName": " Navbar component renders Add button with Plus icon",
+                    "status": "passed",
+                    "title": "renders Add button with Plus icon",
+                    "duration": 10,
+                    "failureMessages": []
+                }
+            ],
+            "startTime": 1743008047710,
+            "endTime": 1743008047798,
+            "status": "passed",
+            "message": "",
+            "name": "D:/repos/ASafariM/ASafariM.Clients/asafarim-bibliography/src/layout/Navbar.spec.tsx"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": [
+                        "",
+                        "bookSlice"
+                    ],
+                    "fullName": " bookSlice should handle initial state",
+                    "status": "passed",
+                    "title": "should handle initial state",
+                    "duration": 2,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "bookSlice",
+                        "reducers"
+                    ],
+                    "fullName": " bookSlice reducers should handle selectBook",
+                    "status": "passed",
+                    "title": "should handle selectBook",
+                    "duration": 1,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "bookSlice",
+                        "reducers"
+                    ],
+                    "fullName": " bookSlice reducers should handle clearSelectedBook",
+                    "status": "passed",
+                    "title": "should handle clearSelectedBook",
+                    "duration": 1,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "bookSlice",
+                        "reducers"
+                    ],
+                    "fullName": " bookSlice reducers should handle toggleReadStatus",
+                    "status": "passed",
+                    "title": "should handle toggleReadStatus",
+                    "duration": 1,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "bookSlice",
+                        "reducers"
+                    ],
+                    "fullName": " bookSlice reducers should handle removeBook",
+                    "status": "passed",
+                    "title": "should handle removeBook",
+                    "duration": 2,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "bookSlice",
+                        "async thunks",
+                        "fetchBooks"
+                    ],
+                    "fullName": " bookSlice async thunks fetchBooks should handle successful fetch",
+                    "status": "passed",
+                    "title": "should handle successful fetch",
+                    "duration": 3,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "bookSlice",
+                        "async thunks",
+                        "fetchBooks"
+                    ],
+                    "fullName": " bookSlice async thunks fetchBooks should handle fetch error",
+                    "status": "passed",
+                    "title": "should handle fetch error",
+                    "duration": 1,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "bookSlice",
+                        "async thunks",
+                        "fetchBooks"
+                    ],
+                    "fullName": " bookSlice async thunks fetchBooks should handle timeout error",
+                    "status": "passed",
+                    "title": "should handle timeout error",
+                    "duration": 2,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "bookSlice",
+                        "async thunks",
+                        "addBook"
+                    ],
+                    "fullName": " bookSlice async thunks addBook should handle successful addition",
+                    "status": "passed",
+                    "title": "should handle successful addition",
+                    "duration": 1,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "bookSlice",
+                        "async thunks",
+                        "addBook"
+                    ],
+                    "fullName": " bookSlice async thunks addBook should handle addition error",
+                    "status": "passed",
+                    "title": "should handle addition error",
+                    "duration": 1,
+                    "failureMessages": []
+                }
+            ],
+            "startTime": 1743008046440,
+            "endTime": 1743008046456,
+            "status": "passed",
+            "message": "",
+            "name": "D:/repos/ASafariM/ASafariM.Clients/asafarim-bibliography/src/store/slices/bookSlice.spec.ts"
+        }
+    ]
+}

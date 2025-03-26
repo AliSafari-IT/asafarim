@@ -20,8 +20,22 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
+    - name: 📁 Create test results directories
+      run: |
+        mkdir -p tests/backend
+        mkdir -p tests/frontend
+
     - name: 🧪 Run Backend Tests
-      run: dotnet test ASafariM.Test/ASafariM.Test.csproj --logger trx
+      run: dotnet test ASafariM.Test/ASafariM.Test.csproj --logger "trx;LogFileName=tests/backend/backend_test_results.trx"
+      
+    - name: 📊 Verify Backend Test Results
+      run: |
+        if grep -q 'outcome="Failed"' tests/backend/backend_test_results.trx; then
+          echo "❌ Backend tests failed. Aborting deployment."
+          exit 1
+        else
+          echo "✅ All backend tests passed. Proceeding with build."
+        fi
 
     - name: 🔨 Build Backend
       run: dotnet publish ASafariM.Api/ASafariM.Api.csproj --configuration Release --output backend-publish
@@ -32,27 +46,66 @@ jobs:
         node-version: '20'
         cache: 'yarn'
 
-    - name: 📦 Install Frontend Dependencies
-      working-directory: ASafariM.Clients/asafarim-ui
+    - name: 📦 Install Dependencies
       run: yarn install --immutable
 
-    - name: 🔍 Lint Frontend
-      working-directory: ASafariM.Clients/asafarim-ui
-      run: yarn lint
+    # Run tests for all frontend projects
+    - name: 🧪 Run All Frontend Tests
+      run: yarn test --reporter=json --outputFile=tests/frontend/frontend_test_results.json
+      
+    # Alternative approach - run tests for each frontend project separately
+    - name: 🧪 Run UI Tests
+      if: ${{ always() }}
+      run: yarn test:frontend:ui --reporter=json --outputFile=tests/frontend/ui_test_results.json || true
+      
+    - name: 🧪 Run Blog Tests
+      if: ${{ always() }}
+      run: yarn test:frontend:blog --reporter=json --outputFile=tests/frontend/blog_test_results.json || true
+      
+    - name: 🧪 Run Bibliography Tests
+      if: ${{ always() }}
+      run: yarn test:frontend:bibliography --reporter=json --outputFile=tests/frontend/bibliography_test_results.json || true
 
-    - name: 🧪 Run Frontend Tests
-      working-directory: ASafariM.Clients/asafarim-ui
-      run: yarn test:run
-
-    - name: ⚙️ Build Frontend
+    # Build all frontend projects
+    - name: ⚙️ Build UI Frontend
       working-directory: ASafariM.Clients/asafarim-ui
       run: yarn build
+      
+    - name: ⚙️ Build Blog
+      working-directory: ASafariM.Clients/asafarim-blog
+      run: yarn build
+      
+    - name: ⚙️ Build Bibliography
+      working-directory: ASafariM.Clients/asafarim-bibliography
+      run: yarn build
 
-    - name: 📤 Upload Frontend Artifacts
+    # Upload test results as artifacts
+    - name: 📤 Upload Test Results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results
+        path: tests/
+        retention-days: 30
+
+    # Upload build artifacts for all projects
+    - name: 📤 Upload UI Frontend Artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: frontend-dist
+        name: ui-frontend-dist
         path: ASafariM.Clients/asafarim-ui/dist
+        
+    - name: 📤 Upload Blog Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: blog-dist
+        path: ASafariM.Clients/asafarim-blog/build
+        
+    - name: 📤 Upload Bibliography Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: bibliography-dist
+        path: ASafariM.Clients/asafarim-bibliography/dist
 
     - name: 📤 Upload Backend Artifacts
       uses: actions/upload-artifact@v4

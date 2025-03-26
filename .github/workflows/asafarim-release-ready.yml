@@ -1,0 +1,61 @@
+name: ASafariM Build and Prepare Artifacts
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    env:
+      DOTNET_VERSION: '9.0.x'
+
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+
+    - name: 🧰 Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: 🧪 Run Backend Tests
+      run: dotnet test ASafariM.Test/ASafariM.Test.csproj --logger trx
+
+    - name: 🔨 Build Backend
+      run: dotnet publish ASafariM.Api/ASafariM.Api.csproj --configuration Release --output backend-publish
+
+    - name: 🧶 Setup Node & Yarn
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'yarn'
+
+    - name: 📦 Install Frontend Dependencies
+      working-directory: ASafariM.Clients/asafarim-ui
+      run: yarn install --immutable
+
+    - name: 🔍 Lint Frontend
+      working-directory: ASafariM.Clients/asafarim-ui
+      run: yarn lint
+
+    - name: 🧪 Run Frontend Tests
+      working-directory: ASafariM.Clients/asafarim-ui
+      run: yarn test:run
+
+    - name: ⚙️ Build Frontend
+      working-directory: ASafariM.Clients/asafarim-ui
+      run: yarn build
+
+    - name: 📤 Upload Frontend Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: frontend-dist
+        path: ASafariM.Clients/asafarim-ui/dist
+
+    - name: 📤 Upload Backend Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: backend-publish
+        path: backend-publish

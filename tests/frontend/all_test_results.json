@@ -1,15 +1,15 @@
 {
-    "numTotalTestSuites": 18,
-    "numPassedTestSuites": 18,
+    "numTotalTestSuites": 22,
+    "numPassedTestSuites": 22,
     "numFailedTestSuites": 0,
     "numPendingTestSuites": 0,
-    "numTotalTests": 31,
-    "numPassedTests": 31,
-    "numFailedTests": 0,
+    "numTotalTests": 41,
+    "numPassedTests": 36,
+    "numFailedTests": 5,
     "numPendingTests": 0,
     "numTodoTests": 0,
-    "startTime": 1743008044485,
-    "success": true,
+    "startTime": 1743021342595,
+    "success": false,
     "testResults": [
         {
             "assertionResults": [
@@ -21,12 +21,12 @@
                     "fullName": " DefaultHeader should render successfully",
                     "status": "passed",
                     "title": "should render successfully",
-                    "duration": 1,
+                    "duration": 3,
                     "failureMessages": []
                 }
             ],
-            "startTime": 1743008047831,
-            "endTime": 1743008047832,
+            "startTime": 1743021345983,
+            "endTime": 1743021345986,
             "status": "passed",
             "message": "",
             "name": "D:/repos/ASafariM/ASafariM.Clients/asafarim-ui/src/layout/Header/DefaultHeader.spec.tsx"
@@ -45,8 +45,8 @@
                     "failureMessages": []
                 }
             ],
-            "startTime": 1743008047850,
-            "endTime": 1743008047850,
+            "startTime": 1743021346002,
+            "endTime": 1743021346002,
             "status": "passed",
             "message": "",
             "name": "D:/repos/ASafariM/ASafariM.Clients/asafarim-bibliography/src/basic.test.ts"
@@ -61,7 +61,7 @@
                     "fullName": " AppInfo Component should render collapsed by default",
                     "status": "passed",
                     "title": "should render collapsed by default",
-                    "duration": 35,
+                    "duration": 7,
                     "failureMessages": []
                 },
                 {
@@ -70,10 +70,16 @@
                         "AppInfo Component"
                     ],
                     "fullName": " AppInfo Component expands on header click",
-                    "status": "passed",
+                    "status": "failed",
                     "title": "expands on header click",
-                    "duration": 58,
-                    "failureMessages": []
+                    "duration": 6,
+                    "failureMessages": [
+                        "Found multiple elements by: [data-testid=\"doc-tab-0\"]\n\nHere are the matching elements:\n\nIgnored nodes: comments, script, style\n\u001b[36m<h3\u001b[39m\n  \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n\u001b[36m>\u001b[39m\n  \u001b[0mDocumentation & Resources\u001b[0m\n\u001b[36m</h3>\u001b[39m\n\nIgnored nodes: comments, script, style\n\u001b[36m<h3\u001b[39m\n  \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n\u001b[36m>\u001b[39m\n  \u001b[0mDocumentation & Resources\u001b[0m\n\u001b[36m</h3>\u001b[39m\n\n(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).\n\nIgnored nodes: comments, script, style\n\u001b[36m<body>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-container collapsed\"\u001b[39m\n      \u001b[33mdata-testid\u001b[39m=\u001b[32m\"app-info-container\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-header\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"header-content\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"header-icon\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0m📚\u001b[0m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<h3\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mDocumentation & Resources\u001b[0m\n          \u001b[36m</h3>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"expand-icon\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0m▲\u001b[0m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</div>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-container collapsed\"\u001b[39m\n      \u001b[33mdata-testid\u001b[39m=\u001b[32m\"app-info-container\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-header\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"header-content\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"header-icon\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0m📚\u001b[0m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<h3\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mDocumentation & Resources\u001b[0m\n          \u001b[36m</h3>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"expand-icon\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0m▲\u001b[0m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</div>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n\u001b[36m</body>\u001b[39m"
+                    ],
+                    "location": {
+                        "line": 37,
+                        "column": 19
+                    }
                 },
                 {
                     "ancestorTitles": [
@@ -81,10 +87,16 @@
                         "AppInfo Component"
                     ],
                     "fullName": " AppInfo Component toggles collapse and expand on click",
-                    "status": "passed",
+                    "status": "failed",
                     "title": "toggles collapse and expand on click",
-                    "duration": 18,
-                    "failureMessages": []
+                    "duration": 5,
+                    "failureMessages": [
+                        "Found multiple elements by: [data-testid=\"doc-tab-0\"]\n\nHere are the matching elements:\n\nIgnored nodes: comments, script, style\n\u001b[36m<h3\u001b[39m\n  \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n\u001b[36m>\u001b[39m\n  \u001b[0mDocumentation & Resources\u001b[0m\n\u001b[36m</h3>\u001b[39m\n\nIgnored nodes: comments, script, style\n\u001b[36m<h3\u001b[39m\n  \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n\u001b[36m>\u001b[39m\n  \u001b[0mDocumentation & Resources\u001b[0m\n\u001b[36m</h3>\u001b[39m\n\nIgnored nodes: comments, script, style\n\u001b[36m<h3\u001b[39m\n  \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n\u001b[36m>\u001b[39m\n  \u001b[0mDocumentation & Resources\u001b[0m\n\u001b[36m</h3>\u001b[39m\n\n(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).\n\nIgnored nodes: comments, script, style\n\u001b[36m<body>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-container collapsed\"\u001b[39m\n      \u001b[33mdata-testid\u001b[39m=\u001b[32m\"app-info-container\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-header\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"header-content\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"header-icon\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0m📚\u001b[0m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<h3\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mDocumentation & Resources\u001b[0m\n          \u001b[36m</h3>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"expand-icon\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0m▲\u001b[0m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</div>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-container collapsed\"\u001b[39m\n      \u001b[33mdata-testid\u001b[39m=\u001b[32m\"app-info-container\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-header\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"header-content\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"header-icon\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0m📚\u001b[0m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<h3\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mDocumentation & Resources\u001b[0m\n          \u001b[36m</h3>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"expand-icon\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0m▲\u001b[0m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</div>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-container collapsed\"\u001b[39m\n      \u001b[33mdata-testid\u001b[39m=\u001b[32m\"app-info-container\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-header\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"header-content\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"header-icon\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0m📚\u001b[0m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<h3\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mDocumentation & Resources\u001b[0m\n          \u001b[36m</h3>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"expand-icon\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0m▲\u001b[0m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</div>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n\u001b[36m</body>\u001b[39m"
+                    ],
+                    "location": {
+                        "line": 37,
+                        "column": 19
+                    }
                 },
                 {
                     "ancestorTitles": [
@@ -92,10 +104,16 @@
                         "AppInfo Component"
                     ],
                     "fullName": " AppInfo Component renders all tabs and switches active tab on click",
-                    "status": "passed",
+                    "status": "failed",
                     "title": "renders all tabs and switches active tab on click",
-                    "duration": 23,
-                    "failureMessages": []
+                    "duration": 8,
+                    "failureMessages": [
+                        "Found multiple elements by: [data-testid=\"doc-tab-0\"]\n\nHere are the matching elements:\n\nIgnored nodes: comments, script, style\n\u001b[36m<h3\u001b[39m\n  \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n\u001b[36m>\u001b[39m\n  \u001b[0mDocumentation & Resources\u001b[0m\n\u001b[36m</h3>\u001b[39m\n\nIgnored nodes: comments, script, style\n\u001b[36m<h3\u001b[39m\n  \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n\u001b[36m>\u001b[39m\n  \u001b[0mDocumentation & Resources\u001b[0m\n\u001b[36m</h3>\u001b[39m\n\nIgnored nodes: comments, script, style\n\u001b[36m<h3\u001b[39m\n  \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n\u001b[36m>\u001b[39m\n  \u001b[0mDocumentation & Resources\u001b[0m\n\u001b[36m</h3>\u001b[39m\n\nIgnored nodes: comments, script, style\n\u001b[36m<h3\u001b[39m\n  \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n\u001b[36m>\u001b[39m\n  \u001b[0mDocumentation & Resources\u001b[0m\n\u001b[36m</h3>\u001b[39m\n\n(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).\n\nIgnored nodes: comments, script, style\n\u001b[36m<body>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-container collapsed\"\u001b[39m\n      \u001b[33mdata-testid\u001b[39m=\u001b[32m\"app-info-container\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-header\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"header-content\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"header-icon\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0m📚\u001b[0m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<h3\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mDocumentation & Resources\u001b[0m\n          \u001b[36m</h3>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"expand-icon\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0m▲\u001b[0m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</div>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-container collapsed\"\u001b[39m\n      \u001b[33mdata-testid\u001b[39m=\u001b[32m\"app-info-container\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-header\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"header-content\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"header-icon\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0m📚\u001b[0m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<h3\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mDocumentation & Resources\u001b[0m\n          \u001b[36m</h3>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"expand-icon\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0m▲\u001b[0m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</div>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-container collapsed\"\u001b[39m\n      \u001b[33mdata-testid\u001b[39m=\u001b[32m\"app-info-container\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-header\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"header-content\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"header-icon\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0m📚\u001b[0m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<h3\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mDocumentation & Resources\u001b[0m\n          \u001b[36m</h3>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"expand-icon\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0m▲\u001b[0m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</div>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-container collapsed\"\u001b[39m\n      \u001b[33mdata-testid\u001b[39m=\u001b[32m\"app-info-container\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-header\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"header-content\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"header-icon\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0m📚\u001b[0m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<h3\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mDocumentation & Resources\u001b[0m\n          \u001b[36m</h3>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"expand-icon\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0m▲\u001b[0m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</div>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n\u001b[36m</body>\u001b[39m"
+                    ],
+                    "location": {
+                        "line": 37,
+                        "column": 19
+                    }
                 },
                 {
                     "ancestorTitles": [
@@ -103,10 +121,16 @@
                         "AppInfo Component"
                     ],
                     "fullName": " AppInfo Component renders correct example code per tab",
-                    "status": "passed",
+                    "status": "failed",
                     "title": "renders correct example code per tab",
-                    "duration": 26,
-                    "failureMessages": []
+                    "duration": 6,
+                    "failureMessages": [
+                        "Found multiple elements by: [data-testid=\"doc-tab-0\"]\n\nHere are the matching elements:\n\nIgnored nodes: comments, script, style\n\u001b[36m<h3\u001b[39m\n  \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n\u001b[36m>\u001b[39m\n  \u001b[0mDocumentation & Resources\u001b[0m\n\u001b[36m</h3>\u001b[39m\n\nIgnored nodes: comments, script, style\n\u001b[36m<h3\u001b[39m\n  \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n\u001b[36m>\u001b[39m\n  \u001b[0mDocumentation & Resources\u001b[0m\n\u001b[36m</h3>\u001b[39m\n\nIgnored nodes: comments, script, style\n\u001b[36m<h3\u001b[39m\n  \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n\u001b[36m>\u001b[39m\n  \u001b[0mDocumentation & Resources\u001b[0m\n\u001b[36m</h3>\u001b[39m\n\nIgnored nodes: comments, script, style\n\u001b[36m<h3\u001b[39m\n  \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n\u001b[36m>\u001b[39m\n  \u001b[0mDocumentation & Resources\u001b[0m\n\u001b[36m</h3>\u001b[39m\n\nIgnored nodes: comments, script, style\n\u001b[36m<h3\u001b[39m\n  \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n\u001b[36m>\u001b[39m\n  \u001b[0mDocumentation & Resources\u001b[0m\n\u001b[36m</h3>\u001b[39m\n\n(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).\n\nIgnored nodes: comments, script, style\n\u001b[36m<body>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-container collapsed\"\u001b[39m\n      \u001b[33mdata-testid\u001b[39m=\u001b[32m\"app-info-container\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-header\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"header-content\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"header-icon\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0m📚\u001b[0m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<h3\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mDocumentation & Resources\u001b[0m\n          \u001b[36m</h3>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"expand-icon\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0m▲\u001b[0m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</div>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-container collapsed\"\u001b[39m\n      \u001b[33mdata-testid\u001b[39m=\u001b[32m\"app-info-container\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-header\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"header-content\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"header-icon\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0m📚\u001b[0m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<h3\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mDocumentation & Resources\u001b[0m\n          \u001b[36m</h3>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"expand-icon\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0m▲\u001b[0m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</div>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-container collapsed\"\u001b[39m\n      \u001b[33mdata-testid\u001b[39m=\u001b[32m\"app-info-container\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-header\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"header-content\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"header-icon\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0m📚\u001b[0m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<h3\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mDocumentation & Resources\u001b[0m\n          \u001b[36m</h3>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"expand-icon\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0m▲\u001b[0m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</div>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-container collapsed\"\u001b[39m\n      \u001b[33mdata-testid\u001b[39m=\u001b[32m\"app-info-container\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-header\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"header-content\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"header-icon\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0m📚\u001b[0m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<h3\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mDocumentation & Resources\u001b[0m\n          \u001b[36m</h3>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"expand-icon\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0m▲\u001b[0m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</div>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-container collapsed\"\u001b[39m\n      \u001b[33mdata-testid\u001b[39m=\u001b[32m\"app-info-container\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-header\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"header-content\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"header-icon\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0m📚\u001b[0m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<h3\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mDocumentation & Resources\u001b[0m\n          \u001b[36m</h3>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"expand-icon\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0m▲\u001b[0m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</div>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n\u001b[36m</body>\u001b[39m"
+                    ],
+                    "location": {
+                        "line": 37,
+                        "column": 19
+                    }
                 },
                 {
                     "ancestorTitles": [
@@ -114,17 +138,151 @@
                         "AppInfo Component"
                     ],
                     "fullName": " AppInfo Component applies fade-in and fade-out classes when toggling",
-                    "status": "passed",
+                    "status": "failed",
                     "title": "applies fade-in and fade-out classes when toggling",
-                    "duration": 20,
+                    "duration": 7,
+                    "failureMessages": [
+                        "Found multiple elements by: [data-testid=\"doc-tab-0\"]\n\nHere are the matching elements:\n\nIgnored nodes: comments, script, style\n\u001b[36m<h3\u001b[39m\n  \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n\u001b[36m>\u001b[39m\n  \u001b[0mDocumentation & Resources\u001b[0m\n\u001b[36m</h3>\u001b[39m\n\nIgnored nodes: comments, script, style\n\u001b[36m<h3\u001b[39m\n  \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n\u001b[36m>\u001b[39m\n  \u001b[0mDocumentation & Resources\u001b[0m\n\u001b[36m</h3>\u001b[39m\n\nIgnored nodes: comments, script, style\n\u001b[36m<h3\u001b[39m\n  \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n\u001b[36m>\u001b[39m\n  \u001b[0mDocumentation & Resources\u001b[0m\n\u001b[36m</h3>\u001b[39m\n\nIgnored nodes: comments, script, style\n\u001b[36m<h3\u001b[39m\n  \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n\u001b[36m>\u001b[39m\n  \u001b[0mDocumentation & Resources\u001b[0m\n\u001b[36m</h3>\u001b[39m\n\nIgnored nodes: comments, script, style\n\u001b[36m<h3\u001b[39m\n  \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n\u001b[36m>\u001b[39m\n  \u001b[0mDocumentation & Resources\u001b[0m\n\u001b[36m</h3>\u001b[39m\n\nIgnored nodes: comments, script, style\n\u001b[36m<h3\u001b[39m\n  \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n\u001b[36m>\u001b[39m\n  \u001b[0mDocumentation & Resources\u001b[0m\n\u001b[36m</h3>\u001b[39m\n\n(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).\n\nIgnored nodes: comments, script, style\n\u001b[36m<body>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-container collapsed\"\u001b[39m\n      \u001b[33mdata-testid\u001b[39m=\u001b[32m\"app-info-container\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-header\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"header-content\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"header-icon\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0m📚\u001b[0m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<h3\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mDocumentation & Resources\u001b[0m\n          \u001b[36m</h3>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"expand-icon\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0m▲\u001b[0m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</div>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-container collapsed\"\u001b[39m\n      \u001b[33mdata-testid\u001b[39m=\u001b[32m\"app-info-container\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-header\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"header-content\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"header-icon\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0m📚\u001b[0m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<h3\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mDocumentation & Resources\u001b[0m\n          \u001b[36m</h3>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"expand-icon\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0m▲\u001b[0m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</div>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-container collapsed\"\u001b[39m\n      \u001b[33mdata-testid\u001b[39m=\u001b[32m\"app-info-container\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-header\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"header-content\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"header-icon\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0m📚\u001b[0m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<h3\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mDocumentation & Resources\u001b[0m\n          \u001b[36m</h3>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"expand-icon\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0m▲\u001b[0m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</div>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-container collapsed\"\u001b[39m\n      \u001b[33mdata-testid\u001b[39m=\u001b[32m\"app-info-container\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-header\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"header-content\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"header-icon\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0m📚\u001b[0m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<h3\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mDocumentation & Resources\u001b[0m\n          \u001b[36m</h3>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"expand-icon\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0m▲\u001b[0m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</div>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-container collapsed\"\u001b[39m\n      \u001b[33mdata-testid\u001b[39m=\u001b[32m\"app-info-container\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-header\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"header-content\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"header-icon\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0m📚\u001b[0m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<h3\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mDocumentation & Resources\u001b[0m\n          \u001b[36m</h3>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"expand-icon\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0m▲\u001b[0m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</div>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-container collapsed\"\u001b[39m\n      \u001b[33mdata-testid\u001b[39m=\u001b[32m\"app-info-container\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"app-info-header\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"header-content\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"header-icon\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0m📚\u001b[0m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<h3\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"doc-tab-0\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mDocumentation & Resources\u001b[0m\n          \u001b[36m</h3>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"expand-icon\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0m▲\u001b[0m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</div>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n\u001b[36m</body>\u001b[39m"
+                    ],
+                    "location": {
+                        "line": 37,
+                        "column": 19
+                    }
+                }
+            ],
+            "startTime": 1743021344918,
+            "endTime": 1743021344957,
+            "status": "failed",
+            "message": "",
+            "name": "D:/repos/ASafariM/ASafariM.Clients/asafarim-bibliography/src/components/AppInfo.spec.tsx"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": [
+                        "",
+                        "<BookDetails />"
+                    ],
+                    "fullName": " <BookDetails /> renders fallback when no bookId is provided",
+                    "status": "passed",
+                    "title": "renders fallback when no bookId is provided",
+                    "duration": 5,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "<BookDetails />"
+                    ],
+                    "fullName": " <BookDetails /> renders loading state",
+                    "status": "passed",
+                    "title": "renders loading state",
+                    "duration": 3,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "<BookDetails />"
+                    ],
+                    "fullName": " <BookDetails /> renders error state",
+                    "status": "passed",
+                    "title": "renders error state",
+                    "duration": 5,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "<BookDetails />"
+                    ],
+                    "fullName": " <BookDetails /> renders BookDetails with fetched data",
+                    "status": "passed",
+                    "title": "renders BookDetails with fetched data",
+                    "duration": 16,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "<BookDetails />"
+                    ],
+                    "fullName": " <BookDetails /> falls back to Redux store when fetch has no data",
+                    "status": "passed",
+                    "title": "falls back to Redux store when fetch has no data",
+                    "duration": 6,
                     "failureMessages": []
                 }
             ],
-            "startTime": 1743008046755,
-            "endTime": 1743008046935,
+            "startTime": 1743021345783,
+            "endTime": 1743021345818,
             "status": "passed",
             "message": "",
-            "name": "D:/repos/ASafariM/ASafariM.Clients/asafarim-bibliography/src/components/AppInfo.spec.tsx"
+            "name": "D:/repos/ASafariM/ASafariM.Clients/asafarim-bibliography/src/components/BookDetails.spec.tsx"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": [
+                        "",
+                        "<BookForm />"
+                    ],
+                    "fullName": " <BookForm /> renders form fields correctly",
+                    "status": "passed",
+                    "title": "renders form fields correctly",
+                    "duration": 56,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "<BookForm />"
+                    ],
+                    "fullName": " <BookForm /> updates input values on change",
+                    "status": "passed",
+                    "title": "updates input values on change",
+                    "duration": 17,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "<BookForm />"
+                    ],
+                    "fullName": " <BookForm /> submits the form and dispatches addBook",
+                    "status": "passed",
+                    "title": "submits the form and dispatches addBook",
+                    "duration": 119,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "<BookForm />"
+                    ],
+                    "fullName": " <BookForm /> shows error message if addBook fails",
+                    "status": "passed",
+                    "title": "shows error message if addBook fails",
+                    "duration": 55,
+                    "failureMessages": []
+                },
+                {
+                    "ancestorTitles": [
+                        "",
+                        "<BookForm />"
+                    ],
+                    "fullName": " <BookForm /> navigates on cancel",
+                    "status": "passed",
+                    "title": "navigates on cancel",
+                    "duration": 16,
+                    "failureMessages": []
+                }
+            ],
+            "startTime": 1743021344565,
+            "endTime": 1743021344828,
+            "status": "passed",
+            "message": "",
+            "name": "D:/repos/ASafariM/ASafariM.Clients/asafarim-bibliography/src/components/BookForm.spec.tsx"
         },
         {
             "assertionResults": [
@@ -137,7 +295,7 @@
                     "fullName": " Redux Hooks useAppDispatch should return a dispatch function",
                     "status": "passed",
                     "title": "should return a dispatch function",
-                    "duration": 27,
+                    "duration": 22,
                     "failureMessages": []
                 },
                 {
@@ -149,7 +307,7 @@
                     "fullName": " Redux Hooks useAppDispatch should correctly dispatch actions",
                     "status": "passed",
                     "title": "should correctly dispatch actions",
-                    "duration": 8,
+                    "duration": 7,
                     "failureMessages": []
                 },
                 {
@@ -173,7 +331,7 @@
                     "fullName": " Redux Hooks useAppSelector should select loading state from the store",
                     "status": "passed",
                     "title": "should select loading state from the store",
-                    "duration": 8,
+                    "duration": 5,
                     "failureMessages": []
                 },
                 {
@@ -185,7 +343,7 @@
                     "fullName": " Redux Hooks useAppSelector should select books array from the store",
                     "status": "passed",
                     "title": "should select books array from the store",
-                    "duration": 4,
+                    "duration": 5,
                     "failureMessages": []
                 },
                 {
@@ -197,7 +355,7 @@
                     "fullName": " Redux Hooks useAppSelector should select error state from the store",
                     "status": "passed",
                     "title": "should select error state from the store",
-                    "duration": 6,
+                    "duration": 3,
                     "failureMessages": []
                 },
                 {
@@ -209,7 +367,7 @@
                     "fullName": " Redux Hooks useAppSelector should select selectedBook from the store",
                     "status": "passed",
                     "title": "should select selectedBook from the store",
-                    "duration": 4,
+                    "duration": 3,
                     "failureMessages": []
                 },
                 {
@@ -221,12 +379,12 @@
                     "fullName": " Redux Hooks useAppSelector should handle complex selectors with derived data",
                     "status": "passed",
                     "title": "should handle complex selectors with derived data",
-                    "duration": 28,
+                    "duration": 23,
                     "failureMessages": []
                 }
             ],
-            "startTime": 1743008046262,
-            "endTime": 1743008046353,
+            "startTime": 1743021344058,
+            "endTime": 1743021344132,
             "status": "passed",
             "message": "",
             "name": "D:/repos/ASafariM/ASafariM.Clients/asafarim-bibliography/src/hooks/reduxHooks.spec.tsx"
@@ -241,7 +399,7 @@
                     "fullName": " Navbar component renders navbar with navigation links",
                     "status": "passed",
                     "title": "renders navbar with navigation links",
-                    "duration": 27,
+                    "duration": 25,
                     "failureMessages": []
                 },
                 {
@@ -252,7 +410,7 @@
                     "fullName": " Navbar component activates \"Bibliography\" link by default",
                     "status": "passed",
                     "title": "activates \"Bibliography\" link by default",
-                    "duration": 12,
+                    "duration": 11,
                     "failureMessages": []
                 },
                 {
@@ -263,7 +421,7 @@
                     "fullName": " Navbar component activates clicked navigation item",
                     "status": "passed",
                     "title": "activates clicked navigation item",
-                    "duration": 19,
+                    "duration": 15,
                     "failureMessages": []
                 },
                 {
@@ -274,7 +432,7 @@
                     "fullName": " Navbar component toggles mobile menu when Disclosure button is clicked",
                     "status": "passed",
                     "title": "toggles mobile menu when Disclosure button is clicked",
-                    "duration": 20,
+                    "duration": 23,
                     "failureMessages": []
                 },
                 {
@@ -285,12 +443,12 @@
                     "fullName": " Navbar component renders Add button with Plus icon",
                     "status": "passed",
                     "title": "renders Add button with Plus icon",
-                    "duration": 10,
+                    "duration": 7,
                     "failureMessages": []
                 }
             ],
-            "startTime": 1743008047710,
-            "endTime": 1743008047798,
+            "startTime": 1743021345629,
+            "endTime": 1743021345711,
             "status": "passed",
             "message": "",
             "name": "D:/repos/ASafariM/ASafariM.Clients/asafarim-bibliography/src/layout/Navbar.spec.tsx"
@@ -305,7 +463,7 @@
                     "fullName": " bookSlice should handle initial state",
                     "status": "passed",
                     "title": "should handle initial state",
-                    "duration": 2,
+                    "duration": 1,
                     "failureMessages": []
                 },
                 {
@@ -317,7 +475,7 @@
                     "fullName": " bookSlice reducers should handle selectBook",
                     "status": "passed",
                     "title": "should handle selectBook",
-                    "duration": 1,
+                    "duration": 2,
                     "failureMessages": []
                 },
                 {
@@ -341,7 +499,7 @@
                     "fullName": " bookSlice reducers should handle toggleReadStatus",
                     "status": "passed",
                     "title": "should handle toggleReadStatus",
-                    "duration": 1,
+                    "duration": 0,
                     "failureMessages": []
                 },
                 {
@@ -366,7 +524,7 @@
                     "fullName": " bookSlice async thunks fetchBooks should handle successful fetch",
                     "status": "passed",
                     "title": "should handle successful fetch",
-                    "duration": 3,
+                    "duration": 4,
                     "failureMessages": []
                 },
                 {
@@ -392,7 +550,7 @@
                     "fullName": " bookSlice async thunks fetchBooks should handle timeout error",
                     "status": "passed",
                     "title": "should handle timeout error",
-                    "duration": 2,
+                    "duration": 1,
                     "failureMessages": []
                 },
                 {
@@ -422,8 +580,8 @@
                     "failureMessages": []
                 }
             ],
-            "startTime": 1743008046440,
-            "endTime": 1743008046456,
+            "startTime": 1743021344210,
+            "endTime": 1743021344224,
             "status": "passed",
             "message": "",
             "name": "D:/repos/ASafariM/ASafariM.Clients/asafarim-bibliography/src/store/slices/bookSlice.spec.ts"

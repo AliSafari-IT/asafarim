@@ -54,20 +54,20 @@ const AppInfo: React.FC = () => {
   };
 
   return (
-    <div className={`app-info-container ${isExpanded ? 'expanded' : 'collapsed'}`}>
+    <div className={`app-info-container ${isExpanded ? 'expanded' : 'collapsed'}`} data-testid="app-info-container">
       <div 
         className="app-info-header" 
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <div className="header-content">
           <div className="header-icon">📚</div>
-          <h3>Documentation & Resources</h3>
+          <h3 data-testid="doc-tab-0">Documentation & Resources</h3>
         </div>
         <div className="expand-icon">{isExpanded ? '▼' : '▲'}</div>
       </div>
       
       {isExpanded && (
-        <div className={`app-info-content ${animationClass}`}>
+        <div className={`app-info-content ${animationClass}`} data-testid="app-info-content">
           <div className="info-intro">
             <div className="glow-text">ASafariM Bibliography</div>
             <p>
@@ -84,6 +84,7 @@ const AppInfo: React.FC = () => {
                   className={`tab ${activeTab === index ? 'active' : ''}`}
                   style={{ '--tab-color': tab.color } as React.CSSProperties}
                   onClick={() => handleTabClick(index)}
+                  data-testid={`tab-${index}`}
                 >
                   <span className="tab-icon">{tab.icon}</span>
                   <span className="tab-title">{tab.title}</span>
@@ -91,7 +92,7 @@ const AppInfo: React.FC = () => {
               ))}
             </div>
             
-            <div className={`tab-content ${animationClass}`}>
+            <div className={`tab-content ${animationClass}`} data-testid={`${tabs[activeTab].title.toLowerCase().replace(' ', '-')}-content`}>
               <div className="tab-header" style={{ color: tabs[activeTab].color }}>
                 <span className="tab-icon-large">{tabs[activeTab].icon}</span>
                 <h3>{tabs[activeTab].title}</h3>

@@ -275,7 +275,7 @@ const ModernNavbar: React.FC = () => {
 
               {/* Blog Link */}
               <a
-                href="https://blog.asafarim.com/blog"
+                href="https://blog.asafarim.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 px-3 py-2 rounded-md text-sm font-medium flex items-center group"
@@ -342,7 +342,7 @@ const ModernNavbar: React.FC = () => {
 
               {/* Blog Link for Mobile */}
               <a
-                href="https://blog.asafarim.com/blog"
+                href="https://blog.asafarim.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white p-2 rounded-full focus:outline-none mr-2 group"
@@ -453,7 +453,7 @@ const ModernNavbar: React.FC = () => {
               {/* Blog Link for Mobile Menu */}
               <div className="px-4 py-2">
                 <a
-                  href="https://blog.asafarim.com/blog"
+                  href="https://blog.asafarim.com"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 px-3 py-2 rounded-md text-sm font-medium flex items-center group"

@@ -31,9 +31,4 @@ describe('<DatabaseErrorMessage />', () => {
     render(<DatabaseErrorMessage error="DB is down" />);
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
   });
-
-//   it('shows fallback message if error is null', () => {
-//     render(<DatabaseErrorMessage error={null} />);
-//     expect(screen.getByText(/unknown database error/i)).toBeInTheDocument();
-//   });
 });

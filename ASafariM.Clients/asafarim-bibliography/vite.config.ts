@@ -30,8 +30,8 @@ export default defineConfig({
             'react-router-dom'
           ],
           'ui-components': [
-            '@mui/material',
-            '@mui/icons-material'
+            // Material UI packages removed as they're not installed
+            // Add UI component libraries here when installed
           ]
         }
       }

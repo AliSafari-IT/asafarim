@@ -27,7 +27,7 @@ const BookDetails: React.FC<BookDetailsProps> = ({ bookId }) => {
 
   return (
     <div className="book-details">
-      <h2 className="text-2xl font-bold mb-4">{book.title}</h2>
+      <h2 className="text-2xl font-bold mb-4" data-testid="book-title">{book.title}</h2>
       
       <div className="bg-gray-700 rounded-lg p-6 shadow-lg">
         <div className="mb-4">

@@ -58,10 +58,22 @@ const config: Config = {
   ],
 
   themeConfig: {
-    image: 'img/logoT.svg',
+    // Add image for social media sharing
+    image: 'img/social-card.png',
+    
+    // Add announcement bar for important info
+    announcementBar: {
+      id: 'announcement',
+      content: '✨ Check out my latest articles on software development and tech trends!',
+      backgroundColor: '#0891b2',
+      textColor: '#ffffff',
+      isCloseable: true,
+    },
+    
+    // Enhance navbar
     navbar: {
       title: 'ASafariM',
-      hideOnScroll: false,
+      hideOnScroll: true,
       style: 'dark',
       logo: {
         alt: 'ASafariM Logo',
@@ -69,7 +81,7 @@ const config: Config = {
         srcDark: 'img/logoT.svg',
         href: 'https://asafarim.com',
         target: '_self',
-        className: 'text-[var(--primary)] dark:text-[var(--primary)] transition-all duration-200 ease-in-out group',
+        className: 'navbar-logo',
       },
       items: [
         {
@@ -77,26 +89,32 @@ const config: Config = {
           sidebarId: 'tutorialSidebar',
           position: 'left',
           label: 'Articles',
-          className: 'text-[var(--primary)] dark:text-[var(--primary)] transition-all duration-200 ease-in-out group',
+          className: 'navbar-item',
         },
-        {to: '/blog', label: 'Blog', position: 'left'},
+        {to: '/blog', label: 'Blog', position: 'left', className: 'navbar-item'},
         {
           href: 'https://github.com/AliSafari-IT/asafarim',
-          label: 'GitHub',
           position: 'right',
-          className: 'text-[var(--primary)] dark:text-[var(--primary)] transition-all duration-200 ease-in-out group',
+          className: 'header-github-link',
+          'aria-label': 'GitHub repository',
         },
       ],
     },
+    
+    // Enhance footer with better organization
     footer: {
-      style: 'light',
+      style: 'dark',
       links: [
         {
-          title: 'Docs',
+          title: 'Content',
           items: [
             {
-              label: 'Introduction',
+              label: 'Articles',
               to: '/docs/intro',
+            },
+            {
+              label: 'Blog',
+              to: '/blog',
             },
           ],
         },
@@ -117,21 +135,27 @@ const config: Config = {
           title: 'More',
           items: [
             {
-              label: 'Blog',
-              to: '/blog',
-            },
-            {
               label: 'ASafariM Website',
               href: 'https://asafarim.com',
             },
           ],
         },
       ],
-      copyright: `Copyright ${new Date().getFullYear()} ASafariM. Built with Docusaurus.`,
+      copyright: `Copyright ${new Date().getFullYear()} ASafariM · Built with Docusaurus`,
     },
+    
+    // Enhance code blocks
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
+      additionalLanguages: ['bash', 'diff', 'json', 'typescript'],
+    },
+    
+    // Add colorMode settings
+    colorMode: {
+      defaultMode: 'light',
+      disableSwitch: false,
+      respectPrefersColorScheme: true,
     },
   } satisfies Preset.ThemeConfig,
 };

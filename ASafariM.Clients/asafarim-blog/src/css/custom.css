@@ -5,6 +5,7 @@
  */
  @import url("https://fonts.googleapis.com/css2?family=Monoton&display=swap");
  @import url("https://fonts.googleapis.com/css2?family=Kirang+Haerang&family=Lobster&display=swap");
+ @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap");
  @import url("https://fonts.googleapis.com/css2?family=Acme&family=Architects+Daughter&family=Cabin+Sketch:wght@700&family=Carter+One&family=Chewy&family=Concert+One&family=Fugaz+One&family=Gloria+Hallelujah&family=Kaushan+Script&family=Knewave&family=Londrina+Solid:wght@900&family=Pacifico&family=Permanent+Marker&family=Skranji:wght@700&display=swap");
 
  @import url("../../../asafarim-ui/src/styles/theme-variables.css");
@@ -13,39 +14,270 @@
 
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
+  /* Brand color palette - modern teal/blue theme */
+  --ifm-color-primary: #0891b2;
+  --ifm-color-primary-dark: #0782a0;
+  --ifm-color-primary-darker: #067a97;
+  --ifm-color-primary-darkest: #05647c;
+  --ifm-color-primary-light: #09a0c4;
+  --ifm-color-primary-lighter: #0aa8cd;
+  --ifm-color-primary-lightest: #0bbee8;
+  
+  /* Secondary accents */
+  --ifm-color-secondary: #6d28d9;
+  --ifm-color-success: #059669;
+  --ifm-color-info: #2563eb;
+  --ifm-color-warning: #d97706;
+  --ifm-color-danger: #dc2626;
+  
+  /* Typography */
+  --ifm-font-family-base: 'Inter', system-ui, -apple-system, sans-serif;
+  --ifm-font-family-monospace: 'Fira Code', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --ifm-heading-font-weight: 700;
+  --ifm-h1-font-size: 2.5rem;
+  
+  /* Spacing & Layout */
+  --ifm-spacing-horizontal: 1.5rem;
+  --ifm-navbar-height: 4rem;
+  --ifm-navbar-padding-horizontal: 1.5rem;
+  --ifm-navbar-padding-vertical: 0.75rem;
+  
+  /* Other UI elements */
+  --ifm-global-radius: 0.5rem;
+  --ifm-card-border-radius: 0.75rem;
+  --ifm-button-border-radius: 0.5rem;
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
   
+  /* Custom Variables */
+  --blog-item-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --transition-standard: all 0.3s ease;
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  /* Dark mode color palette - cooler tones */
+  --ifm-color-primary: #22d3ee;
+  --ifm-color-primary-dark: #1cbad2;
+  --ifm-color-primary-darker: #1aafcb;
+  --ifm-color-primary-darkest: #1590a7;
+  --ifm-color-primary-light: #3ad7f0;
+  --ifm-color-primary-lighter: #47daf1;
+  --ifm-color-primary-lightest: #6de2f3;
+  
+  /* Secondary accents in dark mode */
+  --ifm-color-secondary: #a78bfa;
+  --ifm-color-success: #34d399;
+  --ifm-color-info: #60a5fa;
+  --ifm-color-warning: #fbbf24;
+  --ifm-color-danger: #f87171;
+  
+  /* Dark mode specifics */
+  --ifm-background-color: #0f172a;
+  --ifm-background-surface-color: #1e293b;
+  --ifm-navbar-background-color: rgba(15, 23, 42, 0.8);
+  --docusaurus-highlighted-code-line-bg: rgba(255, 255, 255, 0.05);
+  
+  /* Custom Variables */
+  --blog-item-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
+/* Navbar styling */
+.navbar {
+  backdrop-filter: blur(10px);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.navbar-logo {
+  height: 2.5rem;
+  transition: var(--transition-standard);
+}
+
+.navbar-logo:hover {
+  filter: brightness(1.2);
+}
+
+/* GitHub icon in header */
+.header-github-link:before {
+  content: '';
+  width: 24px;
+  height: 24px;
+  display: flex;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='white' d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E")
+    no-repeat;
+}
+
+[data-theme='dark'] .header-github-link:before {
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='white' d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E")
+    no-repeat;
+}
+
+/* Article & blog post cards */
+.blog-list-item {
+  transition: var(--transition-standard);
+  border-radius: var(--ifm-card-border-radius);
+  overflow: hidden;
+  box-shadow: var(--blog-item-shadow);
+  margin-bottom: 2rem;
+}
+
+.blog-list-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* Blog post title */
+.blog-post__title {
+  font-size: 2.5rem;
+  line-height: 1.3;
+  margin-bottom: 1rem;
+}
+
+/* Code blocks styling */
+pre {
+  border-radius: var(--ifm-global-radius);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Table styling */
+table {
+  display: table;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: var(--ifm-global-radius);
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+table th {
+  background-color: var(--ifm-color-primary);
+  color: white;
+  font-weight: 600;
+}
+
+[data-theme='dark'] table th {
+  background-color: var(--ifm-color-primary-darkest);
+}
+
+/* Footer styling */
+.footer {
+  background-color: var(--ifm-background-surface-color);
+  padding: 4rem 0 2rem;
+}
+
+.footer__link-item {
+  opacity: 0.75;
+  transition: opacity 0.2s ease;
+}
+
+.footer__link-item:hover {
+  opacity: 1;
+  text-decoration: none;
+}
+
+/* Pagination */
+.pagination-nav__link {
+  border-radius: var(--ifm-global-radius);
+  transition: var(--transition-standard);
+}
+
+.pagination-nav__link:hover {
+  transform: translateY(-2px);
+}
+
+/* Fix for images in dark mode */
+[data-theme='dark'] img:not([src*='.svg']) {
+  filter: brightness(0.9) contrast(1.1);
+}
+
+/* SVG-specific handling for dark mode */
+[data-theme='dark'] img[src*='.svg'] {
+  filter: brightness(1.2); /* Slightly brighten SVGs in dark mode for better visibility */
+}
+
+/* Specific handling for blog hero image in dark mode */
+[data-theme='dark'] .heroImage img {
+  filter: brightness(1.3) saturate(1.2); /* Make the hero image more vibrant in dark mode */
+}
+
+/* Enhanced visibility for SVGs in markdown/documentation content */
+[data-theme='dark'] .markdown img[src*='.svg'],
+[data-theme='dark'] article img[src*='.svg'] {
+  background-color: #1e293b; /* Lighter background in dark mode */
+  border: 1px solid #475569; /* Add border for contrast */
+  padding: 1rem;
+  border-radius: 0.5rem;
+  filter: brightness(1.4) contrast(1.1); /* Increase brightness and contrast */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  margin: 1.5rem 0;
+  transition: all 0.3s ease;
+}
+
+[data-theme='dark'] .markdown img[src*='.svg']:hover,
+[data-theme='dark'] article img[src*='.svg']:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.3);
+  filter: brightness(1.5) contrast(1.15);
+}
+
+/* Better handling for diagrams containing text */
+[data-theme='dark'] .markdown img[src*='.svg'][alt*="diagram"],
+[data-theme='dark'] article img[src*='.svg'][alt*="diagram"],
+[data-theme='dark'] .markdown img[src*='.svg'][alt*="wireframe"],
+[data-theme='dark'] article img[src*='.svg'][alt*="wireframe"] {
+  background-color: #334155; /* Even lighter background for diagrams */
+  padding: 1.5rem;
+  filter: brightness(1.5) contrast(1.2) saturate(1.1);
+}
+
+/* Animations for page transitions */
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Add responsive design improvements */
+@media (max-width: 996px) {
+  .navbar__brand {
+    margin-right: 0;
+  }
+  
+  .blog-post__title {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --ifm-spacing-horizontal: 1rem;
+  }
+  
+  .blog-post__title {
+    font-size: 1.75rem;
+  }
+}
+
+/* Keep any existing Douglas-specific elements */
 .containerdouglas {
   position: relative;
-  width: 50%;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  border-radius: var(--ifm-global-radius);
+  overflow: hidden;
+  box-shadow: var(--blog-item-shadow);
 }
 
 .imagedouglas {
   display: block;
   width: 100%;
   height: auto;
+  transition: var(--transition-standard);
 }
 
 .overlaydouglas {
@@ -53,7 +285,7 @@
   bottom: 100%;
   left: 0;
   right: 0;
-  background-color: #495eb8;
+  background-color: var(--ifm-color-primary);
   overflow: hidden;
   width: 100%;
   height: 0;
@@ -66,145 +298,12 @@
 }
 
 .textdouglas {
-  white-space: nowrap;
   color: white;
-  font-size: 20px;
+  font-size: 1.25rem;
   position: absolute;
-  overflow: hidden;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-}
-
-.docusaurus-highlight-code-line {
-  background-color: rgb(72, 79, 99);
-  display: block;
-  margin: 0 calc(-1 * var(--ifm-pre-padding));
-  padding: 0 var(--ifm-pre-padding);
-}
-
-.docusaurus-highlight-code-line {
-  background-color: rgba(0, 0, 0, 0.1);
-  display: block;
-  margin: 0 calc(-1 * var(--ifm-pre-padding));
-  padding: 0 var(--ifm-pre-padding);
-}
-
-html[data-theme="dark"] .docusaurus-highlight-code-line {
-  background-color: rgba(0, 0, 0, 0.3);
-}
-
-
-.docusaurus-highlight-code-line {
-  background-color: rgb(72, 77, 91);
-  display: block;
-  margin: 0 calc(-1 * var(--ifm-pre-padding));
-  padding: 0 var(--ifm-pre-padding);
-}
-
-.navbar-sidebar .menu {
-  --ifm-menu-color: rgb(209, 250, 246);
-}
-
-pre {
-  border-color: var(--ifm-color-emphasis-300);
-  border-radius: var(--ifm-pagination-nav-border-radius);
-  border-style: solid;
-  border-width: 1px;
-}
-
-header h1 {
-  font-family: Sen, var(--ifm-font-family-base);
-  font-size: 2.5em;
-  margin-bottom: 0;
-}
-
-.learn-more {
-  font-size: 1.2rem;
-  font-weight: 600;
-}
-
-.contents {
-  font-size: 0.95rem;
-}
-
-.cta-btn {
-  border-radius: 2em;
-  margin-right: 1em;
-  min-width: 240px;
-}
-
-@media (max-width: 480px) {
-  .cta-btn {
-    margin-right: 0;
-    margin-top: 0.5em;
-  }
-}
-
-figure {
-  display: block;
-  margin-top: 1em;
-  margin-bottom: 2em;
-  margin-left: 0;
-  margin-right: 0;
-}
-
-figcaption {
   text-align: center;
-  color: var(--ifm-menu-color);
-}
-
-figcaption::before {
-  content: "🔎";
-}
-
-footer .footer__link-item {
-  opacity: 0.5;
-  text-decoration: none;
-  transition: opacity 0.2s linear;
-  font-weight: 400;
-}
-
-footer .container .text {
-  color: rgb(229, 243, 32);
-  font-weight: 700;
-}
-
-.red {
-  color: red;
-}
-.bold {
-  font-weight: bold;
-}
-
-/* Fix for images in dark mode */
-[data-theme='dark'] img:not([src*='.svg']) {
-  filter: brightness(0.8) contrast(1.2);
-  background-color: var(--bg-secondary);
-  border-radius: var(--border-radius-medium);
-  padding: var(--spacing-medium);
-  box-shadow: var(--shadow-medium);
-}
-
-/* Specific fix for diagrams and screenshots */
-[data-theme='dark'] .markdown img {
-  background-color: var(--bg-inverted);
-  padding: var(--spacing-large);
-  border-radius: var(--border-radius-large);
-  border: 1px solid var(--border-secondary);
-  transition: all 0.3s ease;
-}
-
-[data-theme='dark'] .markdown img:hover {
-  transform: scale(1.01);
-  box-shadow: 0 0 15px var(--accent-primary);
-}
-
-/* Caption styling */
-.image-caption {
-  text-align: center;
-  font-style: italic;
-  margin-top: var(--spacing-medium);
-  color: var(--text-secondary);
+  width: 90%;
 }

@@ -38,7 +38,7 @@
     "backend": "yarn clean && yarn restore && yarn build && yarn api",
     "backend:build": "yarn clean && yarn restore && yarn build",
     "backend:run": "yarn backend",
-    "prepare:dev": "cp .env.development .env && cp appsettings.Development.json appsettings.json && cp Properties/launchSettings.development.json Properties/launchSettings.json",
+    "prepare:dev": "cd ./ASafariM.Api && cp .env.development .env && cp appsettings.Development.json appsettings.json && cp Properties/launchSettings.development.json Properties/launchSettings.json",
     "cleanup:dev": "yarn prepare:dev && yarn clean",
     "dev": "yarn prepare:dev && concurrently \"yarn workspace asafarim-api start\" \"yarn workspace asafarim-ui start\" && yarn cleanup:dev",
     "prepare:env": "cp .env.production .env && cp appsettings.Production.json appsettings.json && cp Properties/launchSettings.production.json Properties/launchSettings.json",

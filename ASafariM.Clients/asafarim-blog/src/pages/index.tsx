@@ -7,7 +7,7 @@ import HomepageFeatures from '@site/src/components/HomepageFeatures';
 
 import styles from './index.module.css';
 
-function HomepageHeader() {
+export function HomepageHeader() {
   const {siteConfig} = useDocusaurusContext();
   return (
     <header className={clsx('hero', styles.heroBanner)}>
@@ -42,7 +42,7 @@ function HomepageHeader() {
   );
 }
 
-function RecentPosts() {
+export function RecentPosts() {
   return (
     <section className={styles.recentPosts}>
       <div className="container">

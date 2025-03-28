@@ -17,7 +17,7 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "typecheck": "tsc",
-    "test": "vitest"
+    "test": "../../node_modules/.bin/vitest run"
   },
   "dependencies": {
     "@docusaurus/core": "3.7.0",

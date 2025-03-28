@@ -7,8 +7,10 @@ const apiUrls = (host: string): string => {
 
         // Define API URLs for production environments
         const productionUrls: { [key: string]: string } = {
-            'preview.asafarim.com': 'https://preview.asafarim.com/api',
-            'www.preview.asafarim.com': 'https://preview.asafarim.com/api',
+            'bibliography.asafarim.com': 'https://bibliography.asafarim.com/api',
+            'www.bibliography.asafarim.com': 'https://bibliography.asafarim.com/api',
+            'blog.asafarim.com': 'https://blog.asafarim.com/api',
+            'www.blog.asafarim.com': 'https://blog.asafarim.com/api',
             'asafarim.com': 'https://asafarim.com/api',
             'www.asafarim.com': 'https://asafarim.com/api',
         };

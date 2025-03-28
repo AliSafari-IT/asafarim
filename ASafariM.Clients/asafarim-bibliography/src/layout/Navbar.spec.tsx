@@ -29,7 +29,7 @@ describe('Navbar component', () => {
   });
   
   it('renders navbar with navigation links', () => {
-    const { container, unmount } = renderComponent(
+    const { unmount } = renderComponent(
       <MemoryRouter>
         <Navbar />
       </MemoryRouter>
@@ -61,7 +61,7 @@ describe('Navbar component', () => {
   });
 
   it('activates clicked navigation item', () => {
-    const { container, unmount } = renderComponent(
+    const { unmount } = renderComponent(
       <MemoryRouter>
         <Navbar />
       </MemoryRouter>

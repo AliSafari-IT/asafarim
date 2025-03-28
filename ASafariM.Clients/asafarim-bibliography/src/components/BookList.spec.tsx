@@ -1,8 +1,9 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
-import BookList from '../components/BookList';
+import BookList from './BookList';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { fetchBooks, selectBook } from '../store/slices/bookSlice';
+import { renderComponent, act } from '../utils/test-utils';
 
 // Mocks
 vi.mock('../hooks/reduxHooks', () => ({
@@ -16,6 +17,7 @@ vi.mock('../store/slices/bookSlice', () => ({
 
 describe('<BookList />', () => {
   const mockDispatch = vi.fn();
+  let cleanup: () => void;
 
   const defaultState = {
     books: [],
@@ -27,11 +29,19 @@ describe('<BookList />', () => {
     vi.clearAllMocks();
     (useAppDispatch as any).mockReturnValue(mockDispatch);
   });
+  
+  afterEach(() => {
+    if (cleanup) {
+      cleanup();
+    }
+  });
 
   it('displays loading message', () => {
     (useAppSelector as any).mockReturnValue({ ...defaultState, loading: true });
 
-    render(<BookList onSelectBook={() => {}} />);
+    const { unmount } = renderComponent(<BookList onSelectBook={() => {}} />);
+    cleanup = unmount;
+    
     expect(screen.getByText(/loading books/i)).toBeInTheDocument();
   });
 
@@ -39,11 +49,15 @@ describe('<BookList />', () => {
     const errorMsg = 'Something went wrong';
     (useAppSelector as any).mockReturnValue({ ...defaultState, error: errorMsg });
 
-    render(<BookList onSelectBook={() => {}} />);
+    const { unmount } = renderComponent(<BookList onSelectBook={() => {}} />);
+    cleanup = unmount;
+    
     expect(screen.getByText(/error loading books/i)).toBeInTheDocument();
     expect(screen.getByText(errorMsg)).toBeInTheDocument();
 
-    fireEvent.click(screen.getByText(/try again/i));
+    act(() => {
+      fireEvent.click(screen.getByText(/try again/i));
+    });
     expect(mockDispatch).toHaveBeenCalledWith(fetchBooks());
   });
 
@@ -53,15 +67,20 @@ describe('<BookList />', () => {
       error: "table 'Books' doesn't exist",
     });
 
-    render(<BookList onSelectBook={() => {}} />);
-    expect(screen.getByText(/try again/i)).toBeInTheDocument();
+    const { unmount } = renderComponent(<BookList onSelectBook={() => {}} />);
+    cleanup = unmount;
+    
+    // Use a more specific query to avoid multiple matches
+    expect(screen.getByText('Database Tables Not Found')).toBeInTheDocument();
     expect(mockDispatch).not.toHaveBeenCalledWith(selectBook);
   });
 
   it('renders empty list message', () => {
     (useAppSelector as any).mockReturnValue({ ...defaultState, books: [] });
 
-    render(<BookList onSelectBook={() => {}} />);
+    const { unmount } = renderComponent(<BookList onSelectBook={() => {}} />);
+    cleanup = unmount;
+    
     expect(screen.getByText(/no books in your bibliography/i)).toBeInTheDocument();
   });
 
@@ -80,10 +99,14 @@ describe('<BookList />', () => {
     const onSelectBook = vi.fn();
     (useAppSelector as any).mockReturnValue({ ...defaultState, books });
 
-    render(<BookList onSelectBook={onSelectBook} />);
+    const { unmount } = renderComponent(<BookList onSelectBook={onSelectBook} />);
+    cleanup = unmount;
+    
     expect(screen.getByText('Test Book')).toBeInTheDocument();
 
-    fireEvent.click(screen.getByText('Test Book'));
+    act(() => {
+      fireEvent.click(screen.getByText('Test Book'));
+    });
 
     expect(mockDispatch).toHaveBeenCalledWith(selectBook('1'));
     expect(onSelectBook).toHaveBeenCalledWith('1');

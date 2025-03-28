@@ -4,6 +4,7 @@
   "private": true,
   "packageManager": "yarn@4.7.0",
   "scripts": {
+    "co": "cd ../.. && yarn co",
     "install": "echo \"Installing dependencies...\"",
     "docusaurus": "docusaurus",
     "start": "yarn stop && cross-env BLOG_PORT=3002 docusaurus start --port=3002",

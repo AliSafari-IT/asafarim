@@ -92,7 +92,7 @@ const AppInfo: React.FC = () => {
               ))}
             </div>
             
-            <div className={`tab-content ${animationClass}`} data-testid={`${tabs[activeTab].title.toLowerCase().replace(' ', '-')}-content`}>
+            <div className={`tab-content ${animationClass}`} data-testid={`${tabs[activeTab].title.toLowerCase().replace(/ /g, '-')}-content`}>
               <div className="tab-header" style={{ color: tabs[activeTab].color }}>
                 <span className="tab-icon-large">{tabs[activeTab].icon}</span>
                 <h3>{tabs[activeTab].title}</h3>

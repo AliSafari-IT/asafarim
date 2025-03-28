@@ -4,13 +4,13 @@ import { logger } from "@/utils/logger";
 import { jwtDecode } from "jwt-decode";
 
 const ClaimTypes = {
-    NameIdentifier: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+  NameIdentifier: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
 } as const;
 
 interface JwtPayload {
   role?: string;
   exp?: number;
-  [ClaimTypes.NameIdentifier]?: string; 
+  [ClaimTypes.NameIdentifier]?: string;
 }
 
 // Get auth token from either localStorage or sessionStorage
@@ -22,14 +22,14 @@ const getAuthToken = () => {
       const parsedAuth = JSON.parse(localAuth);
       return parsedAuth.token || parsedAuth.Token;
     }
-    
+
     // Then check sessionStorage
     const sessionAuth = sessionStorage.getItem('auth');
     if (sessionAuth) {
       const parsedAuth = JSON.parse(sessionAuth);
       return parsedAuth.token || parsedAuth.Token;
     }
-    
+
     return null;
   } catch (error) {
     logger.error("Error getting auth token: " + error);
@@ -234,24 +234,24 @@ const updateEntity = async (
           Name: "Repository", // Required field in Link entity
           Description: "Project repository link"
         }));
-        
+
         // Create a separate property for the formatted links
         data = {
           ...data,
           FormattedRepoLinks: formattedLinks
         };
-        
+
         logger.info(`Formatted ${formattedLinks.length} repository links for update request`);
       }
     }
-    
+
     const response = await api.put(`/${endpoint}/${id}`, data);
     return response.data;
   } catch (error: any) {
     // Enhanced error logging
     if (error.response) {
       logger.error(`API Error ${error.response.status}: ${JSON.stringify(error.response.data)}`);
-      
+
       // If it's a validation error, extract more details
       if (error.response.status === 400 && error.response.data) {
         logger.error(`Validation error: ${JSON.stringify(error.response.data)}`);
@@ -261,7 +261,7 @@ const updateEntity = async (
     } else {
       logger.error(`Error setting up request: ${error.message}`);
     }
-    
+
     logger.error(`Error updating ${entityTableName}: ${error}`);
     throw error;
   }
@@ -284,22 +284,22 @@ const addProjectWithLinks = async (projectData: Record<string, unknown>) => {
   try {
     // Extract repository links from the project data
     const repoLinks = projectData.RepoLinks as string[];
-    
+
     // Remove RepoLinks from the project data as it's not part of the ProjectCreateDto
     const { RepoLinks, ...projectDataWithoutLinks } = projectData as { RepoLinks: string[], [key: string]: unknown };
-    
+
     logger.info(`Adding project with data: ${JSON.stringify(projectDataWithoutLinks)}`);
     logger.info(`Repository links: ${JSON.stringify(repoLinks)}`);
-    
+
     // First create the project
     const response = await api.post('/projects', projectDataWithoutLinks);
     const createdProject = response.data;
     logger.info(`Successfully added project with ID: ${createdProject.id}`);
-    
+
     // If there are repository links, add them to the project
     if (repoLinks && repoLinks.length > 0) {
       logger.info(`Adding ${repoLinks.length} repository links to project ${createdProject.id}`);
-      
+
       // Add each repository link to the project
       for (const link of repoLinks) {
         try {
@@ -311,7 +311,7 @@ const addProjectWithLinks = async (projectData: Record<string, unknown>) => {
         }
       }
     }
-    
+
     return createdProject;
   } catch (error) {
     logger.error(`Error adding project: ${error}`);
@@ -335,25 +335,25 @@ const fetchEntityRepoLinks = async (entityTableName: string, entityId: string) =
       logger.log('Found $values property:', response.data.$values);
       return response.data.$values;
     }
-    
+
     // If the response is already an array, return it
     if (Array.isArray(response.data)) {
       logger.log('Response is an array with length:', response.data.length);
       return response.data;
     }
-    
+
     // Otherwise, return an empty array
     logger.log('Returning empty array as fallback');
     return [];
   } catch (error) {
     const axiosError = error as AxiosError;
-    
+
     // If it's an authentication error, we should propagate it
     if (axiosError.response?.status === 401) {
       logger.error(`Authentication error when fetching repository links: ${axiosError.message}`);
       throw error; // Re-throw authentication errors to be handled by caller
     }
-    
+
     // For other errors, log and return empty array
     logger.error(`Failed to fetch repository links: ${error}`);
     return [];

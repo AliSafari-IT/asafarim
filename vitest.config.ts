@@ -1,22 +1,22 @@
 // vitest.config.ts
 import { defineConfig } from 'vitest/config';  
 import react from '@vitejs/plugin-react';
-import path from 'path';
+import { fileURLToPath } from 'url';
 
 export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './'),
-      '~ui': path.resolve(__dirname, './ASafariM.Clients/asafarim-ui'),
-      '~blog': path.resolve(__dirname, './ASafariM.Clients/asafarim-blog'),
-      '~bibliography': path.resolve(__dirname, './ASafariM.Clients/asafarim-bibliography'),
-      '~ui/assets': path.resolve(__dirname, './ASafariM.Clients/asafarim-ui/src/assets'),
-      '~blog/assets': path.resolve(__dirname, './ASafariM.Clients/asafarim-blog/src/assets'),
-      '~bibliography/assets': path.resolve(__dirname, './ASafariM.Clients/asafarim-bibliography/src/assets'),
-      '~blog/static': path.resolve(__dirname, './ASafariM.Clients/asafarim-blog/static'),
-      '~bibliography/static': path.resolve(__dirname, './ASafariM.Clients/asafarim-bibliography/static'),
-      '~ui/mdfiles': path.resolve(__dirname, './ASafariM.Clients/asafarim-ui/docs')
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '~ui': fileURLToPath(new URL('./ASafariM.Clients/asafarim-ui', import.meta.url)),
+      '~blog': fileURLToPath(new URL('./ASafariM.Clients/asafarim-blog', import.meta.url)),
+      '~bibliography': fileURLToPath(new URL('./ASafariM.Clients/asafarim-bibliography', import.meta.url)),
+      '~ui/assets': fileURLToPath(new URL('./ASafariM.Clients/asafarim-ui/src/assets', import.meta.url)),
+      '~blog/assets': fileURLToPath(new URL('./ASafariM.Clients/asafarim-blog/src/assets', import.meta.url)),
+      '~bibliography/assets': fileURLToPath(new URL('./ASafariM.Clients/asafarim-bibliography/src/assets', import.meta.url)),
+      '~blog/static': fileURLToPath(new URL('./ASafariM.Clients/asafarim-blog/static', import.meta.url)),
+      '~bibliography/static': fileURLToPath(new URL('./ASafariM.Clients/asafarim-bibliography/static', import.meta.url)),
+      '~ui/mdfiles': fileURLToPath(new URL('./ASafariM.Clients/asafarim-ui/docs', import.meta.url))
     },
   },
   test: {

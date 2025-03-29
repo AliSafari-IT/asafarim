@@ -7,7 +7,7 @@ import { IField } from '@/interfaces';
 import { addUserByAdmin } from '@/api/userManagerApi';
 import AddForm from '@/components/crud/AddForm';
 import { IFormData } from '@/interfaces/IFormData';
-import useAuth from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import { isAxiosError } from 'axios';
 import axios from 'axios';
 import { debounce } from 'lodash';

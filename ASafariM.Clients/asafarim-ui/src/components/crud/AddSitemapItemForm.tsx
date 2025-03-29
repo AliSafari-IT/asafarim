@@ -6,7 +6,7 @@ import dashboardServices from '@/api/entityServices';
 import { IRoleEnum } from '@/interfaces';
 import Wrapper from '@/layout/Wrapper/Wrapper';
 import { isAxiosError } from 'axios';
-import useAuth from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import {logger} from '@/utils/logger';
 
 interface IAddSitemapItemFormProps {

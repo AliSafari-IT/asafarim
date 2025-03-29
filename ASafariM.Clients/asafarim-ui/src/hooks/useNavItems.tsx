@@ -10,7 +10,7 @@ import {
   Accessibility24Regular as IconAccount,
   SignOut24Regular as IconLogout
 } from '@fluentui/react-icons';
-import useAuth from "./useAuth";
+import { useAuth } from "@/contexts/AuthContext";
 import {logger} from "../utils/logger";
 import React from "react";
 import { IMenuItem } from "../interfaces/IMenuItem";

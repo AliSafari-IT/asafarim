@@ -27,7 +27,7 @@ import MarkdownPage from "./components/MarkdownPage/MarkdownPage";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import AccountSettings from "./pages/Accountpage/AccountSettings";
 import { getAllMdFiles } from "./utils/mdFilesUtils";
-import useAuth from "./hooks/useAuth";
+import { useAuth } from "./contexts/AuthContext";
 import React from "react";
 import AddProject from "./pages/Project/AddProject";
 import ViewProject from "./pages/Project/ViewProject";

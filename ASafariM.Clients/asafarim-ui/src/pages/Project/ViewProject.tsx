@@ -10,7 +10,7 @@ import { Stack } from "@fluentui/react/lib/Stack";
 import { Text } from "@fluentui/react";
 import { ActionButton } from "@fluentui/react/lib/Button";
 import { ArrowLeft24Regular, Edit20Regular } from "@fluentui/react-icons";
-import useAuth from "@/hooks/useAuth";
+import { useAuth } from '@/contexts/AuthContext';
 import Toolbar from "@/components/Toolbars/Toolbar";
 import { logger } from "@/utils/logger";
 import entityServices from "@/api/entityServices";

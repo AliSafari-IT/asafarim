@@ -15,7 +15,7 @@ import { ArrowLeft24Regular, Save20Regular, Add20Regular, Delete24Regular, Searc
 import Toolbar from "@/components/Toolbars/Toolbar";
 import { logger } from "@/utils/logger";
 import axios from "axios";
-import useAuth from "@/hooks/useAuth";
+import { useAuth } from '@/contexts/AuthContext';
 
 const EditProject: React.FC = () => {
   const navigate = useNavigate();

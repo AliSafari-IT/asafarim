@@ -96,5 +96,6 @@ export default defineConfig({
     environment: 'jsdom',
     exclude: [...configDefaults.exclude, 'e2e/*'],
     root: path.resolve(__dirname, './'),
+    setupFiles: ['./vitest.setup.ts'],
   },
 });

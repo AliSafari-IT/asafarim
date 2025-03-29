@@ -9,7 +9,7 @@ import Header from '@/layout/Header/Header';
 import { EditSvgIcon } from '@/assets/SvgIcons/EditSvgIcon';
 import { DeleteSvgIcon } from '@/assets/SvgIcons/DeleteSvgIcon';
 import { ViewSvgIcon } from '@/assets/SvgIcons/ViewSvgIcon';
-import useAuth from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import axios from 'axios'; // Import axios
 import Notification from '@/components/Notification/Notification';
 import { IApiResponse, IRole, IUserRole } from '@/interfaces';

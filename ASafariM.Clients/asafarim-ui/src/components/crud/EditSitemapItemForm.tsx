@@ -7,7 +7,7 @@ import dashboardServices from '../../api/entityServices';
 import { isAxiosError } from 'axios';
 import { ISitemapItem } from '@/interfaces/ISitemapItem';
 import { IRoleEnum } from '@/interfaces/IRole';
-import useAuth from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import {logger} from '@/utils/logger';
 
 const useStyles = makeStyles({

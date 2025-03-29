@@ -1,5 +1,9 @@
 import '@testing-library/jest-dom';
-import { vi } from 'vitest';
+import { vi, expect } from 'vitest';
+import matchers from '@testing-library/jest-dom/matchers';
+
+// Extend Vitest's expect with Jest DOM matchers
+expect.extend(matchers);
 
 // Add any global test setup here
 global.ResizeObserver = class ResizeObserver {

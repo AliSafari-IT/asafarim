@@ -9,7 +9,7 @@ import { debounce } from 'lodash';
 import axios from 'axios';
 import { Dropdown, IDropdownOption, mergeStyles } from '@fluentui/react';
 import { IApiResponse, IRole, IUserRole } from '@/interfaces';
-import useAuth from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import { logger } from "@/utils/logger";
 
 const EditUser: React.FC = () => {

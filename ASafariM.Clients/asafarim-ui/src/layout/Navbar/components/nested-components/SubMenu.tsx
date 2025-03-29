@@ -14,6 +14,7 @@ const SubMenu: React.FC<SubMenuProps> = ({ items, parentId, onMenuClick, onClose
     <div
       className="lg:absolute lg:left-full lg:top-0 w-full lg:w-48 bg-[var(--bg-primary)] shadow-lg rounded-md"
       id={parentId}
+      data-testid="submenu-container"
     >
       {items?.map((item) => (
         <MenuItem

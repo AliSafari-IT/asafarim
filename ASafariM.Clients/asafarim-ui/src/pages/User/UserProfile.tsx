@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 import { getUserById } from '@/api/userService';
-import useAuth from '@/hooks/useAuth';
 import { IUser } from '@/interfaces';
 import Wrapper from '@/layout/Wrapper/Wrapper';
 import Header from '@/layout/Header/Header';

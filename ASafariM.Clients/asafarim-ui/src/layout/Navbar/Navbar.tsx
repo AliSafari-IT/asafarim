@@ -8,7 +8,7 @@ import useNavItems from "@/hooks/useNavItems";
 import { SizeProp } from "@fortawesome/fontawesome-svg-core";
 import ResponsiveDropdownMenu from "./components/ResponsiveDropdownMenu";
 import ChangeLogsDropdown from "./ChangeLogsDropdown";
-import useAuth from "@/hooks/useAuth";
+import { useAuth } from "@/contexts/AuthContext";
 import ASMButton from "./components/ASMButton";
 import { Menu, MenuItem, MenuButton } from '@headlessui/react';
 import { ChevronDownIcon, DocumentTextIcon } from '@heroicons/react/24/outline';

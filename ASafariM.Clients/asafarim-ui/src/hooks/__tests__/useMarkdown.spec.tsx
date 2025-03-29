@@ -1,5 +1,6 @@
 import { renderHook, waitFor } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, vi, beforeEach, afterEach } from 'vitest';
+import { expect } from '@/test-utils/setup-test-env';
 import useMarkdown from '@/hooks/useMarkdown';
 import { logger } from '@/utils/logger';
 

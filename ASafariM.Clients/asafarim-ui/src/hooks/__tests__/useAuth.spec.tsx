@@ -1,6 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 import useAuth from '@/hooks/useAuth';
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
+import { describe, beforeEach, afterEach, it, vi } from 'vitest';
+import { expect } from '@/test-utils/setup-test-env';
 import { ILoginModel } from '@/interfaces/ILoginModel';
 
 // Mock the authapi module
@@ -74,6 +75,7 @@ describe('useAuth', () => {
   it('should set auth state on login', async () => {
     const testCredentials: ILoginModel = {
       userName: 'admin',
+      email: 'admin@example.com',
       password: 'password123',
       rememberMe: true
     };

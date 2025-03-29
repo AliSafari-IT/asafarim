@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { logger } from '@/utils/logger';
-import useAuth from '../../hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 
 const LogoutPage = () => {
   const navigate = useNavigate();

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "@/contexts/ThemeContext";
-import useAuth from "@/hooks/useAuth";
+import { useAuth } from "@/contexts/AuthContext";
 import useNavItems from "@/hooks/useNavItems";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import {
@@ -23,8 +23,8 @@ import { logger } from '@/utils/logger';
 import { Transition } from "@headlessui/react";
 
 const ModernNavbar: React.FC = () => {
-  const { authenticatedUser, authenticated, token } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const { authenticatedUser, authenticated, token } = useAuth();
   const location = useLocation();
   const navItems = useNavItems();
   const mdFiles = getAllMdFiles();
@@ -304,7 +304,7 @@ const ModernNavbar: React.FC = () => {
               <ChangeLogsDropdown mobileView={false} />
 
               {/* Auth */}
-              {authenticated && token && authenticatedUser ? (
+              {authenticated && authenticatedUser ? (
                 <UserDropdown mobileView={false} themeToggler={null} />
               ) : (
                 <div className="flex items-center space-x-2">
@@ -483,7 +483,7 @@ const ModernNavbar: React.FC = () => {
               <ChangeLogsDropdown mobileView={true} />
 
               {/* Auth for Mobile */}
-              {authenticated && token && authenticatedUser ? (
+              {authenticated && authenticatedUser ? (
                 <UserDropdown mobileView={true} themeToggler={null} />
               ) : (
                 <div className="px-4 py-2 space-y-1">

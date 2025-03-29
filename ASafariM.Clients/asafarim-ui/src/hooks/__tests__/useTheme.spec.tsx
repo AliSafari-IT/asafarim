@@ -1,5 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, vi, beforeEach, afterEach } from 'vitest';
+import { expect } from '@/test-utils/setup-test-env';
 import { useTheme, ThemeProvider } from '@/contexts/ThemeContext';
 import React from 'react';
 

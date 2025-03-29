@@ -3,7 +3,7 @@ import { FaKey, FaTrash, FaDownload, FaUser } from "react-icons/fa";
 import Wrapper from "@/layout/Wrapper/Wrapper";
 import Header from "@/layout/Header/Header";
 import Footer from "@/layout/Footer/Footer";
-import useAuth from "@/hooks/useAuth";
+import { useAuth } from '@/contexts/AuthContext';
 import DeleteAccount from "../User/DeleteAccount";
 import ExportData from "../User/ExportData";
 import { useNavigate } from "react-router-dom";

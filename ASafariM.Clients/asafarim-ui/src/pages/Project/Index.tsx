@@ -16,7 +16,7 @@ import { IProject } from "../../interfaces/IProject";
 import Notification from "@/components/Notification/Notification";
 import { logger } from "@/utils/logger";
 import dashboardServices from "@/api/entityServices";
-import useAuth from "@/hooks/useAuth";
+import { useAuth } from '@/contexts/AuthContext';
 
 const ProjectHome: React.FC = () => {
   const [loading, setLoading] = useState(false);

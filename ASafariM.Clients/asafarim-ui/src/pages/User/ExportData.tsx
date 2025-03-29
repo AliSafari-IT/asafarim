@@ -71,7 +71,7 @@ const ExportData: React.FC<{ currentUserInfo: IUserInfo | null }> = ({ currentUs
     };
 
     return (
-        <Wrapper>
+        <>
             <div className="w-full max-w-3xl mx-auto px-4 py-8">
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
                     <div className="p-6 border-b border-gray-200 dark:border-gray-700">
@@ -152,7 +152,7 @@ const ExportData: React.FC<{ currentUserInfo: IUserInfo | null }> = ({ currentUs
                     </div>
                 </div>
             </div>
-        </Wrapper>
+        </>
     );
 };
 

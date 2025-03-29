@@ -1,7 +1,5 @@
 import Layout from "../../layout/Layout";
-import NotAuthenticated from "../../components/NotAuthenticated";
 import HomePanels from "./HomePanels";
-import { useAuth } from "@/contexts/AuthContext";
 import StacksPage from "../../components/Stacks/StacksPage";
 import DisplayMd from "@/components/MarkdownPage/DisplayMd";
 import { useLocation } from "react-router-dom";
@@ -12,7 +10,6 @@ import HeroSection from "./HeroSection";
 import TechSkillsSection from "./TechSkillsSection";
 
 export const Home = () => {
-  const { authenticated } = useAuth();
   const location = useLocation();
   var isUnderConstruction = false;
 
@@ -25,19 +22,7 @@ export const Home = () => {
     loadMarkdownContent();
   }, [location.pathname]);
 
-  if (!authenticated) {
-    return (
-      <Layout header={<></>} pageTitle="NotAuthenticated Page">
-        <div
-          className="w-full mt-3 alert alert-danger alert-dismissible fade show"
-          role="alert"
-        >
-          <NotAuthenticated />
-        </div>
-      </Layout>
-    );
-  }
-
+  // Removed authentication check to allow all users to see the home page
   return (
     <Layout header={<></>} pageTitle="Home">
       {isUnderConstruction && (

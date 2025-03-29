@@ -12,6 +12,7 @@ export default defineConfig({
       '~blog': fileURLToPath(new URL('./ASafariM.Clients/asafarim-blog', import.meta.url)),
       '~bibliography': fileURLToPath(new URL('./ASafariM.Clients/asafarim-bibliography', import.meta.url)),
       '~ui/assets': fileURLToPath(new URL('./ASafariM.Clients/asafarim-ui/src/assets', import.meta.url)),
+      '~ui/api': fileURLToPath(new URL('./ASafariM.Clients/asafarim-ui/src/api', import.meta.url)),
       '~blog/assets': fileURLToPath(new URL('./ASafariM.Clients/asafarim-blog/src/assets', import.meta.url)),
       '~bibliography/assets': fileURLToPath(new URL('./ASafariM.Clients/asafarim-bibliography/src/assets', import.meta.url)),
       '~blog/static': fileURLToPath(new URL('./ASafariM.Clients/asafarim-blog/static', import.meta.url)),

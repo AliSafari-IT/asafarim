@@ -143,7 +143,7 @@ const EditUser: React.FC = () => {
     }
   }, [user?.roles]);
 
-  const handleInputChange = (
+  const handleInputChange = ( 
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     if (!user) return;

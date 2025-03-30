@@ -97,24 +97,30 @@ const LoginPage = () => {
       logger.error('Login error: ' + JSON.stringify(err, null, 2));
       logger.error('Login error details:', err);
   
-      if (isAxiosError(err)) {
-        if (err.response) {
-          const { status, data } = err.response;
-          if (status === 401) {
-            setError(data?.message || 'Invalid credentials.');
-          } else if (status === 403) {
-            if (data?.isDeleted) {
-              setShowDeletedMessage(true);
-              return;
-            }
-            setError(data?.message || 'Your account is locked. Try again later.');
-          } else {
-            setError('An unexpected error occurred.');
+      if (isAxiosError(err) || (err as any).isAxiosError) {
+        if ((err as any).response) {
+          const { data } = (err as any).response;
+          
+          // Check for deleted account
+          if (data?.isDeleted) {
+            setShowDeletedMessage(true);
+            return;
           }
+          
+          // Use the exact error message from the response
+          setError(data?.message || 'Invalid credentials.');
+        } else if ((err as any).request) {
+          logger.error('Request made but no response received:', (err as any).request);
+          setError('No response received from server. Please check your connection.');
         } else {
+          logger.error('Error setting up request:', (err as any).message);
           setError('Network error. Please try again.');
         }
+      } else if (err instanceof Error) {
+        logger.error('Non-Axios error:', (err as Error).message);
+        setError((err as Error).message || 'An unexpected error occurred.');
       } else {
+        logger.error('Unknown error type:', err);
         setError('An unexpected error occurred.');
       }
       setLoading(false);
@@ -125,7 +131,7 @@ const LoginPage = () => {
   if (showDeletedMessage) {
     return (
       <Wrapper header={<div className="w-full text-center py-8 text-2xl text-primary border-b border-primary z-10">Account Deleted</div>}>
-        <DeletedAccountMessage email={email} onClose={() => setShowDeletedMessage(false)} data-testid="deleted-account-message" />
+        <DeletedAccountMessage data-testid="deleted-account-message" />
       </Wrapper>
     );
   }
@@ -139,7 +145,7 @@ const LoginPage = () => {
               Sign in to your account
             </h2>
           </div>
-          <form className="mt-8 space-y-6" onSubmit={handleLogin}>
+          <form className="mt-8 space-y-6" onSubmit={handleLogin} role="form">
             <div className="rounded-md shadow-sm -space-y-px">
               <div>
                 <label htmlFor="email-address" className="sr-only">
@@ -231,6 +237,8 @@ const LoginPage = () => {
                   key={index}
                   type="button"
                   onClick={() => {
+                    setEmail(demo.email);
+                    setPassword(demo.password);
                     setLoading(true);
                     setError(null);
                     logger.info('Attempting demo login with email: ' + demo.email);
@@ -240,7 +248,7 @@ const LoginPage = () => {
                     sessionStorage.removeItem('auth');
                     
                     // Attempt login
-                    login(demo)
+                    login({ email: demo.email.trim(), password: demo.password.trim() })
                       .then(auth => {
                         logger.info('Demo login API response:', auth);
                         
@@ -256,13 +264,8 @@ const LoginPage = () => {
                         
                         // Store in appropriate storage
                         try {
-                          if (rememberMe) {
-                            localStorage.setItem('auth', JSON.stringify(authData));
-                            logger.info('Auth data stored in localStorage');
-                          } else {
-                            sessionStorage.setItem('auth', JSON.stringify(authData));
-                            logger.info('Auth data stored in sessionStorage');
-                          }
+                          localStorage.setItem('auth', JSON.stringify(authData));
+                          logger.info('Auth data stored in localStorage');
                           
                           // Notify other components about auth state change
                           window.dispatchEvent(new Event('authStateChange'));

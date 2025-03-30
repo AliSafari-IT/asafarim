@@ -62,14 +62,14 @@ const ForgotPasswordPage = () => {
       <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
           <div>
-            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900" data-testid="forgot-password-heading">
               Forgot Password
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600">
               Enter your email address and we'll send you instructions to reset your password.
             </p>
           </div>
-          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <form className="mt-8 space-y-6" onSubmit={handleSubmit} role="form">
             <div className="rounded-md shadow-sm -space-y-px">
               <div>
                 <label htmlFor="email-address" className="sr-only">
@@ -85,16 +85,17 @@ const ForgotPasswordPage = () => {
                   placeholder="Email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  data-testid="email-input"
                 />
               </div>
             </div>
 
             {error && (
-              <div className="text-red-500 text-sm text-center">{error}</div>
+              <div className="text-red-500 text-sm text-center" data-testid="error-message">{error}</div>
             )}
 
             {success && (
-              <div className="text-green-500 text-sm text-center">{success}</div>
+              <div className="text-green-500 text-sm text-center" data-testid="success-message">{success}</div>
             )}
 
             <div>
@@ -102,6 +103,7 @@ const ForgotPasswordPage = () => {
                 type="submit"
                 disabled={loading}
                 className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                data-testid="reset-button"
               >
                 {loading ? 'Sending...' : 'Send Reset Instructions'}
               </button>
@@ -115,6 +117,7 @@ const ForgotPasswordPage = () => {
                   e.preventDefault();
                   navigate('/login');
                 }}
+                data-testid="back-to-login-link"
               >
                 Back to Login
               </a>

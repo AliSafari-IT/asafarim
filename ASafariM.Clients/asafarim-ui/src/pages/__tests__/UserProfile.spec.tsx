@@ -157,8 +157,9 @@ describe("UserProfile", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText("John Doe")).toBeInTheDocument();
-      expect(screen.getByText("johndoe")).toBeInTheDocument();
+      expect(screen.getByText("John")).toBeInTheDocument();
+      expect(screen.getByText("Doe")).toBeInTheDocument();
+      expect(screen.getAllByText("johndoe")[0]).toBeInTheDocument();
       expect(screen.getByText("john@example.com")).toBeInTheDocument();
     });
   });

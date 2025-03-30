@@ -20,6 +20,7 @@ describe("handleUpdateProfile", () => {
   const mockSetLoading = vi.fn();
   const mockAuthenticatedUser = {
     id: "user123",
+    isAdmin: false,
     email: "old@example.com",
     firstName: "Old",
     lastName: "Name",

@@ -74,17 +74,21 @@ const StacksPage: React.FC<StacksPageProps> = ({ docBranch, stackTitle }) => {
 
   const handleSearch = (e?: { target: { value: string } }) => {
     if (e) {
-      setSearchTerm(e.target.value?.trim().toLowerCase());
+      setSearchTerm(e.target.value?.toLowerCase());
     }
   };
 
   const filteredData = Object.entries(dynamicStackData).reduce(
     (acc, [category, stacks]) => {
-      const filteredStacks = stacks?.filter((stack) =>{
+      const filteredStacks = stacks?.filter((stack) => {
         const stackName = stack?.title?.toLowerCase();
         const stackDescription = stack?.description?.toLowerCase();
         const stackContent = stack?.content?.toLowerCase();
-        return stackName?.includes(searchTerm) || stackDescription?.includes(searchTerm) || stackContent?.includes(searchTerm);
+        return (
+          stackName?.includes(searchTerm) ||
+          stackDescription?.includes(searchTerm) ||
+          stackContent?.includes(searchTerm)
+        );
       });
       if (filteredStacks?.length) {
         acc[category] = filteredStacks;
@@ -296,16 +300,16 @@ const StacksPage: React.FC<StacksPageProps> = ({ docBranch, stackTitle }) => {
             isBlocking={true}
             containerClassName="stack-modal-container"
           >
-            <div className="stack-modal-content">
+            <div className="stack-modal-content w-full max-w-[95vw] md:max-w-[600px] mx-auto my-4">
               <div className="modal-header bg-gradient-to-r from-[var(--info-light)] to-[var(--info)] p-4 rounded-t-lg">
                 <h2 className="text-xl font-bold text-white">
                   {selectedStack.name}
                 </h2>
               </div>
 
-              <div className="modal-body p-6">
+              <div className="modal-body p-4 md:p-6 max-h-[70vh] overflow-y-auto">
                 {selectedStack.description && (
-                  <p className="text-gray-700 dark:text-gray-300 mb-6">
+                  <p className="text-gray-700 dark:text-gray-300 mb-4 md:mb-6">
                     {selectedStack.description}
                   </p>
                 )}
@@ -324,10 +328,10 @@ const StacksPage: React.FC<StacksPageProps> = ({ docBranch, stackTitle }) => {
                 </div>
               </div>
 
-              <div className="modal-footer bg-gray-50 dark:bg-gray-800 p-4 rounded-b-lg flex justify-between">
+              <div className="modal-footer bg-gray-50 dark:bg-gray-800 p-4 rounded-b-lg flex flex-col md:flex-row justify-between gap-2">
                 <button
                   onClick={closeModal}
-                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  className="w-full md:w-auto px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
                 >
                   Close
                 </button>
@@ -343,7 +347,7 @@ const StacksPage: React.FC<StacksPageProps> = ({ docBranch, stackTitle }) => {
                       parentFolder: parentFolderName,
                     });
                   }}
-                  className="px-4 py-2 bg-[var(--info)] text-white rounded-md hover:bg-[var(--info-dark)] transition-colors"
+                  className="px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-md hover:bg-blue-700 dark:hover:bg-blue-800 transition-colors"
                 >
                   View Details
                 </button>

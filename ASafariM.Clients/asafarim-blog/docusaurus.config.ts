@@ -38,6 +38,8 @@ const config: Config = {
           sidebarPath: './sidebars.ts',
           editUrl:
             'https://github.com/AliSafari-IT/asafarim/tree/main/ASafariM.Clients/asafarim-blog/',
+          sidebarCollapsible: true,
+          sidebarCollapsed: true,
         },
         blog: {
           showReadingTime: true,
@@ -99,33 +101,23 @@ const config: Config = {
       ],
     },
 
-    // Enhance footer with better organization
     footer: {
       style: 'dark',
       links: [
         {
-          title: 'Content',
+          title: 'Community',
           items: [
             {
-              label: 'Articles',
-              to: '/docs/intro',
-            },
-            {
-              label: 'Blog',
-              to: '/blog',
-            },
-          ],
-        },
-        {
-          title: 'Connect',
-          items: [
-            {
-              label: 'GitHub',
-              href: 'https://github.com/AliSafari-IT',
+              label: 'Stack Overflow',
+              href: 'https://stackoverflow.com/users/10703628/ali-safari',
             },
             {
               label: 'LinkedIn',
               href: 'https://www.linkedin.com/in/ali-safari-m/',
+            },
+            {
+              label: 'Twitter',
+              href: 'https://twitter.com/asafarim',
             },
           ],
         },
@@ -133,35 +125,28 @@ const config: Config = {
           title: 'More',
           items: [
             {
-              label: 'ASafariM Website',
-              href: 'https://asafarim.com',
+              label: 'Blog',
+              to: '/blog',
+            },
+            {
+              label: 'GitHub',
+              href: 'https://github.com/AliSafari-IT/asafarim',
             },
           ],
         },
       ],
-      copyright: `Copyright ${new Date().getFullYear()} ASafariM · Built with Docusaurus`,
+      copyright: `Copyright ${new Date().getFullYear()} ASafariM. Built with Docusaurus.`,
     },
 
-    // Enhance code blocks
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
-      additionalLanguages: ['bash', 'diff', 'json', 'typescript'],
     },
-
-    // Add colorMode settings
+    
     colorMode: {
       defaultMode: 'light',
       disableSwitch: false,
       respectPrefersColorScheme: true,
-    },
-
-    // Add mobile menu settings
-    docs: {
-      sidebar: {
-        hideable: true,
-        autoCollapseCategories: true,
-      },
     },
   } satisfies Preset.ThemeConfig,
 };

@@ -1,4 +1,5 @@
 I always use yarn and never npm. Also:
+Never downgrade packages without asking.
 1. My apps are already running in @terminal_selection 
 2. do not run my apps until you are asked to
 3. do not install dependencies until you are asked to

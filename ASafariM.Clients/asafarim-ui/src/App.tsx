@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
 import About from "./pages/AboutMe/About";
 import Dashboard from "./pages/Dashboard/DashboardPage";
@@ -54,7 +54,7 @@ import { trackPageView } from "./services/analyticsService";
 import AnalyticsPage from "./pages/Analytics/AnalyticsPage";
 import ActivityPage from "./pages/Activity/ActivityPage";
 import NavbarDemo from "./pages/Demo/NavbarDemo";
-import { logger } from '@/utils/logger';
+import { logger } from "@/utils/logger";
 
 // const userUrl = API_URL + '/users';
 
@@ -442,13 +442,21 @@ function App() {
             path="/sitemap-items/delete/:id"
             element={<DeleteForm entity="sitemapitems" />}
           />
+          {/* redirect  /blog to blog.asafarim.com */}
           <Route
             path="/blog"
+            element={<Navigate to="https://blog.asafarim.com" replace />}
+          />
+          {/* redirect  /community to community.asafarim.com */}
+          <Route
+            path="/community"
             element={
               <UnderConstruction
-                title="Our Blog is Under Construction"
+                title="Our Community is Under Construction"
                 constructionTips={[
-                  "Our blog will feature in-depth technical articles and tutorials.",
+                  `We're working hard to build a community platform that will provide a space for 
+                  technical discussions, sharing knowledge, and fostering a community of like-minded 
+                  individuals.`,
                   "We're building a comment system for community discussions.",
                   "Expect categories for different technology domains.",
                   "Subscribe feature coming soon to get notified of new posts.",
@@ -457,9 +465,10 @@ function App() {
                   "Code snippets with syntax highlighting are on the way!",
                   "Search functionality will help you find relevant content quickly.",
                 ]}
-                description="We're working hard to build a new and improved blog. Check back soon!"
-                bodyText={`Our team is working hard to create a blog platform that will provide valuable insights, 
-              tutorials, and updates about our products and services. We appreciate your patience 
+                description="We're working hard to build a new and improved community. Check back soon!"
+                bodyText={`Our team is working hard to create a community platform that will provide a space for 
+              technical discussions, sharing knowledge, and fostering a community of like-minded 
+              individuals. We appreciate your patience 
               as we construct this new section of our website.`}
               />
             }

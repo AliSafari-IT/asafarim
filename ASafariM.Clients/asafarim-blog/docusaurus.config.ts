@@ -1,6 +1,7 @@
 import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
+
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 const config: Config = { 
   title: 'Blog | ASafariM',
@@ -73,15 +74,13 @@ const config: Config = {
     // Enhance navbar
     navbar: {
       title: 'ASafariM',
-      hideOnScroll: true,
       style: 'dark',
       logo: {
         alt: 'ASafariM Logo',
         src: 'img/logoT.svg',
         srcDark: 'img/logoT.svg',
-        href: 'https://asafarim.com',
-        target: '_self',
-        className: 'navbar-logo',
+        width: 32,
+        height: 32,
       },
       items: [
         {
@@ -89,9 +88,8 @@ const config: Config = {
           sidebarId: 'tutorialSidebar',
           position: 'left',
           label: 'Articles',
-          className: 'navbar-item',
         },
-        {to: '/blog', label: 'Blog', position: 'left', className: 'navbar-item'},
+        {to: '/blog', label: 'Blog', position: 'left'},
         {
           href: 'https://github.com/AliSafari-IT/asafarim',
           position: 'right',
@@ -156,6 +154,14 @@ const config: Config = {
       defaultMode: 'light',
       disableSwitch: false,
       respectPrefersColorScheme: true,
+    },
+    
+    // Add mobile menu settings
+    docs: {
+      sidebar: {
+        hideable: true,
+        autoCollapseCategories: true,
+      },
     },
   } satisfies Preset.ThemeConfig,
 };

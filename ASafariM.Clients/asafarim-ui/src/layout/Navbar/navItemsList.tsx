@@ -10,7 +10,7 @@ import {
 } from '@fluentui/react-icons';
 import { IMenuItem } from '../../interfaces/IMenuItem';
 import { INavItem } from '../../interfaces/INavItem';
-import { getAllMdFiles } from '@/utils/mdFilesUtils';
+import mdFilesUtils from '@/utils/mdFilesUtils';
 
 const mdChapters: INavItem[] = [
   {
@@ -229,34 +229,10 @@ const essentialInsights: IMenuItem = {
   name: 'asafarim-essential-insights',
   to: '#',
   icon: <IconTeaching />,
-  subMenu: [
-    {
-      id: 'console-applications',
-      title: 'Console Applications',
-      className: '',
-      description: '',
-      label: 'Console Applications',
-      style: {},
-      isForNavbar: true,
-      name: 'asafarim-console-applications',
-      icon: <IconTeaching />,
-      subMenu: [{
-        id: 'csharp-recursive-factorial-list',
-        title: 'C# Recursive Factorial List',
-        className: '',
-        description: '',
-        label: 'C# Recursive Factorial List',
-        style: {},
-        isForNavbar: true,
-        name: 'asafarim-csharp-recursive-factorial-list',
-        to: '/essential-insights/console-applications/csharp-recursive-factorial-list',
-        icon: <IconTeaching />
-      }],
-    },
-  ],
+  subMenu: mdFilesUtils.getAllMdFiles().essentialInsights.subMenu,
 };
 
-const mdFiles = getAllMdFiles();
+const mdFiles = mdFilesUtils.getAllMdFiles();
 
 // Dashboard menu item with dropdown
 const dashboard: IMenuItem = {

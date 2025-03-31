@@ -160,16 +160,16 @@ describe('MenuItem', () => {
     extendedExpect(iconElement).toHaveClass('ml-2');
     
     // SubMenu should be rendered when active
-    const submenu = screen.getByTestId('submenu-parent-item');
+    const submenu = screen.getByTestId('submenu-container');
     extendedExpect(submenu).toBeInTheDocument();
+    extendedExpect(submenu).toHaveClass('nested-submenu');
+    extendedExpect(submenu).toHaveClass('active');
     
     // SubMenu should contain child items
-    const childItem1 = screen.getByTestId('submenu-item-child-1');
-    const childItem2 = screen.getByTestId('submenu-item-child-2');
-    extendedExpect(childItem1).toBeInTheDocument();
-    extendedExpect(childItem2).toBeInTheDocument();
-    extendedExpect(childItem1).toHaveTextContent('Child 1');
-    extendedExpect(childItem2).toHaveTextContent('Child 2');
+    const childItems = screen.getAllByRole('menuitem');
+    extendedExpect(childItems.length).toBe(2);
+    extendedExpect(childItems[0]).toHaveTextContent('Child 1');
+    extendedExpect(childItems[1]).toHaveTextContent('Child 2');
   });
 
   it('does not render submenu for items without children', () => {
@@ -189,5 +189,57 @@ describe('MenuItem', () => {
     // No submenu should be rendered for items without children
     const submenu = screen.queryByTestId(/submenu-/);
     extendedExpect(submenu).not.toBeInTheDocument();
+  });
+
+  it('adds has-children class to button when item has children', () => {
+    renderWithRouter(
+      <MenuItem 
+        item={parentItem} 
+        isActive={false} 
+        onMenuClick={vi.fn()} 
+        onClose={vi.fn()} 
+      />
+    );
+    
+    const buttonElement = screen.getByRole('button');
+    extendedExpect(buttonElement).toHaveClass('has-children');
+  });
+
+  it('calls both onMenuClick and handleNestedMenuClick when button with children is clicked', () => {
+    const onMenuClick = vi.fn();
+    renderWithRouter(
+      <MenuItem 
+        item={parentItem} 
+        isActive={false} 
+        onMenuClick={onMenuClick} 
+        onClose={vi.fn()} 
+      />
+    );
+    
+    const buttonElement = screen.getByRole('button');
+    fireEvent.click(buttonElement);
+    
+    // Should call onMenuClick with the item id
+    expect(onMenuClick).toHaveBeenCalledTimes(1);
+    expect(onMenuClick).toHaveBeenCalledWith('parent-item');
+    
+    // After clicking, the nested submenu should have the 'active' class
+    const submenu = screen.getByTestId('submenu-container');
+    extendedExpect(submenu).toHaveClass('nested-submenu');
+  });
+
+  it('renders nested-submenu with active class when isActive is true', () => {
+    renderWithRouter(
+      <MenuItem 
+        item={parentItem} 
+        isActive={true} 
+        onMenuClick={vi.fn()} 
+        onClose={vi.fn()} 
+      />
+    );
+    
+    const submenu = screen.getByTestId('submenu-container');
+    extendedExpect(submenu).toHaveClass('nested-submenu');
+    extendedExpect(submenu).toHaveClass('active');
   });
 });

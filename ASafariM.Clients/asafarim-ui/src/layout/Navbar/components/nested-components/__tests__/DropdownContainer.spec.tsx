@@ -17,14 +17,14 @@ describe('DropdownContainer', () => {
     
     // Check that the container has the correct classes
     const containerElement = childElement.parentElement;
-    extendedExpect(containerElement).toHaveClass('lg:absolute');
-    extendedExpect(containerElement).toHaveClass('lg:left-0');
-    extendedExpect(containerElement).toHaveClass('lg:mt-2');
-    extendedExpect(containerElement).toHaveClass('w-full');
-    extendedExpect(containerElement).toHaveClass('lg:w-48');
+    extendedExpect(containerElement).toHaveClass('absolute');
+    extendedExpect(containerElement).toHaveClass('left-0');
+    extendedExpect(containerElement).toHaveClass('mt-2');
+    extendedExpect(containerElement).toHaveClass('w-48');
     extendedExpect(containerElement).toHaveClass('bg-[var(--bg-primary)]');
     extendedExpect(containerElement).toHaveClass('shadow-lg');
     extendedExpect(containerElement).toHaveClass('rounded-md');
+    extendedExpect(containerElement).toHaveClass('z-10');
   });
 
   it('does not render anything when isOpen is false', () => {

@@ -59,12 +59,15 @@ describe('navItemsList', () => {
 
   it('should have valid essential insights structure', () => {
     const insightsItem = navItems.find(item => item.id === 'essential-insights') as IMenuItem;
-    const consoleApps = insightsItem.subMenu?.[0];
     
-    expect(consoleApps?.subMenu?.[0]).toMatchObject({
-      id: 'csharp-recursive-factorial-list',
-      to: '/essential-insights/console-applications/csharp-recursive-factorial-list'
-    });
+    // Check that the Essential Insights item exists and has the correct properties
+    expect(insightsItem).toBeDefined();
+    expect(insightsItem.title).toBe('Essential Insights');
+    expect(insightsItem.isForNavbar).toBe(true);
+    
+    // Verify that it has a subMenu array (which is now dynamically generated)
+    expect(insightsItem.subMenu).toBeDefined();
+    expect(Array.isArray(insightsItem.subMenu)).toBe(true);
   });
 
   it('should have proper navbar flags', () => {

@@ -18,7 +18,7 @@ import Brand from "./components/Brand";
 import ASMButton from "./components/ASMButton";
 import ResponsiveDropdownMenu from "./components/ResponsiveDropdownMenu";
 import { IMenuItem } from "@/interfaces/IMenuItem";
-import { getAllMdFiles } from "@/utils/mdFilesUtils";
+import mdFilesUtils from "@/utils/mdFilesUtils";
 import { logger } from '@/utils/logger';
 import { Transition } from "@headlessui/react";
 
@@ -27,7 +27,7 @@ const ModernNavbar: React.FC = () => {
   const { authenticatedUser, authenticated, token } = useAuth();
   const location = useLocation();
   const navItems = useNavItems();
-  const mdFiles = getAllMdFiles();
+  const mdFiles = mdFilesUtils.getAllMdFiles();
 
   // Find specific nav items
   const dashboardItem = navItems.find((item) => item.id === "dashboard");
@@ -102,7 +102,7 @@ const ModernNavbar: React.FC = () => {
   };
 
   // Render nested menu items for mobile view
-  const renderNestedMenu = (items: IMenuItem[], parentPath: string = "") => {
+  const renderNestedMenu = (items: IMenuItem[], parentPath: string = "", depth: number = 0) => {
     return items.map((item, idx) => {
       const itemId = item.id || `${parentPath}-${idx}`;
       const isOpen = activeDropdowns.includes(itemId);
@@ -115,6 +115,7 @@ const ModernNavbar: React.FC = () => {
                 className={`flex justify-between items-center w-full px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md text-sm font-medium cursor-pointer ${
                   isOpen ? "bg-gray-100 dark:bg-gray-800" : ""
                 }`}
+                style={{ paddingLeft: `${depth * 0.5 + 1}rem` }}
                 onClick={() => toggleDropdown(itemId)}
               >
                 <span className="flex items-center">
@@ -128,18 +129,19 @@ const ModernNavbar: React.FC = () => {
                 />
               </div>
               {isOpen && (
-                <div className="pl-6 mt-1 space-y-1">
+                <div className="mt-1 space-y-1">
                   {item.subMenu.map((subItem, subIdx) => {
                     const subItemId = subItem.id || `${itemId}-${subIdx}`;
 
                     return (
                       <div key={subItemId} className="w-full">
-                        {subItem.to ? (
+                        {subItem.to && !subItem.to.startsWith('#') ? (
                           <Link
                             to={subItem.to}
                             className={`block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md ${
                               isActive(subItem.to) ? "bg-gray-100 dark:bg-gray-800 font-semibold" : ""
                             }`}
+                            style={{ paddingLeft: `${(depth + 1) * 0.5 + 1}rem` }}
                             onClick={() => {
                               setIsMenuOpen(false);
                               setActiveDropdowns([]);
@@ -152,10 +154,13 @@ const ModernNavbar: React.FC = () => {
                           </Link>
                         ) : subItem.subMenu && subItem.subMenu.length > 0 ? (
                           <div className="w-full">
-                            {renderNestedMenu([subItem], subItemId)}
+                            {renderNestedMenu([subItem], subItemId, depth + 1)}
                           </div>
                         ) : (
-                          <div className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300">
+                          <div 
+                            className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300"
+                            style={{ paddingLeft: `${(depth + 1) * 0.5 + 1}rem` }}
+                          >
                             <span className="flex items-center">
                               {subItem.icon && <span className="mr-2">{subItem.icon}</span>}
                               {subItem.title}
@@ -174,6 +179,7 @@ const ModernNavbar: React.FC = () => {
               className={`block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md ${
                 isActive(item.to) ? "bg-gray-100 dark:bg-gray-800 font-semibold" : ""
               }`}
+              style={{ paddingLeft: `${depth * 0.5 + 1}rem` }}
               onClick={() => setIsMenuOpen(false)}
             >
               <span className="flex items-center">

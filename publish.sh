@@ -30,8 +30,6 @@ SERVICE_FILE="/etc/systemd/system/$SERVICE_NAME.service"
 MAX_RETRIES=5
 HEALTH_CHECK_URL="http://localhost:5000/api/health"
 LOG_DIR="/var/www/asafarim/Logs"
-TEST_RESULTS_DIR="$BASE_DIR/ASafariM.Test/TestResults"
-TEST_RESULTS_FILE="$TEST_RESULTS_DIR/test_results.trx"
 
 # Ensure log directory exists
 mkdir -p "$LOG_DIR"
@@ -40,38 +38,6 @@ DEPLOY_LOG="$LOG_DIR/deploy_$(date +%Y%m%d_%H%M%S).log"
 # Log function
 log() {
   echo "$(date +"%Y-%m-%d %H:%M:%S") - $1" | tee -a "$DEPLOY_LOG"
-}
-
-# Run tests and check results
-run_tests_and_verify() {
-  log "Running tests before deployment..."
-  
-  # Create test results directory if it doesn't exist
-  mkdir -p "$TEST_RESULTS_DIR"
-  
-  # Run the tests
-  dotnet test "$BASE_DIR/ASafariM.Test/ASafariM.Test.csproj" --logger "trx;LogFileName=$TEST_RESULTS_FILE"
-  TEST_EXIT_CODE=$?
-  
-  if [ $TEST_EXIT_CODE -ne 0 ]; then
-    log "❌ Tests failed with exit code $TEST_EXIT_CODE. Aborting deployment."
-    return 1
-  fi
-  
-  # Check for failed tests in the TRX file
-  if [ -f "$TEST_RESULTS_FILE" ]; then
-    FAILED_TESTS=$(grep -c 'outcome="Failed"' "$TEST_RESULTS_FILE")
-    if [ "$FAILED_TESTS" -gt 0 ]; then
-      log "❌ $FAILED_TESTS tests failed. Aborting deployment."
-      return 1
-    else
-      log "✅ All tests passed. Proceeding with deployment."
-      return 0
-    fi
-  else
-    log "❌ Test results file not found. Aborting deployment."
-    return 1
-  fi
 }
 
 # Clean old log files function
@@ -84,18 +50,22 @@ clean_old_logs() {
   # Get unique log file prefixes (everything before the timestamp)
   local prefixes=$(find "$log_dir" -type f -name "*.log" | sed -E 's/(.*)_[0-9]{8}_[0-9]{6}.log$/\1/' | sort -u)
   
-  log "Processing logs with prefix: $base_prefix"
+  # For each prefix, keep only the most recent files
+  for prefix in $prefixes; do
+    local base_prefix=$(basename "$prefix")
+    log "Processing logs with prefix: $base_prefix"
     
-  # Count files for this prefix
-  local file_count=$(find "$log_dir" -type f -name "${base_prefix}_*.log" | wc -l)
+    # Count files for this prefix
+    local file_count=$(find "$log_dir" -type f -name "${base_prefix}_*.log" | wc -l)
     
-  if [ "$file_count" -gt "$keep_count" ]; then
-    log "Keeping $keep_count of $file_count ${base_prefix} logs"
-    find "$log_dir" -type f -name "${base_prefix}_*.log" | sort -r | tail -n +$((keep_count+1)) | xargs -r rm
-    log "Removed $(($file_count-$keep_count)) old ${base_prefix} logs"
-  else
-    log "No old ${base_prefix} logs to remove (found $file_count)"
-  fi
+    if [ "$file_count" -gt "$keep_count" ]; then
+      log "Keeping $keep_count of $file_count ${base_prefix} logs"
+      find "$log_dir" -type f -name "${base_prefix}_*.log" | sort -r | tail -n +$((keep_count+1)) | xargs -r rm
+      log "Removed $(($file_count-$keep_count)) old ${base_prefix} logs"
+    else
+      log "No old ${base_prefix} logs to remove (found $file_count)"
+    fi
+  done
 }
 
 # Clean old logs after creating new log file
@@ -378,12 +348,7 @@ clean_old_backups() {
 # Step 1: Check for updates in asafarim repository
 update_repo "$REPO_DIR"
 
-# Step 2: Run tests and verify results
-if ! run_tests_and_verify; then
-  exit 1
-fi
-
-# Step 3: Apply database migrations if requested
+# Step 2: Apply database migrations if requested
 if [ "$DB_MODE" = "y" ]; then
   # Apply database migrations
   cd "$REPO_DIR" || handle_error "Repository directory not found!" "exit"

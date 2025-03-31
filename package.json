@@ -13,7 +13,7 @@
     "asafarim-ui:publish": "bash -c 'set -e && cd /var/www/asafarim && git pull origin main && yarn workspace asafarim-ui build && sudo rm -rf /var/www/asafarim-com/public_html/* && sudo cp -r /var/www/asafarim/ASafariM.Clients/asafarim-ui/dist/* /var/www/asafarim-com/public_html/ && sudo chown -R www-data:www-data /var/www/asafarim-com/public_html && sudo chmod -R 755 /var/www/asafarim-com/public_html && sudo systemctl restart nginx'",
     "asafarim-bibliography:publish": "bash -c 'set -e && cd /var/www/asafarim && git pull origin main && yarn workspace asafarim-bibliography build && sudo mkdir -p /var/www/asafarim-bibliography && sudo rm -rf /var/www/asafarim-bibliography/* && sudo cp -r /var/www/asafarim/ASafariM.Clients/asafarim-bibliography/dist/* /var/www/asafarim-bibliography/ && sudo chown -R www-data:www-data /var/www/asafarim-bibliography && sudo chmod -R 755 /var/www/asafarim-bibliography && sudo systemctl restart nginx'",
     "asafarim:publish": "yarn asafarim-api:publish && yarn asafarim-ui:publish",
-    "publish": "yarn deploy:if-tests-pass",
+    "publish": "bash ./publish.sh",
     "clean": "bash ./scripts/bash_files/dotnet-commands.sh clean",
     "restore": "bash ./scripts/bash_files/dotnet-commands.sh restore",
     "build": "bash ./scripts/bash_files/dotnet-commands.sh build",

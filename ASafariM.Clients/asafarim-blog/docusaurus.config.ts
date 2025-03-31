@@ -110,9 +110,19 @@ const config: Config = {
         { to: '/blog', label: 'Blog', position: 'left' },
         {
           href: 'https://github.com/AliSafari-IT/asafarim',
+          label: 'GitHub',
           position: 'right',
           className: 'header-github-link',
           'aria-label': 'GitHub repository',
+          title: 'GitHub',
+        },
+        {
+          href: 'https://asafarim.com',
+          label: 'Home',
+          position: 'right',
+          className: 'header-home-link',
+          'aria-label': 'ASafariM Home',
+          title: 'Home',
         },
       ],
     },
@@ -151,7 +161,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright ${new Date().getFullYear()} ASafariM. Built with Docusaurus.`,
+      copyright: `Copyright ${new Date().getFullYear()} ASafariM. Created with React and professional documentation frameworks.`,
     },
 
     prism: {

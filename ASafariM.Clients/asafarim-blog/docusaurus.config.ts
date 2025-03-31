@@ -1,9 +1,9 @@
-import {themes as prismThemes} from 'prism-react-renderer';
-import type {Config} from '@docusaurus/types';
+import { themes as prismThemes } from 'prism-react-renderer';
+import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
-const config: Config = { 
+const config: Config = {
   title: 'Blog | ASafariM',
   tagline: 'Thoughts, stories and ideas from Ali Safari',
   favicon: 'img/favicon.ico',
@@ -19,7 +19,7 @@ const config: Config = {
   organizationName: 'AliSafari-IT', // Usually your GitHub org/user name.
   projectName: 'asafarim', // Usually your repo name.
 
-  onBrokenLinks: 'ignore', 
+  onBrokenLinks: 'ignore',
   onBrokenMarkdownLinks: 'ignore',
 
   // Even if you don't use internationalization, you can use this field to set
@@ -61,7 +61,7 @@ const config: Config = {
   themeConfig: {
     // Add image for social media sharing
     image: 'img/social-card.png',
-    
+
     // Add announcement bar for important info
     announcementBar: {
       id: 'announcement',
@@ -70,7 +70,7 @@ const config: Config = {
       textColor: '#ffffff',
       isCloseable: true,
     },
-    
+
     // Enhance navbar
     navbar: {
       title: 'ASafariM',
@@ -89,7 +89,7 @@ const config: Config = {
           position: 'left',
           label: 'Articles',
         },
-        {to: '/blog', label: 'Blog', position: 'left'},
+        { to: '/blog', label: 'Blog', position: 'left' },
         {
           href: 'https://github.com/AliSafari-IT/asafarim',
           position: 'right',
@@ -98,7 +98,7 @@ const config: Config = {
         },
       ],
     },
-    
+
     // Enhance footer with better organization
     footer: {
       style: 'dark',
@@ -141,21 +141,21 @@ const config: Config = {
       ],
       copyright: `Copyright ${new Date().getFullYear()} ASafariM · Built with Docusaurus`,
     },
-    
+
     // Enhance code blocks
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
       additionalLanguages: ['bash', 'diff', 'json', 'typescript'],
     },
-    
+
     // Add colorMode settings
     colorMode: {
       defaultMode: 'light',
       disableSwitch: false,
       respectPrefersColorScheme: true,
     },
-    
+
     // Add mobile menu settings
     docs: {
       sidebar: {

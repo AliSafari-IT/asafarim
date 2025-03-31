@@ -48,7 +48,7 @@ The first chapter will cover:
 
 ---
 
-Stay tuned — and if you're curious, drop by the [Projects](/projects) page to see how I’m already using AI features behind the scenes.
+Stay tuned — and if you're curious, drop by the [Projects](https://asafarim.com/projects) page to see how I’m already using AI features behind the scenes.
 
 Let’s learn AI the **developer way**. 💻🧠
 

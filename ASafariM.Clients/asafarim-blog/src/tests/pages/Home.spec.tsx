@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import Homepage, { HomepageHeader, RecentPosts } from '../../pages/index';
 import { vi, describe, it, expect } from 'vitest';
 
 // Mock the Docusaurus components and hooks before importing the component

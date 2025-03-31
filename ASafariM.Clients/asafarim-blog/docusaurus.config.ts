@@ -21,15 +21,6 @@ const config: Config = {
 
   onBrokenLinks: 'ignore',
   onBrokenMarkdownLinks: 'ignore',
-
-  // Even if you don't use internationalization, you can use this field to set
-  // useful metadata like html lang. For example, if your site is Chinese, you
-  // may want to replace "en" with "zh-Hans".
-  i18n: {
-    defaultLocale: 'en',
-    locales: ['en'],
-  },
-
   presets: [
     [
       'classic',
@@ -58,6 +49,31 @@ const config: Config = {
         },
       } satisfies Preset.Options,
     ],
+  ],
+
+  // Add i18n configuration back (required by Docusaurus)
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en'],
+  },
+
+  // Exclude test files from being treated as pages
+  plugins: [
+    function pluginExcludeTests() {
+      return {
+        name: 'plugin-exclude-tests',
+        configureWebpack() {
+          return {
+            resolve: {
+              alias: {
+                // Ensure test files are not imported during build
+                '\\.(spec|test)\\.(js|jsx|ts|tsx)$': '@site/src/empty-module.js',
+              },
+            },
+          };
+        },
+      };
+    },
   ],
 
   themeConfig: {
@@ -142,7 +158,7 @@ const config: Config = {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
     },
-    
+
     colorMode: {
       defaultMode: 'light',
       disableSwitch: false,

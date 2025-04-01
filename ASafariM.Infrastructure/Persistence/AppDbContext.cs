@@ -81,6 +81,9 @@ public class AppDbContext : DbContext
     // Bibliography-related sets
     public DbSet<BibliographyItem> BibliographyItems { get; set; }
 
+    // Portfolio-related sets
+    public DbSet<Portfolio> Portfolios { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (optionsBuilder.IsConfigured)

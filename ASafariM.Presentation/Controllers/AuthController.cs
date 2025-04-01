@@ -656,20 +656,37 @@ public class AuthController : ControllerBase
                 return BadRequest(new { message = "Account is not deleted" });
             }
 
-            await _userService.RequestAccountReactivationAsync(command);
+            try
+            {
+                await _userService.RequestAccountReactivationAsync(command);
+                
+                Log.Information(
+                    "Account reactivation request processed successfully for email: {Email}",
+                    command.Email
+                );
 
-            Log.Information(
-                "Account reactivation request processed successfully for email: {Email}",
-                command.Email
-            );
-
-            return Ok(
-                new
-                {
-                    message = "Account reactivation request sent successfully",
-                    email = command.Email,
-                }
-            );
+                return Ok(
+                    new
+                    {
+                        message = "Account reactivation request sent successfully",
+                        email = command.Email,
+                    }
+                );
+            }
+            catch (ApplicationException ex) when (ex.Message.Contains("Failed to send reactivation email"))
+            {
+                // Specific handling for email sending failures
+                Log.Error(
+                    ex,
+                    "Failed to send reactivation email for email: {Email}. Error: {Message}",
+                    command.Email,
+                    ex.Message
+                );
+                return StatusCode(
+                    500,
+                    new { message = "Failed to send reactivation request. Please try again later." }
+                );
+            }
         }
         catch (Exception ex)
         {

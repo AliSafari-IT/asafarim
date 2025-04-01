@@ -515,6 +515,26 @@ public class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.SetNull);
         });
 
+        modelBuilder.Entity<Portfolio>(entity =>
+        {
+            entity.ToTable("Portfolios");
+
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Title).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Summary).IsRequired().HasMaxLength(500);
+            entity.Property(e => e.AboutMarkdown).IsRequired();
+            entity.Property(e => e.ExperienceMarkdown).IsRequired();
+            entity.Property(e => e.PublicationsMarkdown);
+            entity.Property(e => e.FundingMarkdown);
+            entity.Property(e => e.Visibility).IsRequired();
+
+            entity
+                .HasOne(p => p.Owner)
+                .WithMany()
+                .HasForeignKey(p => p.OwnerId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
         if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
         {
             SeedFactory.SeedDatabase(modelBuilder);

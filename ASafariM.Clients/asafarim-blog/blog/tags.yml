@@ -17,14 +17,10 @@ automation:
 technology:
   description: Posts related to technology trends and innovations
   permalink: /tags/technology-tag
-  
+
 data-management:
   description: Posts about data management techniques and tools
   permalink: /tags/data-management-tag
-
-"Data Management":
-  description: Posts about data management techniques and tools
-  permalink: /tags/data-management-capitalized-tag
 
 xitechnix:
   description: Posts related to XiTechniX projects and technologies
@@ -33,3 +29,19 @@ xitechnix:
 programming:
   description: Posts about programming languages, techniques, and best practices
   permalink: /tags/programming-tag
+
+angular:
+  description: Posts about Angular framework
+  permalink: /tags/angular-tag
+
+clean-architecture:
+  description: Posts about Clean Architecture principles
+  permalink: /tags/clean-architecture-tag
+
+dotnet:
+  description: Posts about .NET framework
+  permalink: /tags/dotnet-tag
+
+fullstack:
+  description: Posts about fullstack development
+  permalink: /tags/fullstack-tag

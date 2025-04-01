@@ -178,7 +178,7 @@ describe("AddProject", () => {
     vi.clearAllMocks();
   });
 
-  it("renders the project form correctly", () => {
+  it("displays form fields correctly", () => {
     render(
       <BrowserRouter>
         <ThemeProvider>
@@ -187,12 +187,31 @@ describe("AddProject", () => {
       </BrowserRouter>
     );
 
-    // Check for form fields
-    expect(screen.getByTestId("field-name")).toBeInTheDocument();
-    expect(screen.getByTestId("field-description")).toBeInTheDocument();
-    expect(screen.getByTestId("field-startDate")).toBeInTheDocument();
-    expect(screen.getByTestId("field-endDate")).toBeInTheDocument();
-    expect(screen.getByTestId("field-budget")).toBeInTheDocument();
+    // Check that all form fields are rendered
+    expect(screen.getByTestId("input-name")).toBeInTheDocument();
+    expect(screen.getByTestId("input-description")).toBeInTheDocument();
+    expect(screen.getByTestId("input-startDate")).toBeInTheDocument();
+    expect(screen.getByTestId("input-endDate")).toBeInTheDocument();
+    expect(screen.getByTestId("input-budget")).toBeInTheDocument();
+  });
+
+  it("shows validation errors when form is submitted with empty fields", () => {
+    render(
+      <BrowserRouter>
+        <ThemeProvider>
+          <AddProject />
+        </ThemeProvider>
+      </BrowserRouter>
+    );
+
+    const saveButton = screen.getAllByTestId("primary-button")[0];
+    fireEvent.click(saveButton);
+
+    // Check for the general error message
+    expect(screen.getByText("Please correct the highlighted fields before submitting")).toBeInTheDocument();
+    
+    // Check for the specific project name error
+    expect(screen.getByText("Project name is required")).toBeInTheDocument();
   });
 
   it("handles project name input", () => {
@@ -209,6 +228,7 @@ describe("AddProject", () => {
 
     expect(nameInput).toHaveValue("Test Project");
   });
+
   it("adds a valid manual repository link", () => {
     render(
       <BrowserRouter>

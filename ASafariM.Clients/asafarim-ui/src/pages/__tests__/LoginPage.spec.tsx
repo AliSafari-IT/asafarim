@@ -9,7 +9,9 @@ import { logger } from "@/utils/logger";
 vi.mock("react-router-dom", () => ({
   useNavigate: vi.fn(),
   Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
-    <a href={to} data-testid={`link-to-${to}`}>{children}</a>
+    <a href={to} data-testid={`link-to-${to}`}>
+      {children}
+    </a>
   ),
 }));
 
@@ -31,7 +33,9 @@ vi.mock("../../layout/Wrapper/Wrapper", () => ({
 }));
 
 vi.mock("../../components/DeletedAccountMessage", () => ({
-  default: () => <div data-testid="deleted-account-message">Account deleted message</div>,
+  default: () => (
+    <div data-testid="deleted-account-message">Account deleted message</div>
+  ),
 }));
 
 describe("LoginPage Component", () => {
@@ -75,9 +79,9 @@ describe("LoginPage Component", () => {
 
   it("shows error when fields are empty", async () => {
     render(<LoginPage />);
-    
+
     // Submit the form with empty fields
-    const form = screen.getByRole('form');
+    const form = screen.getByRole("form");
     fireEvent.submit(form);
 
     await waitFor(() => {
@@ -102,8 +106,12 @@ describe("LoginPage Component", () => {
     (login as any).mockResolvedValue(mockAuthResponse);
 
     render(<LoginPage />);
-    fireEvent.change(screen.getByTestId("email-input"), { target: { value: "test@example.com" } });
-    fireEvent.change(screen.getByTestId("password-input"), { target: { value: "password123" } });
+    fireEvent.change(screen.getByTestId("email-input"), {
+      target: { value: "test@example.com" },
+    });
+    fireEvent.change(screen.getByTestId("password-input"), {
+      target: { value: "password123" },
+    });
     fireEvent.click(screen.getByTestId("remember-me-checkbox"));
     fireEvent.click(screen.getByTestId("login-button"));
 
@@ -132,8 +140,12 @@ describe("LoginPage Component", () => {
     (login as any).mockResolvedValue(mockAuthResponse);
 
     render(<LoginPage />);
-    fireEvent.change(screen.getByTestId("email-input"), { target: { value: "test@example.com" } });
-    fireEvent.change(screen.getByTestId("password-input"), { target: { value: "password123" } });
+    fireEvent.change(screen.getByTestId("email-input"), {
+      target: { value: "test@example.com" },
+    });
+    fireEvent.change(screen.getByTestId("password-input"), {
+      target: { value: "password123" },
+    });
     fireEvent.click(screen.getByTestId("login-button"));
 
     await waitFor(() => {
@@ -149,12 +161,16 @@ describe("LoginPage Component", () => {
       response: {
         status: 401,
         data: { message: errorMessage },
-      }
+      },
     });
 
     render(<LoginPage />);
-    fireEvent.change(screen.getByTestId("email-input"), { target: { value: "wrong@example.com" } });
-    fireEvent.change(screen.getByTestId("password-input"), { target: { value: "wrongpass" } });
+    fireEvent.change(screen.getByTestId("email-input"), {
+      target: { value: "wrong@example.com" },
+    });
+    fireEvent.change(screen.getByTestId("password-input"), {
+      target: { value: "wrongpass" },
+    });
     fireEvent.click(screen.getByTestId("login-button"));
 
     await waitFor(() => {
@@ -219,12 +235,121 @@ describe("LoginPage Component", () => {
     (login as any).mockResolvedValue(mockDeletedResponse);
 
     render(<LoginPage />);
-    fireEvent.change(screen.getByTestId("email-input"), { target: { value: "deleted@example.com" } });
-    fireEvent.change(screen.getByTestId("password-input"), { target: { value: "deletedpass" } });
+    fireEvent.change(screen.getByTestId("email-input"), {
+      target: { value: "deleted@example.com" },
+    });
+    fireEvent.change(screen.getByTestId("password-input"), {
+      target: { value: "deletedpass" },
+    });
     fireEvent.click(screen.getByTestId("login-button"));
 
     await waitFor(() => {
       expect(screen.getByTestId("deleted-account-message")).toBeInTheDocument();
+    });
+  });
+  it("handles demo login button click for demo user", async () => {
+    const mockAuthResponse = {
+      token: "demo-token",
+      authenticatedUser: {
+        id: "demo-id",
+        email: "demo_user@example.com",
+        firstName: "Demo",
+        lastName: "User",
+      },
+      authenticated: true,
+    };
+
+    (login as any).mockResolvedValue(mockAuthResponse);
+
+    render(<LoginPage />);
+    fireEvent.click(screen.getByTestId("demo-login-demo-user"));
+
+    await waitFor(() => {
+      expect(login).toHaveBeenCalledWith({
+        email: "demo_user@example.com",
+        password: "Demo+123456/",
+      });
+      expect(window.localStorage.setItem).toHaveBeenCalled();
+    });
+  });
+
+  it("handles demo login error and displays error message", async () => {
+    const errorMessage = "Demo login failed.";
+    (login as any).mockRejectedValue({
+      isAxiosError: true,
+      response: {
+        status: 401,
+        data: { message: errorMessage },
+      },
+    });
+
+    render(<LoginPage />);
+    fireEvent.click(screen.getByTestId("demo-login-demo-admin"));
+
+    // Debug: Log the current state of the DOM
+    console.log("Current DOM:", document.body.innerHTML);
+
+    // Wait for the error message to appear
+    await waitFor(() => {
+      const errorElement = screen.getByTestId("login-error-message");
+      expect(errorElement).toBeInTheDocument();
+      expect(errorElement).toHaveTextContent(errorMessage);
+    });
+
+    // Verify the error message content
+    expect(logger.error).toHaveBeenCalled();
+  });
+
+  it("clears existing tokens before demo login", async () => {
+    const mockAuthResponse = {
+      token: "demo-token",
+      authenticatedUser: {
+        id: "demo-id",
+        email: "demo_admin@example.com",
+        firstName: "Demo",
+        lastName: "Admin",
+      },
+      authenticated: true,
+    };
+
+    (login as any).mockResolvedValue(mockAuthResponse);
+
+    render(<LoginPage />);
+    fireEvent.click(screen.getByTestId("demo-login-demo-admin"));
+
+    await waitFor(() => {
+      expect(window.localStorage.removeItem).toHaveBeenCalledWith("auth");
+      expect(window.sessionStorage.removeItem).toHaveBeenCalledWith("auth");
+    });
+  });
+
+  it("handles network error during demo login", async () => {
+    (login as any).mockRejectedValue({
+      isAxiosError: true,
+      request: {},
+    });
+
+    render(<LoginPage />);
+    fireEvent.click(screen.getByTestId("demo-login-demo-admin"));
+
+    await waitFor(() => {
+      expect(screen.getByTestId("login-error-message")).toHaveTextContent(
+        "No response received from server. Please check your connection."
+      );
+    });
+  });
+
+  it("handles non-Axios error during demo login", async () => {
+    const errorMessage = "Failed to login with demo account. Please try again.";
+    (login as any).mockRejectedValue(new Error(errorMessage));
+
+    render(<LoginPage />);
+    fireEvent.click(screen.getByTestId("demo-login-demo-admin"));
+
+    await waitFor(() => {
+      expect(screen.getByTestId("login-error-message")).toHaveTextContent(
+        errorMessage
+      );
     });
   });
 });

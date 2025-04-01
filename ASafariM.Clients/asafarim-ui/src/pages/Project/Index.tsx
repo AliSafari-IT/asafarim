@@ -64,9 +64,15 @@ const ProjectHome: React.FC = () => {
     if (storedNotification) {
       try {
         const parsedNotification = JSON.parse(storedNotification);
-        setNotification(parsedNotification);
-        // Remove the notification from sessionStorage after displaying it
-        sessionStorage.removeItem('projectNotification');
+        // Ensure type and message are present
+        if (parsedNotification.type && parsedNotification.message) {
+          setNotification({
+            type: parsedNotification.type,
+            message: parsedNotification.message
+          });
+          // Remove the notification from sessionStorage after displaying it
+          sessionStorage.removeItem('projectNotification');
+        }
       } catch (e) {
         logger.error('Error parsing notification from sessionStorage:', e);
       }
@@ -545,7 +551,11 @@ const ProjectHome: React.FC = () => {
     return (
       <Wrapper header={headerBlock}>
         <div className="p-4">
-          <Notification type={notification.type} text={notification.message} />
+          <Notification 
+            type={notification.type} 
+            text={notification.message} 
+            data-testid={`notification-${notification.type}`} 
+          />
         </div>
         {projects.length === 0 ? (
           <div className="text-center p-4">

@@ -58,6 +58,9 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
+    // Set the environment
+    builder.Environment.EnvironmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
+
     // // Configure Kestrel to listen on any IP and port
     // builder.WebHost.ConfigureKestrel(options =>
     // {

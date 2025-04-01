@@ -1,1 +1,8 @@
-<p>portfolio-edit works!</p>
+<!-- portfolio-edit.component.html -->
+<h2>Edit Portfolio</h2>
+<form (ngSubmit)="save()">
+  <input [(ngModel)]="portfolio.headline" name="headline" class="form-control" required>
+  <textarea [(ngModel)]="portfolio.biography" name="biography" class="form-control"></textarea>
+  <textarea [(ngModel)]="portfolio.experienceMarkdown" name="experienceMarkdown" class="form-control"></textarea>
+  <button class="btn btn-success mt-3">Save</button>
+</form>

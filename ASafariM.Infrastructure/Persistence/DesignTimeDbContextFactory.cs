@@ -18,7 +18,7 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<AppDbConte
         var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
         optionsBuilder.UseMySql(
             configuration.GetConnectionString("DefaultConnection"),
-            new MySqlServerVersion(new Version(8, 0, 31)), // Match your MySQL version
+            new MySqlServerVersion(new Version(8, 0, 31)),
             mySqlOptions =>
                 mySqlOptions.EnableRetryOnFailure(
                     maxRetryCount: 5,

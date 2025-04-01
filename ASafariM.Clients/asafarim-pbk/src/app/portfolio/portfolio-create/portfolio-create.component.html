@@ -1,1 +1,8 @@
-<p>portfolio-create works!</p>
+<!-- portfolio-create.component.html -->
+<h2>Create Your Portfolio</h2>
+<form (ngSubmit)="submit()">
+  <input [(ngModel)]="model.headline" name="headline" class="form-control" placeholder="Headline" required>
+  <textarea [(ngModel)]="model.biography" name="biography" class="form-control" placeholder="Bio"></textarea>
+  <textarea [(ngModel)]="model.experienceMarkdown" name="experienceMarkdown" class="form-control" placeholder="Markdown Experience"></textarea>
+  <button class="btn btn-primary mt-3">Create</button>
+</form>

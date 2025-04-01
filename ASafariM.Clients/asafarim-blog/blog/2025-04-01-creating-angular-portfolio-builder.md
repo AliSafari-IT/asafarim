@@ -1,24 +1,18 @@
 ---
-title: Building a Portfolio Builder Kit with Angular & .NET 9
+title: Building a Portfolio Builder Kit with Angular 19 & .NET 9
 description: Learn how I integrated Angular into my .NET 9 Clean Architecture app to create a standalone portfolio builder.
-author: alisafari
-tags: [Angular, .NET, Clean Architecture, Fullstack]
----
-
----
-title: Architecture Overview for Multi-User Portfolios
-description: Explore how ASafariM supports modular multi-user portfolio creation using Angular and .NET 9 in a Clean Architecture.
+authors: [alisafari]
 tags: [Angular, .NET, Portfolio, Clean Architecture, Multi-User, API, Open Source]
 ---
 
-# Architecture Overview for Multi-User Portfolios
+## Architecture Overview for Multi-User Portfolios
 
 This document describes the architecture and design of a **multi-user portfolio builder** implemented using:
 
 - **Backend**: ASP.NET Core 9 (Web API)
 - **Frontend**: Angular (Portfolio Builder Kit aka `asafarim-pbk`)
 - **Architecture**: Clean Architecture with Domain-Driven Design (DDD)
-
+<!-- truncate -->
 ## Goals
 
 - Allow authenticated users to create, edit, and publish personal portfolios.
@@ -65,6 +59,28 @@ public class Portfolio : BaseEntity
 | `/portfolio/:userId/edit`    | `PortfolioEditComponent` | Admin / Owner only   |
 | `/portfolio/:userId/delete`  | `PortfolioDeleteComponent` | Admin / Owner only  |
 
+### File Structure **(asafarim-pbk)**
+
+```bash
+src/
+├── app/
+│   ├── layout/
+│   │   ├── navbar/
+│   │   │   └── navbar.component.ts/html/scss
+│   │   ├── footer/
+│   │   │   └── footer.component.ts/html/scss
+│   │   └── layout.component.ts/html/scss
+│   ├── portfolio/
+│   │   ├── portfolio-list/
+│   │   ├── portfolio-view/
+│   │   ├── portfolio-create/
+│   │   ├── portfolio-edit/
+│   │   └── portfolio-delete/
+│   └── app-routing.module.ts
+│   └── app.module.ts
+└── main.ts
+```
+
 ## Permissions Model
 
 - **All Authenticated Users** (except `Guest`): can **view** the portfolio list.
@@ -77,8 +93,10 @@ The Angular app is fully modular:
 
 ```bash
 ASafariM.Clients/
-├── asafarim-ui/        # React client
-└── asafarim-pbk/       # Angular Portfolio Builder Kit
+├── asafarim-ui/        # ASafariM UI (React + TypeScript + Tailwind CSS)
+├── asafarim-blog/       # ASafariM Blog (React + Docusaurus Documentation Framework)
+├── asafarim-bibliography/       # ASafariM Bibliography (React + Redux Toolkit)
+└── asafarim-pbk/       # ASafariM Portfolio Builder Kit (Angular)
 ```
 
 It uses Angular routing, `HttpClient`, and shared auth utilities to consume the .NET API.
@@ -96,7 +114,3 @@ This architecture is designed for scalability, maintainability, and openness. By
 - Great demo of polyglot frontend strategy
 
 Stay tuned as this module evolves into a standalone, open-source-ready Portfolio Builder Kit.
-
-
-
-```

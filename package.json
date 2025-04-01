@@ -50,6 +50,8 @@
     "app": "concurrently \"yarn backend\" \"yarn ui\"",
     "start": "concurrently \"yarn backend\" \"yarn ui\"",
     "mig": "bash ./scripts/bash_files/dotnet-ef.sh",
+    "addMig": "bash ./scripts/bash_files/add-migration.sh",
+    "delMig": "dotnet ef migrations remove --project ASafariM.Infrastructure --startup-project ASafariM.Api",
     "test:backend": "dotnet test ASafariM.Test/ASafariM.Test.csproj --logger \"trx;LogFileName=tests/backend/backend_test_results.trx\"",
     "test:frontend": "mkdir -p tests/frontend && TIMESTAMP=$(date +%Y%m%d-%H%M) && node --max-old-space-size=4096 node_modules/vitest/vitest.mjs run --reporter=verbose --reporter=json --outputFile=tests/frontend/all_test_results_$TIMESTAMP.json --no-coverage",
     "test:script": "node ./scripts/test-scripts/verify-tests.js",

@@ -1,12 +1,11 @@
 // src/pages/Project/AddProject.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { IField } from "@/interfaces/IField";
 import Wrapper from "@/layout/Wrapper/Wrapper";
 import entityServices from "@/api/entityServices";
 import { logger } from "@/utils/logger";
 import { jwtDecode } from "jwt-decode";
-import Notification from "@/components/Notification/Notification";
 import { TextField } from "@fluentui/react/lib/TextField";
 import { PrimaryButton, DefaultButton, IconButton, ActionButton } from "@fluentui/react/lib/Button";
 import { Text } from "@fluentui/react/lib/Text";
@@ -15,25 +14,51 @@ import { Spinner, SpinnerSize } from "@fluentui/react/lib/Spinner";
 import { List } from "@fluentui/react/lib/List";
 import { Stack } from "@fluentui/react/lib/Stack";
 import { Dropdown, IDropdownOption } from "@fluentui/react/lib/Dropdown";
-import { Add20Regular, Delete24Regular, Search24Regular, ArrowLeft24Regular, Save20Regular } from "@fluentui/react-icons";
+import { 
+  Add20Regular, 
+  Delete24Regular, 
+  Search24Regular, 
+  ArrowLeft24Regular, 
+  Save20Regular,
+  Warning24Regular,
+  CheckmarkCircle24Regular,
+  DismissCircle24Regular,
+  InfoRegular
+} from "@fluentui/react-icons";
 import axios from "axios";
 import Toolbar from "@/components/Toolbars/Toolbar";
 import { useAuth } from '@/contexts/AuthContext';
+import { motion, AnimatePresence } from "framer-motion";
 
-interface JwtPayload {
-  nameid?: string;
-  unique_name?: string;
-  role?: string;
-  exp?: number;
+interface FieldError {
+  name: string;
+  message: string;
 }
 
 const AddProject: React.FC = () => {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [repoLinks, setRepoLinks] = useState<string[]>([]);
   const [newRepoLink, setNewRepoLink] = useState("");
   const { authenticated, authenticatedUser } = useAuth();
+  const [fieldErrors, setFieldErrors] = useState<FieldError[]>([]);
+  const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
+  
+  // Check authentication when component mounts
+  useEffect(() => {
+    if (!authenticated) {
+      logger.warn("Unauthenticated user attempted to access AddProject page");
+      // Store notification message in sessionStorage to display it on the projects page
+      sessionStorage.setItem('projectNotification', JSON.stringify({
+        type: 'warning',
+        message: 'You must be logged in to add or edit a project'
+      }));
+      // Redirect to projects list page
+      navigate('/projects');
+    }
+  }, [authenticated, navigate]);
   
   // Form state
   const [formData, setFormData] = useState({
@@ -64,6 +89,87 @@ const AddProject: React.FC = () => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [linkToDeleteIndex, setLinkToDeleteIndex] = useState<number | null>(null);
   
+  // Validate a single field
+  const validateField = (name: string, value: any): string | null => {
+    switch(name) {
+      case 'name':
+        return !value || value.trim() === '' 
+          ? 'Project name is required' 
+          : null;
+      case 'description':
+        return value && value.length > maxDescriptionLength 
+          ? `Description must be ${maxDescriptionLength} characters or less` 
+          : null;
+      case 'startDate':
+        if (formData.endDate && value) {
+          const start = new Date(value);
+          const end = new Date(formData.endDate);
+          return start > end 
+            ? 'Start date cannot be after end date' 
+            : null;
+        }
+        return null;
+      case 'endDate':
+        if (formData.startDate && value) {
+          const start = new Date(formData.startDate);
+          const end = new Date(value);
+          return end < start 
+            ? 'End date cannot be before start date' 
+            : null;
+        }
+        return null;
+      case 'budget':
+        return value && isNaN(parseFloat(value)) 
+          ? 'Budget must be a valid number' 
+          : null;
+      default:
+        return null;
+    }
+  };
+  
+  // Validate all fields
+  const validateForm = (): boolean => {
+    const errors: FieldError[] = [];
+    
+    // Required fields
+    if (!formData.name || formData.name.trim() === '') {
+      errors.push({ name: 'name', message: 'Project name is required' });
+    }
+    
+    // Description length
+    if (formData.description && formData.description.length > maxDescriptionLength) {
+      errors.push({ 
+        name: 'description', 
+        message: `Description must be ${maxDescriptionLength} characters or less` 
+      });
+    }
+    
+    // Date validation
+    if (formData.startDate && formData.endDate) {
+      const start = new Date(formData.startDate);
+      const end = new Date(formData.endDate);
+      if (start > end) {
+        errors.push({ name: 'startDate', message: 'Start date cannot be after end date' });
+        errors.push({ name: 'endDate', message: 'End date cannot be before start date' });
+      }
+    }
+    
+    // Budget validation
+    if (formData.budget && isNaN(parseFloat(formData.budget))) {
+      errors.push({ name: 'budget', message: 'Budget must be a valid number' });
+    }
+    
+    setFieldErrors(errors);
+    return errors.length === 0;
+  };
+  
+  // Get error message for a field
+  const getFieldError = (fieldName: string): string | undefined => {
+    if (!touchedFields.has(fieldName)) return undefined;
+    const error = fieldErrors.find(err => err.name === fieldName);
+    return error?.message;
+  };
+  
   // Handle form changes
   const handleChange = (
     event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -73,12 +179,29 @@ const AddProject: React.FC = () => {
     const name = target.name;
     const value = newValue || target.value;
     
+    // Mark field as touched
+    setTouchedFields(prev => new Set(prev).add(name));
+    
     // Update character count for description field
     if (name === "description") {
       setDescriptionCharCount(value.length);
     }
     
-    setFormData({ ...formData, [name]: value });
+    // Update form data
+    setFormData(prev => {
+      const updated = { ...prev, [name]: value };
+      
+      // Validate the field
+      const errorMessage = validateField(name, value);
+      
+      // Update field errors
+      setFieldErrors(prev => {
+        const filtered = prev.filter(err => err.name !== name);
+        return errorMessage ? [...filtered, { name, message: errorMessage }] : filtered;
+      });
+      
+      return updated;
+    });
   };
 
   const handleDropdownChange = (
@@ -87,10 +210,26 @@ const AddProject: React.FC = () => {
     name?: string
   ) => {
     if (option && name) {
-      setFormData({ ...formData, [name]: option.key.toString() });
+      // Mark field as touched
+      setTouchedFields(prev => new Set(prev).add(name));
+      
+      setFormData(prev => {
+        const updated = { ...prev, [name]: option.key.toString() };
+        
+        // Validate the field
+        const errorMessage = validateField(name, option.key.toString());
+        
+        // Update field errors
+        setFieldErrors(prev => {
+          const filtered = prev.filter(err => err.name !== name);
+          return errorMessage ? [...filtered, { name, message: errorMessage }] : filtered;
+        });
+        
+        return updated;
+      });
     }
   };
-  
+
   // Repository links handlers
   const handleAddRepoLink = () => {
     if (newRepoLink && newRepoLink.trim() !== '') {
@@ -183,23 +322,31 @@ const AddProject: React.FC = () => {
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null); // Clear any previous errors
-
-    try {
-      if (!formData.name) {
-        setError("Project name is required");
-        setLoading(false);
-        return;
+    
+    // Mark all fields as touched
+    const allFields = Object.keys(formData);
+    setTouchedFields(new Set(allFields));
+    
+    // Validate all fields
+    if (!validateForm()) {
+      // Scroll to the first field with an error
+      if (fieldErrors.length > 0) {
+        const firstErrorField = document.getElementsByName(fieldErrors[0].name)[0];
+        if (firstErrorField) {
+          firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          firstErrorField.focus();
+        }
       }
       
-      // Check description length
-      if (formData.description && formData.description.length > maxDescriptionLength) {
-        setError(`Description must be ${maxDescriptionLength} characters or less`);
-        setLoading(false);
-        return;
-      }
+      setError("Please correct the highlighted fields before submitting");
+      return;
+    }
+    
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
 
+    try {
       // Check if user is authenticated using the useAuth hook
       if (!authenticated || !authenticatedUser) {
         logger.error("No authenticated user found");
@@ -235,15 +382,17 @@ const AddProject: React.FC = () => {
         logger.warn(`Filtered out ${repoLinks.length - validLinks.length} invalid repository links`);
       }
 
+      // Get current date in ISO format (YYYY-MM-DD)
+      const today = new Date();
+      const todayFormatted = today.toISOString().split('T')[0];
+
       const projectData = {
         Name: formData.name,
         Description: formData.description,
-        StartDate: formData.startDate
-          ? new Date(formData.startDate).toISOString()
-          : null,
-        EndDate: formData.endDate
-          ? new Date(formData.endDate).toISOString()
-          : null,
+        // Use today's date as default if not provided
+        StartDate: formData.startDate ? formData.startDate : todayFormatted,
+        // Set EndDate to null if not provided (optional field)
+        EndDate: formData.endDate || null,
         Budget: parseFloat(formData.budget) || 0,
         Visibility: parseInt(formData.visibility, 10) || 0,
         Status: parseInt(formData.status, 10) || 0,
@@ -251,20 +400,150 @@ const AddProject: React.FC = () => {
         RepoLinks: validLinks // Add validated repository links to the project data
       };
 
-      logger.info("Sending project data: " + JSON.stringify(projectData));
-      
-      // Use the standard addEntity function now that the backend supports repository links
-      const result = await entityServices.addEntity("project", projectData);
+      // Format dates properly for the API
+      try {
+        // Always ensure StartDate is properly formatted
+        const startDate = new Date(projectData.StartDate);
+        if (isNaN(startDate.getTime())) {
+          // If invalid, use today's date
+          projectData.StartDate = todayFormatted;
+        } else {
+          // Format date as yyyy-MM-dd to avoid timezone issues
+          projectData.StartDate = startDate.toISOString().split('T')[0];
+        }
+        
+        // Format EndDate if provided
+        if (projectData.EndDate) {
+          const endDate = new Date(projectData.EndDate);
+          if (isNaN(endDate.getTime())) {
+            // If invalid, set to null (optional field)
+            projectData.EndDate = null;
+          } else {
+            // Format date as yyyy-MM-dd to avoid timezone issues
+            projectData.EndDate = endDate.toISOString().split('T')[0];
+          }
+        }
+        
+        logger.info("Sending project data with formatted dates: " + JSON.stringify(projectData));
+        
+        // Show a temporary success message
+        setSuccess("Creating your project...");
+        
+        // Use the standard addEntity function now that the backend supports repository links
+        const result = await entityServices.addEntity("project", projectData);
 
-      if (result) {
-        logger.info("Project created successfully: " + JSON.stringify(result));
-        window.location.href = "/projects";
-      } else {
-        throw new Error("Failed to create project - no result returned");
+        if (result) {
+          logger.info("Project created successfully: " + JSON.stringify(result));
+          setSuccess("Project created successfully! Redirecting...");
+          
+          // Redirect after a short delay to show the success message
+          setTimeout(() => {
+            window.location.href = "/projects";
+          }, 1500);
+        } else {
+          throw new Error("Failed to create project - no result returned");
+        }
+      } catch (formatError) {
+        // Handle date formatting errors gracefully
+        setError("There was an issue with the date format. Using today's date for start date.");
+        logger.warn("Date formatting error, using defaults: " + formatError);
+        
+        // Try again with today's date
+        projectData.StartDate = todayFormatted;
+        projectData.EndDate = null;
+        
+        try {
+          const result = await entityServices.addEntity("project", projectData);
+          if (result) {
+            logger.info("Project created successfully with default dates: " + JSON.stringify(result));
+            setSuccess("Project created successfully! Redirecting...");
+            
+            // Redirect after a short delay to show the success message
+            setTimeout(() => {
+              window.location.href = "/projects";
+            }, 1500);
+          } else {
+            throw new Error("Failed to create project - no result returned");
+          }
+        } catch (retryError) {
+          throw retryError; // Re-throw to be handled by the outer catch block
+        }
       }
     } catch (error) {
-      logger.error("Error creating project: " + error);
-      setError(error instanceof Error ? error.message : "Failed to create project");
+      logger.error("Error creating project: " + JSON.stringify(error));
+      setSuccess(null);
+      
+      // Extract more specific error messages from the API response
+      if (axios.isAxiosError(error) && error.response) {
+        const { status, data } = error.response;
+        
+        if (status === 400) {
+          // Handle validation errors from the API
+          if (data.errors) {
+            // If we have a structured validation errors object
+            const apiFieldErrors: FieldError[] = [];
+            
+            Object.entries(data.errors).forEach(([field, messages]) => {
+              const fieldName = field.toLowerCase();
+              const message = Array.isArray(messages) ? messages.join(', ') : String(messages);
+              
+              // Clean up technical error messages
+              let userFriendlyMessage = message;
+              if (message.includes("JSON value could not be converted to System.DateTime")) {
+                userFriendlyMessage = "Please enter a valid date format";
+              } else if (message.includes("projectDto field is required")) {
+                userFriendlyMessage = "This field is required";
+              }
+              
+              // Add to field errors
+              apiFieldErrors.push({ name: fieldName, message: userFriendlyMessage });
+              
+              // Mark field as touched
+              setTouchedFields(prev => new Set(prev).add(fieldName));
+            });
+            
+            setFieldErrors(apiFieldErrors);
+            
+            // Create a summary error message
+            const errorFields = apiFieldErrors.map(err => {
+              const fieldLabel = err.name.charAt(0).toUpperCase() + err.name.slice(1);
+              return fieldLabel;
+            }).join(', ');
+            
+            setError(`Please fix the following fields: ${errorFields}`);
+            
+            // Scroll to the first field with an error
+            if (apiFieldErrors.length > 0) {
+              const firstErrorField = document.getElementsByName(apiFieldErrors[0].name)[0];
+              if (firstErrorField) {
+                firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                firstErrorField.focus();
+              }
+            }
+          } else if (data.message) {
+            // If we have a single error message
+            setError(data.message);
+          } else if (typeof data === 'string') {
+            // If the response is a string
+            setError(data);
+          } else {
+            // Fallback for other 400 errors
+            setError("Please check your input and try again.");
+          }
+        } else if (status === 401) {
+          setError("Your session has expired. Please log in again to continue.");
+        } else if (status === 403) {
+          setError("You don't have permission to create projects.");
+        } else if (status === 500) {
+          setError("We're experiencing technical difficulties. Please try again later.");
+        } else {
+          // Generic error with status code
+          setError(`Something went wrong (${status}). Please try again.`);
+        }
+      } else {
+        // Non-Axios error
+        setError(error instanceof Error ? error.message : "Unable to create project. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -276,22 +555,39 @@ const AddProject: React.FC = () => {
     label: string;
     type: string;
   }) => {
+    const errorMessage = getFieldError(field.name);
+    const hasError = !!errorMessage;
+    
     return (
       <div
         key={field.name}
-        className="p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md"
+        className={`p-4 bg-[var(--bg-secondary)] border ${hasError ? 'border-red-400' : 'border-[var(--border-primary)]'} rounded-lg shadow-md transition-all duration-200 ${hasError ? 'shadow-red-100' : ''}`}
       >
-        <Text
-          as="label"
-          className="block text-[var(--text-primary)] font-medium mb-2"
-        >
-          {field.label}:
-          {field.name === "description" && (
-            <span className={`ml-2 text-sm ${descriptionCharCount > maxDescriptionLength ? 'text-red-500 font-bold' : 'text-gray-500'}`}>
-              {descriptionCharCount}/{maxDescriptionLength}
-            </span>
+        <div className="flex justify-between items-center mb-2">
+          <Text
+            as="label"
+            className={`block font-medium ${hasError ? 'text-red-600' : 'text-[var(--text-primary)]'}`}
+          >
+            {field.label}{field.name === 'name' && <span className="text-red-500 ml-1">*</span>}:
+            {field.name === "description" && (
+              <span className={`ml-2 text-sm ${descriptionCharCount > maxDescriptionLength ? 'text-red-500 font-bold' : 'text-gray-500'}`}>
+                {descriptionCharCount}/{maxDescriptionLength}
+              </span>
+            )}
+          </Text>
+          
+          {hasError && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex items-center text-red-600 text-sm"
+            >
+              <DismissCircle24Regular className="mr-1" />
+              <span>{errorMessage}</span>
+            </motion.div>
           )}
-        </Text>
+        </div>
+        
         {field.type === "select" ? (
           <Dropdown
             placeholder="Select an option"
@@ -300,6 +596,16 @@ const AddProject: React.FC = () => {
             }
             selectedKey={formData[field.name as keyof typeof formData]}
             onChange={(e, option) => handleDropdownChange(e, option, field.name)}
+            styles={{
+              root: { 
+                borderColor: hasError ? 'var(--red-400)' : undefined,
+                selectors: {
+                  ':hover': {
+                    borderColor: hasError ? 'var(--red-500)' : undefined
+                  }
+                }
+              }
+            }}
           />
         ) : (
           <TextField
@@ -309,9 +615,18 @@ const AddProject: React.FC = () => {
             onChange={handleChange}
             multiline={field.type === "textarea"}
             rows={field.type === "textarea" ? 4 : undefined}
-            errorMessage={field.name === "description" && descriptionCharCount > maxDescriptionLength 
-              ? `Description must be ${maxDescriptionLength} characters or less` 
-              : undefined}
+            errorMessage={errorMessage}
+            className={hasError ? 'error-field' : ''}
+            styles={{
+              fieldGroup: { 
+                borderColor: hasError ? 'var(--red-400)' : undefined,
+                selectors: {
+                  ':hover': {
+                    borderColor: hasError ? 'var(--red-500)' : undefined
+                  }
+                }
+              }
+            }}
           />
         )}
       </div>
@@ -357,9 +672,47 @@ const AddProject: React.FC = () => {
   return (
     <Wrapper>
       {error && (
-        <Stack className="max-w-5xl mx-auto p-8">
-          <Notification type="error" text={error} />
-        </Stack>
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-5xl mx-auto p-4 mb-4 bg-red-50 border-l-4 border-red-500 rounded-md shadow-md"
+        >
+          <div className="flex items-start">
+            <div className="flex-shrink-0 pt-0.5">
+              <DismissCircle24Regular className="h-5 w-5 text-red-500" />
+            </div>
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-red-800">
+                There was an error creating your project
+              </h3>
+              <div className="mt-2 text-sm text-red-700">
+                {error}
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {success && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-5xl mx-auto p-4 mb-4 bg-green-50 border-l-4 border-green-500 rounded-md shadow-md"
+        >
+          <div className="flex items-start">
+            <div className="flex-shrink-0 pt-0.5">
+              <CheckmarkCircle24Regular className="h-5 w-5 text-green-500" />
+            </div>
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-green-800">
+                Success
+              </h3>
+              <div className="mt-2 text-sm text-green-700">
+                {success}
+              </div>
+            </div>
+          </div>
+        </motion.div>
       )}
       
       <div className="w-2/3 mx-auto p-6 md:p-10 bg-[var(--bg-primary)] shadow-lg rounded-xl">

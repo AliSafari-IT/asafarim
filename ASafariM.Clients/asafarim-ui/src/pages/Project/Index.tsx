@@ -21,6 +21,7 @@ import { useAuth } from '@/contexts/AuthContext';
 const ProjectHome: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [notification, setNotification] = useState<{type: string, message: string} | null>(null);
   const [projects, setProjects] = useState<IProject[]>([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const navigate = useNavigate();
@@ -56,6 +57,21 @@ const ProjectHome: React.FC = () => {
     // For private and members-only projects, only authenticated users with proper access can see
     return false;
   };
+
+  // Check for notification from sessionStorage (e.g., when redirected from AddProject)
+  useEffect(() => {
+    const storedNotification = sessionStorage.getItem('projectNotification');
+    if (storedNotification) {
+      try {
+        const parsedNotification = JSON.parse(storedNotification);
+        setNotification(parsedNotification);
+        // Remove the notification from sessionStorage after displaying it
+        sessionStorage.removeItem('projectNotification');
+      } catch (e) {
+        logger.error('Error parsing notification from sessionStorage:', e);
+      }
+    }
+  }, []);
 
   // Add resize listener for responsive behavior
   useEffect(() => {
@@ -521,6 +537,197 @@ const ProjectHome: React.FC = () => {
             Retry
           </Button>
         </div>
+      </Wrapper>
+    );
+  }
+
+  if (notification) {
+    return (
+      <Wrapper header={headerBlock}>
+        <div className="p-4">
+          <Notification type={notification.type} text={notification.message} />
+        </div>
+        {projects.length === 0 ? (
+          <div className="text-center p-4">
+            <p>No projects found.</p>
+            <Button
+              appearance="primary"
+              icon={<AddNewIcon />}
+              onClick={() => navigate("/projects/add")}
+              className="mt-4"
+            >
+              Create Your First Project
+            </Button>
+          </div>
+        ) : isMobile ? (
+          // Mobile card view
+          <div className="space-y-4">
+            {projects.map((project) => renderProjectCard(project))}
+          </div>
+        ) : (
+          // Desktop table view with responsive design
+          <div className="overflow-x-auto">
+            <table className="w-full shadow-md rounded-lg">
+              <thead className="bg-gray-100 dark:bg-gray-800">
+                <tr>
+                  <th className="p-2 text-left font-bold">Project Name</th>
+                  <th className="p-2 text-left font-bold">Status</th>
+                  <th className="p-2 text-left font-bold">Visibility</th>
+                  <th className="p-2 text-left font-bold">Start Date</th>
+                  <th className="p-2 text-center font-bold">Days Active</th>
+                  <th className="p-2 text-center font-bold">Days Left</th>
+                  <th className="p-2 text-center font-bold">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white dark:bg-gray-700">
+                {projects?.map((project) => (
+                  <tr key={project.id} className="border-t">
+                    <td className="p-2">{project.name}</td>
+                    <td className="p-2">{getStatusLabel(project.status)}</td>
+                    <td className="p-2">{getVisibilityIcon(project.visibility)}</td>
+                    <td
+                      className={`p-2 ${!canViewSensitiveDetails(project) ? "opacity-50 blur-sm" : ""}`}
+                    >
+                      {project.startDate
+                        ? new Date(project.startDate).toLocaleDateString()
+                        : "Not set"}
+                    </td>
+                    <td
+                      className={`p-2 text-center font-bold ${
+                        project.startDate
+                          ? calculateDaysActive(
+                              new Date(project.startDate),
+                              project.endDate
+                            ) < 0
+                            ? "bg-red-300"
+                            : calculateDaysActive(
+                                new Date(project.startDate),
+                                project.endDate
+                              ) < 30
+                            ? "bg-yellow-800"
+                            : "bg-green-100"
+                          : "bg-gray-100"
+                      } ${!canViewSensitiveDetails(project) ? "opacity-50 blur-sm" : ""}`}
+                    >
+                      {project.startDate
+                        ? formatDaysActive(
+                            calculateDaysActive(
+                              new Date(project.startDate),
+                              project.endDate
+                            )
+                          )
+                        : "Not set"}
+                    </td>
+                    <td
+                      className={`p-2 text-center font-bold ${
+                        project.endDate
+                          ? calculateDaysRemaining(project.endDate) !== null
+                            ? calculateDaysRemaining(project.endDate)! < 0
+                              ? "bg-red-300"
+                              : calculateDaysRemaining(project.endDate)! < 30
+                              ? "bg-yellow-800"
+                              : "bg-green-100"
+                            : "bg-gray-100"
+                          : "bg-gray-100"
+                      } ${!canViewSensitiveDetails(project) ? "opacity-50 blur-sm" : ""}`}
+                    >
+                      {project.endDate
+                        ? calculateDaysRemaining(project.endDate) !== null
+                          ? formatDaysRemaining(
+                              calculateDaysRemaining(project.endDate)
+                            )
+                          : "Error"
+                        : "Not set"}
+                    </td>
+                    <td className="p-2 text-center">
+                      <div className="flex justify-center space-x-1">
+                        <Tooltip content="View Project" relationship="label">
+                          <Button
+                            icon={<Eye20Regular />}
+                            onClick={() => handleView(project.id)}
+                            appearance="subtle"
+                            className="bg-teal-100 hover:bg-teal-200 dark:bg-transparent dark:hover:bg-teal-900 text-teal-700 dark:text-teal-400 p-1 min-w-0 rounded-md border border-teal-200 dark:border-teal-800"
+                            style={{
+                              color: "var(--teal-700, #0f766e) !important",
+                              backgroundColor:
+                                "var(--teal-100, #ccfbf1) !important",
+                              fontWeight: "bold !important",
+                            }}
+                            aria-label="View Project"
+                          >
+                            <span
+                              className="hidden sm:inline ml-1 text-xs font-medium"
+                              style={{
+                                color: "var(--teal-700, #0f766e) !important",
+                                fontWeight: "bold !important",
+                              }}
+                            >
+                              View
+                            </span>
+                          </Button>
+                        </Tooltip>
+                        {canModifyProject(project.ownerId) && (
+                          <Tooltip content="Edit Project" relationship="label">
+                            <Button
+                              icon={<Edit20Regular />}
+                              onClick={() => handleEdit(project.id)}
+                              appearance="subtle"
+                              className="bg-blue-100 hover:bg-blue-200 dark:bg-transparent dark:hover:bg-blue-900 text-blue-700 dark:text-blue-400 p-1 min-w-0 rounded-md border border-blue-200 dark:border-blue-800"
+                              style={{
+                                color: "var(--blue-700, #1d4ed8) !important",
+                                backgroundColor:
+                                  "var(--blue-100, #dbeafe) !important",
+                                fontWeight: "bold !important",
+                              }}
+                              aria-label="Edit Project"
+                            >
+                              <span
+                                className="hidden sm:inline ml-1 text-xs font-medium"
+                                style={{
+                                  color: "var(--blue-700, #1d4ed8) !important",
+                                  fontWeight: "bold !important",
+                                }}
+                              >
+                                Edit
+                              </span>
+                            </Button>
+                          </Tooltip>
+                        )}
+                        {canModifyProject(project.ownerId) && (
+                          <Tooltip content="Delete Project" relationship="label">
+                            <Button
+                              icon={<Delete20Regular />}
+                              onClick={() => handleDelete(project.id)}
+                              appearance="subtle"
+                              className="bg-red-100 hover:bg-red-200 dark:bg-transparent dark:hover:bg-red-900 text-red-700 dark:text-red-400 p-1 min-w-0 rounded-md border border-red-200 dark:border-red-800"
+                              style={{
+                                color: "var(--red-700, #b91c1c) !important",
+                                backgroundColor:
+                                  "var(--red-100, #fee2e2) !important",
+                                fontWeight: "bold !important",
+                              }}
+                              aria-label="Delete Project"
+                            >
+                              <span
+                                className="hidden sm:inline ml-1 text-xs font-medium"
+                                style={{
+                                  color: "var(--red-700, #b91c1c) !important",
+                                  fontWeight: "bold !important",
+                                }}
+                              >
+                                Delete
+                              </span>
+                            </Button>
+                          </Tooltip>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </Wrapper>
     );
   }

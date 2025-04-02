@@ -6,6 +6,7 @@ REPO_DIR="$BASE_DIR/asafarim"
 FRONTEND_DIR="$REPO_DIR/ASafariM.Clients/asafarim-ui"
 BLOG_DIR="$REPO_DIR/ASafariM.Clients/asafarim-blog"
 BIBLIOGRAPHY_DIR="$REPO_DIR/ASafariM.Clients/asafarim-bibliography"
+PBK_DIR="$REPO_DIR/ASafariM.Clients/asafarim-pbk"
 BACKEND_DIR="$REPO_DIR/ASafariM.Api"
 FRONTEND_DEPLOY_DIR="$BASE_DIR/asafarim-com/public_html"
 FRONTEND_BACKUP_DIR="$REPO_DIR/backups/frontends"
@@ -13,16 +14,20 @@ BLOG_DEPLOY_DIR="$BASE_DIR/asafarim-blog/public_html"
 BLOG_BACKUP_DIR="$REPO_DIR/backups/blogs"
 BIBLIOGRAPHY_DEPLOY_DIR="$BASE_DIR/asafarim-bibliography/public_html"
 BIBLIOGRAPHY_BACKUP_DIR="$REPO_DIR/backups/bibliography"
+PBK_DEPLOY_DIR="$BASE_DIR/asafarim-pbk/public_html"
+PBK_BACKUP_DIR="$REPO_DIR/backups/pbks"
 BACKEND_DEPLOY_DIR="$BASE_DIR/asafarim-api"
 BACKEND_BACKUP_DIR="$REPO_DIR/backups/backends"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 FRONTEND_BACKUP_FILE="asafarim-frontend_backup_${TIMESTAMP}.tar.gz"
 BLOG_BACKUP_FILE="asafarim-blog_backup_${TIMESTAMP}.tar.gz"
 BIBLIOGRAPHY_BACKUP_FILE="asafarim-bibliography_backup_${TIMESTAMP}.tar.gz"
+PBK_BACKUP_FILE="asafarim-pbk_backup_${TIMESTAMP}.tar.gz"
 BACKEND_BACKUP_FILE="asafarim-backend_backup_${TIMESTAMP}.tar.gz"
 FRONTEND_BACKUP_PATH="$FRONTEND_BACKUP_DIR/$FRONTEND_BACKUP_FILE"
 BLOG_BACKUP_PATH="$BLOG_BACKUP_DIR/$BLOG_BACKUP_FILE"
 BIBLIOGRAPHY_BACKUP_PATH="$BIBLIOGRAPHY_BACKUP_DIR/$BIBLIOGRAPHY_BACKUP_FILE"
+PBK_BACKUP_PATH="$PBK_BACKUP_DIR/$PBK_BACKUP_FILE"
 BACKEND_BACKUP_PATH="$BACKEND_BACKUP_DIR/$BACKEND_BACKUP_FILE"
 PUBLISH_DIR="$BASE_DIR/asafarim-api"
 SERVICE_NAME="asafarim-api"
@@ -44,24 +49,24 @@ log() {
 clean_old_logs() {
   local log_dir=$1
   local keep_count=2
-  
+
   log "Cleaning old log files in $log_dir, keeping newest $keep_count for each type"
-  
+
   # Get unique log file prefixes (everything before the timestamp)
   local prefixes=$(find "$log_dir" -type f -name "*.log" | sed -E 's/(.*)_[0-9]{8}_[0-9]{6}.log$/\1/' | sort -u)
-  
+
   # For each prefix, keep only the most recent files
   for prefix in $prefixes; do
     local base_prefix=$(basename "$prefix")
     log "Processing logs with prefix: $base_prefix"
-    
+
     # Count files for this prefix
     local file_count=$(find "$log_dir" -type f -name "${base_prefix}_*.log" | wc -l)
-    
+
     if [ "$file_count" -gt "$keep_count" ]; then
       log "Keeping $keep_count of $file_count ${base_prefix} logs"
-      find "$log_dir" -type f -name "${base_prefix}_*.log" | sort -r | tail -n +$((keep_count+1)) | xargs -r rm
-      log "Removed $(($file_count-$keep_count)) old ${base_prefix} logs"
+      find "$log_dir" -type f -name "${base_prefix}_*.log" | sort -r | tail -n +$((keep_count + 1)) | xargs -r rm
+      log "Removed $(($file_count - $keep_count)) old ${base_prefix} logs"
     else
       log "No old ${base_prefix} logs to remove (found $file_count)"
     fi
@@ -89,6 +94,7 @@ echo "2: Backend"
 echo "3: Both (Frontend & Backend)"
 echo "4: Blog"
 echo "5: Bibliography"
+echo "6: Portfolio Builder Kit (PBK)"
 echo "0: Exit"
 echo ""
 echo "You can select multiple options using commas (e.g., '1,4,5' to deploy Frontend, Blog, and Bibliography)"
@@ -105,7 +111,7 @@ if [[ "$DEPLOY_MODES" == "0" ]]; then
 fi
 
 # Convert comma-separated input to array
-IFS=',' read -ra DEPLOY_MODE_ARRAY <<< "$DEPLOY_MODES"
+IFS=',' read -ra DEPLOY_MODE_ARRAY <<<"$DEPLOY_MODES"
 log "Selected deployment modes: $DEPLOY_MODES"
 
 # Function to check if a git pull is needed
@@ -135,7 +141,7 @@ check_health() {
   local retries=0
   local max_retries=30
   log "Starting health check at $HEALTH_CHECK_URL"
-  
+
   # First check if the service is actually running
   local service_status=$(systemctl is-active $SERVICE_NAME)
   if [ "$service_status" != "active" ]; then
@@ -144,14 +150,14 @@ check_health() {
     sudo systemctl start $SERVICE_NAME
     sleep 5
   fi
-  
+
   # Check if port 5000 is actually in use
-  if ! sudo lsof -i :5000 > /dev/null 2>&1; then
+  if ! sudo lsof -i :5000 >/dev/null 2>&1; then
     log "WARNING: Nothing is listening on port 5000!"
     log "Checking service status again..."
-    sudo systemctl status $SERVICE_NAME --no-pager >> "$DEPLOY_LOG"
+    sudo systemctl status $SERVICE_NAME --no-pager >>"$DEPLOY_LOG"
   fi
-  
+
   while [ $retries -lt $max_retries ]; do
     log "Health check attempt $((retries + 1))..."
     response=$(curl -sk "$HEALTH_CHECK_URL" -v 2>&1)
@@ -162,7 +168,7 @@ check_health() {
       log "Health check passed! (HTTP 200 OK received)"
       return 0
     fi
-    
+
     # Also check for the healthy status in JSON as a fallback
     if [[ "$response" == *"\"status\":\"healthy\""* ]] || [[ "$response" == *"\"status\":\"Healthy\""* ]]; then
       log "Health check passed! (healthy status found in response)"
@@ -173,18 +179,18 @@ check_health() {
     if [ $curl_status -ne 0 ]; then
       log "Curl failed with status $curl_status"
       case $curl_status in
-        7) log "Failed to connect to host or proxy" ;;
-        28) log "Operation timeout" ;;
-        *) log "Curl error: $curl_status" ;;
+      7) log "Failed to connect to host or proxy" ;;
+      28) log "Operation timeout" ;;
+      *) log "Curl error: $curl_status" ;;
       esac
     fi
 
     # Only show logs every 5 attempts to reduce noise
     if [ $((retries % 5)) -eq 0 ]; then
       log "Recent application logs:"
-      sudo journalctl -u $SERVICE_NAME -n 20 --no-pager >> "$DEPLOY_LOG"
+      sudo journalctl -u $SERVICE_NAME -n 20 --no-pager >>"$DEPLOY_LOG"
       log "Checking if service is still running..."
-      sudo systemctl status $SERVICE_NAME --no-pager | head -n 3 >> "$DEPLOY_LOG"
+      sudo systemctl status $SERVICE_NAME --no-pager | head -n 3 >>"$DEPLOY_LOG"
     fi
 
     # Wait longer between retries as attempts increase
@@ -197,7 +203,7 @@ check_health() {
   log "Health check failed after $max_retries attempts"
   log "Final diagnostics:"
   log "Service status: $(systemctl is-active $SERVICE_NAME)"
-  log "Port 5000 in use: $(if sudo lsof -i :5000 > /dev/null 2>&1; then echo 'Yes'; else echo 'No'; fi)"
+  log "Port 5000 in use: $(if sudo lsof -i :5000 >/dev/null 2>&1; then echo 'Yes'; else echo 'No'; fi)"
   log "Last curl response: $response"
   return 1
 }
@@ -210,26 +216,26 @@ rollback() {
     log "Stopping service before rollback..."
     sudo systemctl stop $SERVICE_NAME
     sleep 3
-    
+
     log "Clearing deployment directory..."
     rm -rf "$BACKEND_DEPLOY_DIR"/* || log "Warning: Failed to clear deployment directory"
-    
+
     log "Extracting backup..."
     sudo tar -xzf "$BACKEND_BACKUP_PATH" -C "$BACKEND_DEPLOY_DIR" || handle_error "Failed to extract backup" "exit"
-    
+
     log "Setting correct permissions..."
     sudo chown -R www-data:www-data "$BACKEND_DEPLOY_DIR"
-    
+
     log "Restarting service after rollback..."
     sudo systemctl daemon-reload
     sudo systemctl start $SERVICE_NAME
     sleep 5
-    
+
     if check_health; then
       log "Rollback successful"
     else
       log "WARNING: Rollback health check failed. Checking service status:"
-      sudo systemctl status $SERVICE_NAME --no-pager >> "$DEPLOY_LOG"
+      sudo systemctl status $SERVICE_NAME --no-pager >>"$DEPLOY_LOG"
       handle_error "Rollback failed - manual intervention required" "exit"
     fi
   else
@@ -240,7 +246,7 @@ rollback() {
 # Function to create systemd service file
 create_service_file() {
   log "Creating systemd service file..."
-  cat > "$SERVICE_FILE" << EOF
+  cat >"$SERVICE_FILE" <<EOF
 [Unit]
 Description=ASafariM .NET API
 After=network.target mysql.service
@@ -268,24 +274,24 @@ EOF
 # Ensure port 5000 is free
 ensure_port_5000_free() {
   log "Ensuring port 5000 is free..."
-  
+
   # First try to stop the service gracefully
   sudo systemctl stop $SERVICE_NAME
   sleep 2
-  
+
   # Check if port is still in use
   PID=$(sudo lsof -t -i:5000)
   if [ -n "$PID" ]; then
     log "Port 5000 is still in use by process $PID, killing it..."
     sudo kill -9 $PID
     sleep 2
-    
+
     # Verify port is free
-    if sudo lsof -i :5000 > /dev/null 2>&1; then
+    if sudo lsof -i :5000 >/dev/null 2>&1; then
       handle_error "Failed to free port 5000" "exit"
     fi
   fi
-  
+
   log "Port 5000 is available"
 }
 
@@ -294,14 +300,14 @@ create_backup() {
   local source_dir=$1
   local backup_path=$2
   local backup_name=$3
-  
+
   log "Creating $backup_name backup..."
 
   # Ensure backup directory exists with correct permissions
   sudo mkdir -p "$(dirname "$backup_path")" || true
   sudo chown -R root:root "$(dirname "$backup_path")" || true
   sudo chmod -R 755 "$(dirname "$backup_path")" || true
-  
+
   # Verify source directory exists and has content
   if [ ! -d "$source_dir" ]; then
     log "Warning: Source directory $source_dir does not exist, creating it..."
@@ -316,7 +322,7 @@ create_backup() {
 
   # Create backup
   log "Creating backup at $backup_path"
-  if sudo tar -czf "$backup_path" -C "$source_dir" . > /dev/null 2>&1; then
+  if sudo tar -czf "$backup_path" -C "$source_dir" . >/dev/null 2>&1; then
     log "Backup created successfully"
     return 0
   else
@@ -329,17 +335,17 @@ create_backup() {
 clean_old_backups() {
   local backup_dir=$1
   local keep_count=3
-  
+
   log "Cleaning old backups in $backup_dir, keeping newest $keep_count"
   sudo mkdir -p "$backup_dir" || true
-  
+
   # Count files
   file_count=$(ls -1 "$backup_dir"/*.tar.gz 2>/dev/null | wc -l)
-  
+
   if [ "$file_count" -gt "$keep_count" ]; then
     log "Removing old backups..."
-    ls -t "$backup_dir"/*.tar.gz | tail -n +$((keep_count+1)) | xargs -r sudo rm
-    log "Removed $(($file_count-$keep_count)) old backups"
+    ls -t "$backup_dir"/*.tar.gz | tail -n +$((keep_count + 1)) | xargs -r sudo rm
+    log "Removed $(($file_count - $keep_count)) old backups"
   else
     log "No old backups to remove"
   fi
@@ -353,13 +359,13 @@ if [ "$DB_MODE" = "y" ]; then
   # Apply database migrations
   cd "$REPO_DIR" || handle_error "Repository directory not found!" "exit"
   log "Applying database migrations..."
-  
+
   dotnet tool restore || handle_error "Failed to restore .NET tools!" "exit"
 
   # Run database migration and capture output
   MIGRATION_OUTPUT=$(dotnet ef database update --project ./ASafariM.Infrastructure/ASafariM.Infrastructure.csproj --startup-project ./ASafariM.Api/ASafariM.Api.csproj --verbose 2>&1)
   MIGRATION_STATUS=$?
-  
+
   # Check if the error is just 'Table already exists'
   if [ $MIGRATION_STATUS -ne 0 ]; then
     if echo "$MIGRATION_OUTPUT" | grep -q "Table.*already exists"; then
@@ -598,6 +604,63 @@ if [[ " ${DEPLOY_MODE_ARRAY[*]} " =~ " 5 " ]]; then
   sudo systemctl restart nginx || handle_error "Failed to restart Nginx!" "exit"
 
   log "Bibliography deployment completed successfully!"
+fi
+
+# *********************************************************************
+# PBK Deployment
+# Check if PBK deployment (mode 6) is selected
+if [[ " ${DEPLOY_MODE_ARRAY[*]} " =~ " 6 " ]]; then
+  log "Starting Portfolio Builder Kit (PBK) Deployment..."
+
+  # Clean old backups
+  clean_old_backups "$PBK_BACKUP_DIR"
+
+  # Create a backup of the current deployment
+  create_backup "$PBK_DEPLOY_DIR" "$PBK_BACKUP_PATH" "pbk"
+
+  # Navigate to PBK project
+  cd "$PBK_DIR" || handle_error "PBK directory not found!" "exit"
+
+  # Build the PBK app
+  log "Building PBK app..."
+  yarn build || handle_error "PBK build failed!" "exit"
+
+  # Ensure Deployment Directory Exists
+  log "Ensuring deployment directory exists..."
+  sudo mkdir -p "$PBK_DEPLOY_DIR" || true
+
+  # Clear old files
+  log "Cleaning old deployment files..."
+  sudo rm -rf "$PBK_DEPLOY_DIR"/* || true
+
+  # Move new build files
+  log "Deploying new build files..."
+  if [ -d "dist" ]; then
+    sudo cp -r dist/asafarim-pbk/browser/* "$PBK_DEPLOY_DIR"/ || {
+      log "Error: Moving files failed, rolling back..."
+      sudo tar -xzf "$PBK_BACKUP_PATH" -C "$PBK_DEPLOY_DIR"
+      handle_error "PBK deployment failed" "exit"
+    }
+  else
+    handle_error "Build directory 'dist' not found" "exit"
+  fi
+
+  # Set correct permissions
+  log "Setting correct file permissions..."
+  sudo chown -R www-data:www-data "$PBK_DEPLOY_DIR"
+  sudo chmod -R 755 "$PBK_DEPLOY_DIR"
+
+  # Restart Nginx
+  log "Restarting Nginx..."
+  sudo systemctl restart nginx || handle_error "Failed to restart Nginx!" "exit"
+
+  log "PBK deployment completed successfully!"
+  log "=== DEPLOYMENT SUMMARY ==="
+  log "PBK deployed to: $PBK_DEPLOY_DIR"
+  log "Backup stored at: $PBK_BACKUP_PATH"
+  log "Log file: $DEPLOY_LOG"
+  log "=== END DEPLOYMENT SUMMARY ==="
+  
 fi
 
 # **Deployment Complete**

@@ -54,7 +54,7 @@ describe('ASMButton', () => {
     // Verify that window.open was called with the correct URL and target
     expect(mockOpen).toHaveBeenCalledTimes(1);
     expect(mockOpen).toHaveBeenCalledWith(
-      'https://sites.google.com/view/asafarim-it',
+      'https://pbk.asafarim.com',
       '_blank'
     );
   });

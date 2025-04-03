@@ -3,7 +3,7 @@ import React from "react";
 const ASMButton: React.FC = () => {
     return (
         <button
-            onClick={() => window.open("https://sites.google.com/view/asafarim-it", "_blank")}
+            onClick={() => window.open("https://pbk.asafarim.com", "_blank")}
             className="bg-gradient-to-r from-[var(--button-bg, #41D1FF)] to-[var(--button-hover-bg, #BD34FE)] text-[var(--button-text, white)] px-6 py-2 rounded-md flex items-center space-x-2 shadow-md hover:scale-105 transition-transform dark:bg-gradient-to-r dark:from-[var(--button-bg, #BD34FE)] dark:to-[var(--button-hover-bg, #41D1FF)] dark:text-[var(--button-text, white)]"
         >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="24" height="24">

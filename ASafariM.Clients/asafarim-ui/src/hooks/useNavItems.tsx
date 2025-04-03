@@ -10,7 +10,7 @@ import {
   Accessibility24Regular as IconAccount,
   SignOut24Regular as IconLogout
 } from '@fluentui/react-icons';
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 import {logger} from "../utils/logger";
 import React from "react";
 import { IMenuItem } from "../interfaces/IMenuItem";
@@ -90,7 +90,7 @@ const homeDD: IMenuItem = {
           id: 'asafarim-gg-site',
           name: 'asafarim-gg-site',
           title: 'ASafariM Google Site',
-          to: 'https://sites.google.com/view/asafarim-it/',
+          to: 'https://pbk.asafarim.com/',
           target: '_blank',
           icon: <IconContact />,
           label: 'ASafariM Google Site',

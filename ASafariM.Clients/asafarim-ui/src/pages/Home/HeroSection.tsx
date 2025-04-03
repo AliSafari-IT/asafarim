@@ -19,7 +19,7 @@ const HeroSection = () => {
             </p>
             <div className="flex flex-wrap gap-4">
               <Link
-                to="https://sites.google.com/view/asafarim-it"
+                to="https://pbk.asafarim.com"
                 className="px-8 py-3 bg-white text-teal-700 font-semibold rounded-lg shadow-md hover:bg-teal-50 transition duration-300 text-lg"
                 target="_blank"
               >

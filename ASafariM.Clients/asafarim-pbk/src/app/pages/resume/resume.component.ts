@@ -74,7 +74,7 @@ export class ResumeComponent implements OnInit, OnDestroy {
   theme: Theme = 'light';
   private themeSubscription: Subscription = Subscription.EMPTY;
 
-  constructor(private themeService: ThemeService) {}
+  constructor(private themeService: ThemeService) { }
 
   ngOnInit() {
     // Subscribe to theme changes
@@ -83,11 +83,11 @@ export class ResumeComponent implements OnInit, OnDestroy {
         this.theme = currentTheme;
       }
     );
-    
+
     // Load LinkedIn badge script
     this.loadLinkedInScript();
   }
-  
+
   private loadLinkedInScript(): void {
     const script = document.createElement('script');
     script.src = 'https://platform.linkedin.com/badges/js/profile.js';
@@ -123,8 +123,8 @@ export class ResumeComponent implements OnInit, OnDestroy {
       period: 'December 2020 - December 2023',
       description: 'Full-stack software development for scientific applications, focusing on comprehensive technology solutions across frontend, backend, and database domains.',
       skills: [
-        '.NET Core', 'ASP.NET Core', 'WebAPI', 'MVC', 
-        'Entity Framework Core', 'React', 'TypeScript', 
+        '.NET Core', 'ASP.NET Core', 'WebAPI', 'MVC',
+        'Entity Framework Core', 'React', 'TypeScript',
         'Syncfusion', 'MongoDB', 'SQL Server', 'MySQL'
       ],
       technologies: {
@@ -163,30 +163,29 @@ export class ResumeComponent implements OnInit, OnDestroy {
       ]
     },
     {
-      title: 'Scientific App Developer (Internship)',
+      title: 'Data Visualization Developer (Internship)',
+      company: 'IRC Engineering',
+      location: 'Dendermonde, Belgium',
+      period: 'a monthly basis internship (2020)',
+      description: 'Developing data visualization solutions',
+      achievements: [
+        'Energy Consumption Time series analysis and visualization',
+        'Utilized C# and R.Net to create Windows Presentation Foundation (WPF) applications'
+      ],
+      skills: ['WPF', 'C#', 'R', 'R.NET', '.NET']
+    },
+    { 
+      title: 'Hydrologic Modeling & Development (Internship)',
       company: 'Flanders Environment Agency (VMM)',
-      period: '2018',
-      description: 'Specialized in hydrologic modeling and scientific programming within a research-driven environmental context.',
+      location: 'Brussels, Belgium',
+      period: '2018 - 2019',
+      description: 'Developing hydrologic model WetSpa and scientific programming within a research-driven environmental context.',
       skills: ['FORTRAN', 'Hydrologic Modeling', 'Scientific Programming', 'River Flow Simulation'],
       achievements: [
         'Adapted and enhanced the WetSpa hydrologic model for river flow simulations',
         'Leveraged advanced scientific programming skills in environmental research',
         'Contributed to innovative hydrologic modeling techniques'
       ]
-    },
-    {
-      title: 'IT Consultant',
-      company: 'ASafariM IT Solutions',
-      period: '2018 - Present',
-      description: 'Providing IT consulting services for small to medium businesses. Specializing in web development, database design, and system integration.',
-      skills: ['Angular', 'React', 'Node.js', 'MongoDB', 'AWS', 'Docker']
-    },
-    {
-      title: 'Software Engineer',
-      company: 'Tech Innovations',
-      period: '2015 - 2020',
-      description: 'Developed enterprise applications and web solutions for clients across various industries. Implemented CI/CD pipelines and automated testing.',
-      skills: ['Java', 'Spring Boot', 'JavaScript', 'Jenkins', 'Git', 'PostgreSQL']
     }
   ];
 
@@ -211,9 +210,9 @@ export class ResumeComponent implements OnInit, OnDestroy {
       period: '2005 - 2012',
       description: 'Advanced hydrologic modeling research integrating big data analytics from environmental data sources.',
       skills: [
-        'Hydrologic Modeling (WetSpa distributed model)', 
-        'Numerical River Flow Modeling', 
-        'Radar & Satellite Data Analysis', 
+        'Hydrologic Modeling (WetSpa distributed model)',
+        'Numerical River Flow Modeling',
+        'Radar & Satellite Data Analysis',
         'Developed Automated Model calibration technique (ARIMA based time series analysis)',
         'Model prediction and validation'
       ],
@@ -231,8 +230,8 @@ export class ResumeComponent implements OnInit, OnDestroy {
       period: '1994 - 2001',
       description: 'Comprehensive education in hydrologic engineering and environmental modeling.',
       skills: [
-        'Flood Zone Analysis and Mapping (GIS)', 
-        'Natural Resources Management', 
+        'Flood Zone Analysis and Mapping (GIS)',
+        'Natural Resources Management',
         'Flood Risk Analysis',
         'Hec-RAS (Hydraulic Engineering Computing - River Analysis System) modeling'
       ],
@@ -248,8 +247,8 @@ export class ResumeComponent implements OnInit, OnDestroy {
     {
       category: 'Programming Languages',
       items: [
-        'C# (ASP.NET Core, .NET Framework)', 
-        'TypeScript', 
+        'C# (ASP.NET Core, .NET Framework)',
+        'TypeScript',
         'JavaScript'
       ],
       description: 'Mastering multiple programming languages for building robust applications.'
@@ -257,10 +256,10 @@ export class ResumeComponent implements OnInit, OnDestroy {
     {
       category: 'Frontend Development',
       items: [
-        'React with TypeScript', 
-        'Redux State Management', 
-        'Syncfusion UI Components', 
-        'Tailwind CSS', 
+        'React with TypeScript',
+        'Redux State Management',
+        'Syncfusion UI Components',
+        'Tailwind CSS',
         'SASS Styling'
       ],
       description: 'Mastering frontend development with React and TypeScript.'
@@ -268,8 +267,8 @@ export class ResumeComponent implements OnInit, OnDestroy {
     {
       category: 'Backend Development',
       items: [
-        'ASP.NET Core (WebAPI, MVC)', 
-        'Entity Framework Core', 
+        'ASP.NET Core (WebAPI, MVC)',
+        'Entity Framework Core',
         'SignalR Real-Time Features'
       ],
       description: 'Mastering backend development with ASP.NET Core and Entity Framework.'
@@ -277,8 +276,8 @@ export class ResumeComponent implements OnInit, OnDestroy {
     {
       category: 'Data Visualization & Analytics',
       items: [
-        'D3.js Data Visualizations', 
-        'R', 
+        'D3.js Data Visualizations',
+        'R',
         'R.Net Data Processing'
       ],
       description: 'Mastering data visualization and analytics with D3.js and R.'
@@ -286,18 +285,18 @@ export class ResumeComponent implements OnInit, OnDestroy {
     {
       category: 'Database Management',
       items: [
-        'SQL Server', 
-        'MySQL', 
+        'SQL Server',
+        'MySQL',
         'MongoDB',
         'Database Design and Optimization'
-      ] ,
+      ],
       description: 'Mastering database management with SQL Server, MySQL, and MongoDB.'
     },
     {
       category: 'Testing & Quality Assurance',
       items: [
-        'xUnit', 
-        'Moq', 
+        'xUnit',
+        'Moq',
         'TestCafe End-to-End Testing'
       ],
       description: 'Mastering testing and quality assurance with xUnit and Moq.'
@@ -305,9 +304,9 @@ export class ResumeComponent implements OnInit, OnDestroy {
     {
       category: 'Version Control & DevOps',
       items: [
-        'Git', 
-        'GitHub', 
-        'Azure DevOps', 
+        'Git',
+        'GitHub',
+        'Azure DevOps',
         'Docker'
       ],
       description: 'Mastering version control and DevOps with Git, GitHub, and Azure DevOps.'
@@ -315,7 +314,7 @@ export class ResumeComponent implements OnInit, OnDestroy {
     {
       category: 'API & Documentation',
       items: [
-        'Swagger UI', 
+        'Swagger UI',
         'RESTful API Development'
       ],
       description: 'Mastering API development and documentation with Swagger UI.'

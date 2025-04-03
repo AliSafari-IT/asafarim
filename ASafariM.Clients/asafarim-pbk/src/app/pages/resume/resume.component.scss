@@ -1,6 +1,6 @@
 .resume-section {
   padding: 2rem 0;
-  background-color: var(--bg-primary);
+  background-color: var(--bg-inverted);
   min-height: calc(100vh - 70px);
 }
 
@@ -53,7 +53,6 @@
 .resume-layout {
   display: flex;
   flex-direction: column;
-  background-color: white;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -69,11 +68,11 @@
 }
 
 .resume-left-column {
-  background-color: #f5f7fa;
-  padding: 2rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: var(--bg-secondary);
   
   @media (min-width: 768px) {
     width: 240px;
@@ -89,6 +88,8 @@
 .resume-right-column {
   flex: 1;
   padding: 2rem;
+  background-color: var(--bg-primary);
+  color: var(--text-muted);
   
   @media print {
     padding: 1.5rem;
@@ -145,10 +146,10 @@
 .profile-name {
   font-size: 1.75rem;
   font-weight: 700;
-  color: #1e293b;
   margin-bottom: 0.25rem;
   line-height: 1.2;
   text-align: center;
+  color: var(--primary-color);
   
   @media print {
     font-size: 1.5rem;
@@ -157,10 +158,10 @@
 
 .profile-title {
   font-size: 1rem;
-  color: #64748b;
   margin-bottom: 1.5rem;
   font-weight: 500;
   text-align: center;
+  color: var(--i-color);
   
   @media print {
     font-size: 0.9rem;
@@ -172,7 +173,6 @@
   font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 0.75rem;
-  color: #1e293b;
   border-bottom: 2px solid #e2e8f0;
   padding-bottom: 0.5rem;
   
@@ -190,11 +190,11 @@
 
 .language-item {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   padding: 0.25rem 0;
   font-size: 0.9rem;
-  color: #475569;
-  
+    
   @media print {
     font-size: 0.8rem;
   }
@@ -202,22 +202,22 @@
 
 .language-name {
   font-weight: 600;
-  color: #334155;
+  color: var(--info-color);
 }
 
 .language-level {
-  color: #0ea5e9;
   font-weight: 500;
+  color: var(--primary-color);
 }
 
 .scholar-link {
   display: inline-flex;
   align-items: center;
-  color: #0ea5e9;
+  color: var(--primary-color);
   font-weight: 500;
   text-decoration: none;
   padding: 0.5rem 0.75rem;
-  border: 1px solid #0ea5e9;
+  border: 1px solid var(--primary-color);
   border-radius: 4px;
   font-size: 0.85rem;
   transition: all 0.2s ease;
@@ -272,7 +272,7 @@
 .section-title {
   font-size: 1.4rem;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--info-color);
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
   border-bottom: 2px solid #e2e8f0;
@@ -319,7 +319,7 @@
 .summary-content {
   font-size: 0.95rem;
   line-height: 1.5;
-  color: #475569;
+  color: var(--text-muted);
   
   @media print {
     font-size: 0.85rem;
@@ -327,27 +327,92 @@
 }
 
 /* Key Skills Section */
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  .section-icon {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+  }
+}
+
 .key-skills-list {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
 .key-skill-item {
-  margin-bottom: 1rem;
+  background-color: var(--bg-metallic);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+  
+  @media print {
+    box-shadow: none !important;
+    transform: none !important;
+    margin-bottom: 0.75rem;
+  }
+}
+
+.key-skill-row {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  
+  @media (max-width: 767px) {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
+
+.key-skill-category {
+  width: 150px;
+  flex-shrink: 0;
+  word-spacing: .5rem;
+  
+  @media (max-width: 767px) {
+    width: 100%;
+  }
+}
+
+.key-skill-content {
+  flex: 1;
+  min-width: 0;
 }
 
 .key-skill-title {
   font-size: 1rem;
   font-weight: 600;
-  color: #334155;
+  color: var(--text-metallic);
   margin-bottom: 0.5rem;
-  border-bottom: 1px solid #e2e8f0;
-  padding-bottom: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  .category-icon {
+    color: var(--primary-color);
+    font-size: 1.1rem;
+  }
   
   @media print {
     font-size: 0.9rem;
     margin-bottom: 0.35rem;
+  }
+  
+  @media (max-width: 767px) {
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid var(--border-color);
   }
 }
 
@@ -363,10 +428,16 @@
 
 .skill-tag {
   font-size: 0.8rem;
-  color: #0ea5e9;
-  background-color: rgba(14, 165, 233, 0.1);
+  color: var(--primary-color);
+  background-color: rgba(var(--primary-color-rgb), 0.1);
   padding: 0.2rem 0.6rem;
   border-radius: 100px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background-color: rgba(var(--primary-color-rgb), 0.2);
+    transform: translateY(-1px);
+  }
   
   @media print {
     font-size: 0.7rem;
@@ -375,20 +446,48 @@
 }
 
 /* Experience Section */
-.experience-item {
-  margin-bottom: 1.5rem;
+.experience-timeline-container {
+  position: relative;
+  padding-left: 30px;
+  margin-left: 20px;
+  margin-top: 1rem;
+}
+
+.experience-timeline-item {
+  position: relative;
+  margin-bottom: 2rem;
   
   &:last-child {
     margin-bottom: 0;
   }
   
   @media print {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+.experience-card {
+  background-color: var(--bg-metallic);
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  }
+  
+  @media print {
+    box-shadow: none !important;
+    transform: none !important;
   }
 }
 
 .experience-header {
   margin-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.5rem;
   
   @media print {
     margin-bottom: 0.5rem;
@@ -398,8 +497,28 @@
 .experience-company {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--text-metallic);
   margin-bottom: 0.25rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  
+  i {
+    color: var(--primary-color);
+    margin-right: 0.25rem;
+  }
+  
+  .experience-location {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-left: 0.5rem;
+    
+    i {
+      color: var(--warning-color);
+      margin-right: 0.25rem;
+    }
+  }
   
   @media print {
     font-size: 1rem;
@@ -408,21 +527,48 @@
 
 .experience-role {
   font-size: 0.9rem;
-  color: #64748b;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  
+  i {
+    color: var(--info-color);
+    margin-right: 0.25rem;
+  }
+  
+  .experience-period {
+    font-size: 0.85rem;
+    color: var(--info-color);
+    background-color: rgba(var(--primary-color-rgb), 0.1);
+    padding: 0.15rem 0.5rem;
+    border-radius: 100px;
+    margin-left: 0.5rem;
+    
+    i {
+      color: var(--info-color);
+      margin-right: 0.25rem;
+    }
+  }
   
   @media print {
     font-size: 0.8rem;
   }
 }
 
+.experience-content {
+  padding-top: 0.5rem;
+}
+
 .experience-achievements {
   list-style-type: disc;
   padding-left: 1.25rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
   
   li {
     font-size: 0.9rem;
-    color: #475569;
+    color: var(--text-muted);
     margin-bottom: 0.35rem;
     line-height: 1.5;
     
@@ -431,6 +577,26 @@
       line-height: 1.4;
       margin-bottom: 0.25rem;
     }
+  }
+}
+
+.experience-tech-container {
+  margin-top: 0.75rem;
+}
+
+.tech-badge {
+  color: var(--text-muted);
+  background-color: var(--bg-muted);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  font-size: 0.85rem;
+  
+  i {
+    margin-right: 0.25rem;
+    color: var(--primary-color);
   }
 }
 
@@ -446,10 +612,16 @@
 
 .tech-tag {
   font-size: 0.8rem;
-  color: #0ea5e9;
-  background-color: rgba(14, 165, 233, 0.1);
+  color: var(--primary-color);
+  background-color: rgba(var(--primary-color-rgb), 0.1);
   padding: 0.2rem 0.6rem;
   border-radius: 100px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background-color: rgba(var(--primary-color-rgb), 0.2);
+    transform: translateY(-1px);
+  }
   
   @media print {
     font-size: 0.7rem;
@@ -493,7 +665,7 @@
 .education-degree {
   font-size: 1rem;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--text-metallic);
   margin-bottom: 0.15rem;
   
   @media print {
@@ -503,7 +675,7 @@
 
 .education-year {
   font-size: 0.85rem;
-  color: #64748b;
+  color: var(--text-metallic);
   padding: 0.2rem 0.6rem;
   background-color: rgba(14, 165, 233, 0.1);
   border-radius: 100px;
@@ -516,7 +688,7 @@
 
 .education-institution {
   font-size: 0.85rem;
-  color: #475569;
+  color: var(--info-color);
   margin-bottom: 0.25rem;
   
   @media print {
@@ -529,7 +701,7 @@
   flex-wrap: wrap;
   gap: 0.4rem;
   margin-top: 0.25rem;
-  
+    
   @media print {
     gap: 0.25rem;
     margin-top: 0.15rem;
@@ -538,7 +710,7 @@
 
 .edu-skill-tag {
   font-size: 0.75rem;
-  color: #0ea5e9;
+  color: var(--primary-color);
   background-color: rgba(14, 165, 233, 0.1);
   padding: 0.15rem 0.5rem;
   border-radius: 100px;
@@ -551,11 +723,163 @@
 
 .more-skills {
   font-size: 0.75rem;
-  color: #64748b;
+  color: var(--text-metallic);
   font-style: italic;
   
   @media print {
     font-size: 0.65rem;
+  }
+}
+// Education Timeline
+.education-timeline-container {
+  position: relative;
+  padding-left: 30px;
+  margin-left: 20px;
+}
+
+.timeline-vertical-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background-color: var(--border-color);
+}
+
+.education-timeline-item {
+  position: relative;
+  margin-bottom: 2rem;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.timeline-marker {
+  position: absolute;
+  left: -30px;
+  top: 15px;
+}
+
+.timeline-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  border: 3px solid var(--bg-white);
+  box-shadow: 0 0 0 2px var(--border-color);
+}
+
+.education-card {
+  background-color: var(--bg-metallic);
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  }
+  
+  @media print {
+    box-shadow: none !important;
+    transform: none !important;
+  }
+}
+
+.education-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.education-degree {
+  color: var(--text-metallic);
+  font-weight: 600;
+  
+  i {
+    margin-right: 0.5rem;
+    color: var(--primary-color);
+  }
+}
+
+.education-institution {
+  color: var(--text-muted);
+  margin: 0.5rem 0;
+  
+  i {
+    margin-right: 0.5rem;
+    color: var(--info-color);
+  }
+  
+  .education-location {
+    color: var(--text-muted);
+    opacity: 0.8;
+    margin-left: 0.5rem;
+    
+    i {
+      margin-right: 0.25rem;
+      color: var(--warning-color);
+    }
+  }
+}
+
+.education-year {
+  color: var(--info-color);
+  background-color: rgba(var(--primary-color-rgb), 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 100px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  
+  i {
+    margin-right: 0.25rem;
+  }
+}
+
+.education-skills {
+  margin-top: 0.75rem;
+}
+
+.skills-badge {
+  color: var(--text-muted);
+  background-color: var(--bg-muted);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  font-size: 0.85rem;
+  
+  i {
+    margin-right: 0.25rem;
+    color: var(--primary-color);
+  }
+}
+
+.skills-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+// Responsive adjustments
+@media (max-width: 767px) {
+  .education-timeline-container {
+    padding-left: 20px;
+    margin-left: 10px;
+  }
+  
+  .timeline-marker {
+    left: -20px;
+  }
+  
+  .timeline-dot {
+    width: 12px;
+    height: 12px;
   }
 }
 
@@ -575,7 +899,7 @@
 }
 
 .certification-item {
-  background-color: #f8fafc;
+  background-color: var(--bg-metallic);
   border-radius: 6px;
   padding: 0.75rem 1rem;
   
@@ -588,7 +912,7 @@
   font-size: 0.95rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
-  
+
   @media print {
     font-size: 0.85rem;
     margin-bottom: 0.35rem;
@@ -596,7 +920,7 @@
 }
 
 .cert-link {
-  color: #0ea5e9;
+  color: var(--gray-500);
   text-decoration: none;
   transition: color 0.2s ease;
   
@@ -626,7 +950,7 @@
 }
 
 .certification-year {
-  color: #0ea5e9;
+  color: var(--info-color);
 }
 
 .education-year {

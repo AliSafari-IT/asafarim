@@ -28,7 +28,6 @@ export class NavbarComponent implements OnInit {
   isMobileMenuOpen = false;
 
   navItems = [
-    { path: '/', label: 'Home' },
     { path: '/resume', label: 'Resume' },
     { path: '/publications', label: 'Publications' },
     { path: '/research', label: 'Research' }

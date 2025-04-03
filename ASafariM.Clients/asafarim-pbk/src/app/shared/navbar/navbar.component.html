@@ -2,17 +2,17 @@
   <div class="navbar-container">
     <div class="navbar-content">
       <!-- Logo -->
-      <a routerLink="//https://asafarim.com" class="navbar-logo">
+      <a href="https://asafarim.com" class="navbar-logo">
         <img src="logoT.svg" alt="ASafariM Logo" class="logo-image" />
         <span class="logo-text">ASafariM</span>
-      </a>
-      <a routerLink="/" class="navbar-logo">
-        <img src="portfolio.svg" alt="Portfolio Logo" class="logo-image" />
-        <span class="logo-text">Portfolio Home</span>
-      </a>
+      </a>     
 
       <!-- Desktop Menu -->
       <div class="navbar-menu desktop-menu">
+        <a routerLink="/" class="navbar-logo">
+          <img src="images/portfolio.svg" alt="Portfolio Logo" class="logo-image" />
+          <span class="logo-text">Portfolio</span>
+        </a>
         <a *ngFor="let item of navItems" 
            [routerLink]="item.path" 
            routerLinkActive="active" 

@@ -95,6 +95,349 @@ export class ResumeComponent implements OnInit, OnDestroy {
     script.defer = true;
     document.body.appendChild(script);
   }
+  
+  /**
+   * Process the profile image for the downloaded HTML file
+   * Attempts to make the image look more decent in the downloaded file
+   */
+  private processProfileImage(resumeElement: HTMLElement): void {
+    // Find the profile image
+    const profileImg = resumeElement.querySelector('.profile-image img') as HTMLImageElement;
+    
+    if (profileImg) {
+      // Ensure the image has proper styling
+      profileImg.style.width = '100%';
+      profileImg.style.height = '100%';
+      profileImg.style.objectFit = 'cover';
+      profileImg.style.borderRadius = '50%';
+      
+      // If the image is a relative path, convert to absolute URL
+      if (profileImg.src.startsWith('/') || !profileImg.src.startsWith('http')) {
+        const baseUrl = window.location.origin;
+        profileImg.src = new URL(profileImg.src, baseUrl).href;
+      }
+      
+      // Add a fallback image in case the original doesn't load
+      profileImg.onerror = () => {
+        profileImg.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMjU2IDI1NiI+PHJlY3Qgd2lkdGg9IjI1NiIgaGVpZ2h0PSIyNTYiIGZpbGw9IiNlOWVjZWYiLz48Y2lyY2xlIGN4PSIxMjgiIGN5PSI5NiIgcj0iNjQiIGZpbGw9IiNhYmI1YmUiLz48Y2lyY2xlIGN4PSIxMjgiIGN5PSIyMjQiIHI9IjEyOCIgZmlsbD0iI2FiYjViZSIvPjwvc3ZnPg==';
+      };
+    }
+    
+    // Fix SVG icons if needed
+    const svgIcons = resumeElement.querySelectorAll('svg');
+    svgIcons.forEach(svg => {
+      if (svg.getAttribute('width') === null) {
+        svg.setAttribute('width', '16');
+      }
+      if (svg.getAttribute('height') === null) {
+        svg.setAttribute('height', '16');
+      }
+    });
+    
+    // Fix other image icons
+    const icons = resumeElement.querySelectorAll('.icon');
+    icons.forEach(icon => {
+      if (icon instanceof HTMLImageElement) {
+        const img = icon as HTMLImageElement;
+        if (img.src.startsWith('/') || !img.src.startsWith('http')) {
+          const baseUrl = window.location.origin;
+          img.src = new URL(img.src, baseUrl).href;
+        }
+      }
+    });
+  }
+  
+  /**
+   * Generates and downloads the resume as an HTML file
+   */
+  downloadResume(): void {
+    // Get the resume content
+    const resumeSection = document.querySelector('.resume-section') as HTMLElement;
+    
+    if (resumeSection) {
+      // Clone the element to avoid modifying the displayed content
+      const clonedResume = resumeSection.cloneNode(true) as HTMLElement;
+      
+      // Remove elements with 'no-print' class
+      const noPrintElements = clonedResume.querySelectorAll('.no-print');
+      noPrintElements.forEach(element => element.remove());
+      
+      // Fix profile image - convert to embedded base64 if possible
+      this.processProfileImage(clonedResume);
+      
+      // Create a complete HTML document
+      const htmlContent = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Ali Safari - Resume</title>
+          <style>
+            /* Include essential styles */
+            body {
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              margin: 0;
+              padding: 0;
+              background-color: white;
+              color: #333;
+            }
+            
+            /* Copy your essential resume styles here */
+            .resume-section {
+              padding: 2rem 0;
+              background-color: white;
+            }
+            
+            .container {
+              max-width: 1000px;
+              margin: 0 auto;
+              padding: 0 1.5rem;
+            }
+            
+            .resume-layout {
+              display: flex;
+              flex-direction: row;
+              border-radius: 8px;
+              overflow: hidden;
+            }
+            
+            .resume-left-column {
+              width: 240px;
+              padding: 1.5rem;
+              background-color: #f5f7fa;
+            }
+            
+            .resume-right-column {
+              flex: 1;
+              padding: 1.5rem;
+              background-color: white;
+            }
+            
+            /* Profile image styles */
+            .profile-image-container {
+              margin-bottom: 1.5rem;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              width: 100%;
+            }
+            
+            .profile-image {
+              width: 120px;
+              height: 120px;
+              border-radius: 50%;
+              overflow: hidden;
+              border: 3px solid #0ea5e9;
+              padding: 3px;
+              background-color: white;
+              box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+              margin-bottom: 1.25rem;
+            }
+            
+            .avatar {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              border-radius: 50%;
+            }
+            
+            .profile-name {
+              font-size: 1.75rem;
+              font-weight: 700;
+              margin-bottom: 0.25rem;
+              line-height: 1.2;
+              text-align: center;
+              color: #3b82f6;
+            }
+            
+            .profile-title {
+              font-size: 1rem;
+              margin-bottom: 1.5rem;
+              font-weight: 500;
+              text-align: center;
+              color: #0ea5e9;
+            }
+            
+            .section-title {
+              font-size: 1.4rem;
+              font-weight: 700;
+              color: #0ea5e9;
+              margin-bottom: 1rem;
+              padding-bottom: 0.5rem;
+              border-bottom: 2px solid #e2e8f0;
+            }
+            
+            /* Sidebar styles */
+            .sidebar-section {
+              width: 100%;
+              margin-bottom: 1.5rem;
+            }
+            
+            .sidebar-title {
+              font-size: 1.1rem;
+              font-weight: 600;
+              margin-bottom: 0.75rem;
+              border-bottom: 2px solid #e2e8f0;
+              padding-bottom: 0.5rem;
+            }
+            
+            .languages-list {
+              display: flex;
+              flex-direction: column;
+              gap: 0.5rem;
+            }
+            
+            .language-item {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              padding: 0.25rem 0;
+              font-size: 0.9rem;
+            }
+            
+            .language-name {
+              font-weight: 600;
+              color: #0ea5e9;
+            }
+            
+            .language-level {
+              font-weight: 500;
+              color: #3b82f6;
+            }
+            
+            /* Print specific styles */
+            .print-only {
+              display: block;
+            }
+            
+            /* Timeline styles */
+            .education-timeline-container,
+            .experience-timeline-container {
+              position: relative;
+              padding-left: 30px;
+              margin-left: 20px;
+            }
+            
+            .timeline-vertical-line {
+              position: absolute;
+              top: 0;
+              bottom: 0;
+              left: 0;
+              width: 2px;
+              background-color: #dee2e6;
+            }
+            
+            .timeline-marker {
+              position: absolute;
+              left: -30px;
+              top: 15px;
+            }
+            
+            .timeline-dot {
+              width: 16px;
+              height: 16px;
+              border-radius: 50%;
+              background-color: #3b82f6;
+              border: 3px solid white;
+              box-shadow: 0 0 0 2px #dee2e6;
+            }
+            
+            .education-card,
+            .experience-card,
+            .key-skill-item,
+            .certification-item {
+              background-color: #f7f9fc;
+              border-radius: 8px;
+              padding: 1rem;
+              border: 1px solid #dee2e6;
+              margin-bottom: 1rem;
+            }
+            
+            .skill-tag,
+            .tech-tag,
+            .edu-skill-tag {
+              font-size: 0.8rem;
+              color: #3b82f6;
+              background-color: rgba(59, 130, 246, 0.1);
+              padding: 0.2rem 0.6rem;
+              border-radius: 100px;
+              display: inline-block;
+              margin: 0.2rem;
+            }
+            
+            .key-skill-row {
+              display: flex;
+              flex-direction: row;
+              gap: 1.5rem;
+            }
+            
+            .key-skill-category {
+              width: 150px;
+              flex-shrink: 0;
+            }
+            
+            .key-skill-content {
+              flex: 1;
+            }
+            
+            .key-skill-tags,
+            .experience-tech,
+            .skills-container {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 0.5rem;
+            }
+            
+            /* Icon styles */
+            .icon {
+              width: 16px;
+              height: 16px;
+            }
+            
+            /* Add Font Awesome for icons */
+            .fas, .far {
+              margin-right: 0.5rem;
+            }
+            
+            /* Flex utilities */
+            .flex { display: flex; }
+            .justify-between { justify-content: space-between; }
+            .items-center { align-items: center; }
+            .space-y-2 > * + * { margin-top: 0.5rem; }
+            .space-y-3 > * + * { margin-top: 0.75rem; }
+            
+            /* Add more specific styles as needed */
+            @media print {
+              body {
+                font-size: 12pt;
+              }
+              .resume-section {
+                padding: 0;
+              }
+            }
+          </style>
+          <!-- Add Font Awesome for icons -->
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        </head>
+        <body>
+          ${clonedResume.outerHTML}
+        </body>
+        </html>
+      `;
+      
+      // Create a blob and download
+      const blob = new Blob([htmlContent], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = 'ali-safari-resume.html';
+      anchor.click();
+      
+      // Clean up
+      URL.revokeObjectURL(url);
+    }
+  }
 
   ngOnDestroy() {
     // Unsubscribe to prevent memory leaks

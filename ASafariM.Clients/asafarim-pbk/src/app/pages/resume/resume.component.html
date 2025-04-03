@@ -72,6 +72,75 @@
             <img src="images/globe.svg" alt="Website" class="icon" />
           </a>
         </div>
+
+        <!-- contact me -->
+        <div class="sidebar-section no-print space-y-3">
+          <a
+            href="mailto:asafarim@gmail.com"
+            target="_blank"
+            class="flex justify-between items-center dark:text-[var(--primary-color)]"
+          >
+            <span>Contact Me</span>
+            <img src="images/envelope.svg" alt="Contact" class="icon" />
+          </a>
+          <!-- goto contact page asafarim.com/contact  -->
+          <a
+            href="https://www.asafarim.com/contact"
+            target="_blank"
+            class="flex justify-between items-center dark:text-[var(--primary-color)]"
+          >
+            <span>Go to Contact Page</span>
+            <img src="images/globe.svg" alt="Contact" class="icon" />
+          </a>
+        </div>
+        <!-- contact me on print-->
+        <div class="sidebar-section print-only space-y-2">
+          <h5>Contact Me:</h5>
+          <a
+            href="mailto:asafarim@gmail.com"
+            target="_blank"
+            class="flex justify-between items-center dark:text-[var(--primary-color)]"
+          >
+            <img src="images/envelope.svg" alt="" class="icon" />
+            <span>asafarim&#64;gmail.com</span>
+          </a>
+          <!-- goto contact page asafarim.com/contact  -->
+          <a
+            href="https://www.asafarim.com/contact"
+            target="_blank"
+            class="flex justify-between items-center dark:text-[var(--primary-color)]"
+          >
+            <img src="images/globe.svg" alt="" class="icon" />
+            <span>asafarim.com/contact</span>
+          </a>
+        </div>
+
+        <!-- Download Resume Button -->
+        <div class="resume-actions no-print space-y-3 mb-4">
+          <a
+            (click)="downloadResume()"
+            class="btn btn-primary download-button"
+            role="button"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="download-icon"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              width="48px"
+              height="48px"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+            Download Resume
+          </a>
+        </div>
       </div>
 
       <!-- Right Column -->
@@ -117,17 +186,21 @@
         <!-- Professional Experience Section -->
         <section class="content-section">
           <h2 class="section-title">
-            <i class="fas fa-briefcase section-icon"></i> Professional Experience
+            <i class="fas fa-briefcase section-icon"></i> Professional
+            Experience
           </h2>
 
           <div class="experience-timeline-container">
             <div class="timeline-vertical-line"></div>
-            
-            <div *ngFor="let exp of experiences" class="experience-timeline-item">
+
+            <div
+              *ngFor="let exp of experiences"
+              class="experience-timeline-item"
+            >
               <div class="timeline-marker">
                 <div class="timeline-dot"></div>
               </div>
-              
+
               <div class="experience-card">
                 <div class="experience-header">
                   <div class="experience-company-role">
@@ -149,14 +222,14 @@
                     </p>
                   </div>
                 </div>
-                
+
                 <div class="experience-content">
                   <ul class="experience-achievements">
                     <li *ngFor="let achievement of exp.achievements">
                       {{ achievement }}
                     </li>
                   </ul>
-                  
+
                   <div class="experience-tech-container">
                     <div class="tech-badge">
                       <i class="fas fa-code"></i>
@@ -174,57 +247,63 @@
           </div>
         </section>
 
-<!-- Education Section -->
-<section class="content-section">
-  <h2 class="section-title">Academic Journey</h2>
-  
-  <div class="education-timeline-container">
-    <div class="timeline-vertical-line"></div>
-    
-    <div *ngFor="let edu of education" class="education-timeline-item">
-      <div class="timeline-marker">
-        <div class="timeline-dot"></div>
-      </div>
-      
-      <div class="education-card">
-        <div class="education-header">
-          <h3 class="education-degree">
-            <i class="fas fa-graduation-cap"></i>
-            {{ edu.degree }}
-          </h3>
-          <span class="education-year">
-            <i class="far fa-calendar-alt"></i>
-            {{ edu.period }}
-          </span>
-        </div>
-        
-        <p class="education-institution">
-          <i class="fas fa-university"></i>
-          {{ edu.institution }}
-          <span *ngIf="edu.location" class="education-location">
-            <i class="fas fa-map-marker-alt"></i>
-            {{ edu.location }}
-          </span>
-        </p>
-        
-        <div *ngIf="edu.skills && edu.skills.length" class="education-skills">
-          <div class="skills-badge">
-            <i class="fas fa-tools"></i>
-            Skills Gained:
+        <!-- Education Section -->
+        <section class="content-section">
+          <h2 class="section-title">Academic Journey</h2>
+
+          <div class="education-timeline-container">
+            <div class="timeline-vertical-line"></div>
+
+            <div *ngFor="let edu of education" class="education-timeline-item">
+              <div class="timeline-marker">
+                <div class="timeline-dot"></div>
+              </div>
+
+              <div class="education-card">
+                <div class="education-header">
+                  <h3 class="education-degree">
+                    <i class="fas fa-graduation-cap"></i>
+                    {{ edu.degree }}
+                  </h3>
+                  <span class="education-year">
+                    <i class="far fa-calendar-alt"></i>
+                    {{ edu.period }}
+                  </span>
+                </div>
+
+                <p class="education-institution">
+                  <i class="fas fa-university"></i>
+                  {{ edu.institution }}
+                  <span *ngIf="edu.location" class="education-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    {{ edu.location }}
+                  </span>
+                </p>
+
+                <div
+                  *ngIf="edu.skills && edu.skills.length"
+                  class="education-skills"
+                >
+                  <div class="skills-badge">
+                    <i class="fas fa-tools"></i>
+                    Skills Gained:
+                  </div>
+                  <div class="skills-container">
+                    <span
+                      *ngFor="let skill of edu.skills.slice(0, 3)"
+                      class="edu-skill-tag"
+                    >
+                      {{ skill }}
+                    </span>
+                    <span *ngIf="edu.skills.length > 3" class="more-skills">
+                      +{{ edu.skills.length - 3 }} more
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="skills-container">
-            <span *ngFor="let skill of edu.skills.slice(0, 3)" class="edu-skill-tag">
-              {{ skill }}
-            </span>
-            <span *ngIf="edu.skills.length > 3" class="more-skills">
-              +{{ edu.skills.length - 3 }} more
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+        </section>
 
         <!-- Certifications Section -->
         <section class="content-section">
@@ -248,30 +327,6 @@
             </div>
           </div>
         </section>
-      </div>
-    </div>
-
-    <!-- Download Resume Button -->
-    <div class="resume-actions no-print">
-      <a href="#" class="btn btn-primary download-button">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="download-icon"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-          />
-        </svg>
-        Download Full Resume
-      </a>
-      <div class="back-link">
-        <a routerLink="/" class="back-home"> &larr; Back to Home </a>
       </div>
     </div>
   </div>

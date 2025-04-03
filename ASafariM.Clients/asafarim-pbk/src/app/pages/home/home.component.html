@@ -1,0 +1,79 @@
+<section class="hero-section">
+  <div class="container mx-auto p-4 pt-16 text-center">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1 class="hero-title text-4xl md:text-6xl font-bold mb-4 text-gray-800 dark:text-white">
+          Hi, I'm Ali—a passionate <span class="highlight">IT (Scientific Solutions)</span> developer
+        </h1>
+        <p class="hero-subtitle text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8">
+          Based in Hasselt, Belgium. Specializing in innovative technological solutions.
+        </p>
+        <div class="hero-buttons flex justify-center space-x-4 mb-12">
+          <div class="btn-group grid grid-cols-1 md:grid-cols-2 gap-6 px-auto w-full">
+            <a href="https://asafarim.com/contact" class="btn btn-info">
+              Get In Touch
+            </a>  
+            <a routerLink="/resume" class="btn btn-primary">
+              Resume (CV)
+            </a>
+            <a routerLink="/publications" class="btn btn-info">
+              Publications
+            </a>
+            <a routerLink="/research" class="btn btn-info">
+              Research
+            </a>
+          </div>
+          <div class="btn-group grid grid-cols-1 md:grid-cols-3 w-full mx-auto flex justify-around">
+            <a href="https://github.com/asafarim" 
+            class="btn hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white dark:bg-gray-100" 
+            target="_blank" rel="noopener" title="GitHub">
+              <img src="images/github.svg" alt="GitHub" class="icon">
+            </a>
+            <a href="https://www.linkedin.com/in/ali-safari-m/" 
+            class="btn hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white dark:bg-gray-100" 
+            target="_blank" rel="noopener" title="LinkedIn">
+              <img src="images/linkedin.svg" alt="LinkedIn" class="icon">
+            </a>
+            <a href="https://www.researchgate.net/profile/Alireza-Safari-3" 
+            class="btn hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white dark:bg-gray-100" 
+            target="_blank" rel="noopener" title="ResearchGate">
+              <img src="images/researchgate.svg" alt="ResearchGate" class="icon">
+            </a>
+            <a href="https://www.asafarim.com" 
+            class="btn hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white dark:bg-gray-100" 
+            target="_blank" rel="noopener" title="Website">
+              <img src="images/globe.svg" alt="Website" class="icon">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="services-section">
+  <div class="container mx-auto">
+    <h2 class="section-title text-3xl font-bold mb-4 text-gray-800 dark:text-white">My Services</h2>
+    <div class="services-grid grid md:grid-cols-3 gap-6">
+      <div *ngFor="let service of services" class="service-card bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+        <div class="service-icon" [ngClass]="service.iconClass">
+          <i [ngClass]="service.icon"></i>
+        </div>
+        <h3 class="service-title text-xl font-semibold mb-4">{{ service.title }}</h3>
+        <p class="service-description text-gray-600 dark:text-gray-300">
+          {{ service.description }}
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container mx-auto">
+    <div class="cta-content text-center">
+      <h2 class="cta-title text-3xl font-bold mb-4 text-gray-800 dark:text-white">Ready to work together?</h2>
+      <p class="cta-text text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8">Let's collaborate on your next project and create innovative solutions.</p>
+      <a href="https://asafarim.com/contact" class="btn btn-primary btn-lg">Get Started</a>
+    </div>
+  </div>
+</section>

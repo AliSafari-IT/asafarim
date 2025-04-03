@@ -1,0 +1,389 @@
+.research-section {
+  padding: 3rem 0;
+  background-color: var(--bg-primary);
+  min-height: calc(100vh - 70px);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.section-header {
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--text-color);
+  position: relative;
+  display: inline-block;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background-color: var(--primary-color);
+  }
+}
+
+.section-subtitle {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.content-section {
+  margin-bottom: 4rem;
+}
+
+.content-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: var(--text-color);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.75rem;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 80px;
+    height: 3px;
+    background-color: var(--primary-color);
+  }
+}
+
+// Project Items
+.research-projects-grid {
+  margin-top: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+
+.project-card {
+  @extend .card;
+  border-left: 4px solid var(--success-color);
+  margin-top: 1.5rem;
+  height: 100%;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  z-index: 1;
+  gap: 1.5rem;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.05) 0%, rgba(var(--primary-rgb), 0) 50%);
+    z-index: 0;
+  }
+  
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    
+    .project-image-container div {
+      transform: scale(1.05) rotate(2deg);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+  }
+}
+
+.project-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text-color);
+  transition: color 0.3s ease;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.project-period {
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.project-description {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin: 1rem 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-clamp: 4;
+}
+
+.project-image-container {
+  div {
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    z-index: 2;
+    margin: 0 20px;
+    padding-left: 20px;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom right, rgba(var(--primary-rgb), 0.2), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 1;
+      pointer-events: none;
+    }
+  }
+  
+  img {
+    width: 100px;
+    height: 120px;
+
+
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+}
+
+.technologies-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.technology-tag {
+  background-color: var(--bg-secondary);
+  color: var(--text-muted);
+  padding: 0.25rem 0.75rem;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: rgba(var(--primary-rgb), 0.15);
+    color: var(--primary-color);
+    transform: translateY(-2px);
+  }
+}
+
+// Dark mode enhancements
+:host-context([data-theme="dark"]) {
+  .project-card {
+    &::before {
+      background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.15) 0%, rgba(var(--primary-rgb), 0) 50%);
+    }
+    
+    &:hover {
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+    }
+  }
+  
+  .project-image-container {
+    div {      
+      &::after {
+        background: linear-gradient(to bottom right, rgba(var(--primary-rgb), 0.3), transparent);
+      }
+    }
+  }
+  
+  .project-period {
+    width: 25%;
+    color: var(--primary-color);
+  }
+  
+  .technology-tag {
+    background-color: rgba(255, 255, 255, 0.1);
+    
+    &:hover {
+      background-color: rgba(var(--primary-rgb), 0.3);
+    }
+  }
+}
+
+// Funding Cards
+.funding-grid {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.funding-card {
+  @extend .card;
+  border-left: 4px solid var(--success-color);
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.funding-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0.75rem;
+  color: var(--text-color);
+}
+
+.funding-organization {
+  font-size: 0.95rem;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+  
+  .label {
+    font-weight: 600;
+    margin-right: 0.25rem;
+  }
+}
+
+.funding-details {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.funding-period {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  
+  .label {
+    font-weight: 600;
+    margin-right: 0.25rem;
+  }
+}
+
+.funding-amount {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--success-color);
+}
+
+.funding-description {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+// Impact Cards
+.impact-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.impact-card {
+  @extend .card;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.impact-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--primary-color);
+  line-height: 1;
+}
+
+.impact-label {
+  font-size: 1rem;
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+// Call to Action
+.cta-container {
+  text-align: center;
+  margin: 3rem 0;
+  padding: 2rem;
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  box-shadow: var(--card-shadow);
+}
+
+.cta-text {
+  font-size: 1.25rem;
+  color: var(--text-color);
+  margin-bottom: 1.5rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+// Consolidated common styles
+.card {
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  box-shadow: var(--card-shadow);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+// Simplified research styles
+.research-item {
+  margin: 1rem 0;
+}
+
+// Optimized dark theme
+:host-context([data-theme="dark"]) {
+  .card {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  }
+  .image-placeholder {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  .technology-tag {
+    background-color: rgba(var(--primary-rgb), 0.2);
+  }
+}

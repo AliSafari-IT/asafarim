@@ -1,0 +1,168 @@
+<section class="publications-section">
+  <div class="container mx-auto p-4 py-8">
+    <header class="section-header text-center mb-12">
+      <h1 class="section-title text-3xl md:text-5xl font-bold mb-4 text-gray-800 dark:text-white">{{ pageTitle }}</h1>
+      <p class="section-subtitle text-xl text-gray-600 dark:text-gray-300">
+        A collection of my academic research and scientific publications
+      </p>
+    </header>
+
+    <div class="publications-layout flex flex-col md:flex-row gap-8">
+      <!-- Left Sidebar with Categories -->
+      <aside class="categories-sidebar sidebar-width">
+        <div class="categories-card bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 sticky top-24">
+          <h3 class="categories-title text-xl font-bold mb-4 text-gray-800 dark:text-white">Categories</h3>
+          <ul class="categories-list space-y-2">
+            <li>
+              <button 
+                (click)="setCategory(null)" 
+                class="category-button w-full text-left py-1 px-2 rounded"
+                [class.active]="selectedCategory === null">
+                All Publications ({{ publications.length }})
+              </button>
+            </li>
+            <li *ngFor="let category of categories">
+              <button 
+                (click)="setCategory(category.name)" 
+                class="category-button w-full text-left py-1 px-2 rounded"
+                [class.active]="selectedCategory === category.name">
+                {{ category.name }} ({{ category.count }})
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Citation Statistics Card (Desktop) -->
+        <div class="citation-stats-card desktop-only bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <h3 class="citation-stats-title text-xl font-bold mb-4 text-gray-800 dark:text-white">Citation Statistics</h3>
+          
+          <div class="citation-metrics">
+            <div class="metric-item">
+              <div class="metric-value text-3xl font-bold text-gray-800 dark:text-white">{{ citationStats.total }}</div>
+              <div class="metric-label text-gray-600 dark:text-gray-400">Citations</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-value text-3xl font-bold text-gray-800 dark:text-white">{{ citationStats.hIndex }}</div>
+              <div class="metric-label text-gray-600 dark:text-gray-400">h-index</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-value text-3xl font-bold text-gray-800 dark:text-white">{{ citationStats.i10Index }}</div>
+              <div class="metric-label text-gray-600 dark:text-gray-400">i10-index</div>
+            </div>
+          </div>
+          
+          <div class="citation-chart">
+            <div class="chart-container">
+              <div *ngFor="let stat of citationStats.yearlyStats" class="chart-bar" 
+                   [style.height.%]="(stat.count / 100) * 100">
+                <div class="bar-tooltip">{{ stat.count }} citations</div>
+              </div>
+            </div>
+            <div class="chart-labels">
+              <div *ngFor="let stat of citationStats.yearlyStats" class="chart-label">
+                {{ stat.year }}
+              </div>
+            </div>
+          </div>
+          
+          <div class="citation-footer">
+            <a href="https://scholar.google.com/citations?user=YZs9ktMAAAAJ" target="_blank" class="scholar-link text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center" rel="noopener">
+              View Google Scholar Profile
+              <svg xmlns="http://www.w3.org/2000/svg" class="link-icon h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Publications Content -->
+      <div class="publications-content content-width">
+        <div *ngIf="selectedCategory" class="active-filter mb-6">
+          <div class="filter-tag flex items-center">
+            <span class="filter-label bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 px-3 py-1 rounded-full text-sm">
+              {{ selectedCategory }}
+            </span>
+            <button 
+              (click)="setCategory(null)" 
+              class="filter-clear ml-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+              <svg xmlns="http://www.w3.org/2000/svg" class="clear-icon h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Citation Statistics Card (Mobile) -->
+        <div class="citation-stats-card mobile-only bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 mb-6">
+          <h3 class="citation-stats-title text-xl font-bold mb-4 text-gray-800 dark:text-white">Citation Statistics</h3>
+          
+          <div class="citation-metrics">
+            <div class="metric-item">
+              <div class="metric-value text-3xl font-bold text-gray-800 dark:text-white">{{ citationStats.total }}</div>
+              <div class="metric-label text-gray-600 dark:text-gray-400">Citations</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-value text-3xl font-bold text-gray-800 dark:text-white">{{ citationStats.hIndex }}</div>
+              <div class="metric-label text-gray-600 dark:text-gray-400">h-index</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-value text-3xl font-bold text-gray-800 dark:text-white">{{ citationStats.i10Index }}</div>
+              <div class="metric-label text-gray-600 dark:text-gray-400">i10-index</div>
+            </div>
+          </div>
+          
+          <div class="citation-chart">
+            <div class="chart-container">
+              <div *ngFor="let stat of citationStats.yearlyStats" class="chart-bar" 
+                   [style.height.%]="(stat.count / 100) * 100">
+                <div class="bar-tooltip">{{ stat.count }} citations</div>
+              </div>
+            </div>
+            <div class="chart-labels">
+              <div *ngFor="let stat of citationStats.yearlyStats" class="chart-label">
+                {{ stat.year }}
+              </div>
+            </div>
+          </div>
+          
+          <div class="citation-footer">
+            <a href="https://scholar.google.com/citations?user=YZs9ktMAAAAJ" target="_blank" class="scholar-link text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center" rel="noopener">
+              View Google Scholar Profile
+              <svg xmlns="http://www.w3.org/2000/svg" class="link-icon h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Publications List -->
+        <div *ngFor="let pub of filteredPublications" class="publication-card bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+          <div class="publication-header">
+            <h3 class="publication-title text-xl font-bold mb-2 text-gray-800 dark:text-white">{{ pub.title }}</h3>
+            <span class="publication-citations text-gray-600 dark:text-gray-400">{{ pub.citations }} citations</span>
+          </div>
+          <p class="publication-authors text-gray-700 dark:text-gray-300 mb-3">{{ pub.authors }}</p>
+          <p class="publication-journal text-gray-700 dark:text-gray-300 mb-3">
+            <span class="journal-name font-semibold">{{ pub.journal }}</span>, {{ pub.year }}, Vol. {{ pub.volume }}, pp. {{ pub.pages }}
+          </p>
+          <p class="publication-abstract text-gray-700 dark:text-gray-300 mb-4">{{ pub.abstract }}</p>
+          <div class="publication-footer flex justify-between items-center">
+            <a [href]="pub.doi" target="_blank" class="publication-link text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center" rel="noopener">
+              <span>View Publication</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="link-icon h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+            <span class="publication-year text-gray-700 dark:text-gray-300">{{ pub.year }}</span>
+          </div>
+        </div>
+
+        <!-- No Results Message -->
+        <div *ngIf="filteredPublications.length === 0" class="no-results bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 text-center">
+          <p class="text-gray-700 dark:text-gray-300">No publications found in this category.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

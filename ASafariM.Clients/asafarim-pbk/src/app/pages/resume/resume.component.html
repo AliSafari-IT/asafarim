@@ -1,0 +1,202 @@
+<section class="resume-section printable-resume">
+  <div class="container">
+    <!-- Profile Header -->
+    <div class="resume-layout">
+      <!-- Left Column -->
+      <div class="resume-left-column">
+        <div class="profile-image-container">
+          <div class="profile-image">
+            <img src="ali-photo.jpg" alt="Alireza Safari" class="avatar" />
+          </div>
+        </div>
+
+        <h1 class="profile-name">{{ personalInfo.name }}</h1>
+        <p class="profile-title">{{ personalInfo.title }}</p>
+
+        <!-- Languages -->
+        <div class="sidebar-section">
+          <h3 class="sidebar-title">Languages</h3>
+          <div class="languages-list">
+            <div
+              *ngFor="let language of personalInfo.languages"
+              class="language-item"
+            >
+              <span class="language-name">{{ language.name }}:</span>
+              <span class="language-level">{{ language.level }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Google Scholar Link -->
+        <div class="sidebar-section no-print">
+          <a
+            href="https://scholar.google.com/citations?user=YZs9ktMAAAAJ"
+            target="_blank"
+            class="scholar-link"
+          >
+            <img
+              src="Google_Scholar_logo.svg"
+              alt="Google Scholar Logo"
+              class="scholar-logo"
+            />
+            <span>My Google Scholar Profile</span>
+          </a>
+        </div>
+
+        <!-- Social Links -->
+        <div class="sidebar-section no-print ">
+          <a
+            href="https://www.linkedin.com/in/ali-safari-m/"
+            target="_blank"
+            class="flex justify-between items-center"
+          >
+            <span>LinkedIn</span>
+            <img src="images/linkedin.svg" alt="LinkedIn" class="icon">
+          </a>
+
+          <a href="https://github.com/alisafari-IT" target="_blank" class="flex justify-between items-center">
+            <span>GitHub</span>
+            <img src="images/github.svg" alt="GitHub" class="icon">
+          </a>
+
+          <a href="https://www.asafarim.com" target="_blank" class="flex justify-between items-center">
+            <span>Website</span>
+            <img src="images/globe.svg" alt="Website" class="icon">
+          </a>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div class="resume-right-column">
+        <!-- Summary Section -->
+        <section class="content-section">
+          <h2 class="section-title">Summary</h2>
+          <div class="summary-content">
+            <p>{{ personalInfo.summary }}</p>
+          </div>
+        </section>
+
+        <!-- Key Skills Section -->
+        <section class="content-section">
+          <h2 class="section-title">Key Skills</h2>
+          <div class="key-skills-list">
+            <div *ngFor="let skillGroup of skills" class="key-skill-item">
+              <h3 class="key-skill-title">{{ skillGroup.category }}</h3>
+              <div class="key-skill-tags">
+                <span *ngFor="let item of skillGroup.items" class="skill-tag">{{
+                  item
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Professional Experience Section -->
+        <section class="content-section">
+          <h2 class="section-title">Professional Experience</h2>
+
+          <div *ngFor="let exp of experiences" class="experience-item">
+            <div class="experience-header">
+              <div class="experience-company-role">
+                <h3 class="experience-company">
+                  {{ exp.company }} – {{ exp.location }}
+                </h3>
+                <p class="experience-role">
+                  {{ exp.title }} | {{ exp.period }}
+                </p>
+              </div>
+            </div>
+            <ul class="experience-achievements">
+              <li *ngFor="let achievement of exp.achievements">
+                {{ achievement }}
+              </li>
+            </ul>
+            <div class="experience-tech">
+              <span *ngFor="let tech of exp.skills" class="tech-tag">{{
+                tech
+              }}</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Education Section -->
+        <section class="content-section">
+          <h2 class="section-title">Education</h2>
+
+          <div *ngFor="let edu of education" class="education-item">
+            <div class="education-header">
+              <div class="education-main">
+                <h3 class="education-degree">{{ edu.degree }}</h3>
+                <p class="education-institution">
+                  {{ edu.institution
+                  }}<span *ngIf="edu.location">, {{ edu.location }}</span>
+                </p>
+              </div>
+              <span class="education-year">{{ edu.period }}</span>
+            </div>
+            <div
+              *ngIf="edu.skills && edu.skills.length > 0"
+              class="education-skills"
+            >
+              <span
+                *ngFor="let skill of edu.skills.slice(0, 3)"
+                class="edu-skill-tag"
+                >{{ skill }}</span
+              >
+              <span *ngIf="edu.skills.length > 3" class="more-skills"
+                >+{{ edu.skills.length - 3 }} more</span
+              >
+            </div>
+          </div>
+        </section>
+
+        <!-- Certifications Section -->
+        <section class="content-section">
+          <h2 class="section-title">Certifications</h2>
+          <div class="certifications-list">
+            <div *ngFor="let cert of certifications" class="certification-item">
+              <h3 class="certification-name">
+                <a
+                  *ngIf="cert.credentialUrl"
+                  [href]="cert.credentialUrl"
+                  target="_blank"
+                  class="cert-link"
+                  >{{ cert.name }}</a
+                >
+                <span *ngIf="!cert.credentialUrl">{{ cert.name }}</span>
+              </h3>
+              <div class="certification-details">
+                <span class="certification-issuer">{{ cert.issuer }}</span>
+                <span class="certification-year">{{ cert.issuedDate }}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Download Resume Button -->
+    <div class="resume-actions no-print">
+      <a href="#" class="btn btn-primary download-button">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="download-icon"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+          />
+        </svg>
+        Download Full Resume
+      </a>
+      <div class="back-link">
+        <a routerLink="/" class="back-home"> &larr; Back to Home </a>
+      </div>
+    </div>
+  </div>
+</section>

@@ -6,9 +6,12 @@
   "author": "Ali Safari <asafarim@gmail.com>",
   "scripts": {
     "ng": "ng",
+    "pre-commit": "ng lint",
+    "reinstall": "rm -rf node_modules && yarn install",
     "co": "git add . && python .github/scripts/generate_commit_message.py && git push",
     "start": "ng serve",
     "build": "ng build",
+    "rebuild": "ng build --watch --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "stop": "npx kill-port 4200"

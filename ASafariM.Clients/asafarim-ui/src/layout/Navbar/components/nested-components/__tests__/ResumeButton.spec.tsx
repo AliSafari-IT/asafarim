@@ -65,7 +65,7 @@ describe('ResumeButton', () => {
     // Check that window.open was called with the correct URL and target
     expect(windowOpenSpy).toHaveBeenCalledTimes(1);
     expect(windowOpenSpy).toHaveBeenCalledWith(
-      'https://pbk.asafarim.com',
+      'https://pbk.asafarim.com/resume',
       '_blank'
     );
   });

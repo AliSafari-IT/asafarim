@@ -12,7 +12,7 @@ const ResumeButton: React.FC<ResumeButtonProps> = ({
 
   return (
     <button
-      onClick={() => window.open("https://pbk.asafarim.com", "_blank")}
+      onClick={() => window.open("https://pbk.asafarim.com/resume", "_blank")}
       className={`bg-teams-purple text-white px-4 py-2 rounded-md shadow-md hover:bg-teams-purple-light transition-all flex items-center space-x-2 ${className}`}
     >
       {displayType === "text" ? (

@@ -374,6 +374,62 @@
   height: 120px;
   overflow: visible;
   position: relative;
+  display: flex;
+  align-items: stretch;
+}
+
+.chart-y-axis {
+  display: flex;
+  align-items: stretch;
+  margin-right: 10px;
+  width: 30px;
+  position: relative;
+}
+
+.y-axis-line {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: rgba(var(--text-muted-rgb, 128, 128, 128), 0.3);
+}
+
+.y-axis-markers {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 90px;
+  width: 100%;
+  padding-right: 5px;
+  position: relative;
+}
+
+.y-marker {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-align: right;
+  position: relative;
+  transform: translateY(-50%);
+  line-height: 1;
+}
+
+.y-marker:first-child {
+  top: 0;
+}
+
+.y-marker:nth-child(2) {
+  top: 33%;
+}
+
+.y-marker:last-child {
+  top: 67%;
+}
+
+.chart-visualization {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .chart-container {
@@ -382,6 +438,29 @@
   justify-content: space-between;
   height: 90px;
   gap: 0.15rem;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 33%;
+    height: 1px;
+    background-color: rgba(var(--text-muted-rgb, 128, 128, 128), 0.2);
+    z-index: 0;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 67%;
+    height: 1px;
+    background-color: rgba(var(--text-muted-rgb, 128, 128, 128), 0.2);
+    z-index: 0;
+  }
 }
 
 .chart-bar {
@@ -440,6 +519,10 @@
   text-align: center;
   font-size: 0.8rem;
   color: var(--text-muted);
+  writing-mode: vertical-lr;
+  transform: rotate(180deg);
+  height: 20px;
+  margin-top: 5px;
 }
 
 .citation-footer {

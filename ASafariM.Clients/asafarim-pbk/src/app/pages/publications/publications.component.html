@@ -52,15 +52,27 @@
           </div>
           
           <div class="citation-chart">
-            <div class="chart-container">
-              <div *ngFor="let stat of citationStats.yearlyStats" class="chart-bar" 
-                   [style.height.%]="(stat.count / 100) * 100">
-                <div class="bar-tooltip">{{ stat.count }} citations</div>
+            <!-- Y-axis with scale markers -->
+            <div class="chart-y-axis">
+              <div class="y-axis-line"></div>
+              <div class="y-axis-markers">
+                <div class="y-marker">{{ getMaxCitationCount() }}</div>
+                <div class="y-marker">{{ Math.ceil(getMaxCitationCount() / 2) }}</div>
+                <div class="y-marker">0</div>
               </div>
             </div>
-            <div class="chart-labels">
-              <div *ngFor="let stat of citationStats.yearlyStats" class="chart-label">
-                {{ stat.year }}
+            
+            <div class="chart-visualization">
+              <div class="chart-container">
+                <div *ngFor="let stat of citationStats.yearlyStats" class="chart-bar" 
+                     [style.height.%]="(stat.count / getMaxCitationCount()) * 100">
+                  <div class="bar-tooltip">{{ stat.count }} citations</div>
+                </div>
+              </div>
+              <div class="chart-labels">
+                <div *ngFor="let stat of citationStats.yearlyStats" class="chart-label">
+                  {{ stat.year }}
+                </div>
               </div>
             </div>
           </div>
@@ -113,15 +125,27 @@
           </div>
           
           <div class="citation-chart">
-            <div class="chart-container">
-              <div *ngFor="let stat of citationStats.yearlyStats" class="chart-bar" 
-                   [style.height.%]="(stat.count / 100) * 100">
-                <div class="bar-tooltip">{{ stat.count }} citations</div>
+            <!-- Y-axis with scale markers -->
+            <div class="chart-y-axis">
+              <div class="y-axis-line"></div>
+              <div class="y-axis-markers">
+                <div class="y-marker">{{ getMaxCitationCount() }}</div>
+                <div class="y-marker">{{ Math.ceil(getMaxCitationCount() / 2) }}</div>
+                <div class="y-marker">0</div>
               </div>
             </div>
-            <div class="chart-labels">
-              <div *ngFor="let stat of citationStats.yearlyStats" class="chart-label">
-                {{ stat.year }}
+            
+            <div class="chart-visualization">
+              <div class="chart-container">
+                <div *ngFor="let stat of citationStats.yearlyStats" class="chart-bar" 
+                     [style.height.%]="(stat.count / getMaxCitationCount()) * 100">
+                  <div class="bar-tooltip">{{ stat.count }} citations</div>
+                </div>
+              </div>
+              <div class="chart-labels">
+                <div *ngFor="let stat of citationStats.yearlyStats" class="chart-label">
+                  {{ stat.year }}
+                </div>
               </div>
             </div>
           </div>

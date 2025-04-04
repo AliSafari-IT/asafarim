@@ -264,7 +264,13 @@ const ModernNavbar: React.FC = () => {
                 </Link>
               )}
 
-              {viewWidth > 400 && <ASMButton />}
+              {/* ASM Button for Desktop */}
+              <ASMButton 
+                onlyIcon={viewWidth < 768} 
+                onClick={() => window.open("https://pbk.asafarim.com/resume", "_blank")} 
+                width="24" 
+                height="24" 
+              />
 
               {/* Theme Toggle */}
               <button
@@ -333,6 +339,16 @@ const ModernNavbar: React.FC = () => {
 
             {/* Mobile menu button */}
             <div className="lg:hidden flex items-center">
+              {/* ASM Button for Mobile Header */}
+              <div className="mr-2">
+              <ASMButton 
+                onlyIcon={viewWidth < 480} 
+                onClick={() => window.open("https://pbk.asafarim.com/resume", "_blank")} 
+                width="24" 
+                height="24" 
+              />
+              </div>
+
               {/* Theme Toggle for Mobile */}
               <button
                 onClick={toggleTheme}
@@ -450,12 +466,6 @@ const ModernNavbar: React.FC = () => {
                 </div>
               )}
 
-              {viewWidth <= 400 && (
-                <div className="py-1">
-                  <ASMButton />
-                </div>
-              )}
-
               {/* Blog Link for Mobile Menu */}
               <div className="px-4 py-2">
                 <a
@@ -484,6 +494,8 @@ const ModernNavbar: React.FC = () => {
                   <span className="group-hover:text-[var(--primary)] transition-colors duration-200">Blog</span>
                 </a>
               </div>
+
+
 
               {/* Changelogs for Mobile */}
               <ChangeLogsDropdown mobileView={true} />

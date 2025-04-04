@@ -141,4 +141,17 @@ export class PublicationsComponent {
   setCategory(category: string | null) {
     this.selectedCategory = category;
   }
+
+  // Get the maximum citation count for scaling the Y-axis
+  getMaxCitationCount(): number {
+    if (!this.citationStats || !this.citationStats.yearlyStats || this.citationStats.yearlyStats.length === 0) {
+      return 30; // Default value if no data
+    }
+    
+    // Find the maximum count in the yearly stats
+    return Math.max(...this.citationStats.yearlyStats.map(stat => stat.count));
+  }
+  
+  // Make Math available to the template
+  Math = Math;
 }

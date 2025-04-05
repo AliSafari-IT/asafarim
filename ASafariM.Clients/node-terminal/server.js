@@ -41,7 +41,7 @@ io.on('connection', (socket) => {
     name: 'xterm-color',
     cols: 80,
     rows: 24,
-    cwd: '/',  // Start from root directory
+    cwd: '/var/www/asafarim',  // Set default directory
     env: env
   });
   

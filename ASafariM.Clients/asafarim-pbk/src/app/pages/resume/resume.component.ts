@@ -95,7 +95,7 @@ export class ResumeComponent implements OnInit, OnDestroy {
     script.defer = true;
     document.body.appendChild(script);
   }
-  
+
   /**
    * Process the profile image for the downloaded HTML file
    * Attempts to make the image look more decent in the downloaded file
@@ -103,26 +103,26 @@ export class ResumeComponent implements OnInit, OnDestroy {
   private processProfileImage(resumeElement: HTMLElement): void {
     // Find the profile image
     const profileImg = resumeElement.querySelector('.profile-image img') as HTMLImageElement;
-    
+
     if (profileImg) {
       // Ensure the image has proper styling
       profileImg.style.width = '100%';
       profileImg.style.height = '100%';
       profileImg.style.objectFit = 'cover';
       profileImg.style.borderRadius = '50%';
-      
+
       // If the image is a relative path, convert to absolute URL
       if (profileImg.src.startsWith('/') || !profileImg.src.startsWith('http')) {
         const baseUrl = window.location.origin;
         profileImg.src = new URL(profileImg.src, baseUrl).href;
       }
-      
+
       // Add a fallback image in case the original doesn't load
       profileImg.onerror = () => {
         profileImg.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMjU2IDI1NiI+PHJlY3Qgd2lkdGg9IjI1NiIgaGVpZ2h0PSIyNTYiIGZpbGw9IiNlOWVjZWYiLz48Y2lyY2xlIGN4PSIxMjgiIGN5PSI5NiIgcj0iNjQiIGZpbGw9IiNhYmI1YmUiLz48Y2lyY2xlIGN4PSIxMjgiIGN5PSIyMjQiIHI9IjEyOCIgZmlsbD0iI2FiYjViZSIvPjwvc3ZnPg==';
       };
     }
-    
+
     // Fix SVG icons if needed
     const svgIcons = resumeElement.querySelectorAll('svg');
     svgIcons.forEach(svg => {
@@ -133,7 +133,7 @@ export class ResumeComponent implements OnInit, OnDestroy {
         svg.setAttribute('height', '16');
       }
     });
-    
+
     // Fix other image icons
     const icons = resumeElement.querySelectorAll('.icon');
     icons.forEach(icon => {
@@ -146,25 +146,25 @@ export class ResumeComponent implements OnInit, OnDestroy {
       }
     });
   }
-  
+
   /**
    * Generates and downloads the resume as an HTML file
    */
   downloadResume(): void {
     // Get the resume content
     const resumeSection = document.querySelector('.resume-section') as HTMLElement;
-    
+
     if (resumeSection) {
       // Clone the element to avoid modifying the displayed content
       const clonedResume = resumeSection.cloneNode(true) as HTMLElement;
-      
+
       // Remove elements with 'no-print' class
       const noPrintElements = clonedResume.querySelectorAll('.no-print');
       noPrintElements.forEach(element => element.remove());
-      
+
       // Fix profile image - convert to embedded base64 if possible
       this.processProfileImage(clonedResume);
-      
+
       // Create a complete HTML document
       const htmlContent = `
         <!DOCTYPE html>
@@ -425,7 +425,7 @@ export class ResumeComponent implements OnInit, OnDestroy {
         </body>
         </html>
       `;
-      
+
       // Create a blob and download
       const blob = new Blob([htmlContent], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
@@ -433,7 +433,7 @@ export class ResumeComponent implements OnInit, OnDestroy {
       anchor.href = url;
       anchor.download = 'ali-safari-resume.html';
       anchor.click();
-      
+
       // Clean up
       URL.revokeObjectURL(url);
     }
@@ -517,7 +517,7 @@ export class ResumeComponent implements OnInit, OnDestroy {
       ],
       skills: ['WPF', 'C#', 'R', 'R.NET', '.NET']
     },
-    { 
+    {
       title: 'Hydrologic Modeling & Development (Internship)',
       company: 'Flanders Environment Agency (VMM)',
       location: 'Brussels, Belgium',

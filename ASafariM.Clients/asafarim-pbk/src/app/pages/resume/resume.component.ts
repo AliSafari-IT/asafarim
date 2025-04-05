@@ -701,6 +701,12 @@ export class ResumeComponent implements OnInit, OnDestroy {
 
   certifications: Certification[] = [
     {
+      name: "JavaScript: Under the Hood",
+      issuer: 'LinkedIn',
+      issuedDate: 'Sep 2022',
+      credentialUrl: 'https://www.linkedin.com/learning/certificates/5bc51a6b570d17e116d8e19f56a406910c1a020ff185bc44b5b8ed22037025b5'
+    },
+    {
       name: 'Improving Your Thinking',
       issuer: 'LinkedIn',
       issuedDate: 'Jun 2021',

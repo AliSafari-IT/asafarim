@@ -146,6 +146,8 @@ ___
 - Document the troubleshooting process and the root cause analysis for future reference.
 
 <!-- Add image here -->
-![Receipt of the Codeium Pro Ultimate subscription from Windsurf](/img/blog/codeium-pro-ultimate.png)
+<div style="text-align: center;">
+  ![Receipt of the Codeium Pro Ultimate subscription from Windsurf](/img/blog/codeium-pro-ultimate.png)
+</div>
 
 ---

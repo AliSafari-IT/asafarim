@@ -1,6 +1,6 @@
 ---
-title: 🕵️‍♂️ Windsurf AI Critical Analysis: Issues and Inefficiencies
-description: A critical analysis of the issues encountered during our troubleshooting session for the ASafariM web application. ⚡
+title: "🕵️‍♂️ Windsurf AI Critical Analysis: Issues and Inefficiencies"
+description: "A critical analysis of the issues encountered during our troubleshooting session for the ASafariM web application. ⚡"
 authors: [alisafari]
 tags: [.NET, Windsurf, Codeium, Debugging, Efficiency, Productivity, Troubleshooting]
 ---

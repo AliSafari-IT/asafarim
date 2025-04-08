@@ -61,10 +61,10 @@ DotNetEnv.Env.Load(envFilePath);
 **Example:**
 ```csharp
 // Original configuration
-var name = Environment.GetEnvironmentVariable("DB_NAME") ?? "asafarim-projects-db";
+var name = Environment.GetEnvironmentVariable("DB_NAME") ?? "projects-db";
 
 // Changed to incorrect configuration
-var name = Environment.GetEnvironmentVariable("DB_NAME") ?? "asafarimDB";
+var name = Environment.GetEnvironmentVariable("DB_NAME") ?? "myDB";
 ```
 
 **Impact:** This created database connection errors as the application attempted to connect to a non-existent database.

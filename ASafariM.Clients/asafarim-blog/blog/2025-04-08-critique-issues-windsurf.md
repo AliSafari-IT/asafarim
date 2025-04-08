@@ -1,13 +1,13 @@
 ---
-title: Critical Analysis of Session Issues and Inefficiencies
-description: A critical analysis of the issues encountered during our troubleshooting session for the ASafariM web application.
+title: 🕵️‍♂️ Windsurf AI Critical Analysis: Issues and Inefficiencies
+description: A critical analysis of the issues encountered during our troubleshooting session for the ASafariM web application. ⚡
 authors: [alisafari]
 tags: [.NET, Windsurf, Codeium, Debugging, Efficiency, Productivity, Troubleshooting]
 ---
 
 ## Introduction
 
-As a recent purchaser of the Codeium Pro Ultimate subscription from Windsurf, I embarked on a journey to leverage cutting-edge AI-assisted coding technologies. While the code completion features initially showed promise, delivering swift and contextually relevant suggestions, the experience quickly devolved into a labyrinth of frustration. 
+As a recent purchaser of the Codeium Pro Ultimate subscription from Windsurf, I embarked on a journey to leverage cutting-edge AI-assisted coding technologies. While the code completion features initially showed promise, delivering swift and contextually relevant suggestions, the experience quickly devolved into a labyrinth of frustration 🧩.
 <!-- truncate -->
 The AI's well-intentioned but often misguided interventions transformed what should have been a streamlined development process into a complex debugging marathon, challenging the very premise of productivity enhancement that AI coding assistants promise.
 
@@ -115,7 +115,7 @@ MYSQL_PASSWORD: ${MYSQL_PASSWORD}
 
 **Impact:** Each operation consumed computational resources and time.
 
-## Quantifiable Impact
+## Quantifiable Impact 📈
 
 1. **Time Wasted:** Approximately 30-45 minutes spent on unproductive changes and reversions
 2. **Resource Consumption:** Multiple unnecessary builds and Docker operations
@@ -135,7 +135,7 @@ The session demonstrated several inefficiencies in the troubleshooting approach 
 
 ___
 
-## Additional Notes for Future Sessions
+## Additional Notes for Future Sessions 📝
 
 - Always ensure that the database name, user, and password are consistent across the application and docker-compose files.
 - Use environment variables to store sensitive data and avoid hardcoding values in the code.
@@ -146,5 +146,6 @@ ___
 - Document the troubleshooting process and the root cause analysis for future reference.
 
 <!-- Add image here -->
-[![Receipt of the Codeium Pro Ultimate subscription from Windsurf](/img/blog/codeium-pro-ultimate.png)]
+![Receipt of the Codeium Pro Ultimate subscription from Windsurf](/img/blog/codeium-pro-ultimate.png)
+
 ---

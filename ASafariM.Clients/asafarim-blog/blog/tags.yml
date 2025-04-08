@@ -59,11 +59,11 @@ machine-learning:
   permalink: /tags/machine-learning-tag
 
 codeium:
-  description: Posts about Codeium
+  description: Posts about Codeium AI coding assistant
   permalink: /tags/codeium-tag
 
 debugging:
-  description: Posts about debugging
+  description: Posts about debugging techniques and tools
   permalink: /tags/debugging-tag
 
 docker:
@@ -71,15 +71,15 @@ docker:
   permalink: /tags/docker-tag
 
 efficiency:
-  description: Posts about efficiency and productivity
+  description: Posts about development efficiency and productivity
   permalink: /tags/efficiency-tag
 
 productivity:
-  description: Posts about productivity and workflow optimization
+  description: Posts about developer productivity tools and techniques
   permalink: /tags/productivity-tag
 
 troubleshooting:
-  description: Posts about troubleshooting and problem-solving
+  description: Posts about troubleshooting technical issues
   permalink: /tags/troubleshooting-tag
 
 react:
@@ -87,17 +87,17 @@ react:
   permalink: /tags/react-tag
 
 portfolio:
-  description: Posts about portfolio development and projects
+  description: Posts about portfolio development and management
   permalink: /tags/portfolio-tag
 
 multi-user:
-  description: Posts about multi-user systems and authentication
+  description: Posts about multi-user systems and architectures
   permalink: /tags/multi-user-tag
 
 api:
-  description: Posts about API development and design
+  description: Posts about API design and development
   permalink: /tags/api-tag
 
 open-source:
-  description: Posts about open source development
+  description: Posts about open source software and contributions
   permalink: /tags/open-source-tag

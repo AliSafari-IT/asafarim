@@ -45,3 +45,39 @@ dotnet:
 fullstack:
   description: Posts about fullstack development
   permalink: /tags/fullstack-tag
+
+windsurf:
+  description: Windsurf AI integration code editor
+  permalink: /tags/windsurf-tag
+
+ai:
+  description: Posts about AI and machine learning
+  permalink: /tags/ai-tag
+
+machine-learning:
+  description: Posts about machine learning and AI
+  permalink: /tags/machine-learning-tag
+
+codeium:
+  description: Posts about Codeium
+  permalink: /tags/codeium-tag
+
+debugging:
+  description: Posts about debugging
+  permalink: /tags/debugging-tag
+
+docker:
+  description: Posts about Docker
+  permalink: /tags/docker-tag
+
+efficiency:
+  description: Posts about efficiency and productivity
+  permalink: /tags/efficiency-tag
+
+productivity:
+  description: Posts about productivity and workflow optimization
+  permalink: /tags/productivity-tag
+
+troubleshooting:
+  description: Posts about troubleshooting and problem-solving
+  permalink: /tags/troubleshooting-tag

@@ -19,7 +19,7 @@ technology:
   permalink: /tags/technology-tag
 
 data-management:
-  description: Posts about data management techniques and tools
+  description: Posts about data management and database systems
   permalink: /tags/data-management-tag
 
 xitechnix:
@@ -31,7 +31,7 @@ programming:
   permalink: /tags/programming-tag
 
 angular:
-  description: Posts about Angular framework
+  description: Posts about Angular development
   permalink: /tags/angular-tag
 
 clean-architecture:
@@ -39,7 +39,7 @@ clean-architecture:
   permalink: /tags/clean-architecture-tag
 
 dotnet:
-  description: Posts about .NET framework
+  description: Posts about .NET development
   permalink: /tags/dotnet-tag
 
 fullstack:
@@ -81,3 +81,23 @@ productivity:
 troubleshooting:
   description: Posts about troubleshooting and problem-solving
   permalink: /tags/troubleshooting-tag
+
+react:
+  description: Posts about React.js development
+  permalink: /tags/react-tag
+
+portfolio:
+  description: Posts about portfolio development and projects
+  permalink: /tags/portfolio-tag
+
+multi-user:
+  description: Posts about multi-user systems and authentication
+  permalink: /tags/multi-user-tag
+
+api:
+  description: Posts about API development and design
+  permalink: /tags/api-tag
+
+open-source:
+  description: Posts about open source development
+  permalink: /tags/open-source-tag

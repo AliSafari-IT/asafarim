@@ -1,5 +1,4 @@
 ---
-slug: welcome-to-asafarim-blog
 title: Welcome to ASafariM Blog
 authors: [alisafari]
 tags: [welcome, asafarim, blog]

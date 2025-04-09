@@ -1,0 +1,37 @@
+.authorLink {
+  color: var(--ifm-color-primary);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.authorLink:hover {
+  color: var(--ifm-color-primary-darker);
+  text-decoration: underline;
+}
+
+.authorPhotoLink {
+  display: block;
+  transition: transform 0.2s ease;
+}
+
+.authorPhotoLink:hover {
+  transform: scale(1.05);
+}
+
+/* Target Docusaurus avatar name class */
+:global(.avatar__name) {
+  position: relative;
+}
+
+:global(.avatar__name a) {
+  color: var(--ifm-color-primary);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+:global(.avatar__name a:hover) {
+  color: var(--ifm-color-primary-darker);
+  text-decoration: underline;
+}

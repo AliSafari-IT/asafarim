@@ -2,12 +2,20 @@ import React from 'react';
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import { getAllAuthors } from '../../utils/authorsData';
+import { useAuthorsData, Author } from '../../utils/authorsData';
 import styles from './authors.module.css';
 
 export default function AuthorsPage(): JSX.Element {
   const {siteConfig} = useDocusaurusContext();
-  const authors = getAllAuthors();
+  
+  // Get authors data using the hook
+  const authorsData = useAuthorsData();
+  
+  // Convert to array with keys included
+  const authors = Object.entries(authorsData).map(([key, data]) => ({
+    key,
+    ...data as Author,
+  }));
   
   return (
     <Layout

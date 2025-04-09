@@ -19,7 +19,6 @@ Answer the questions like:
 - *<span style={{ padding: '3px', backgroundColor: 'tomato' }}>workspace name</span>*: type a name for your workspace,
 - *<span style={{ padding: '3px', backgroundColor: 'tomato' }}>What to create in the new workspace ...</span>*: choose the type of application you want to create.,
 
-<Figure data="/img/nx-workspace-type.png" caption="nx different types of workspaces" />
+- *<span style={{ padding: '3px', backgroundColor: 'tomato' }}>Add a stylesheet</span>*: choose whether you want to add a stylesheet or not.
 
-- adding the stylesheet and that's it.
 

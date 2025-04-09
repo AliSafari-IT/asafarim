@@ -12,7 +12,9 @@ This document describes the architecture and design of a **multi-user portfolio 
 - **Backend**: ASP.NET Core 9 (Web API)
 - **Frontend**: Angular (Portfolio Builder Kit aka `asafarim-pbk`)
 - **Architecture**: Clean Architecture with Domain-Driven Design (DDD)
+
 <!-- truncate -->
+
 ## Goals
 
 - Allow authenticated users to create, edit, and publish personal portfolios.
@@ -66,10 +68,16 @@ src/
 ├── app/
 │   ├── layout/
 │   │   ├── navbar/
-│   │   │   └── navbar.component.ts/html/scss
+│   │   │   └── navbar.component.ts
+│   │   │   └── navbar.component.html
+│   │   │   └── navbar.component.scss
 │   │   ├── footer/
-│   │   │   └── footer.component.ts/html/scss
-│   │   └── layout.component.ts/html/scss
+│   │   │   └── footer.component.ts
+│   │   │   └── footer.component.html
+│   │   │   └── footer.component.scss
+│   │   └── layout.component.ts
+│   │   └── layout.component.html
+│   │   └── layout.component.scss
 │   ├── portfolio/
 │   │   ├── portfolio-list/
 │   │   ├── portfolio-view/
@@ -98,8 +106,6 @@ ASafariM.Clients/
 ├── asafarim-bibliography/       # ASafariM Bibliography (React + Redux Toolkit)
 └── asafarim-pbk/       # ASafariM Portfolio Builder Kit (Angular)
 ```
-
-It uses Angular routing, `HttpClient`, and shared auth utilities to consume the .NET API.
 
 ## Markdown Content Support
 

@@ -58,7 +58,7 @@ const config: Config = {
   },
 
   // Exclude test files from being treated as pages
-  plugins: [
+  plugins: [    
     function pluginExcludeTests() {
       return {
         name: 'plugin-exclude-tests',

@@ -1,5 +1,4 @@
 ---
-slug: opening-post
 title: Computer coding for science
 authors: [alisafari]
 tags: [xitechnix, programming]

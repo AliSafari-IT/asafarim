@@ -1,5 +1,4 @@
 ---
-slug: ai-chapter-announcement
 title: 🔜 AI for Developers
 description: I'm launching a new AI chapter for developers to explore practical AI skills in software engineering.
 authors: [alisafari]

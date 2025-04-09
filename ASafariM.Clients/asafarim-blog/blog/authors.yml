@@ -12,17 +12,3 @@ alisafari:
   bio: "I'm a software engineer with a passion for clean architecture and AI. I'm always learning and sharing my knowledge with the community."
   contact: https://www.asafarim.com/contact
   
-
-asafarim:
-  name: ASafariM
-  title: Portfolio Builder Kit (PBK)
-  urls:
-    - https://github.com/AliSafari-IT
-    - https://asafarim.com
-  image_url: https://avatars.githubusercontent.com/u/58768873?s=300&v=4
-  email: contact@asafarim.com
-  company: ASafariM
-  location: Hasselt, Belgium
-  bio: "I'm a software engineer with a passion for clean architecture and AI. I'm always learning and sharing my knowledge with the community."
-  contact: https://pbk.asafarim.com
-  

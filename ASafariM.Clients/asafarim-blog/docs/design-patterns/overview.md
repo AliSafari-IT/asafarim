@@ -13,13 +13,6 @@ The catalog of Gang-of-Four (the same refernce as mentioned above) classifies th
 
 <!-- truncate -->
 
-<table>
-<tr>
-<th>Creational patterns</th>   <th>Structural patterns</th>   <th>Behavioral patterns</th>
-</tr>
-<tr>
-<td>Increase flexibility and reuse of existing code by providing various object creation mechanism</td>  
-<td>Explain how to assemble objects and classes into larger structures while keeping these structures flexible and efficient.</td>   
-<td>These patterns are concerned with algorithms and the assignment of responsibilities between objects.</td>   
-</tr>
-</table>
+| Creational patterns | Structural patterns | Behavioral patterns |
+|---------------------|---------------------|---------------------|
+| Increase flexibility and reuse of existing code by providing various object creation mechanism | Explain how to assemble objects and classes into larger structures while keeping these structures flexible and efficient. | These patterns are concerned with algorithms and the assignment of responsibilities between objects. |

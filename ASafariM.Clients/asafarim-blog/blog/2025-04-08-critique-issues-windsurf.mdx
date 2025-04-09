@@ -2,13 +2,25 @@
 title: "🕵️‍♂️ My Frustrating Journey with Windsurf AI: A Critical Analysis"
 description: "A personal account and critical analysis of issues encountered with AI-assisted coding using Codeium Pro Ultimate for the ASafariM web application. ⚡"
 authors: [alisafari]
-tags: [.NET, Windsurf, Codeium, Debugging, Efficiency, Productivity, Troubleshooting, AI Coding]
+tags:
+  [
+    .NET,
+    Windsurf,
+    Codeium,
+    Debugging,
+    Efficiency,
+    Productivity,
+    Troubleshooting,
+    AI Coding,
+  ]
 ---
 
 ## Introduction: High Hopes and Hard Realities
 
 As a recent purchaser of the Codeium Pro Ultimate subscription from Windsurf, I embarked on a journey to leverage cutting-edge AI-assisted coding technologies. While the code completion features initially showed promise, delivering swift and contextually relevant suggestions, the experience quickly devolved into a labyrinth of frustration 🧩.
+
 <!-- truncate -->
+
 The AI's well-intentioned but often misguided interventions transformed what should have been a streamlined development process into a complex debugging marathon, challenging the very premise of productivity enhancement that AI coding assistants promise.
 
 I invested in the Codeium Pro Ultimate subscription with high hopes of revolutionizing my development workflow for the ASafariM web application. What I encountered was a series of increasingly frustrating interactions that made me question the true value of AI-assisted coding. This document provides a critical analysis of those experiences, highlighting not just technical issues but the genuine human frustration they caused.
@@ -22,6 +34,7 @@ My most memorable moment of AI-induced frustration came during a critical databa
 **Problem:** I watched in disbelief as the AI repeatedly modified my `Program.cs`, transforming a working namespace import into a series of increasingly problematic variations.
 
 **Example:**
+
 ```csharp
 // Original working code
 using DotNetEnv;
@@ -43,6 +56,7 @@ using DotNetEnv;
 **Problem:** Inconsistent modifications to how environment variables were loaded created confusion and errors.
 
 **Example:**
+
 ```csharp
 // Original code
 DotNetEnv.Env.Load(envFilePath);
@@ -61,6 +75,7 @@ DotNetEnv.Env.Load(envFilePath);
 **Problem:** Changing database names without proper verification of existing configurations.
 
 **Example:**
+
 ```csharp
 // Original configuration
 var name = Environment.GetEnvironmentVariable("DB_NAME") ?? "projects-db";
@@ -76,6 +91,7 @@ var name = Environment.GetEnvironmentVariable("DB_NAME") ?? "myDB";
 **Problem:** My Docker Compose file became a battleground of configuration changes. The AI seemed determined to "help" by randomly altering environment variables without understanding the existing setup.
 
 **Example:**
+
 ```yaml
 # Original configuration using environment variables
 MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -100,6 +116,7 @@ MYSQL_PASSWORD: ${MYSQL_PASSWORD}
 **Problem:** Initial focus on namespace and compilation errors when the real issue was with database connectivity.
 
 **Example:** Spending time modifying using directives and namespace references when the actual problem was related to:
+
 - Port mapping (3307 on host vs 3306 in container)
 - Database name mismatches
 - Connection string parameters
@@ -111,6 +128,7 @@ MYSQL_PASSWORD: ${MYSQL_PASSWORD}
 **Problem:** Multiple unnecessary tool calls and operations that consumed resources.
 
 **Example:**
+
 - Multiple edit operations on the same file sections
 - Repeated build operations without significant changes
 - Starting and stopping Docker containers unnecessarily
@@ -121,14 +139,14 @@ MYSQL_PASSWORD: ${MYSQL_PASSWORD}
 
 ### Personal Performance Ratings for Codeium Pro Ultimate AI Engines
 
-| AI Engine | Code Completion | Debugging Capability | Context Understanding | Personal Frustration Level |
-|-----------|-----------------|---------------------|----------------------|----------------------------|
-| Claude 3.5 Opus | ★★★☆☆ | ★★☆☆☆ | ★★☆☆☆ | ★★★★★ |
-| Claude 3.7 Sonnet | ★★★★☆ | ★★★☆☆ | ★★★☆☆ | ★★★☆☆ |
-| Claude Base | ★★☆☆☆ | ★★☆☆☆ | ★★☆☆☆ | ★★★★☆ |
-| DeepSeek V3 | ★★★★☆ | ★★☆☆☆ | ★★☆☆☆ | ★★★★★ |
-| DeepSeek R1 | ★★★☆☆ | ★★☆☆☆ | ★★☆☆☆ | ★★★★☆ |
-| GPT-4o | ★★★★☆ | ★★★☆☆ | ★★★☆☆ | ★★★☆☆ |
+| AI Engine         | Code Completion | Debugging Capability | Context Understanding | Personal Frustration Level |
+| ----------------- | --------------- | -------------------- | --------------------- | -------------------------- |
+| Claude 3.5 Opus   | ★★★☆☆           | ★★☆☆☆                | ★★☆☆☆                 | ★★★★★                      |
+| Claude 3.7 Sonnet | ★★★★☆           | ★★★☆☆                | ★★★☆☆                 | ★★★☆☆                      |
+| Claude Base       | ★★☆☆☆           | ★★☆☆☆                | ★★☆☆☆                 | ★★★★☆                      |
+| DeepSeek V3       | ★★★★☆           | ★★☆☆☆                | ★★☆☆☆                 | ★★★★★                      |
+| DeepSeek R1       | ★★★☆☆           | ★★☆☆☆                | ★★☆☆☆                 | ★★★★☆                      |
+| GPT-4o            | ★★★★☆           | ★★★☆☆                | ★★★☆☆                 | ★★★☆☆                      |
 
 ### Real-World Frustration Factors
 
@@ -169,7 +187,7 @@ The Codeium Pro Ultimate subscription feels like a double-edged sword. While the
 
 **Pro Tip:** When the AI starts suggesting changes, take a deep breath, pour a coffee, and prepare for a debugging adventure.
 
-___
+---
 
 ## Additional Notes for Future Sessions 📝
 
@@ -181,11 +199,93 @@ ___
 - Communicate clearly with the team and explain the reasoning behind proposed changes.
 - Document the troubleshooting process and the root cause analysis for future reference.
 
-![Receipt of the Codeium Pro Ultimate subscription from Windsurf](/img/blog/codeium-pro-ultimate.png)
+---   
 
-**Note:** The receipt image is a personal record of the Codeium Pro Ultimate subscription purchase, included for documentation purposes.
+import React, { useState } from 'react';
 
+export const ReceiptImage = () => {
+  const [showMagnifier, setShowMagnifier] = useState(false);
+  const [[imgWidth, imgHeight], setImgSize] = useState([0, 0]);
+  const [[x, y], setXY] = useState([0, 0]);
+  
+  // Calculate zoom level
+  const magnifierSize = 120;
+  const zoomLevel = 3;
+  
+  // Load image dimensions on mount
+  const getImgSize = (e) => {
+    const { width, height } = e.target;
+    setImgSize([width, height]);
+  };
+  
+  // Handle mouse movements
+  const handleMouseMove = (e) => {
+    const elem = e.currentTarget;
+    const { top, left } = elem.getBoundingClientRect();
+    
+    // Calculate cursor position relative to the image
+    const x = e.clientX - left;
+    const y = e.clientY - top;
+    
+    setXY([x, y]);
+  };
+  
+  return (
+    <div className="img-wrapper">
+      <div 
+        className="img-container"
+        style={{ position: 'relative' }}
+        onMouseEnter={() => setShowMagnifier(true)}
+        onMouseLeave={() => setShowMagnifier(false)}
+        onMouseMove={handleMouseMove}
+      >
+        <img 
+          src="/img/blog/codeium-pro-ultimate.png" 
+          alt="Codeium Pro Ultimate Subscription Receipt" 
+          className="receipt-image"
+          onLoad={getImgSize}
+        />
+        
+        {showMagnifier && (
+          <div
+            style={{
+              position: 'absolute',
+              // Position the magnifier
+              left: `${x}px`,
+              top: `${y}px`,
+              // Size of the magnifier
+              width: `${magnifierSize}px`,
+              height: `${magnifierSize}px`,
+              // Move it center to cursor
+              transform: 'translate(-50%, -50%)',
+              border: '2px solid white',
+              borderRadius: '50%',
+              // Background settings
+              backgroundImage: `url(/img/blog/codeium-pro-ultimate.png)`,
+              backgroundRepeat: 'no-repeat',
+              // Calculate the background position
+              backgroundSize: `${imgWidth * zoomLevel}px ${imgHeight * zoomLevel}px`,
+              backgroundPosition: `
+                ${-x * zoomLevel + magnifierSize / 2}px 
+                ${-y * zoomLevel + magnifierSize / 2}px
+              `,
+              pointerEvents: 'none',
+              opacity: 1,
+              backgroundColor: 'white',
+              boxShadow: '0 5px 10px rgba(0,0,0,0.3)',
+              zIndex: 1000
+            }}
+          />
+        )}
+      </div>
+      <div className="img-caption">
+        <strong>Note:</strong> The receipt image is a personal record of the Codeium Pro Ultimate subscription purchase, included for documentation purposes.
+      </div>
+    </div>
+  );
+};
+
+<ReceiptImage />
 ___
 
-**Disclaimer:** This critique is based on my personal experience and may not reflect the experiences of other developers. Your mileage may vary.
----
+## **Disclaimer:** This critique is based on my personal experience and may not reflect the experiences of other developers. Your mileage may vary.

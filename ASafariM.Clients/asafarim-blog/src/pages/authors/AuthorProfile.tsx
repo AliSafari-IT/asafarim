@@ -52,12 +52,22 @@ const WebsiteIcon = () => (
   </svg>
 );
 
+const StackOverflowIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+    <path d="M12.658 14.577v-4.27h1.423V16H1.23v-5.693h1.42v4.27h10.006zm-8.583-1.423h7.16V11.73h-7.16v1.424zm.173-3.948l6.987 1.465.294-1.398L4.272 7.81l-.294 1.396zm.861-3.295l6.47 3.016.585-1.258-6.47-3.016-.585 1.258zm1.723-3.143L10.238 5.13l.88-1.058-4.53-3.77-.88 1.058z"/>
+  </svg>
+);
+
+const TwitterXIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+    <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.846-5.007-4.425 5.007H.84l5.733-6.57L0 .75h5.063l3.474 4.385L12.6.75Zm-.86 13.028h1.36L4.323 2.145H2.865l8.875 11.633Z"/>
+  </svg>
+);
+
 // Define props interface for type safety
 interface AuthorProfileProps {
   authorKey: string;
 }
-
-
 
 // This component will be used to display any author's profile based on the URL parameter
 export default function AuthorProfile({ authorKey }: AuthorProfileProps): JSX.Element {
@@ -76,7 +86,7 @@ export default function AuthorProfile({ authorKey }: AuthorProfileProps): JSX.El
   
   // Filter posts by author
   const blogPosts = allBlogPosts.filter((post: BlogPost) => 
-    post.authors && post.authors.includes(authorKey)
+    post.frontMatter.authors && post.frontMatter.authors.includes(authorKey)
   );
   
   // If author not found, show error message
@@ -138,21 +148,40 @@ export default function AuthorProfile({ authorKey }: AuthorProfileProps): JSX.El
             )}
             
             <div className={styles.authorSocialLinks}>
-              {author.urls && author.urls.length > 0 && (
-                <a href={author.urls[0]} className={styles.authorSocialLink} target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-                  <GithubIcon />
-                </a>
-              )}
-              {author.urls && author.urls.length > 1 && (
-                <a href={author.urls[1]} className={styles.authorSocialLink} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-                  <LinkedinIcon />
-                </a>
-              )}
-              {author.urls && author.urls.length > 2 && (
-                <a href={author.urls[2]} className={styles.authorSocialLink} target="_blank" rel="noopener noreferrer" aria-label="Website">
-                  <WebsiteIcon />
-                </a>
-              )}
+              {author.urls && author.urls.map((url, index) => {
+                let icon = null;
+                let ariaLabel = '';
+
+                if (url.includes('github.com')) {
+                  icon = <GithubIcon />;
+                  ariaLabel = 'GitHub';
+                } else if (url.includes('linkedin.com')) {
+                  icon = <LinkedinIcon />;
+                  ariaLabel = 'LinkedIn';
+                } else if (url.includes('stackoverflow.com')) {
+                  icon = <StackOverflowIcon />;
+                  ariaLabel = 'StackOverflow';
+                } else if (url.includes('x.com')) {
+                  icon = <TwitterXIcon />;
+                  ariaLabel = 'X';
+                } else {
+                  icon = <WebsiteIcon />;
+                  ariaLabel = 'Personal Website';
+                }
+
+                return (
+                  <a 
+                    key={index} 
+                    href={url} 
+                    className={styles.authorSocialLink} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    aria-label={ariaLabel}
+                  >
+                    {icon}
+                  </a>
+                );
+              })}
             </div>
           </div>
           

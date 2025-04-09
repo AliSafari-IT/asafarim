@@ -3,7 +3,7 @@
   "version": "1.2.2",
   "private": true,
   "type": "module",
-  "packageManager": "yarn@4.7.0",
+  "packageManager": "yarn@4.9.0",
   "overrides": {
     "postcss-nesting": "^13.0.1"
   },

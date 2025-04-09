@@ -101,3 +101,19 @@ api:
 open-source:
   description: Posts about open source software and contributions
   permalink: /tags/open-source-tag
+
+ai-coding:
+  description: Posts about AI coding assistants and their impact on development workflows
+  permalink: /tags/ai-coding-tag
+
+ai-debugging:
+  description: Posts about AI debugging assistants and their impact on development workflows
+  permalink: /tags/ai-debugging-tag
+
+ai-productivity:
+  description: Posts about AI productivity assistants and their impact on development workflows
+  permalink: /tags/ai-productivity-tag
+
+ai-troubleshooting:
+  description: Posts about AI troubleshooting assistants and their impact on development workflows
+  permalink: /tags/ai-troubleshooting-tag

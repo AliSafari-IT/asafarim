@@ -108,6 +108,7 @@ const config: Config = {
           label: 'Articles',
         },
         { to: '/blog', label: 'Blog', position: 'left' },
+        { to: '/authors', label: 'Authors', position: 'left' },
         {
           href: 'https://github.com/AliSafari-IT/asafarim',
           label: 'GitHub',

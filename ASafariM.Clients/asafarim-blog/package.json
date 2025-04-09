@@ -1,11 +1,11 @@
 {
   "name": "asafarim-blog",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
-  "packageManager": "yarn@4.8.1",
+  "packageManager": "yarn@4.9.0",
   "scripts": {
     "co": "cd ../.. && yarn co",
-    "install": "echo \"Installing dependencies...\"",
+    "install": "echo \"Installing dependencies...\" && yarn install",
     "docusaurus": "docusaurus",
     "start": "yarn stop && cross-env BLOG_PORT=3002 docusaurus start --port=3002",
     "build": "docusaurus build",

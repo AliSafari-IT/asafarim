@@ -193,11 +193,11 @@ export default function AuthorProfile({ authorKey }: AuthorProfileProps): JSX.El
                 {blogPosts.map(post => (
                   <li key={post.id} className={styles.authorPostItem}>
                     <h3 className={styles.authorPostTitle}>
-                      <Link to={post.url}>{post.title}</Link>
+                      <Link to={post.permalink}>{post.title}</Link>
                     </h3>
                     <span className={styles.authorPostDate}>{post.date}</span>
                     <p className={styles.authorPostExcerpt}>{post.excerpt}</p>
-                    <Link to={post.url} className={styles.authorPostReadMore}>
+                    <Link to={post.permalink} className={styles.authorPostReadMore}>
                       Read More →
                     </Link>
                   </li>

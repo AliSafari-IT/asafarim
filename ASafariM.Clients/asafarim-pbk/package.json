@@ -2,7 +2,7 @@
   "name": "asafarim-pbk",
   "version": "0.1.0",
   "repository": "https://github.com/AliSafari-IT/asafarim.git",
-  "packageManager": "yarn@4.8.1",
+  "packageManager": "yarn@4.9.0",
   "author": "Ali Safari <asafarim@gmail.com>",
   "scripts": {
     "ng": "ng",

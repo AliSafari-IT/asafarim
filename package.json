@@ -85,7 +85,8 @@
     "ASafariM.Clients/asafarim-ui",
     "ASafariM.Clients/asafarim-bibliography",
     "ASafariM.Clients/asafarim-pbk",
-    "ASafariM.Clients/asafarim-blog"
+    "ASafariM.Clients/asafarim-blog",
+    "ASafariM.Clients/asafarim-node-terminal"
   ],
   "dependencies": {
     "lodash": "^4.17.21"

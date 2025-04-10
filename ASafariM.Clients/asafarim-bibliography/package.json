@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "packageManager": "yarn@4.9.0",
   "repository": "https://github.com/AliSafari-IT/asafarim.git",
   "scripts": {
     "co": "cd ../.. && yarn co",

@@ -1,10 +1,5 @@
 import React, { useState } from "react";
 
-interface ImageDimensions {
-  width: number;
-  height: number;
-}
-
 const ReceiptImage: React.FC = () => {
   const [showMagnifier, setShowMagnifier] = useState(false);
   const [[imgWidth, imgHeight], setImgSize] = useState([0, 0]);

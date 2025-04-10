@@ -74,14 +74,8 @@
     "test:backend:watch": "cd ASafariM.Test && dotnet watch test --logger \"trx;LogFileName=TestResults/test_results.trx\""
   },
   "workspaces": [
-    "ASafariM.Clients/**",
-    "asafarim",
-    "asafarim-ui",
-    "asafarim-blog",
-    "asafarim-bibliography",
-    "asafarim-pbk",
-    "asafarim-terminal",
-    "asafarim-api"
+    "ASafariM.Clients/*",
+    "ASafariM.Api"
   ],
   "dependencies": {
     "lodash": "^4.17.21"

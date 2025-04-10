@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 
 interface ImageDimensions {
   width: number;
@@ -6,32 +6,18 @@ interface ImageDimensions {
 }
 
 const ReceiptImage: React.FC = () => {
-  const [showMagnifier, setShowMagnifier] = useState<boolean>(false);
-  const [imgDimensions, setImgDimensions] = useState<ImageDimensions>({ width: 0, height: 0 });
-  const [cursorPosition, setCursorPosition] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
-  const imgRef = useRef<HTMLImageElement>(null);
+  const [showMagnifier, setShowMagnifier] = useState(false);
+  const [[imgWidth, imgHeight], setImgSize] = useState([0, 0]);
+  const [[x, y], setXY] = useState([0, 0]);
   
   // Calculate zoom level
   const magnifierSize = 120;
   const zoomLevel = 3;
   
-  // Load image dimensions on mount and when image loads
-  useEffect(() => {
-    const img = imgRef.current;
-    if (img && img.complete && img.naturalWidth > 0) {
-      setImgDimensions({
-        width: img.naturalWidth,
-        height: img.naturalHeight
-      });
-    }
-  }, []);
-  
-  const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    const img = e.currentTarget;
-    setImgDimensions({
-      width: img.naturalWidth,
-      height: img.naturalHeight
-    });
+  // Load image dimensions on mount
+  const getImgSize = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const { width, height } = e.currentTarget;
+    setImgSize([width, height]);
   };
   
   // Handle mouse movements
@@ -43,12 +29,8 @@ const ReceiptImage: React.FC = () => {
     const x = e.clientX - left;
     const y = e.clientY - top;
     
-    setCursorPosition({ x, y });
+    setXY([x, y]);
   };
-  
-  // Ensure we have image dimensions for the magnifier
-  const { width: imgWidth, height: imgHeight } = imgDimensions;
-  const { x, y } = cursorPosition;
   
   return (
     <div className="img-wrapper">
@@ -60,11 +42,10 @@ const ReceiptImage: React.FC = () => {
         onMouseMove={handleMouseMove}
       >
         <img 
-          ref={imgRef}
           src="/img/blog/codeium-pro-ultimate.png" 
           alt="Codeium Pro Ultimate Subscription Receipt" 
           className="receipt-image"
-          onLoad={handleImageLoad}
+          onLoad={getImgSize}
         />
         
         {showMagnifier && imgWidth > 0 && imgHeight > 0 && (

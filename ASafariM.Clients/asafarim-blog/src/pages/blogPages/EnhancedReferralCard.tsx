@@ -52,10 +52,10 @@ const EnhancedReferralCard = () => {
               </a>
               <span className={styles["enhanced-referral-divider"]}></span>
               <a 
-                href="#where-it-shines" 
+                href="#where-targeted-use-shows-promise" 
                 className={styles["enhanced-referral-link"]}
               >
-                <span>💎</span> See where it shines
+                <span> 💎 </span> See where it shines
               </a>
             </div>
           </div>

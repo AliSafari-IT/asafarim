@@ -33,10 +33,24 @@ const ReceiptImage: React.FC = () => {
   };
   
   return (
-    <div className="img-wrapper">
+    <div 
+      className="img-wrapper" 
+      style={{
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        width: '100%', 
+        minHeight: '500px'
+      }}
+    >
       <div 
         className="img-container"
-        style={{ position: 'relative' }}
+        style={{ 
+          position: 'relative', 
+          maxWidth: '800px', 
+          width: '100%', 
+          margin: '0 auto' 
+        }}
         onMouseEnter={() => setShowMagnifier(true)}
         onMouseLeave={() => setShowMagnifier(false)}
         onMouseMove={handleMouseMove}
@@ -45,6 +59,12 @@ const ReceiptImage: React.FC = () => {
           src="/img/blog/codeium-pro-ultimate.png" 
           alt="Codeium Pro Ultimate Subscription Receipt" 
           className="receipt-image"
+          style={{
+            width: '100%',
+            height: 'auto',
+            display: 'block',
+            margin: '0 auto'
+          }}
           onLoad={getImgSize}
         />
         
@@ -80,7 +100,14 @@ const ReceiptImage: React.FC = () => {
           />
         )}
       </div>
-      <div className="img-caption">
+      <div 
+        className="img-caption" 
+        style={{ 
+          textAlign: 'center', 
+          marginTop: '10px', 
+          width: '100%' 
+        }}
+      >
         <strong>Note:</strong> The receipt image is a personal record of the Codeium Pro Ultimate subscription purchase, included for documentation purposes.
       </div>
     </div>

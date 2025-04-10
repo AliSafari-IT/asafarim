@@ -8,13 +8,15 @@
   "scripts": {
     "co": "cd ../.. && yarn co",
     "preinstall": "npx only-allow yarn",
-    "clean": "rm -rf node_modules && yarn install",
+    "clean": "rm -rf node_modules .yarn yarn.lock",
+    "reinstall": "echo \" 📦 Clearing cache and installing dependencies...\" && yarn cache clean --all && yarn clean && yarn install",
     "start": "yarn stop && vite --port 3004",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "stop": "npx kill-port 3004",
     "rs": "yarn stop && yarn start",
+    "rebuild": "yarn reinstall && vite build",
     "test": "vitest"
   },
   "browserslist": {

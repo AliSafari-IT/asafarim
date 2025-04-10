@@ -7,8 +7,10 @@
   "scripts": {
     "ng": "ng",
     "pre-commit": "ng lint",
-    "reinstall": "rm -rf node_modules && yarn install",
-    "co": "git add . && python .github/scripts/generate_commit_message.py && git push",
+    "clean": "rm -rf node_modules .yarn yarn.lock",
+    "reinstall": "echo \" 📦 Clearing cache and installing dependencies...\" && yarn cache clean --all && yarn clean && yarn install",
+    "preinstall": "npx only-allow yarn",
+    "co": "cd ../.. && yarn co",
     "start": "ng serve",
     "build": "ng build",
     "rebuild": "ng build --watch --configuration production",

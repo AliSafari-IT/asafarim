@@ -1,5 +1,5 @@
 {
-  "name": "asafarim-node-terminal",
+  "name": "asafarim-terminal",
   "version": "1.0.0",
   "packageManager": "yarn@4.9.0",
   "description": "A simple terminal interface using Node.js",

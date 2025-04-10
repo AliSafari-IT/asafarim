@@ -8,11 +8,11 @@
   "author": "Ali Safari <asafarim@gmail.com>",
   "scripts": {
     "publish": "bash ./publish.sh",
+    "exT": "npx kill-port 3008 && cd /var/www/asafarim/ASafariM.Clients/node-terminal && yarn && yarn start & sleep 3 && (gio open http://localhost:3008 || xdg-open http://localhost:3008 || echo 'Open remote terminal manually: http://localhost:3008')",
     "reinstall": "rm -rf node_modules && yarn install",
     "runAll": "yarn prepare:dev && concurrently \"yarn workspace asafarim-api start\" \"yarn workspace asafarim-ui start\" \"yarn workspace asafarim-blog start\" \"yarn workspace asafarim-bibliography start\"",
     "co": "git add . && python .github/scripts/generate_commit_message.py && git push",
     "reloadBash": "bash ./restart_shell.sh",
-    "exT": "npx kill-port 3008 && cd /var/www/asafarim/ASafariM.Clients/node-terminal && yarn && yarn start & sleep 3 && (gio open http://localhost:3008 || xdg-open http://localhost:3008 || echo 'Open remote terminal manually: http://localhost:3008')",
     "asafarim-api:publish": "bash -c 'set -e && cd /var/www/asafarim && git pull origin main && sudo rm -rf /var/www/asafarim-api/* && dotnet publish ASafariM.Api/ASafariM.Api.csproj -c Release -o /var/www/asafarim-api && sudo chown -R www-data:www-data /var/www/asafarim-api && sudo chmod -R 755 /var/www/asafarim-api && sudo systemctl restart asafarim-api'",
     "asafarim-ui:publish": "bash -c 'set -e && cd /var/www/asafarim && git pull origin main && yarn workspace asafarim-ui build && sudo rm -rf /var/www/asafarim-com/public_html/* && sudo cp -r /var/www/asafarim/ASafariM.Clients/asafarim-ui/dist/* /var/www/asafarim-com/public_html/ && sudo chown -R www-data:www-data /var/www/asafarim-com/public_html && sudo chmod -R 755 /var/www/asafarim-com/public_html && sudo systemctl restart nginx'",
     "asafarim-bibliography:publish": "bash -c 'set -e && cd /var/www/asafarim && git pull origin main && yarn workspace asafarim-bibliography build && sudo mkdir -p /var/www/asafarim-bibliography && sudo rm -rf /var/www/asafarim-bibliography/* && sudo cp -r /var/www/asafarim/ASafariM.Clients/asafarim-bibliography/dist/* /var/www/asafarim-bibliography/ && sudo chown -R www-data:www-data /var/www/asafarim-bibliography && sudo chmod -R 755 /var/www/asafarim-bibliography && sudo systemctl restart nginx'",

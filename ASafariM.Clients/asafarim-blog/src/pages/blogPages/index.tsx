@@ -1,7 +1,6 @@
 import React from 'react';
-import BalancedView from "./BalancedView";
-import ReceiptImage from "./ReceiptImage";
-import ReferralCard from "./ReferralCard";
-import EnhancedReferralCard from "./EnhancedReferralCard";
 
-export default { BalancedView, ReceiptImage, ReferralCard, EnhancedReferralCard }
+export { default as BalancedView } from "./BalancedView";
+export { default as ReceiptImage } from "./ReceiptImage"; 
+export { default as ReferralCard } from "./ReferralCard";
+export { default as EnhancedReferralCard } from "./EnhancedReferralCard";

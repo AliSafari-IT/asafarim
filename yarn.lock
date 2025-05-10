@@ -11249,12 +11249,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ASafariM.Api@workspace:ASafariM.Api":
-  version: 0.0.0-use.local
-  resolution: "ASafariM.Api@workspace:ASafariM.Api"
-  languageName: unknown
-  linkType: soft
-
 "abbrev@npm:^3.0.0":
   version: 3.0.1
   resolution: "abbrev@npm:3.0.1"

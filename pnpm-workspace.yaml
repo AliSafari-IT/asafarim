@@ -1,0 +1,16 @@
+packages:
+  - ASafariM.Clients/**
+  - ASafariM.Api
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - '@tailwindcss/oxide'
+  - '@tsparticles/engine'
+  - core-js
+  - core-js-pure
+  - esbuild
+  - lmdb
+  - msgpackr-extract
+  - node-pty
+  - react-tsparticles
+  - sharp
+  - tsparticles-engine

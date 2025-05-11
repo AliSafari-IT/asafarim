@@ -1,16 +1,7 @@
 packages:
-  - ASafariM.Clients/**
   - ASafariM.Api
-onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - '@tailwindcss/oxide'
-  - '@tsparticles/engine'
-  - core-js
-  - core-js-pure
-  - esbuild
-  - lmdb
-  - msgpackr-extract
-  - node-pty
-  - react-tsparticles
-  - sharp
-  - tsparticles-engine
+  - ASafariM.Clients/asafarim-ui
+  - ASafariM.Clients/asafarim-blog
+  - ASafariM.Clients/asafarim-bibliography
+  - ASafariM.Clients/asafarim-pbk
+  - ASafariM.Clients/asafarim-terminal

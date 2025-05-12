@@ -18,7 +18,7 @@ public class AppDbContext : DbContext
         : base(options) { }
 
     public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration)
-        : base(options) 
+        : base(options)
     {
         _configuration = configuration;
     }
@@ -172,6 +172,18 @@ public class AppDbContext : DbContext
             entity.HasIndex(u => u.Email).IsUnique();
             entity.HasIndex(u => u.NormalizedUserName).IsUnique();
             entity.HasIndex(u => u.NormalizedEmail).IsUnique();
+
+            // Ensure DateOfBirth is treated as UTC
+            entity
+                .Property(u => u.DateOfBirth)
+                .HasColumnType("datetime(6)") // Explicitly set column type (optional but good practice)
+                .HasConversion(
+                    d => d.HasValue ? d.Value.ToUniversalTime() : (DateTime?)null, // Ensure saved as UTC
+                    d =>
+                        d.HasValue
+                            ? DateTime.SpecifyKind(d.Value, DateTimeKind.Utc)
+                            : (DateTime?)null // Ensure read as UTC
+                );
 
             // One-to-Many: User → Project (as Owner)
             entity

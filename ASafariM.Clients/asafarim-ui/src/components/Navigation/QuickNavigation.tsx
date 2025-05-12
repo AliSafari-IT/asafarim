@@ -39,7 +39,7 @@ const QuickNavigation: React.FC = () => {
       title: "Blog",
       description: "Read the latest articles and updates",
       icon: "📝",
-      link: "/blog",
+      link: "//blog.asafarim.com",
       color: "tertiary",
       buttonText: "Read Our Blog",
     },

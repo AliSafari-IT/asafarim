@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { initializeIcons } from '@fluentui/font-icons-mdl2';
 import './index.css';
 import AppWithRouter from './AppWithRouter';
 import { AzureDarkTheme } from '@fluentui-contrib/azure-theme';
@@ -10,8 +9,13 @@ import { initializeGA } from './services/analyticsService';
 // Initialize Google Analytics
 initializeGA();
 
-// Initialize FluentUI icons
-initializeIcons();
+// Initialize FluentUI icons - with error handling
+try {
+  const { initializeIcons } = require('@fluentui/font-icons-mdl2');
+  initializeIcons();
+} catch (error) {
+  console.warn('Failed to initialize FluentUI icons:', error);
+}
 
 const theme = AzureDarkTheme;
 ReactDOM.createRoot(document.getElementById('root')!).render(

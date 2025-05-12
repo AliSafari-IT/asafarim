@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using ASafariM.Api;
 using ASafariM.Api.Extensions;
 using ASafariM.Application;
@@ -256,14 +257,15 @@ try
         .Services.AddControllers()
         .AddJsonOptions(options =>
         {
-            options.JsonSerializerOptions.ReferenceHandler = System
-                .Text
-                .Json
-                .Serialization
-                .ReferenceHandler
-                .Preserve;
-            options.JsonSerializerOptions.MaxDepth = 64; // Increase max depth if needed
+            options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+            options.JsonSerializerOptions.MaxDepth = 64;
+            // Add custom converters for consistent UTC DateTime handling
+            options.JsonSerializerOptions.Converters.Add(new UtcDateTimeConverter());
+            options.JsonSerializerOptions.Converters.Add(new UtcDateTimeNotNullableConverter());
+            // Set naming policy to camelCase to match frontend JSON
+            options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
         })
+        // Chain AddApplicationPart here
         .AddApplicationPart(
             typeof(ASafariM.Presentation.Controllers.MarkdownFilesController).Assembly
         )

@@ -173,6 +173,22 @@ const EditUser: React.FC = () => {
     });
   };
 
+  // Helper function to convert local date string (YYYY-MM-DD) to ISO string at UTC midnight
+  const convertLocalDateToISOString = (localDateString: string): string | undefined => {
+    if (!localDateString) return undefined;
+    try {
+      // Create date parts assuming local time
+      const [year, month, day] = localDateString.split('-').map(Number);
+      // Construct a Date object using UTC values to represent the local date at midnight
+      const utcDate = new Date(Date.UTC(year, month - 1, day));
+      // Return the ISO string (which will end in Z for UTC)
+      return utcDate.toISOString();
+    } catch (e) {
+      logger.error("Error converting local date string to ISO:", e);
+      return undefined;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -184,13 +200,16 @@ const EditUser: React.FC = () => {
       // First, update the user's basic information
       const { roles: currentRoles, ...userWithoutRoles } = user;
       
-      // Ensure required fields are present
+      // Convert dateOfBirth, handling potential undefined
+      const isoDateOfBirth = convertLocalDateToISOString(user.dateOfBirth || '');
+      
+      // Ensure required fields are present and conditionally add dateOfBirth
       const updateData = {
         ...userWithoutRoles,
         id: user.id,
         firstName: user.firstName || '',
         lastName: user.lastName || '',
-        dateOfBirth: user.dateOfBirth ? new Date(user.dateOfBirth).toISOString() : undefined,
+        ...(isoDateOfBirth && { dateOfBirth: isoDateOfBirth }), // Only add if isoDateOfBirth is a valid string
         // Ensure boolean values are properly typed
         isAdmin: typeof user.isAdmin === 'string' ? user.isAdmin === 'true' : !!user.isAdmin,
         isActive: typeof user.isActive === 'string' ? user.isActive === 'true' : !!user.isActive,

@@ -1,9 +1,12 @@
 import { defineConfig } from 'vite';
-import { configDefaults } from 'vitest/config';
 import path from 'path';
 import react from '@vitejs/plugin-react';
 import vitePluginMd from 'vite-plugin-md';
-import md from 'vite-plugin-md';
+import dotenv from 'dotenv';
+
+// Load .env file
+dotenv.config();
+
 // https://vite.dev/config/
 export default defineConfig({
   mode: process.env.NODE_ENV,
@@ -22,7 +25,6 @@ export default defineConfig({
         html: true,
       },
     }),
-    md()
   ],
   resolve: {
     alias: {
@@ -38,7 +40,7 @@ export default defineConfig({
     },
   },
   server: {
-    port: 3000,
+    port: parseInt(process.env.VITE_UI_PORT || '3000', 10),
     open: true,
     proxy: {
       '/api': {
@@ -90,12 +92,5 @@ export default defineConfig({
       // Improve compatibility with D3 modules
       transformMixedEsModules: true,
     },
-  },
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    exclude: [...configDefaults.exclude, 'e2e/*'],
-    root: path.resolve(__dirname, './'),
-    setupFiles: ['./vitest.setup.ts'],
   },
 });

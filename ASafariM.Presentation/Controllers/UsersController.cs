@@ -149,6 +149,9 @@ namespace ASafariM.Presentation.Controllers
                 return BadRequest("ID mismatch between route and command");
             }
 
+            // Log the received DateOfBirth *before* calling the service
+            Log.Information("Received DateOfBirth in command: {DateOfBirth}", command.DateOfBirth);
+
             try
             {
                 var userUpdated = await _userService.UpdateUserByAdminAsync(command);

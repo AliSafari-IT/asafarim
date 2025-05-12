@@ -26,6 +26,7 @@ const UserProfile: React.FC = () => {
             try {
                 setLoading(true);
                 const data = await getUserById(authenticatedUser.id);
+                console.log('Received dateOfBirth from API:', data.dateOfBirth, _isActive); // <--- Add this line
                 setUserInfo(data);
             } catch (err) {
                 logger.error('Error fetching user information:', err);
@@ -36,7 +37,7 @@ const UserProfile: React.FC = () => {
         };
 
         fetchUserInfo();
-    }, [authenticated, authenticatedUser, token, navigate]);
+    }, [authenticated, authenticatedUser, token, navigate, _isActive]);
 
     useEffect(
         () => {

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Page</title>
+</head>
+<body>
+  <h1>Test Page</h1>
+  <p>If you can see this, the page is working!</p>
+  <script type="module">
+    import { createRoot } from 'react-dom/client';
+    
+    console.log('React DOM loaded successfully!');
+    
+    try {
+      // Try to import one of the problematic packages
+      import('@fluentui/react-components').then(() => {
+        console.log('FluentUI components loaded successfully!');
+      }).catch(err => {
+        console.error('Error loading FluentUI components:', err);
+      });
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  </script>
+</body>
+</html>

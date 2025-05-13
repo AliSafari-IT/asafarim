@@ -7,7 +7,7 @@
   "author": "Ali Safari <asafarim@gmail.com>",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "publish": "bash ./publish.sh",
+    "publishToASafariM": "bash ./publish.sh",
     "nt:install": "pnpm --filter asafarim-terminal install",
     "nt:rebuild": "pnpm --filter asafarim-terminal rebuild node-pty --loglevel verbose",
     "nt:server": "cd /var/www/asafarim/ASafariM.Clients/node-terminal && node server.js",

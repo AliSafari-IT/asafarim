@@ -397,7 +397,7 @@ if [[ " ${DEPLOY_MODE_ARRAY[*]} " =~ " 1 " ]] || [[ " ${DEPLOY_MODE_ARRAY[*]} " 
 
   # Build the frontend
   log "Building frontend..."
-  yarn build:npx || handle_error "Frontend build failed!" "exit"
+  pnpm build || handle_error "Frontend build failed!" "exit"
 
   # Ensure Deployment Directory Exists
   log "Ensuring deployment directory exists..."
@@ -451,7 +451,7 @@ if [[ " ${DEPLOY_MODE_ARRAY[*]} " =~ " 2 " ]] || [[ " ${DEPLOY_MODE_ARRAY[*]} " 
 
   # Build the backend
   log "Building backend..."
-  yarn api:build || handle_error "Build for API in Release mode failed!" "exit"
+  pnpm api:build || handle_error "Build for API in Release mode failed!" "exit"
 
   # Navigate to backend project
   cd "$BACKEND_DIR" || handle_error "Backend directory not found!" "exit"

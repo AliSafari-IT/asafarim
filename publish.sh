@@ -521,7 +521,7 @@ if [[ " ${DEPLOY_MODE_ARRAY[*]} " =~ " 4 " ]]; then
 
   # Build the blog
   log "Building blog..."
-  yarn build || handle_error "Blog build failed!" "exit"
+  pnpm build || handle_error "Blog build failed!" "exit"
 
   # Ensure Deployment Directory Exists
   log "Ensuring deployment directory exists..."
@@ -572,7 +572,7 @@ if [[ " ${DEPLOY_MODE_ARRAY[*]} " =~ " 5 " ]]; then
 
   # Build the bibliography app
   log "Building bibliography app..."
-  yarn build || handle_error "Bibliography build failed!" "exit"
+  pnpm build || handle_error "Bibliography build failed!" "exit"
 
   # Ensure Deployment Directory Exists
   log "Ensuring deployment directory exists..."
@@ -623,7 +623,7 @@ if [[ " ${DEPLOY_MODE_ARRAY[*]} " =~ " 6 " ]]; then
 
   # Build the PBK app
   log "Building PBK app..."
-  yarn build || handle_error "PBK build failed!" "exit"
+  pnpm build || handle_error "PBK build failed!" "exit"
 
   # Ensure Deployment Directory Exists
   log "Ensuring deployment directory exists..."

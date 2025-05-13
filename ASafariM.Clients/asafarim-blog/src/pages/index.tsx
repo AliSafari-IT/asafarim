@@ -9,7 +9,7 @@ import styles from './index.module.css';
 
 export function HomepageHeader() {
   const {siteConfig} = useDocusaurusContext();
-  return (
+  return ( 
     <header className={clsx('hero', styles.heroBanner)}>
       <div className="container">
         <div className={styles.heroContent}>

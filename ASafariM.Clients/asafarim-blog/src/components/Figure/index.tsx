@@ -1,5 +1,5 @@
 import React from "react";
-import classnames from "classnames";
+import classnames from "clsx";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
 
@@ -16,7 +16,7 @@ function Figure({ src, caption, className }: FigureProps) {
       <Zoom>
         <img src={src} alt={caption} />
       </Zoom>
-      <figcaption className="figure-caption">{caption}</figcaption>
+      <figcaption className="text-center text-gray-600">{caption}</figcaption>
     </figure>
   );
 }

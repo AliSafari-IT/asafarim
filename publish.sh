@@ -18,6 +18,15 @@ PBK_DEPLOY_DIR="$BASE_DIR/asafarim-pbk/public_html"
 PBK_BACKUP_DIR="$REPO_DIR/backups/pbks"
 BACKEND_DEPLOY_DIR="$BASE_DIR/asafarim-api"
 BACKEND_BACKUP_DIR="$REPO_DIR/backups/backends"
+
+CLI_DIR="$REPO_DIR/ASafariM.Clients/asafarim-cli"
+CLI_DEPLOY_DIR="$BASE_DIR/asafarim-cli"
+CLI_BACKUP_DIR="$REPO_DIR/backups/cli"
+CLI_BACKUP_FILE="asafarim-cli_backup_${TIMESTAMP}.tar.gz"
+CLI_BACKUP_PATH="$CLI_BACKUP_DIR/$CLI_BACKUP_FILE"
+CLI_SERVICE_NAME="asafarim-cli"
+CLI_SERVICE_FILE="/etc/systemd/system/$CLI_SERVICE_NAME.service"
+
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 FRONTEND_BACKUP_FILE="asafarim-frontend_backup_${TIMESTAMP}.tar.gz"
 BLOG_BACKUP_FILE="asafarim-blog_backup_${TIMESTAMP}.tar.gz"
@@ -95,6 +104,7 @@ echo "3: Both (Frontend & Backend)"
 echo "4: Blog"
 echo "5: Bibliography"
 echo "6: Portfolio Builder Kit (PBK)"
+echo "7: CLI"
 echo "0: Exit"
 echo ""
 echo "You can select multiple options using commas (e.g., '1,4,5' to deploy Frontend, Blog, and Bibliography)"
@@ -293,6 +303,29 @@ ensure_port_5000_free() {
   fi
 
   log "Port 5000 is available"
+}
+
+create_cli_service_file() {
+  log "Creating CLI systemd service file..."
+  cat >"$CLI_SERVICE_FILE" <<EOF
+[Unit]
+Description=ASafariM CLI Service
+After=network.target
+
+[Service]
+WorkingDirectory=/var/www/asafarim-cli
+ExecStart=/usr/bin/node server.js
+User=root
+Group=root
+Restart=always
+RestartSec=5
+Environment=NODE_ENV=production
+Environment=PORT=3001
+
+[Install]
+WantedBy=multi-user.target
+EOF
+  log "Created CLI systemd service file at $CLI_SERVICE_FILE"
 }
 
 # Create backup function
@@ -645,6 +678,81 @@ if [[ " ${DEPLOY_MODE_ARRAY[*]} " =~ " 6 " ]]; then
     handle_error "Build directory 'dist' not found" "exit"
   fi
 
+  # *********************************************************************
+  # CLI Deployment
+  # Check if CLI deployment (mode 7) is selected
+  if [[ " ${DEPLOY_MODE_ARRAY[*]} " =~ " 7 " ]]; then
+    log "Starting CLI Deployment..."
+
+    # Clean old backups
+    clean_old_backups "$CLI_BACKUP_DIR"
+
+    # Create a backup of the current deployment
+    create_backup "$CLI_DEPLOY_DIR" "$CLI_BACKUP_PATH" "cli"
+
+    # Navigate to CLI project
+    cd "$CLI_DIR" || handle_error "CLI directory not found!" "exit"
+
+    # Build the CLI app
+    log "Building CLI app..."
+    pnpm build:prod || handle_error "CLI build failed!" "exit"
+
+    # Stop the service before deployment
+    log "Stopping CLI service..."
+    sudo systemctl stop $CLI_SERVICE_NAME || true
+    sleep 2
+
+    # Ensure Deployment Directory Exists
+    log "Ensuring deployment directory exists..."
+    sudo mkdir -p "$CLI_DEPLOY_DIR" || true
+
+    # Clear old files
+    log "Cleaning old deployment files..."
+    sudo rm -rf "$CLI_DEPLOY_DIR"/* || true
+
+    # Copy application files
+    log "Deploying CLI files..."
+    sudo cp -r ./* "$CLI_DEPLOY_DIR"/ || {
+      log "Error: Moving files failed, rolling back..."
+      sudo tar -xzf "$CLI_BACKUP_PATH" -C "$CLI_DEPLOY_DIR"
+      handle_error "CLI deployment failed" "exit"
+    }
+
+    # Set correct permissions
+    log "Setting correct file permissions..."
+    sudo chown -R root:root "$CLI_DEPLOY_DIR"
+    sudo chmod -R 755 "$CLI_DEPLOY_DIR"
+
+    # Update systemd service
+    log "Updating systemd service..."
+    create_cli_service_file
+
+    # Reload systemd
+    log "Reloading systemd daemon..."
+    sudo systemctl daemon-reload || true
+
+    # Enable and start service
+    log "Starting CLI service..."
+    sudo systemctl enable "$CLI_SERVICE_NAME"
+    sudo systemctl start "$CLI_SERVICE_NAME" || handle_error "Failed to start CLI service!" "exit"
+
+    # Check if service is running
+    if sudo systemctl is-active "$CLI_SERVICE_NAME" >/dev/null 2>&1; then
+      log "CLI deployment completed successfully!"
+      log "=== DEPLOYMENT SUMMARY ==="
+      log "CLI deployed to: $CLI_DEPLOY_DIR"
+      log "Backup stored at: $CLI_BACKUP_PATH"
+      log "Service name: $CLI_SERVICE_NAME"
+      log "Log file: $DEPLOY_LOG"
+      log "=== END DEPLOYMENT SUMMARY ==="
+    else
+      log "CLI service failed to start, rolling back..."
+      sudo tar -xzf "$CLI_BACKUP_PATH" -C "$CLI_DEPLOY_DIR"
+      handle_error "CLI deployment failed" "exit"
+    fi
+  fi
+  # *********************************************************************
+
   # Set correct permissions
   log "Setting correct file permissions..."
   sudo chown -R www-data:www-data "$PBK_DEPLOY_DIR"
@@ -660,7 +768,7 @@ if [[ " ${DEPLOY_MODE_ARRAY[*]} " =~ " 6 " ]]; then
   log "Backup stored at: $PBK_BACKUP_PATH"
   log "Log file: $DEPLOY_LOG"
   log "=== END DEPLOYMENT SUMMARY ==="
-  
+
 fi
 
 # **Deployment Complete**

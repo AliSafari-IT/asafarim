@@ -4,4 +4,4 @@ packages:
   - ASafariM.Clients/asafarim-blog
   - ASafariM.Clients/asafarim-bibliography
   - ASafariM.Clients/asafarim-pbk
-  - ASafariM.Clients/node-terminal
+  - ASafariM.Clients/asafarim-cli

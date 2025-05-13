@@ -8,6 +8,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "publishToASafariM": "bash ./publish.sh",
+    "asm":"bash ./publish.sh",
     "nt:install": "pnpm --filter asafarim-terminal install",
     "nt:rebuild": "pnpm --filter asafarim-terminal rebuild node-pty --loglevel verbose",
     "nt:server": "cd /var/www/asafarim/ASafariM.Clients/node-terminal && node server.js",

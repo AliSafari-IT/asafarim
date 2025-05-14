@@ -1,96 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ASafariM - Node.js Terminal</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.1.0/css/xterm.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/xterm@5.1.0/css/xterm.css"
+    />
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            background-color: #1e1e1e;
-            color: #f0f0f0;
-            font-family: 'Courier New', monospace;
-        }
-        #header {
-            background-color: #2d2d2d;
-            padding: 10px;
-            text-align: center;
-            border-bottom: 1px solid #444;
-        }
-        #terminal-container {
-            flex: 1;
-            padding: 10px;
-            background-color: #1e1e1e;
-        }
-        #terminal {
-            width: 100%;
-            height: 100%;
-        }
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background-color: #1e1e1e;
+        color: #f0f0f0;
+        font-family: "Courier New", monospace;
+      }
+      #header {
+        background-color: #2d2d2d;
+        padding: 10px;
+        text-align: center;
+        border-bottom: 1px solid #444;
+      }
+      #terminal-container {
+        flex: 1;
+        padding: 10px;
+        background-color: #1e1e1e;
+        display: none;
+      }
+      #unauthorized-container {
+        flex: 1;
+        padding: 20px;
+        background-color: #1e1e1e;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      #terminal {
+        width: 100%;
+        height: 100%;
+      }
+      .warning-box {
+        background-color: #2d2d2d;
+        border: 1px solid #ff6b6b;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        max-width: 600px;
+      }
+      .button-group {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+      }
+      .action-button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.3s;
+      }
+      .primary-button {
+        background-color: #4a9eff;
+        color: white;
+      }
+      .secondary-button {
+        background-color: #6c757d;
+        color: white;
+      }
+      .primary-button:hover {
+        background-color: #357abd;
+      }
+      .secondary-button:hover {
+        background-color: #5a6268;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div id="header">
-        <h2 style="color: skyblue;">ASafariM - Node.js Terminal</h2>
-        <p style="color: rgb(198, 232, 245); font-size: 14px;">A fully functional terminal with proper prompt support</p>
+      <h2 style="color: skyblue">ASafariM - Node.js Terminal</h2>
+      <p style="color: rgb(198, 232, 245); font-size: 14px">
+        A fully functional terminal with proper prompt support
+      </p>
+    </div>
+    <div id="unauthorized-container">
+      <div class="warning-box">
+        <h3 style="color: #ff6b6b; margin-top: 0">⚠️ Access Restricted</h3>
+        <p>
+          This terminal interface is only accessible to administrators with
+          SuperAdmin privileges.
+        </p>
+        <p>
+          Please ensure you are logged in with the appropriate permissions to
+          access this feature.
+        </p>
+        <div class="button-group">
+          <button onclick="window.location.href='https://asafarim.com';" class="action-button primary-button">Return to Homepage</button>
+          <button onclick="checkAuth();" class="action-button primary-button">
+            Try Again
+          </button>
+          <button
+            onclick="window.location.href='https://asafarim.com/contact';"
+            class="action-button secondary-button"
+          >
+            Contact Support
+          </button>
+        </div>
+      </div>
     </div>
     <div id="terminal-container">
-        <div id="terminal"></div>
+      <div id="terminal"></div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/xterm@5.1.0/lib/xterm.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.7.0/lib/xterm-addon-fit.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        // Initialize terminal
-        const term = new Terminal({
-            cursorBlink: true,
-            theme: {
-                background: '#1e1e1e',
-                foreground: '#f0f0f0'
-            },
-            fontFamily: '"Courier New", monospace',
-            fontSize: 14
-        });
-        
-        // Load the fit addon to make the terminal fit its container
-        const fitAddon = new FitAddon.FitAddon();
-        term.loadAddon(fitAddon);
-        
-        // Open the terminal in the container
-        term.open(document.getElementById('terminal'));
-        fitAddon.fit();
-        
-        // Connect to the server
-        const socket = io();
-        
-        // Handle terminal output
-        socket.on('terminal-output', (data) => {
-            term.write(data);
-        });
-        
-        // Handle terminal input
-        term.onData((data) => {
-            socket.emit('terminal-input', data);
-        });
-        
-        // Handle terminal resize
-        window.addEventListener('resize', () => {
-            fitAddon.fit();
-            const dimensions = { cols: term.cols, rows: term.rows };
-            socket.emit('terminal-resize', dimensions);
-        });
-        
-        // Initial resize
-        setTimeout(() => {
-            fitAddon.fit();
-            const dimensions = { cols: term.cols, rows: term.rows };
-            socket.emit('terminal-resize', dimensions);
-        }, 100);
+        async function checkAuth() {
+            try {
+                // Check localStorage first
+                const authData = localStorage.getItem('auth');
+                if (!authData) {
+                    throw new Error('Not authenticated');
+                }
+
+                const auth = JSON.parse(authData);
+                if (!auth.authenticated || !auth.token || !auth.authenticatedUser) {
+                    throw new Error('Invalid authentication data');
+                }
+
+                // Verify user roles from API
+                const response = await fetch('https://asafarim.com/api/roles', {
+                    headers: {
+                        'Authorization': `Bearer ${auth.token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to verify roles');
+                }
+
+                const rolesData = await response.json();
+                console.info("roleData", rolesData);
+                // Check if user has required permissions
+                const user = auth.authenticatedUser;
+                if (user.isAdmin && user.isSuperAdmin && !user.isBlocked && !user.isDeleted && user.isActive) {
+                    document.getElementById('unauthorized-container').style.display = 'none';
+                    document.getElementById('terminal-container').style.display = 'flex';
+                    initializeTerminal();
+                } else {
+                    throw new Error('Insufficient permissions');
+                }
+            } catch (error) {
+                console.error('Auth check failed:', error);
+                document.getElementById('unauthorized-container').style.display = 'flex';
+                document.getElementById('terminal-container').style.display = 'none';
+            }
+        }
+
+      // Check authentication when page loads
+      checkAuth();
+
+      function initializeTerminal() {
+          const term = new Terminal({
+          cursorBlink: true,
+          theme: {
+              background: '#1e1e1e',
+              foreground: '#f0f0f0'
+          },
+          fontFamily: '"Courier New", monospace',
+          fontSize: 14
+      });
+
+      // Load the fit addon to make the terminal fit its container
+      const fitAddon = new FitAddon.FitAddon();
+      term.loadAddon(fitAddon);
+
+      // Open the terminal in the container
+      term.open(document.getElementById('terminal'));
+      fitAddon.fit();
+
+      // Connect to the server with auth token
+      const authData = JSON.parse(localStorage.getItem('auth'));
+      const socket = io({
+        auth: {
+          token: authData.token
+        }
+      });
+
+      // Handle terminal output
+      socket.on('terminal-output', (data) => {
+          term.write(data);
+      });
+
+      // Handle terminal input
+      term.onData((data) => {
+          socket.emit('terminal-input', data);
+      });
+
+      // Handle terminal resize
+      window.addEventListener('resize', () => {
+          fitAddon.fit();
+          const dimensions = { cols: term.cols, rows: term.rows };
+          socket.emit('terminal-resize', dimensions);
+      });
+
+      // Initial resize
+      setTimeout(() => {
+          fitAddon.fit();
+          const dimensions = { cols: term.cols, rows: term.rows };
+          socket.emit('terminal-resize', dimensions);
+      }, 100);
+    }
     </script>
-</body>
+  </body>
 </html>

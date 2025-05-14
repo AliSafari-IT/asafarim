@@ -5,17 +5,83 @@ const socketIO = require('socket.io');
 const pty = require('node-pty');
 const path = require('path');
 const os = require('os');
+const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
 
+// Middleware
+app.use(cookieParser());
+app.use(express.json());
+
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Authentication check endpoint
+app.get('/api/auth/check', (req, res) => {
+  try {
+    const token = req.cookies.token;
+    
+    if (!token) {
+      return res.json({
+        isAuthenticated: false,
+        isAdmin: false,
+        userRoles: []
+      });
+    }
+
+    // Verify JWT token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    
+    return res.json({
+      isAuthenticated: true,
+      isAdmin: decoded.isAdmin || false,
+      userRoles: decoded.roles || []
+    });
+  } catch (error) {
+    console.error('Auth check error:', error);
+    return res.json({
+      isAuthenticated: false,
+      isAdmin: false,
+      userRoles: []
+    });
+  }
+});
 
 // Route for the home page
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Socket authentication middleware
+io.use(async (socket, next) => {
+  try {
+    const token = socket.handshake.auth.token;
+    if (!token) {
+      return next(new Error('Authentication required'));
+    }
+
+    // Verify token with asafarim.com API
+    const response = await fetch('https://asafarim.com/api/roles', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      return next(new Error('Invalid token'));
+    }
+
+    const rolesData = await response.json();
+    socket.user = { token, roles: rolesData };
+    next();
+  } catch (error) {
+    console.error('Socket auth error:', error);
+    next(new Error('Authentication failed'));
+  }
 });
 
 // Socket.io connection

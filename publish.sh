@@ -44,7 +44,8 @@ SERVICE_FILE="/etc/systemd/system/$SERVICE_NAME.service"
 MAX_RETRIES=5
 HEALTH_CHECK_URL="http://localhost:5000/api/health"
 LOG_DIR="/var/www/asafarim/Logs"
-
+Environment=NODE_ENV=production
+Environment=PORT=3001
 # Ensure log directory exists
 mkdir -p "$LOG_DIR"
 DEPLOY_LOG="$LOG_DIR/deploy_$(date +%Y%m%d_%H%M%S).log"
@@ -97,22 +98,20 @@ handle_error() {
 # Deploy Mode (multiple options can be selected with comma separation)
 log "******* Deploying ASafariM Application *******"
 echo ""
-echo " ******* Deploying ASafariM Application *******"
-echo "1: Frontend"
-echo "2: Backend"
-echo "3: Both (Frontend & Backend)"
-echo "4: Blog"
-echo "5: Bibliography"
-echo "6: Portfolio Builder Kit (PBK)"
-echo "7: CLI"
-echo "0: Exit"
+echo "Select deployment mode (comma-separated for multiple):"
+echo "1. Frontend Only"
+echo "2. Backend Only"
+echo "3. Both Frontend and Backend"
+echo "4. Blog"
+echo "5. Bibliography"
+echo "6. Portfolio Builder Kit (PBK)"
+echo "7. CLI App"
+echo "0. Exit"
 echo ""
 echo "You can select multiple options using commas (e.g., '1,4,5' to deploy Frontend, Blog, and Bibliography)"
-read -p "Enter deploy mode(s): " DEPLOY_MODES
+read -p "Enter deploy mode(s) (1-7, 0 to exit): " DEPLOY_MODES
 
-# Database Migration prompt
-echo " ******* Database Migration update *******"
-read -p "Apply database migration? (y/n): " DB_MODE
+# Exit if user selected 0
 
 # Check if user wants to exit
 if [[ "$DEPLOY_MODES" == "0" ]]; then
@@ -255,30 +254,64 @@ rollback() {
 
 # Function to create systemd service file
 create_service_file() {
-  log "Creating systemd service file..."
-  cat >"$SERVICE_FILE" <<EOF
+  local service_file=$1
+  local service_name=$2
+  local working_dir=$3
+  local environment=$4
+  local port=$5
+  local is_cli=${6:-false}
+
+  log "Creating systemd service file: $service_file"
+  
+  if [ "$is_cli" = true ]; then
+    cat > "$service_file" << EOL
 [Unit]
-Description=ASafariM .NET API
-After=network.target mysql.service
+Description=ASafariM CLI Service
+After=network.target
 
 [Service]
-WorkingDirectory=/var/www/asafarim-api
-ExecStart=/usr/bin/dotnet /var/www/asafarim-api/ASafariM.Api.dll
-User=root
-Group=root
+WorkingDirectory=$working_dir
+ExecStart=/usr/bin/node server.js
+User=www-data
+Group=www-data
 Restart=always
 RestartSec=5
-Environment=ASPNETCORE_ENVIRONMENT=Production
-Environment=ASAFARIM_ENV=production
-Environment=ASPNETCORE_URLS=http://0.0.0.0:5000
-NoNewPrivileges=true
-ProtectSystem=full
-ProtectHome=true
+Environment=NODE_ENV=$environment
+Environment=PORT=$port
+Environment=JWT_SECRET=${JWT_SECRET}
+Environment=JWT_EXPIRATION=24h
 
 [Install]
 WantedBy=multi-user.target
-EOF
-  log "Created systemd service file at $SERVICE_FILE"
+EOL
+  else
+    cat > "$service_file" << EOL
+[Unit]
+Description=ASafariM API Service
+After=network.target
+
+[Service]
+WorkingDirectory=$working_dir
+ExecStart=/usr/bin/node server.js
+User=www-data
+Group=www-data
+Restart=always
+RestartSec=5
+Environment=NODE_ENV=$environment
+Environment=PORT=$port
+
+[Install]
+WantedBy=multi-user.target
+EOL
+  fi
+
+  if [ $? -ne 0 ]; then
+    handle_error "Failed to create service file" "exit"
+  fi
+
+  # Set proper permissions
+  sudo chown root:root "$service_file"
+  sudo chmod 644 "$service_file"
 }
 
 # Ensure port 5000 is free
@@ -303,29 +336,6 @@ ensure_port_5000_free() {
   fi
 
   log "Port 5000 is available"
-}
-
-create_cli_service_file() {
-  log "Creating CLI systemd service file..."
-  cat >"$CLI_SERVICE_FILE" <<EOF
-[Unit]
-Description=ASafariM CLI Service
-After=network.target
-
-[Service]
-WorkingDirectory=/var/www/asafarim-cli
-ExecStart=/usr/bin/node server.js
-User=root
-Group=root
-Restart=always
-RestartSec=5
-Environment=NODE_ENV=production
-Environment=PORT=3001
-
-[Install]
-WantedBy=multi-user.target
-EOF
-  log "Created CLI systemd service file at $CLI_SERVICE_FILE"
 }
 
 # Create backup function
@@ -386,6 +396,132 @@ clean_old_backups() {
 
 # Step 1: Check for updates in asafarim repository
 update_repo "$REPO_DIR"
+
+# Deploy PBK if mode 6 is selected
+if [[ " ${DEPLOY_MODE_ARRAY[*]} " =~ " 6 " ]]; then
+  log "Starting Portfolio Builder Kit (PBK) Deployment..."
+
+  # Clean old backups
+  clean_old_backups "$PBK_BACKUP_DIR"
+
+  # Create backup of existing deployment
+  if [ -d "$PBK_DEPLOY_DIR" ]; then
+    create_backup "$PBK_DEPLOY_DIR" "$PBK_BACKUP_PATH" "PBK"
+  fi
+
+  # Build PBK app
+  log "Building PBK app..."
+  cd "$PBK_DIR" || handle_error "Failed to change to PBK directory" "exit"
+  pnpm build
+
+  # Check if build was successful
+  if [ -d "$PBK_DIR/dist" ]; then
+    # Ensure deployment directory exists
+    log "Ensuring deployment directory exists..."
+    sudo mkdir -p "$PBK_DEPLOY_DIR"
+
+    # Clean old deployment files
+    log "Cleaning old deployment files..."
+    sudo rm -rf "$PBK_DEPLOY_DIR"/*
+
+    # Deploy new build files
+    log "Deploying new build files..."
+    sudo cp -r "$PBK_DIR/dist"/* "$PBK_DEPLOY_DIR"/
+
+    # Set correct permissions
+    log "Setting correct file permissions..."
+    sudo chown -R www-data:www-data "$PBK_DEPLOY_DIR"
+    sudo chmod -R 755 "$PBK_DEPLOY_DIR"
+
+    # Restart Nginx
+    log "Restarting Nginx..."
+    sudo systemctl restart nginx || handle_error "Failed to restart Nginx!" "exit"
+
+    log "PBK deployment completed successfully!"
+    log "=== DEPLOYMENT SUMMARY ==="
+    log "PBK deployed to: $PBK_DEPLOY_DIR"
+    log "Backup stored at: $PBK_BACKUP_PATH"
+    log "Log file: $DEPLOY_LOG"
+    log "=== END DEPLOYMENT SUMMARY ==="
+  else
+    handle_error "Build directory 'dist' not found" "exit"
+  fi
+fi
+
+# Deploy CLI app if mode 7 is selected
+if [[ " ${DEPLOY_MODE_ARRAY[*]} " =~ " 7 " ]]; then
+  log "Starting CLI App Deployment..."
+
+  # Clean old backups
+  clean_old_backups "$CLI_BACKUP_DIR"
+
+  # Create backup of existing CLI deployment
+  if [ -d "$CLI_DEPLOY_DIR" ]; then
+    create_backup "$CLI_DEPLOY_DIR" "$CLI_BACKUP_PATH" "CLI"
+  fi
+
+  # Ensure CLI deploy directory exists
+  mkdir -p "$CLI_DEPLOY_DIR"
+
+  # Copy CLI files
+  log "Copying CLI files to deploy directory"
+  rsync -av --delete "$CLI_DIR/" "$CLI_DEPLOY_DIR/" --exclude 'node_modules' --exclude '.git'
+
+  # Install production dependencies
+  log "Installing CLI production dependencies"
+  cd "$CLI_DEPLOY_DIR" || handle_error "Failed to change to CLI deploy directory" "exit"
+  pnpm install --production
+
+  # Create or update systemd service file
+  create_service_file "$CLI_SERVICE_FILE" "$CLI_SERVICE_NAME" "$CLI_DEPLOY_DIR" "production" "3001" true
+
+  # Reload systemd and restart service
+  log "Reloading systemd and restarting CLI service"
+  systemctl daemon-reload
+  systemctl restart "$CLI_SERVICE_NAME"
+  systemctl enable "$CLI_SERVICE_NAME"
+
+  # Wait for service to start
+  sleep 5
+
+  # Check if service is running
+  if ! systemctl is-active --quiet "$CLI_SERVICE_NAME"; then
+    handle_error "CLI service failed to start" "continue"
+  else
+    log "CLI service started successfully"
+  fi
+
+  # Health check with retry logic
+  log "Running CLI health check..."
+  MAX_RETRIES=5
+  RETRY_DELAY=10
+  for i in $(seq 1 $MAX_RETRIES); do
+    RESPONSE=$(curl -s http://localhost:3001/health)
+    if echo "$RESPONSE" | grep -q '"status":"ok"'; then
+      log "CLI authentication check passed"
+      break
+    elif [ $i -eq $MAX_RETRIES ]; then
+      handle_error "CLI authentication check failed after $MAX_RETRIES attempts" "continue"
+    else
+      log "Attempt $i failed, retrying in $RETRY_DELAY seconds..."
+      sleep $RETRY_DELAY
+    fi
+  done
+
+  log "CLI deployment completed successfully!"
+  log "=== DEPLOYMENT SUMMARY ==="
+  log "CLI deployed to: $CLI_DEPLOY_DIR"
+  log "Backup stored at: $CLI_BACKUP_PATH"
+  log "Service name: $CLI_SERVICE_NAME"
+  log "Log file: $DEPLOY_LOG"
+  log "=== END DEPLOYMENT SUMMARY ==="
+fi
+
+# **Deployment Complete**
+log "Deployment completed successfully!"
+echo
+echo "  Deployment completed successfully!  "
+exit 0
 
 # Step 2: Apply database migrations if requested
 if [ "$DB_MODE" = "y" ]; then
@@ -678,81 +814,6 @@ if [[ " ${DEPLOY_MODE_ARRAY[*]} " =~ " 6 " ]]; then
     handle_error "Build directory 'dist' not found" "exit"
   fi
 
-  # *********************************************************************
-  # CLI Deployment
-  # Check if CLI deployment (mode 7) is selected
-  if [[ " ${DEPLOY_MODE_ARRAY[*]} " =~ " 7 " ]]; then
-    log "Starting CLI Deployment..."
-
-    # Clean old backups
-    clean_old_backups "$CLI_BACKUP_DIR"
-
-    # Create a backup of the current deployment
-    create_backup "$CLI_DEPLOY_DIR" "$CLI_BACKUP_PATH" "cli"
-
-    # Navigate to CLI project
-    cd "$CLI_DIR" || handle_error "CLI directory not found!" "exit"
-
-    # Build the CLI app
-    log "Building CLI app..."
-    pnpm build:prod || handle_error "CLI build failed!" "exit"
-
-    # Stop the service before deployment
-    log "Stopping CLI service..."
-    sudo systemctl stop $CLI_SERVICE_NAME || true
-    sleep 2
-
-    # Ensure Deployment Directory Exists
-    log "Ensuring deployment directory exists..."
-    sudo mkdir -p "$CLI_DEPLOY_DIR" || true
-
-    # Clear old files
-    log "Cleaning old deployment files..."
-    sudo rm -rf "$CLI_DEPLOY_DIR"/* || true
-
-    # Copy application files
-    log "Deploying CLI files..."
-    sudo cp -r ./* "$CLI_DEPLOY_DIR"/ || {
-      log "Error: Moving files failed, rolling back..."
-      sudo tar -xzf "$CLI_BACKUP_PATH" -C "$CLI_DEPLOY_DIR"
-      handle_error "CLI deployment failed" "exit"
-    }
-
-    # Set correct permissions
-    log "Setting correct file permissions..."
-    sudo chown -R root:root "$CLI_DEPLOY_DIR"
-    sudo chmod -R 755 "$CLI_DEPLOY_DIR"
-
-    # Update systemd service
-    log "Updating systemd service..."
-    create_cli_service_file
-
-    # Reload systemd
-    log "Reloading systemd daemon..."
-    sudo systemctl daemon-reload || true
-
-    # Enable and start service
-    log "Starting CLI service..."
-    sudo systemctl enable "$CLI_SERVICE_NAME"
-    sudo systemctl start "$CLI_SERVICE_NAME" || handle_error "Failed to start CLI service!" "exit"
-
-    # Check if service is running
-    if sudo systemctl is-active "$CLI_SERVICE_NAME" >/dev/null 2>&1; then
-      log "CLI deployment completed successfully!"
-      log "=== DEPLOYMENT SUMMARY ==="
-      log "CLI deployed to: $CLI_DEPLOY_DIR"
-      log "Backup stored at: $CLI_BACKUP_PATH"
-      log "Service name: $CLI_SERVICE_NAME"
-      log "Log file: $DEPLOY_LOG"
-      log "=== END DEPLOYMENT SUMMARY ==="
-    else
-      log "CLI service failed to start, rolling back..."
-      sudo tar -xzf "$CLI_BACKUP_PATH" -C "$CLI_DEPLOY_DIR"
-      handle_error "CLI deployment failed" "exit"
-    fi
-  fi
-  # *********************************************************************
-
   # Set correct permissions
   log "Setting correct file permissions..."
   sudo chown -R www-data:www-data "$PBK_DEPLOY_DIR"
@@ -770,6 +831,48 @@ if [[ " ${DEPLOY_MODE_ARRAY[*]} " =~ " 6 " ]]; then
   log "=== END DEPLOYMENT SUMMARY ==="
 
 fi
+
+# *********************************************************************
+# CLI Deployment
+# Check if CLI deployment (mode 7) is selected
+if [[ " ${DEPLOY_MODE_ARRAY[*]} " =~ " 7 " ]]; then
+  log "Starting CLI Deployment..."
+
+  # Clean old backups
+  clean_old_backups "$CLI_BACKUP_DIR"
+
+  # Create a backup of the current deployment
+  create_backup "$CLI_DEPLOY_DIR" "$CLI_BACKUP_PATH" "cli"
+
+  # Navigate to CLI project
+  cd "$CLI_DIR" || handle_error "CLI directory not found!" "exit"
+
+  # Build the CLI app
+  log "Setting up CLI deployment..."
+  
+  # Create CLI deployment directory if it doesn't exist
+  if [ ! -d "$CLI_DEPLOY_DIR" ]; then
+    log "Creating CLI deployment directory..."
+    sudo mkdir -p "$CLI_DEPLOY_DIR" || handle_error "Failed to create CLI deployment directory" "exit"
+  fi
+
+  # Clean old deployment files
+  log "Cleaning old deployment files..."
+  sudo rm -rf "$CLI_DEPLOY_DIR"/*
+
+  # Deploy CLI files
+  log "Deploying CLI files..."
+  sudo cp -r "$CLI_DIR"/* "$CLI_DEPLOY_DIR"/
+
+  # Set correct permissions
+  log "Setting correct permissions..."
+  sudo chown -R www-data:www-data "$CLI_DEPLOY_DIR"
+  sudo chmod -R 755 "$CLI_DEPLOY_DIR"
+
+  # Install dependencies
+  log "Installing dependencies..."
+  cd "$CLI_DEPLOY_DIR" || handle_error "Failed to change to deployment directory" "exit"
+  pnpm install --prod || handle_error "Failed to install dependencies" "exit"
 
 # **Deployment Complete**
 log "Deployment completed successfully!"

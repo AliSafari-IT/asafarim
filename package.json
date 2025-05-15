@@ -13,7 +13,8 @@
     "nt:rebuild": "pnpm --filter asafarim-terminal rebuild node-pty --loglevel verbose",
     "nt:server": "cd /var/www/asafarim/ASafariM.Clients/node-terminal && node server.js",
     "nt:clean": "pnpm --filter asafarim-terminal run clean",
-    "exT": "npx kill-port 3008 && pnpm --filter asafarim-terminal install > /var/www/asafarim/ASafariM.Clients/node-terminal/install.log 2>&1 && pnpm --filter asafarim-terminal rebuild node-pty >> /var/www/asafarim/ASafariM.Clients/node-terminal/install.log 2>&1 && touch /var/www/asafarim/ASafariM.Clients/node-terminal/node-terminal.log && node /var/www/asafarim/ASafariM.Clients/node-terminal/server.js >> /var/www/asafarim/ASafariM.Clients/node-terminal/node-terminal.log 2>&1 & sleep 3 && (xdg-open http://localhost:3008 || echo 'Open remote terminal manually: http://localhost:3008')",
+    "restart:service:cli": "sudo systemctl restart asafarim-cli",
+    "exT": "npx kill-port 3001 && pnpm --filter asafarim-terminal install > /var/www/asafarim/ASafariM.Clients/node-terminal/install.log 2>&1 && pnpm --filter asafarim-terminal rebuild node-pty >> /var/www/asafarim/ASafariM.Clients/node-terminal/install.log 2>&1 && touch /var/www/asafarim/ASafariM.Clients/node-terminal/node-terminal.log && node /var/www/asafarim/ASafariM.Clients/node-terminal/server.js >> /var/www/asafarim/ASafariM.Clients/node-terminal/node-terminal.log 2>&1 & sleep 3 && (xdg-open http://localhost:3001 || echo 'Open remote terminal manually: http://localhost:3001')",
     "clean": "pnpm store prune && dotnet clean ./ASafariM.Api/ASafariM.Api.csproj && dotnet clean ./ASafariM.Application/ASafariM.Application.csproj && dotnet clean ./ASafariM.Infrastructure/ASafariM.Infrastructure.csproj && dotnet clean ./ASafariM.Presentation/ASafariM.Presentation.csproj && dotnet clean ./ASafariM.Domain/ASafariM.Domain.csproj",
     "reinstall": "echo \" 📦 Clearing cache and installing  dependencies...\" && pnpm store prune --all && pnpm clean && pnpm install",
     "runAll": "pnpm prepare:dev && concurrently \"pnpm --filter asafarim-api start\" \"pnpm --filter asafarim-ui start\" \"pnpm --filter asafarim-blog start\" \"pnpm --filter asafarim-bibliography start\"",
@@ -99,5 +100,5 @@
       "node-pty"
     ]
   },
-  "packageManager": "pnpm@10.10.0"
+  "packageManager": "pnpm@10.11.0"
 }

@@ -1,16 +1,17 @@
 # ASafariM Node.js Terminal
 
-A web-based terminal emulator built with Node.js, Express, Socket.IO and xterm.js.
+A web-based terminal emulator built with Node.js, Express, Socket.IO and xterm.js, with secure authentication and role-based access control.
 
 ![Terminal Screenshot](screenshot.png)
 
 ## Features
 
 - Real-time terminal emulation in browser
+- Secure authentication with JWT tokens
+- Role-based access control (Admin + SuperAdmin required)
 - Custom color scheme and prompt styling
 - Responsive design that adapts to window size
 - Support for common terminal commands
-- Cross-platform (Windows/Linux/macOS)
 
 ## Installation
 
@@ -21,23 +22,31 @@ A web-based terminal emulator built with Node.js, Express, Socket.IO and xterm.j
 pnpm install
 ```
 
-3. Start the server:
+3. Configure environment variables in `.env`:
+```bash
+PORT=3001
+JWT_SECRET=your_jwt_secret
+API_URL=https://asafarim.com/api
+```
+
+4. Start the server:
 
 ```bash
 pnpm start
 ```
 
-4. Open browser to <http://localhost:3008>
+5. Open browser to <http://localhost:3001>
 
 ## Project Structure
 
 ```
-node-terminal/
+asafarim-cli/
 ├── public/            # Static files
 │   └── index.html     # Terminal web interface
 ├── server.js          # Node.js server
 ├── package.json       # Project configuration
-└── README.md          # This file
+├── .env              # Environment variables
+└── README.md         # Documentation
 ```
 
 ## Dependencies
@@ -46,46 +55,70 @@ node-terminal/
 
 - express: Web server framework
 - socket.io: Real-time communication
-- node-pty: Pseudo-terminal functionality
+- jsonwebtoken: JWT authentication
+- cookie-parser: Cookie handling
+- node-fetch: HTTP client
+- xterm-headless: Terminal emulation
 
 ### Development
 
 - dotenv: Environment variables
+- nan: Native abstractions
 
 ### Client-side
 
 - xterm.js: Terminal emulator in browser
+- socket.io-client: Real-time communication
+
+## Scripts
+
+- `pnpm start`: Start the server
+- `pnpm restart`: Reinstall dependencies and restart
+- `pnpm clean`: Remove dependencies
+- `pnpm reinstall`: Clean install of dependencies
+- `pnpm build:prod`: Production build
+- `pnpm build:dev`: Development build
 
 ## Configuration
 
 The server can be configured via environment variables:
 
-- `PORT`: Server port (default: 3008)
-- `DEFAULT_CWD`: Default working directory (default: /var/www/asafarim)
+- `PORT`: Server port (default: 3001)
+- `JWT_SECRET`: Secret for JWT token verification
+- `API_URL`: URL of the main API server
 
 ## Usage
 
-1. Open the terminal in your browser
-2. Type commands as you would in a normal terminal
-3. The terminal supports:
+1. Log in at https://asafarim.com
+2. Ensure you have Admin and SuperAdmin privileges
+3. Navigate to https://asafarim.com/cli
+4. The terminal supports:
    - Basic shell commands
    - Command history (up/down arrows)
    - Tab completion
-   - Resizing
+   - Window resizing
+
+## Security
+
+- JWT token authentication required
+- Admin and SuperAdmin roles required
+- Session validation against main API
+- Secure WebSocket connections
 
 ## Troubleshooting
 
-If the prompt doesn't appear:
+If you can't access the terminal:
 
-1. Wait a few seconds - it may take a moment to initialize
-2. Press Enter to trigger a new prompt
-3. Check browser console for errors
+1. Ensure you're logged in at asafarim.com
+2. Verify you have Admin and SuperAdmin privileges
+3. Check browser console for authentication errors
+4. Try the "Try Again" button to re-authenticate
 
-## Deployment to asafarim.com/terminal
+## Deployment
 
 ### Prerequisites
 
-- Node.js installed on server
+- Node.js 18+ installed
 - PM2 for process management
 - Nginx as reverse proxy
 - Domain configured (asafarim.com)
@@ -95,24 +128,27 @@ If the prompt doesn't appear:
 1. Build for production:
 
 ```bash
-pnpm install --production
+pnpm build:prod
 ```
 
-2. Start the application using PM2:
+2. Start with PM2:
 
 ```bash
-pm2 start server.js --name "asafarim-terminal"
+pm2 start server.js --name "asafarim-cli"
 ```
 
-3. Configure Nginx reverse proxy:
+3. Configure Nginx:
 
 ```nginx
 server {
-    listen 80;
+    listen 443 ssl;
     server_name asafarim.com;
 
-    location /terminal {
-        proxy_pass http://localhost:3008;
+    ssl_certificate /etc/letsencrypt/live/asafarim.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/asafarim.com/privkey.pem;
+
+    location /cli {
+        proxy_pass http://localhost:3001;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -122,13 +158,7 @@ server {
 }
 ```
 
-4. Set up SSL with Let's Encrypt:
-
-```bash
-sudo certbot --nginx -d asafarim.com
-```
-
-5. Enable the Nginx config:
+4. Restart Nginx:
 
 ```bash
 sudo systemctl restart nginx

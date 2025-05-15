@@ -338,42 +338,46 @@ io.on('connection', (socket) => {
         
         // Add to command buffer or execute based on input
         if (data === '\r' || data === '\n' || data === '\r\n') {
-          if (currentCommand.trim()) {
-            console.log(`Executing command: ${currentCommand}`);
-            
-            // Add to command history if not a duplicate of the last command
-            if (commandHistory.length === 0 || commandHistory[commandHistory.length - 1] !== currentCommand) {
-              commandHistory.push(currentCommand);
-            }
-            // Reset history position to the end
-            historyPosition = commandHistory.length;
-            
-            // Execute the command directly in a new process
-            const cmdProcess = spawn('/bin/bash', ['-c', currentCommand], {
-              cwd: process.env.HOME || process.cwd(),
-              stdio: 'pipe'
-            });
-            
-            // Capture command output
-            cmdProcess.stdout.on('data', (output) => {
-              socket.emit('terminal-output', '\r\n' + output.toString());
-            });
-            
-            cmdProcess.stderr.on('data', (output) => {
-              socket.emit('terminal-output', '\r\n' + output.toString());
-            });
-            
-            // Display new prompt when command completes
-            cmdProcess.on('close', () => {
-              socket.emit('terminal-output', '\r\n$ ');
-            });
-            
-            // Reset command buffer
-            currentCommand = '';
-          } else {
-            // Just a new line, add a new prompt
-            socket.emit('terminal-output', '\r\n$ ');
-          }
+  if (currentCommand.trim()) {
+    const allowedCommands = ['ls', 'echo'];
+    const trimmedCmd = currentCommand.trim();
+    const cmdName = trimmedCmd.split(/\s+/)[0];
+    // Disallow shell metacharacters for extra safety
+    const forbiddenPattern = /[;&|`$()<>]/;
+    if (!allowedCommands.includes(cmdName) || forbiddenPattern.test(trimmedCmd)) {
+      socket.emit('terminal-output', '\r\nError: Only "ls" and "echo" commands are allowed.\r\n$ ');
+      currentCommand = '';
+      return;
+    }
+    console.log(`Executing command: ${currentCommand}`);
+    // Add to command history if not a duplicate of the last command
+    if (commandHistory.length === 0 || commandHistory[commandHistory.length - 1] !== currentCommand) {
+      commandHistory.push(currentCommand);
+    }
+    // Reset history position to the end
+    historyPosition = commandHistory.length;
+    // Execute the command directly in a new process
+    const cmdProcess = spawn('/bin/bash', ['-c', currentCommand], {
+      cwd: process.env.HOME || process.cwd(),
+      stdio: 'pipe'
+    });
+    // Capture command output
+    cmdProcess.stdout.on('data', (output) => {
+      socket.emit('terminal-output', '\r\n' + output.toString());
+    });
+    cmdProcess.stderr.on('data', (output) => {
+      socket.emit('terminal-output', '\r\n' + output.toString());
+    });
+    // Display new prompt when command completes
+    cmdProcess.on('close', () => {
+      socket.emit('terminal-output', '\r\n$ ');
+    });
+    // Reset command buffer
+    currentCommand = '';
+  } else {
+    // Just a new line, add a new prompt
+    socket.emit('terminal-output', '\r\n$ ');
+  }
         } else {
           // Add character to command buffer
           currentCommand += data;

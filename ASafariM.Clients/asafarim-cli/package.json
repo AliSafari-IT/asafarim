@@ -5,6 +5,8 @@
   "main": "server.js",
   "scripts": {
     "co": "cd ../.. && pnpm co",
+    "stop": "npx kill-port 3001",
+    "deploy": "cd ../.. && echo \" 📦 Deploying CLI App...\" && echo 7 | pnpm asm",
     "start": "node server.js",
     "restart": "echo \" 📦 Re-installing dependencies and restarting a clean app \" && pnpm reinstall && pnpm start ",
     "clean": "rm -rf node_modules .pnpm pnpm-lock.yaml",
@@ -12,7 +14,7 @@
     "rebuild": "node-gyp rebuild",
     "build:prod": "pnpm install --production",
     "build:dev": "pnpm install && node-gyp rebuild",
-    "kill":"pkill -f 'node server.js'"
+    "kill": "pkill -f 'node server.js'"
   },
   "dependencies": {
     "cookie-parser": "^1.4.7",

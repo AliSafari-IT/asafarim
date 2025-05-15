@@ -477,7 +477,7 @@ if [[ " ${DEPLOY_MODE_ARRAY[*]} " =~ " 7 " ]]; then
   pnpm install --production
 
   # Create or update systemd service file
-  create_service_file "$CLI_SERVICE_FILE" "$CLI_SERVICE_NAME" "$CLI_DEPLOY_DIR" "production" "3001" true "$JWT_SECRET" true
+  create_service_file "$CLI_SERVICE_FILE" "$CLI_SERVICE_NAME" "$CLI_DEPLOY_DIR" "production" "3001" "$JWT_SECRET" true
 
   # Reload systemd and restart service
   log "Reloading systemd and restarting CLI service"

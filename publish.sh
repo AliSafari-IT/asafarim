@@ -259,7 +259,8 @@ create_service_file() {
   local working_dir=$3
   local environment=$4
   local port=$5
-  local is_cli=${6:-false}
+  local jwt_secret=$6
+  local is_cli=${7:-false}
 
   log "Creating systemd service file: $service_file"
   
@@ -278,7 +279,7 @@ Restart=always
 RestartSec=5
 Environment=NODE_ENV=$environment
 Environment=PORT=$port
-Environment=JWT_SECRET=${JWT_SECRET}
+Environment=JWT_SECRET=$jwt_secret
 Environment=JWT_EXPIRATION=24h
 
 [Install]
@@ -299,6 +300,8 @@ Restart=always
 RestartSec=5
 Environment=NODE_ENV=$environment
 Environment=PORT=$port
+Environment=JWT_SECRET=$jwt_secret
+Environment=JWT_EXPIRATION=24h
 
 [Install]
 WantedBy=multi-user.target
@@ -473,7 +476,7 @@ if [[ " ${DEPLOY_MODE_ARRAY[*]} " =~ " 7 " ]]; then
   pnpm install --production
 
   # Create or update systemd service file
-  create_service_file "$CLI_SERVICE_FILE" "$CLI_SERVICE_NAME" "$CLI_DEPLOY_DIR" "production" "3001" true
+  create_service_file "$CLI_SERVICE_FILE" "$CLI_SERVICE_NAME" "$CLI_DEPLOY_DIR" "production" "3001" true "$JWT_SECRET" true
 
   # Reload systemd and restart service
   log "Reloading systemd and restarting CLI service"

@@ -2,16 +2,32 @@
 
 A web-based terminal emulator built with Node.js, Express, Socket.IO and xterm.js, with secure authentication and role-based access control.
 
-![Terminal Screenshot](screenshot.png)
+**Logged In:**
+
+![CLI Logged In](cli_loggedin.png)
+
+**Logged Out:**
+
+![CLI Logged Out](cli_loggedout.png)
+
+These images show the terminal interface in both authenticated and unauthenticated states.
 
 ## Features
 
 - Real-time terminal emulation in browser
-- Secure authentication with JWT tokens
+- Secure authentication with JWT tokens (login/logout endpoints)
 - Role-based access control (Admin + SuperAdmin required)
 - Custom color scheme and prompt styling
-- Responsive design that adapts to window size
-- Support for common terminal commands
+- Responsive, adaptive design
+- Support for standard shell commands (bash)
+- Command history navigation (up/down arrows)
+- Tab completion (where supported by shell)
+- Window resizing (auto fit)
+- Error and session handling (with clear error messages)
+- Health check endpoint for service monitoring
+- Session validation against the main API
+- Secure WebSocket connections
+- Admin and SuperAdmin required for access
 
 ## Installation
 
@@ -76,8 +92,9 @@ asafarim-cli/
 - `pnpm restart`: Reinstall dependencies and restart
 - `pnpm clean`: Remove dependencies
 - `pnpm reinstall`: Clean install of dependencies
-- `pnpm build:prod`: Production build
-- `pnpm build:dev`: Development build
+- `pnpm build:prod`: Production build (installs production dependencies only)
+- `pnpm build:dev`: Development build (includes rebuild of native modules)
+- `pnpm kill`: Kill all running CLI server processes
 
 ## Configuration
 
@@ -89,14 +106,36 @@ The server can be configured via environment variables:
 
 ## Usage
 
-1. Log in at https://asafarim.com
-2. Ensure you have Admin and SuperAdmin privileges
-3. Navigate to https://asafarim.com/cli
-4. The terminal supports:
-   - Basic shell commands
-   - Command history (up/down arrows)
-   - Tab completion
-   - Window resizing
+### Accessing the CLI
+
+1. Log in at [asafarim.com](https://asafarim.com) with an Admin or SuperAdmin account.
+2. Visit [https://asafarim.com/cli](https://asafarim.com/cli) in your browser.
+3. If not authenticated, you'll see a login prompt (see image above). If authenticated and authorized, the terminal will appear.
+
+### Terminal Functionalities
+- **Shell Commands:** Enter any standard bash command. Output is streamed in real time.
+- **Command History:** Use Up/Down arrows to navigate previous/next commands.
+- **Tab Completion:** Use Tab to auto-complete commands or paths (if supported by the shell).
+- **Window Resizing:** Terminal automatically fits to browser window size.
+- **Prompt:** Custom prompt styling for clarity.
+- **Session Expiry/Error:** If your session expires or you lose access, you will be prompted to log in again or see an error message.
+
+### Authentication & Authorization
+- **Login:** Handled via `/api/auth/login` (forwards credentials to main API; sets JWT token as cookie).
+- **Logout:** `/api/auth/logout` clears the JWT token and session.
+- **Health Check:** `/health` endpoint returns service status (no authentication required).
+- **Role Check:** Only Admin or SuperAdmin can access the terminal. Session is validated against the main API.
+- **Session Validation:** Uses JWT and checks user roles. If invalid, access is denied and you are logged out.
+
+### Error Handling
+- Clear error messages for authentication, authorization, and command execution errors.
+- Retry and re-authenticate options provided in the UI.
+
+### Example Workflow
+1. Log in at [asafarim.com](https://asafarim.com/login).
+2. Navigate to the CLI page.
+3. Run commands, navigate history, and use tab completion as needed.
+4. If your session expires, use the "Try Again" button to re-authenticate.
 
 ## Security
 
@@ -109,17 +148,20 @@ The server can be configured via environment variables:
 
 If you can't access the terminal:
 
-1. Ensure you're logged in at asafarim.com
+1. Ensure you're logged in at [asafarim.com](https://asafarim.com)
 2. Verify you have Admin and SuperAdmin privileges
-3. Check browser console for authentication errors
-4. Try the "Try Again" button to re-authenticate
+3. Check browser console for authentication or network errors
+4. Use the "Try Again" button to re-authenticate
+5. Confirm your browser allows cookies and JavaScript
+6. If issues persist, check the server logs for errors (see `server.js` output)
+7. For deployment issues, verify that the health check endpoint (`/health`) returns status `ok`
 
 ## Deployment
 
 ### Prerequisites
 
 - Node.js 18+ installed
-- PM2 for process management
+- PM2 for process management (`pnpm add -g pm2`)
 - Nginx as reverse proxy
 - Domain configured (asafarim.com)
 
@@ -127,43 +169,29 @@ If you can't access the terminal:
 
 1. Build for production:
 
-```bash
-pnpm build:prod
-```
+   ```bash
+   pnpm build:prod
+   ```
 
 2. Start with PM2:
 
-```bash
-pm2 start server.js --name "asafarim-cli"
-```
+   ```bash
+   pm2 start server.js --name "asafarim-cli"
+   ```
 
-3. Configure Nginx:
-
-```nginx
-server {
-    listen 443 ssl;
-    server_name asafarim.com;
-
-    ssl_certificate /etc/letsencrypt/live/asafarim.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/asafarim.com/privkey.pem;
-
-    location /cli {
-        proxy_pass http://localhost:3001;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
-```
-
+3. Configure Nginx as a reverse proxy (see below for sample config).
 4. Restart Nginx:
 
-```bash
-sudo systemctl restart nginx
-```
+   ```bash
+   sudo systemctl restart nginx
+   ```
 
+5. Ensure environment variables (`.env`) are set:
+   - `PORT` (default: 3001)
+   - `JWT_SECRET` (required)
+   - `API_URL` (main API base URL)
+
+6. Health check endpoint: `GET /health` should return `{ status: 'ok', ... }`
 ## License
 
 [MIT](LICENSE)

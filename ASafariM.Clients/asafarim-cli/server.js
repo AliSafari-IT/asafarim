@@ -19,7 +19,8 @@ const io = socketIO(server, {
     credentials: true
   },
   allowEIO3: true,
-  transports: ['websocket', 'polling']
+  transports: ['websocket', 'polling'],
+  path: '/socket.io' // Ensure this is the default path
 });
 
 // Middleware
@@ -282,44 +283,146 @@ io.on('connection', (socket) => {
   try {
     console.log('A user connected');
     console.log('Auth token:', socket.handshake.auth.token);
-
-    // Permission checks (as you already have)
-    if (!socket.request.user?.isAdmin || !socket.request.user?.isSuperAdmin) {
+    
+    // Check if user has Admin role based on JWT token
+    const userRole = socket.request.user?.role;
+    console.log('User role from JWT:', userRole);
+    
+    // Check if user has Admin or SuperAdmin role
+    if (!(userRole === 'Admin' || userRole === 'SuperAdmin')) {
       console.error('Access denied - User roles:', socket.request.user);
-      socket.emit('error', 'Access denied. SuperAdmin and Admin privileges required.');
+      socket.emit('error', 'Access denied. SuperAdmin or Admin privileges required.');
       socket.disconnect(true);
       return;
     }
 
-    if (socket.request.user.isBlocked || socket.request.user.isDeleted || !socket.request.user.isActive) {
-      console.error('Account not active - User status:', socket.request.user);
-      socket.emit('error', 'Account is not active');
-      socket.disconnect(true);
-      return;
-    }
+    // Skip account status check since JWT doesn't contain these properties
+    // The main API has already verified the account is active by issuing a valid token
 
-    // ------ FIXED SHELL SPAWN LOGIC ------
-    const defaultShell = os.platform() === 'win32' ? 'cmd.exe' : 'bash';
-    const shellProcess = spawn(defaultShell, [], {
+    // ------ DIRECT COMMAND EXECUTION APPROACH ------
+    // Start with a basic shell process
+    const shellProcess = spawn('/bin/bash', [], {
       cwd: process.env.HOME || process.cwd(),
       env: process.env,
-      shell: true,
+      shell: false,
       stdio: 'pipe'
     });
+    
+    // Track the current command being built
+    let currentCommand = '';
+    
+    // Track command history for arrow up/down navigation
+    let commandHistory = [];
+    let historyPosition = -1;
+    
+    // Send initial prompt
+    setTimeout(() => {
+      socket.emit('terminal-output', '\r\nWelcome to ASafariM CLI\r\n$ ');
+    }, 500);
 
     // Send shell output to terminal
     shellProcess.stdout.on('data', (data) => {
-      socket.emit('terminal-output', data.toString());
+      const output = data.toString();
+      socket.emit('terminal-output', output);
     });
+    
     shellProcess.stderr.on('data', (data) => {
-      socket.emit('terminal-output', data.toString());
+      const output = data.toString();
+      socket.emit('terminal-output', output);
     });
 
     // Receive user input from terminal and send to shell
     socket.on('input', (data) => {
-      shellProcess.stdin.write(data);
+      try {
+        // Don't echo input - the terminal already does this
+        
+        // Add to command buffer or execute based on input
+        if (data === '\r' || data === '\n' || data === '\r\n') {
+          if (currentCommand.trim()) {
+            console.log(`Executing command: ${currentCommand}`);
+            
+            // Add to command history if not a duplicate of the last command
+            if (commandHistory.length === 0 || commandHistory[commandHistory.length - 1] !== currentCommand) {
+              commandHistory.push(currentCommand);
+            }
+            // Reset history position to the end
+            historyPosition = commandHistory.length;
+            
+            // Execute the command directly in a new process
+            const cmdProcess = spawn('/bin/bash', ['-c', currentCommand], {
+              cwd: process.env.HOME || process.cwd(),
+              stdio: 'pipe'
+            });
+            
+            // Capture command output
+            cmdProcess.stdout.on('data', (output) => {
+              socket.emit('terminal-output', '\r\n' + output.toString());
+            });
+            
+            cmdProcess.stderr.on('data', (output) => {
+              socket.emit('terminal-output', '\r\n' + output.toString());
+            });
+            
+            // Display new prompt when command completes
+            cmdProcess.on('close', () => {
+              socket.emit('terminal-output', '\r\n$ ');
+            });
+            
+            // Reset command buffer
+            currentCommand = '';
+          } else {
+            // Just a new line, add a new prompt
+            socket.emit('terminal-output', '\r\n$ ');
+          }
+        } else {
+          // Add character to command buffer
+          currentCommand += data;
+        }
+      } catch (error) {
+        console.error('Error processing command:', error);
+        socket.emit('terminal-output', '\r\nError processing command\r\n$ ');
+        currentCommand = '';
+      }
     });
 
+    // Handle special keys like arrow up/down for command history
+    socket.on('special-key', (key) => {
+      try {
+        switch(key) {
+          case 'arrow-up':
+            // Navigate backward in history
+            if (historyPosition > 0) {
+              historyPosition--;
+              const prevCommand = commandHistory[historyPosition];
+              // Send the previous command to the client
+              socket.emit('history-command', prevCommand);
+              // Update current command
+              currentCommand = prevCommand;
+            }
+            break;
+            
+          case 'arrow-down':
+            // Navigate forward in history or clear if at the end
+            if (historyPosition < commandHistory.length - 1) {
+              historyPosition++;
+              const nextCommand = commandHistory[historyPosition];
+              // Send the next command to the client
+              socket.emit('history-command', nextCommand);
+              // Update current command
+              currentCommand = nextCommand;
+            } else if (historyPosition === commandHistory.length - 1) {
+              // At the end of history, clear the command
+              historyPosition = commandHistory.length;
+              socket.emit('history-command', '');
+              currentCommand = '';
+            }
+            break;
+        }
+      } catch (error) {
+        console.error('Error handling special key:', error);
+      }
+    });
+    
     // Handle terminal resize if implemented
     socket.on('terminal-resize', (dimensions) => {
       // No need to resize if not using a pseudo-terminal package
@@ -343,7 +446,7 @@ io.on('connection', (socket) => {
 });
 
 // Start the server
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3001;
 const scr= process.env.JWT_SECRET;
 
 server.listen(PORT, () => {

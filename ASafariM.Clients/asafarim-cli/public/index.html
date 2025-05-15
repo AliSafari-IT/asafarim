@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ASafariM/CLI</title>
+    <title>ASafariM ~ CLI</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/xterm@5.1.0/css/xterm.css"
@@ -128,9 +128,14 @@
             cursorBlink: true,
             disableStdin: false,
             allowProposedApi: false,
+            convertEol: true,
+            scrollback: 1000,
             theme: {
               background: "#1e1e1e",
               foreground: "#f0f0f0",
+              cursor: "#ffffff",
+              cursorAccent: "#000000",
+              selection: "rgba(255, 255, 255, 0.3)",
             },
             fontFamily: '"Courier New", monospace',
             fontSize: 14,
@@ -151,6 +156,7 @@
             query: {
               disableShellIntegration: "true",
             },
+            path: '/cli/socket.io',  // Add path prefix to match nginx configuration
             reconnection: true,
             reconnectionAttempts: 5,
             reconnectionDelay: 1000,
@@ -209,11 +215,41 @@
             term.write(data);
           });
 
-          // Handle terminal input
+          // Handle terminal input with better command handling
           term.onData((data) => {
             if (socket.connected) {
+              // Handle special keys
+              if (data.length === 3 && data.charCodeAt(0) === 27 && data.charCodeAt(1) === 91) {
+                // Arrow keys: ESC [ A/B/C/D
+                const key = data.charCodeAt(2);
+                
+                if (key === 65) { // Up arrow
+                  socket.emit("special-key", "arrow-up");
+                  return;
+                } else if (key === 66) { // Down arrow
+                  socket.emit("special-key", "arrow-down");
+                  return;
+                }
+                // We don't need to handle left/right arrows here as they're handled by terminal
+              }
+              
+              // Echo the input locally for immediate feedback
+              term.write(data);
+              
+              // Regular input - send to server
               socket.emit("input", data);
+              
+              // If Enter key is pressed, add a small delay before allowing more input
+              if (data === '\r' || data === '\n') {
+                console.log('Enter key pressed, sending command');
+              }
             }
+          });
+
+          // Handle history command replacement
+          socket.on("history-command", (command) => {
+            // Clear the current line
+            term.write('\r$ ' + ' '.repeat(100) + '\r$ ' + command);
           });
 
           // Handle terminal resize

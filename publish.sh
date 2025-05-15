@@ -2,6 +2,7 @@
 
 # Set Variables
 BASE_DIR="/var/www"
+JWT_SECRET="0+a0ZklJy6DVL6osEj73W6P9inMk3+Ocn8KkQoUDR78="
 REPO_DIR="$BASE_DIR/asafarim"
 FRONTEND_DIR="$REPO_DIR/ASafariM.Clients/asafarim-ui"
 BLOG_DIR="$REPO_DIR/ASafariM.Clients/asafarim-blog"

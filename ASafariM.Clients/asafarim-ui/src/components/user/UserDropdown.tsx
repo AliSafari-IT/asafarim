@@ -1,6 +1,7 @@
 import { useAuth } from '@/contexts/AuthContext';
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 
 interface IUserDropdownProps {
   themeToggler?: React.ReactNode;
@@ -73,6 +74,17 @@ const UserDropdown: React.FC<IUserDropdownProps> = ({  themeToggler, mobileView 
           >
             Logout
           </Link>
+          <hr className="my-1 border-gray-200 dark:border-gray-700" />
+          <a
+            href="https://asafarim.com/cli"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center px-4 py-2 text-sm hover:bg-[var(--info-light)] dark:hover:bg-gray-700 transition-colors duration-200"
+            title='CLI Access'
+          >
+            <span>CLI Access</span>
+            <ArrowTopRightOnSquareIcon className="ml-2 h-4 w-4" />
+          </a>
         </div>
       )}
     </div>

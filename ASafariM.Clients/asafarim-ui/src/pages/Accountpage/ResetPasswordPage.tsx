@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Wrapper from '../../layout/Wrapper/Wrapper';
+import Wrapper from '../../layout/Wrapper';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { resetPassword } from '../../api/authapi';
 import { isAxiosError } from 'axios';

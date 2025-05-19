@@ -8,7 +8,7 @@ import getSlug from "@/utils/getSlug";
 import generateCategoryColors from "@/utils/categoryColors";
 import determineTextColor from "@/utils/determineTextColor";
 import { getFirstHeading } from "@/utils/mdUtils";
-import Wrapper from "@/layout/Wrapper/Wrapper";
+import Wrapper from "@/layout/Wrapper";
 import { logger } from "@/utils/logger";
 
 interface StacksPageProps {

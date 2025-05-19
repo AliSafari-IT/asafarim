@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Wrapper from "../../layout/Wrapper/Wrapper";
+import Wrapper from "../../layout/Wrapper";
 import { Button, Toolbar, Tooltip } from "@fluentui/react-components";
 import {
   Edit20Regular,

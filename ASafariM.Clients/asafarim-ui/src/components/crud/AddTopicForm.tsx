@@ -10,7 +10,7 @@ import {
   Stack,
   Label,
 } from "@fluentui/react";
-import Wrapper from "@/layout/Wrapper/Wrapper";
+import Wrapper from "@/layout/Wrapper";
 import { makeStyles } from "@fluentui/react-components";
 import { logger } from "@/utils/logger";
 import dashboardServices from "@/api/entityServices";

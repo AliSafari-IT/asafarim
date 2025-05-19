@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { IPost } from "../../interfaces/post-types";
-import Wrapper from "../../layout/Wrapper/Wrapper";
+import Wrapper from "../../layout/Wrapper";
 import dashboardServices from "@/api/entityServices";
 import { ITag } from "@fluentui/react";
 import apiUrls from "@/api/getApiUrls";

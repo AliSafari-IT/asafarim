@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import entityServices from "@/api/entityServices";
-import Wrapper from "@/layout/Wrapper/Wrapper";
+import Wrapper from "@/layout/Wrapper";
 import Notification from "@/components/Notification/Notification";
 import { Stack } from "@fluentui/react/lib/Stack";
 import { Text } from "@fluentui/react/lib/Text";

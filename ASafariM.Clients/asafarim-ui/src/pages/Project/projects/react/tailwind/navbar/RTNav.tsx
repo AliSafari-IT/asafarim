@@ -1,5 +1,5 @@
 import DisplayMd from '../../../../../../components/MarkdownPage/DisplayMd';
-import Wrapper from '../../../../../../layout/Wrapper/Wrapper';
+import Wrapper from '../../../../../../layout/Wrapper';
 import mdFile from './dynamic-nav.md?raw';
 
 export default function RTNav(): JSX.Element {

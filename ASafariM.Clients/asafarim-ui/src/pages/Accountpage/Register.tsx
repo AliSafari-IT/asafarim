@@ -8,7 +8,7 @@ import { debounce } from "lodash";
 import { validatePassword, getPasswordValidationMessage } from "./validatePassword";
 import PasswordRequirements from "./PasswordRequirements";
 
-import Wrapper from "../../layout/Wrapper/Wrapper";
+import Wrapper from "../../layout/Wrapper";
 
 const Register: React.FC = () => {
   const [model, setModel] = useState<IRegisterModel>({

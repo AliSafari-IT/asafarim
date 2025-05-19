@@ -1,5 +1,5 @@
 import React from "react";
-import Wrapper from "../../layout/Wrapper/Wrapper";
+import Wrapper from "../../layout/Wrapper";
 import { DashboardHeaderBlock } from "./DashboardHeaderBlock";
 import { Link } from "@fluentui/react-components";
 import QuickNavigation from "../../components/Navigation/QuickNavigation";

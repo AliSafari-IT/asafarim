@@ -4,7 +4,7 @@ import { getVisibilityLabel, getStatusLabel } from "@/interfaces/ProjectEnums";
 import { IProject } from "@/interfaces/IProject";
 import { useNavigate, useParams } from "react-router-dom";
 import Loading from "@/components/Loading/Loading";
-import Wrapper from "@/layout/Wrapper/Wrapper";
+import Wrapper from "@/layout/Wrapper";
 import Notification from "@/components/Notification/Notification";
 import { Stack } from "@fluentui/react/lib/Stack";
 import { Text } from "@fluentui/react";

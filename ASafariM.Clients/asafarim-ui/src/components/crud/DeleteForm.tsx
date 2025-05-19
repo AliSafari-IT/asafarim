@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, FluentProvider, makeStyles, tokens, shorthands, mergeClasses, webDarkTheme, webLightTheme } from '@fluentui/react-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import Wrapper from '../../layout/Wrapper/Wrapper';
+import Wrapper from '../../layout/Wrapper';
 import dashboardServices from '../../api/entityServices';
 import { useTheme } from '@/contexts/ThemeContext';
 import Alert from '../Containers/Alert/Alert';

@@ -11,7 +11,7 @@ import {
     Stack,
     IconButton,
 } from '@fluentui/react';
-import Wrapper from '@/layout/Wrapper/Wrapper';
+import Wrapper from '@/layout/Wrapper';
 import Header from '@/layout/Header/Header';
 import { IPost } from '@/interfaces/post-types';
 import { Toolbar } from '@fluentui/react-components';

@@ -1,5 +1,5 @@
 import DisplayMd from "../../components/MarkdownPage/DisplayMd";
-import Wrapper from "../../layout/Wrapper/Wrapper";
+import Wrapper from "../../layout/Wrapper";
 import aboutMeMd from "./aboutme.en.md?raw";
 import aboutMeNlMd from "./aboutme.nl.md?raw";
 import AdditionalInfo from "./AdditionalInfo";

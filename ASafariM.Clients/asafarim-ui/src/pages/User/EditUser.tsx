@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getRoles, getUserById, updateUserByAdmin, assignRolesToUser, removeRolesFromUser, getRolesByUserId } from '../../api/userService';
 import { IUser } from '../../interfaces/IUser';
-import Wrapper from '../../layout/Wrapper/Wrapper';
+import Wrapper from '../../layout/Wrapper';
 import Footer from '../../layout/Footer/Footer';
 import Header from '@/layout/Header/Header';
 import { debounce } from 'lodash';

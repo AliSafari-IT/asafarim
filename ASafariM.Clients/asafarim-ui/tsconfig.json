@@ -14,7 +14,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
+    "jsx": "react",
     
     /* Linting */
     "strict": true,
@@ -24,12 +24,11 @@
     
     /* Paths and Types */
     "paths": {
-      "@/*": ["src/*"],
-      "react-router-dom": ["node_modules/react-router-dom"]
+      "@/*": ["src/*"]
     },
     "esModuleInterop": true,
-    "types": ["vite/client", "@types/react", "@types/react-dom", "vitest/globals"]
+    "types": ["react", "react-dom", "vite/client", "vitest/globals"]
   },
-  "include": ["src/**/*", "vitest.setup.ts", "vite.config.ts"],
+  "include": ["src/**/*", "vitest.setup.ts", "vite.config.ts", "src/types/**/*.d.ts"],
   "exclude": ["node_modules", "dist"]
 }

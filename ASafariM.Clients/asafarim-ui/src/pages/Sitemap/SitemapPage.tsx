@@ -5,7 +5,7 @@ import { IconButton, Dropdown, IDropdownOption } from '@fluentui/react';
 import { sitemapService } from '../../services/sitemapService';
 import  { AxiosError } from 'axios';
 import '../../styles/sitemap-page.css';
-import Wrapper from '../../layout/Wrapper/Wrapper';
+import Wrapper from '../../layout/Wrapper';
 import { ISitemapItem } from '../../services/sitemapService';
 import CreateNewModal from './CreateNewModal';
 import { handleError } from '../../utils/handleError';

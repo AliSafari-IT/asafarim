@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { FaKey, FaTrash, FaDownload, FaUser } from "react-icons/fa";
-import Wrapper from "@/layout/Wrapper/Wrapper";
+import Wrapper from "@/layout/Wrapper";
 import Header from "@/layout/Header/Header";
 import Footer from "@/layout/Footer/Footer";
 import { useAuth } from '@/contexts/AuthContext';

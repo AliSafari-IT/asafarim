@@ -4,7 +4,7 @@ import { TextField, PrimaryButton, Dropdown, IDropdownOption, makeStyles } from 
 import { useNavigate } from 'react-router-dom';
 import dashboardServices from '@/api/entityServices';
 import { IRoleEnum } from '@/interfaces';
-import Wrapper from '@/layout/Wrapper/Wrapper';
+import Wrapper from '@/layout/Wrapper';
 import { isAxiosError } from 'axios';
 import { useAuth } from '@/contexts/AuthContext';
 import {logger} from '@/utils/logger';

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { IUser } from '../../interfaces/IUser';
 import { deleteUserByAdmin, getUsers, getRolesByUserId, getRoles } from '../../api/userService';
-import Wrapper from '../../layout/Wrapper/Wrapper';
+import Wrapper from '../../layout/Wrapper';
 import Footer from '../../layout/Footer/Footer';
 import Header from '@/layout/Header/Header';
 import { EditSvgIcon } from '@/assets/SvgIcons/EditSvgIcon';

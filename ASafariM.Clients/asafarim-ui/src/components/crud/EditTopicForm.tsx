@@ -2,7 +2,7 @@ import React, { FC, useState, useEffect, FormEvent } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { TextField, Dropdown, IDropdownOption, PrimaryButton, Stack, Label } from "@fluentui/react";
-import Wrapper from "@/layout/Wrapper/Wrapper";
+import Wrapper from "@/layout/Wrapper";
 import { makeStyles } from "@fluentui/react-components";
 import { isAxiosError } from "axios";
 import { ITopic } from "@/interfaces/ITopic";

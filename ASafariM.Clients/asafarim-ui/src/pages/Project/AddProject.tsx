@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { IField } from "@/interfaces/IField";
-import Wrapper from "@/layout/Wrapper/Wrapper";
+import Wrapper from "@/layout/Wrapper";
 import entityServices from "@/api/entityServices";
 import { logger } from "@/utils/logger";
 import { jwtDecode } from "jwt-decode";

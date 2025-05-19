@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Wrapper from '@/layout/Wrapper/Wrapper';
+import Wrapper from '@/layout/Wrapper';
 import Footer from '@/layout/Footer/Footer';
 import Header from '@/layout/Header/Header';
 import { IField } from '@/interfaces';

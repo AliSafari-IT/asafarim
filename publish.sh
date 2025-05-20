@@ -20,6 +20,8 @@ PBK_BACKUP_DIR="$REPO_DIR/backups/pbks"
 BACKEND_DEPLOY_DIR="$BASE_DIR/asafarim-api"
 BACKEND_BACKUP_DIR="$REPO_DIR/backups/backends"
 
+TIMESTAMP=$(TZ=:Europe/Brussels date +%Y%m%d_%H%M%S)
+
 CLI_DIR="$REPO_DIR/ASafariM.Clients/asafarim-cli"
 CLI_DEPLOY_DIR="$BASE_DIR/asafarim-cli"
 CLI_BACKUP_DIR="$REPO_DIR/backups/cli"
@@ -27,8 +29,6 @@ CLI_BACKUP_FILE="asafarim-cli_backup_${TIMESTAMP}.tar.gz"
 CLI_BACKUP_PATH="$CLI_BACKUP_DIR/$CLI_BACKUP_FILE"
 CLI_SERVICE_NAME="asafarim-cli"
 CLI_SERVICE_FILE="/etc/systemd/system/$CLI_SERVICE_NAME.service"
-
-TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 FRONTEND_BACKUP_FILE="asafarim-frontend_backup_${TIMESTAMP}.tar.gz"
 BLOG_BACKUP_FILE="asafarim-blog_backup_${TIMESTAMP}.tar.gz"
 BIBLIOGRAPHY_BACKUP_FILE="asafarim-bibliography_backup_${TIMESTAMP}.tar.gz"
@@ -521,12 +521,6 @@ if [[ " ${DEPLOY_MODE_ARRAY[*]} " =~ " 7 " ]]; then
   log "=== END DEPLOYMENT SUMMARY ==="
 fi
 
-# **Deployment Complete**
-log "Deployment completed successfully!"
-echo
-echo "  Deployment completed successfully!  "
-exit 0
-
 # Step 2: Apply database migrations if requested
 if [ "$DB_MODE" = "y" ]; then
   # Apply database migrations
@@ -655,7 +649,7 @@ if [[ " ${DEPLOY_MODE_ARRAY[*]} " =~ " 2 " ]] || [[ " ${DEPLOY_MODE_ARRAY[*]} " 
 
   # Update systemd service
   log "Updating systemd service..."
-  create_service_file
+  create_service_file "$SERVICE_FILE" "$SERVICE_NAME" "$BACKEND_DEPLOY_DIR" "production" "5000" "$JWT_SECRET" false
 
   # Reload systemd
   log "Reloading systemd daemon..."
@@ -878,8 +872,16 @@ if [[ " ${DEPLOY_MODE_ARRAY[*]} " =~ " 7 " ]]; then
   cd "$CLI_DEPLOY_DIR" || handle_error "Failed to change to deployment directory" "exit"
   pnpm install --prod || handle_error "Failed to install dependencies" "exit"
 
+  log "CLI deployment completed successfully!"
+  log "=== DEPLOYMENT SUMMARY ==="
+  log "CLI deployed to: $CLI_DEPLOY_DIR"
+  log "Backup stored at: $CLI_BACKUP_PATH"
+  log "Service name: $CLI_SERVICE_NAME"
+  log "Log file: $DEPLOY_LOG"
+  log "=== END DEPLOYMENT SUMMARY ==="
+fi
+
 # **Deployment Complete**
 log "Deployment completed successfully!"
 echo
 echo "  Deployment completed successfully!  "
-exit 0

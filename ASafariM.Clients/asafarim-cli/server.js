@@ -339,13 +339,13 @@ io.on('connection', (socket) => {
         // Add to command buffer or execute based on input
         if (data === '\r' || data === '\n' || data === '\r\n') {
   if (currentCommand.trim()) {
-    const allowedCommands = ['ls', 'echo'];
+    const allowedCommands = ['ls', 'echo', 'whoami', 'where', 'asm', 'asafarim', 'pnpm', 'npm', 'yarn', 'bun', 'npx'];
     const trimmedCmd = currentCommand.trim();
     const cmdName = trimmedCmd.split(/\s+/)[0];
     // Disallow shell metacharacters for extra safety
     const forbiddenPattern = /[;&|`$()<>]/;
     if (!allowedCommands.includes(cmdName) || forbiddenPattern.test(trimmedCmd)) {
-      socket.emit('terminal-output', '\r\nError: Only "ls" and "echo" commands are allowed.\r\n$ ');
+      socket.emit('terminal-output', '\r\nError: Only "ls", "echo", "whoami", "pnpm", "where", "bun", "npx" commands are allowed.\r\n$ ');
       currentCommand = '';
       return;
     }

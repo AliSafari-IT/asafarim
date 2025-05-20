@@ -44,7 +44,7 @@ SERVICE_NAME="asafarim-api"
 SERVICE_FILE="/etc/systemd/system/$SERVICE_NAME.service"
 MAX_RETRIES=5
 HEALTH_CHECK_URL="http://localhost:5000/api/health"
-LOG_DIR="/var/www/asafarim/Logs"
+LOG_DIR="/var/www/asafarim/logs"
 Environment=NODE_ENV=production
 Environment=PORT=3001
 # Ensure log directory exists

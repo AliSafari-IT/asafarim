@@ -308,6 +308,9 @@ io.on('connection', (socket) => {
       stdio: 'pipe'
     });
     
+    // Track active script processes for interactive input
+    const activeScriptProcesses = new Map();
+    
     // Track the current command being built
     let currentCommand = '';
     
@@ -315,9 +318,19 @@ io.on('connection', (socket) => {
     let commandHistory = [];
     let historyPosition = -1;
     
+    // Track the current working directory
+    let currentWorkingDirectory = process.env.HOME || '/var/www';
+    
+    // Function to get a formatted prompt with the current directory
+    const getPrompt = () => {
+      // Get the last part of the path for a cleaner prompt
+      const dirName = path.basename(currentWorkingDirectory);
+      return `\r\n[${dirName}]$ `;
+    };
+
     // Send initial prompt
     setTimeout(() => {
-      socket.emit('terminal-output', '\r\nWelcome to ASafariM CLI\r\n$ ');
+      socket.emit('terminal-output', '\r\nWelcome to ASafariM CLI' + getPrompt());
     }, 500);
 
     // Send shell output to terminal
@@ -331,21 +344,41 @@ io.on('connection', (socket) => {
       socket.emit('terminal-output', output);
     });
 
+    // Track if an interactive script is currently running
+    let interactiveScriptRunning = false;
+    let interactiveScriptProcess = null;
+
     // Receive user input from terminal and send to shell
     socket.on('input', (data) => {
       try {
+        // If we have an interactive script running, send input directly to it
+        if (interactiveScriptRunning && interactiveScriptProcess) {
+          // For enter key, send the current command to the script
+          if (data === '\r' || data === '\n' || data === '\r\n') {
+            interactiveScriptProcess.stdin.write(currentCommand + '\n');
+            currentCommand = '';
+            return;
+          } else {
+            // For other keys, add to the current command
+            currentCommand += data;
+            return;
+          }
+        }
+        
         // Don't echo input - the terminal already does this
         
         // Add to command buffer or execute based on input
         if (data === '\r' || data === '\n' || data === '\r\n') {
   if (currentCommand.trim()) {
-    const allowedCommands = ['ls', 'echo', 'whoami', 'where', 'asm', 'asafarim', 'pnpm', 'npm', 'yarn', 'bun', 'npx'];
+    // Create an array with numbers 1-99
+    const numberCommands = Array.from({length: 99}, (_, i) => (i + 1).toString());
+    const allowedCommands = ['ls', 'echo', 'cd', 'whoami', 'where', 'asm', 'asafarim', 'pnpm', 'npm', 'yarn', 'bun', 'npx', ...numberCommands];
     const trimmedCmd = currentCommand.trim();
     const cmdName = trimmedCmd.split(/\s+/)[0];
     // Disallow shell metacharacters for extra safety
     const forbiddenPattern = /[;&|`$()<>]/;
     if (!allowedCommands.includes(cmdName) || forbiddenPattern.test(trimmedCmd)) {
-      socket.emit('terminal-output', '\r\nError: Only "ls", "echo", "whoami", "pnpm", "where", "bun", "npx" commands are allowed.\r\n$ ');
+      socket.emit('terminal-output', '\r\nError: Only basic commands like "ls", "cd", "echo", numbers 1-99, and package managers are allowed.' + getPrompt());
       currentCommand = '';
       return;
     }
@@ -356,11 +389,71 @@ io.on('connection', (socket) => {
     }
     // Reset history position to the end
     historyPosition = commandHistory.length;
-    // Execute the command directly in a new process
+    // Handle cd command specially to track directory changes
+    if (cmdName === 'cd') {
+      try {
+        // Extract the target directory
+        const targetDir = trimmedCmd.substring(2).trim();
+        
+        // Handle special cases
+        if (!targetDir || targetDir === '~') {
+          currentWorkingDirectory = process.env.HOME || '/var/www';
+        } else if (targetDir === '-') {
+          // Not implementing cd - (previous directory) for simplicity
+          socket.emit('terminal-output', '\r\ncd - not supported in this terminal\r\n');
+        } else {
+          // Resolve the path (handle relative paths)
+          const newPath = path.resolve(currentWorkingDirectory, targetDir);
+          
+          // Check if directory exists
+          try {
+            // Use a synchronous spawn to check if directory exists
+            const checkDirProcess = spawn('test', ['-d', newPath], {
+              stdio: 'pipe',
+              shell: true
+            });
+            
+            // Wait for the process to complete
+            const exitCode = require('child_process').spawnSync('test', ['-d', newPath], {
+              stdio: 'pipe',
+              shell: true
+            }).status;
+            
+            if (exitCode === 0) {
+              currentWorkingDirectory = newPath;
+              socket.emit('terminal-output', `\r\nChanged directory to: ${newPath}` + getPrompt());
+            } else {
+              socket.emit('terminal-output', `\r\ncd: ${targetDir}: No such directory` + getPrompt());
+            }
+          } catch (error) {
+            socket.emit('terminal-output', `\r\ncd: ${error.message}` + getPrompt());
+          }
+        }
+        currentCommand = '';
+        return;
+      } catch (error) {
+        socket.emit('terminal-output', `\r\ncd: ${error.message}` + getPrompt());
+        currentCommand = '';
+        return;
+      }
+    }
+    
+    // Check if this is a script that might need interactive input
+    const isInteractiveScript = currentCommand.includes('./publish.sh') || currentCommand.includes('pnpm asm') || currentCommand.includes('npm run asm') || currentCommand.includes('pnpm run asm');
+    
+    // Execute commands in the current working directory, with pseudo-TTY for interactive scripts
     const cmdProcess = spawn('/bin/bash', ['-c', currentCommand], {
-      cwd: process.env.HOME || process.cwd(),
-      stdio: 'pipe'
+      cwd: currentWorkingDirectory,
+      stdio: 'pipe',  // Always use pipe for better control
+      env: { ...process.env, TERM: 'xterm-256color' }
     });
+    
+    // If this is an interactive script, set up for interactive mode
+    if (isInteractiveScript) {
+      interactiveScriptRunning = true;
+      interactiveScriptProcess = cmdProcess;
+      socket.emit('terminal-output', '\r\n[Interactive mode enabled for script]\r\n');
+    }
     // Capture command output
     cmdProcess.stdout.on('data', (output) => {
       socket.emit('terminal-output', '\r\n' + output.toString());
@@ -370,17 +463,33 @@ io.on('connection', (socket) => {
     });
     // Display new prompt when command completes
     cmdProcess.on('close', () => {
-      socket.emit('terminal-output', '\r\n$ ');
+      // Reset interactive script state if needed
+      if (interactiveScriptRunning && interactiveScriptProcess === cmdProcess) {
+        interactiveScriptRunning = false;
+        interactiveScriptProcess = null;
+        socket.emit('terminal-output', '\r\n[Interactive mode disabled]');
+      }
+      socket.emit('terminal-output', getPrompt());
     });
     // Reset command buffer
     currentCommand = '';
   } else {
     // Just a new line, add a new prompt
-    socket.emit('terminal-output', '\r\n$ ');
+    socket.emit('terminal-output', getPrompt());
   }
         } else {
-          // Add character to command buffer
-          currentCommand += data;
+          // Handle backspace (ASCII 8 or 127)
+          if (data === '\b' || data.charCodeAt(0) === 127) {
+            // Remove the last character from the command buffer if it's not empty
+            if (currentCommand.length > 0) {
+              currentCommand = currentCommand.slice(0, -1);
+              // Send a backspace to the terminal to move cursor back
+              socket.emit('terminal-output', '\b \b');
+            }
+          } else {
+            // Add character to command buffer
+            currentCommand += data;
+          }
         }
       } catch (error) {
         console.error('Error processing command:', error);

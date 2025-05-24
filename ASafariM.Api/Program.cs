@@ -38,7 +38,7 @@ var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 Console.WriteLine($"ASPNETCORE_ENVIRONMENT: {environment}");
 
 var logDirectory =
-    environment == "Production" ? "/var/www/asafarim/logs" : "D:/repos/ASafariM/Logs";
+    environment?.ToLower() == "production" ? "/var/www/asafarim/logs" : "D:/repos/ASafariM/Logs";
 
 Console.WriteLine($"Log Directory: {logDirectory}"); // Debugging line
 Directory.CreateDirectory(logDirectory);

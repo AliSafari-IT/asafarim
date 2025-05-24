@@ -266,6 +266,7 @@ create_service_file() {
   log "Creating systemd service file: $service_file"
   
   if [ "$is_cli" = true ]; then
+    # CLI service uses Node.js
     cat > "$service_file" << EOL
 [Unit]
 Description=ASafariM CLI Service
@@ -287,6 +288,7 @@ Environment=JWT_EXPIRATION=24h
 WantedBy=multi-user.target
 EOL
   else
+    # API service uses .NET Core
     cat > "$service_file" << EOL
 [Unit]
 Description=ASafariM API Service
@@ -294,13 +296,13 @@ After=network.target
 
 [Service]
 WorkingDirectory=$working_dir
-ExecStart=/usr/bin/node server.js
+ExecStart=/usr/bin/dotnet ASafariM.Api.dll
 User=www-data
 Group=www-data
 Restart=always
 RestartSec=5
-Environment=NODE_ENV=$environment
-Environment=PORT=$port
+Environment=ASPNETCORE_ENVIRONMENT=$environment
+Environment=ASPNETCORE_URLS=http://localhost:$port
 Environment=JWT_SECRET=$jwt_secret
 Environment=JWT_EXPIRATION=24h
 

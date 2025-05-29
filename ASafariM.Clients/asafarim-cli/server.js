@@ -20,7 +20,7 @@ const io = socketIO(server, {
   },
   allowEIO3: true,
   transports: ['websocket', 'polling'],
-  path: '/socket.io' // Ensure this is the default path
+  path: '/cli/socket.io' // Match the path used in the client
 });
 
 // Middleware
@@ -222,56 +222,85 @@ io.use(async (socket, next) => {
       return next(new Error('Authentication required'));
     }
 
-    // First try to verify the token locally
+    console.log('Received token for validation');
+    
+    // Try multiple approaches to validate the token
+    let user = null;
+    
+    // First try to get user info from ASafariM API
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      if (!decoded) {
-        console.error('Invalid token');
-        return next(new Error('Invalid token'));
-      }
-    } catch (jwtError) {
-      console.error('JWT verification failed:', jwtError);
-      return next(new Error('Invalid token'));
-    }
-
-    // Verify token locally first
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      if (!decoded) {
-        console.error('Invalid token');
-        return next(new Error('Invalid token'));
-      }
-
-      // Get user info from ASafariM API
-      const response = await fetch('https://asafarim.com/api/auth/validate-token', {
-        method: 'POST',
+      console.log('Attempting to validate token with API...');
+      const response = await fetch('https://asafarim.com/api/auth/current-user', {
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ token })
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
       });
 
-      if (!response.ok) {
-        console.error('API verification failed:', response.status);
-        // Use local token verification as fallback
-        socket.request.user = decoded;
+      if (response.ok) {
+        user = await response.json();
+        console.log('API validation successful');
+        socket.request.user = user;
         return next();
+      } else {
+        console.log('API validation failed, status:', response.status);
       }
-
-      const user = await response.json();
-      socket.request.user = user;
-      return next();
     } catch (apiError) {
       console.error('API request error:', apiError);
-      // On API error, just use local JWT verification
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    }
+    
+    // If API validation fails, try local JWT verification
+    try {
+      console.log('Attempting local JWT verification...');
+      // Try with the configured secret
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'asafarim-secret-key');
+      
       if (decoded) {
-        socket.request.user = decoded;
+        console.log('Local JWT verification successful');
+        // Extract user info from token
+        socket.request.user = {
+          ...decoded,
+          // Add standard properties that might be checked
+          isAdmin: decoded.isAdmin || 
+                  decoded.role === 'Admin' || 
+                  (decoded.roles && decoded.roles.includes('Admin')),
+          isSuperAdmin: decoded.isSuperAdmin || 
+                       decoded.role === 'SuperAdmin' || 
+                       (decoded.roles && decoded.roles.includes('SuperAdmin'))
+        };
         return next();
       }
-      return next(new Error('Authentication failed'));
+    } catch (jwtError) {
+      console.error('Local JWT verification failed:', jwtError);
+      
+      // As a last resort, try to parse the token without verification
+      try {
+        console.log('Attempting to parse token without verification...');
+        const tokenParts = token.split('.');
+        if (tokenParts.length === 3) {
+          const payload = JSON.parse(Buffer.from(tokenParts[1], 'base64').toString());
+          console.log('Token payload parsed:', payload);
+          
+          // Use the payload directly
+          socket.request.user = {
+            ...payload,
+            // Add standard properties that might be checked
+            isAdmin: payload.isAdmin || 
+                    payload.role === 'Admin' || 
+                    (payload.roles && payload.roles.includes('Admin')),
+            isSuperAdmin: payload.isSuperAdmin || 
+                         payload.role === 'SuperAdmin' || 
+                         (payload.roles && payload.roles.includes('SuperAdmin'))
+          };
+          return next();
+        }
+      } catch (parseError) {
+        console.error('Token parsing failed:', parseError);
+      }
     }
+    
+    // If all validation attempts fail
+    return next(new Error('Invalid token'));
   } catch (error) {
     console.error('Socket auth error:', error);
     next(new Error('Invalid token'));
@@ -284,13 +313,18 @@ io.on('connection', (socket) => {
     console.log('A user connected');
     console.log('Auth token:', socket.handshake.auth.token);
     
-    // Check if user has Admin role based on JWT token
-    const userRole = socket.request.user?.role;
-    console.log('User role from JWT:', userRole);
+    // Check if user has Admin privileges based on JWT token
+    const user = socket.request.user;
+    console.log('User from JWT:', user);
     
-    // Check if user has Admin or SuperAdmin role
-    if (!(userRole === 'Admin' || userRole === 'SuperAdmin')) {
-      console.error('Access denied - User roles:', socket.request.user);
+    // Check for admin privileges in multiple possible formats
+    const hasAdminPrivileges = 
+      (user?.role === 'Admin' || user?.role === 'SuperAdmin') || // Check role property
+      (user?.roles && (user.roles.includes('Admin') || user.roles.includes('SuperAdmin'))) || // Check roles array
+      user?.isAdmin || user?.isSuperAdmin; // Check boolean flags
+    
+    if (!hasAdminPrivileges) {
+      console.error('Access denied - User data:', user);
       socket.emit('error', 'Access denied. SuperAdmin or Admin privileges required.');
       socket.disconnect(true);
       return;

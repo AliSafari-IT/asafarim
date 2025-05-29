@@ -12,18 +12,42 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 
 const app = express();
 const server = http.createServer(app);
+// Configure Socket.IO with WebSocket transport and proper CORS
 const io = socketIO(server, {
   cors: {
-    origin: '*', // Allow all origins for testing
+    origin: ['https://asafarim.com', 'http://localhost:3001'],
     methods: ['GET', 'POST', 'OPTIONS'],
     credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token']
   },
+  // Enable compatibility with Socket.IO v2 clients
   allowEIO3: true,
-  transports: ['polling', 'websocket'], // Put polling first to ensure it's tried first
-  path: '/socket.io', // Use default path for simplicity
-  pingTimeout: 60000, // Increase ping timeout
-  pingInterval: 25000 // Increase ping interval
+  // Use WebSocket transport only for better performance
+  transports: ['websocket'],
+  // Set the path for Socket.IO endpoint
+  path: '/socket.io',
+  // Increase timeouts to handle slow connections
+  pingTimeout: 60000,    // 60 seconds
+  pingInterval: 25000,   // 25 seconds
+  // Enable HTTP long-polling fallback (disabled for now)
+  allowUpgrades: false,
+  // Enable per-message deflate compression
+  perMessageDeflate: {
+    threshold: 1024, // Size threshold (bytes) for compression
+    zlibDeflateOptions: {
+      level: 3 // Compression level (0-9)
+    }
+  },
+  // Enable HTTP compression
+  httpCompression: true,
+  // Maximum size of a message that can be received
+  maxHttpBufferSize: 1e8, // 100MB
+  // Enable WebSocket compression
+  wsEngine: 'ws',
+  // Enable WebSocket per-message deflate
+  wsOptions: {
+    maxPayload: 100 * 1024 * 1024 // 100MB
+  }
 });
 
 // Middleware
@@ -73,7 +97,6 @@ app.use((req, res, next) => {
   }
   authenticateUser(req, res, next);
 });
-
 
 // Authentication check endpoint
 app.get('/api/auth/check', async (req, res) => {

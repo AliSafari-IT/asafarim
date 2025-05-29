@@ -156,30 +156,49 @@
           const isLocalhost = window.location.hostname === 'localhost' || 
                              window.location.hostname === '127.0.0.1';
           
+          // For production, use the WebSocket protocol with the current host
           // For local development, connect to localhost directly
-          // For production, connect to the same origin as the page
-          const serverUrl = isLocalhost ? 
-                           'http://localhost:3001' : 
-                           window.location.origin;
+          let serverUrl;
+          let wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
           
-          console.log('Connecting to Socket.IO server at:', serverUrl);
+          if (isLocalhost) {
+            // Local development
+            serverUrl = 'http://localhost:3001';
+          } else {
+            // Production - use WebSocket protocol with the current host
+            serverUrl = window.location.origin;
+          }
           
+          console.log('Connecting to server:', serverUrl);
+          
+          // Configure Socket.IO client
           const socket = io(serverUrl, {
             auth: {
               token: auth.token,
             },
-            query: {
-              disableShellIntegration: "true",
-            },
-            path: '/socket.io',  // Use default Socket.IO path
+            path: '/socket.io',
+            transports: ['websocket'],  // Use WebSocket only for better performance
             reconnection: true,
-            reconnectionAttempts: 10,
-            reconnectionDelay: 1000,
-            timeout: 20000,
-            transports: ['polling', 'websocket'], // Try polling first
-            forceNew: true,
-            withCredentials: true
+            reconnectionAttempts: 5,     // Number of reconnection attempts
+            reconnectionDelay: 1000,     // Initial delay before reconnection in ms
+            reconnectionDelayMax: 5000,  // Maximum delay between reconnections
+            timeout: 20000,              // Connection timeout in ms
+            withCredentials: true,       // Send cookies with requests
+            forceNew: true,              // Force new connection
+            autoConnect: true,           // Automatically connect
+            // Enable debug logging
+            debug: true,
+            // WebSocket options
+            upgrade: false,              // Disable upgrade from long-polling to WebSocket
+            // Additional headers
+            extraHeaders: {
+              'x-client-version': '1.0.0',
+              'x-client-type': 'web'
+            }
           });
+          
+          // Manually connect to the server
+          socket.connect();
 
           // Handle initial connection
           socket.io.on("open", () => {

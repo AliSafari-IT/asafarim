@@ -14,13 +14,16 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIO(server, {
   cors: {
-    origin: ['https://asafarim.com', 'http://localhost:3001'],
-    methods: ['GET', 'POST'],
-    credentials: true
+    origin: '*', // Allow all origins for testing
+    methods: ['GET', 'POST', 'OPTIONS'],
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization']
   },
   allowEIO3: true,
-  transports: ['websocket', 'polling'],
-  path: '/cli/socket.io' // Match the path used in the client
+  transports: ['polling', 'websocket'], // Put polling first to ensure it's tried first
+  path: '/socket.io', // Use default path for simplicity
+  pingTimeout: 60000, // Increase ping timeout
+  pingInterval: 25000 // Increase ping interval
 });
 
 // Middleware
@@ -594,8 +597,17 @@ io.on('connection', (socket) => {
 
 // Start the server
 const PORT = process.env.PORT || 3001;
-const scr= process.env.JWT_SECRET;
 
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT} → http://localhost:${PORT}/ \n with secret code (${scr})`);
+// Set a default JWT secret if not provided in environment
+if (!process.env.JWT_SECRET) {
+  process.env.JWT_SECRET = 'asafarim-default-secret-key';
+  console.log('WARNING: Using default JWT secret key. Set JWT_SECRET in .env for production.');
+}
+
+// Log detailed server information
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT} → http://localhost:${PORT}/`);
+  console.log(`Socket.IO path: ${io.path()}`);
+  console.log(`Available transports: ${io.engine.opts.transports.join(', ')}`);
+  console.log(`CORS settings: ${JSON.stringify(io.engine.opts.cors)}`);
 });

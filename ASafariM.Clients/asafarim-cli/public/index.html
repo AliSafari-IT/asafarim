@@ -152,18 +152,33 @@
           fitAddon.fit();
 
           // Connect to socket with auth token
-          const socket = io({
+          // Determine the correct server URL based on the current environment
+          const isLocalhost = window.location.hostname === 'localhost' || 
+                             window.location.hostname === '127.0.0.1';
+          
+          // For local development, connect to localhost directly
+          // For production, connect to the same origin as the page
+          const serverUrl = isLocalhost ? 
+                           'http://localhost:3001' : 
+                           window.location.origin;
+          
+          console.log('Connecting to Socket.IO server at:', serverUrl);
+          
+          const socket = io(serverUrl, {
             auth: {
               token: auth.token,
             },
             query: {
               disableShellIntegration: "true",
             },
-            path: '/cli/socket.io',  // Add path prefix to match nginx configuration
+            path: '/socket.io',  // Use default Socket.IO path
             reconnection: true,
-            reconnectionAttempts: 5,
+            reconnectionAttempts: 10,
             reconnectionDelay: 1000,
-            timeout: 10000,
+            timeout: 20000,
+            transports: ['polling', 'websocket'], // Try polling first
+            forceNew: true,
+            withCredentials: true
           });
 
           // Handle initial connection
@@ -179,12 +194,29 @@
 
           socket.on("connect_error", (error) => {
             console.error("Socket connection error:", error);
+            console.error("Error details:", error.message, error.description, error.context);
+            
+            // Show more detailed error information
             term.write("\r\nConnection error: " + error.message + "\r\n");
+            term.write("Error type: " + error.type + "\r\n");
+            term.write("Debug info: " + JSON.stringify({
+              transport: socket.io.engine?.transport?.name,
+              protocol: socket.io.engine?.protocol,
+              hostname: window.location.hostname,
+              url: window.location.origin + socket.io.opts.path
+            }) + "\r\n");
 
-            // Try to reconnect after a delay
+            // Try to reconnect with different transport
             setTimeout(() => {
               if (!socket.connected) {
-                console.log("Attempting to reconnect...");
+                console.log("Attempting to reconnect with different transport...");
+                // Try to force a different transport on reconnection
+                const currentTransports = socket.io.opts.transports;
+                if (currentTransports[0] === 'polling') {
+                  socket.io.opts.transports = ['websocket', 'polling'];
+                } else {
+                  socket.io.opts.transports = ['polling', 'websocket'];
+                }
                 socket.connect();
               }
             }, 2000);

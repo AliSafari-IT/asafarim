@@ -12,42 +12,15 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 
 const app = express();
 const server = http.createServer(app);
-// Configure Socket.IO with WebSocket transport and proper CORS
 const io = socketIO(server, {
   cors: {
     origin: ['https://asafarim.com', 'http://localhost:3001'],
-    methods: ['GET', 'POST', 'OPTIONS'],
-    credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token']
+    methods: ['GET', 'POST'],
+    credentials: true
   },
-  // Enable compatibility with Socket.IO v2 clients
   allowEIO3: true,
-  // Use WebSocket transport only for better performance
-  transports: ['websocket'],
-  // Set the path for Socket.IO endpoint
-  path: '/socket.io',
-  // Increase timeouts to handle slow connections
-  pingTimeout: 60000,    // 60 seconds
-  pingInterval: 25000,   // 25 seconds
-  // Enable HTTP long-polling fallback (disabled for now)
-  allowUpgrades: false,
-  // Enable per-message deflate compression
-  perMessageDeflate: {
-    threshold: 1024, // Size threshold (bytes) for compression
-    zlibDeflateOptions: {
-      level: 3 // Compression level (0-9)
-    }
-  },
-  // Enable HTTP compression
-  httpCompression: true,
-  // Maximum size of a message that can be received
-  maxHttpBufferSize: 1e8, // 100MB
-  // Enable WebSocket compression
-  wsEngine: 'ws',
-  // Enable WebSocket per-message deflate
-  wsOptions: {
-    maxPayload: 100 * 1024 * 1024 // 100MB
-  }
+  transports: ['websocket', 'polling'],
+  path: '/socket.io' // Ensure this is the default path
 });
 
 // Middleware
@@ -97,6 +70,7 @@ app.use((req, res, next) => {
   }
   authenticateUser(req, res, next);
 });
+
 
 // Authentication check endpoint
 app.get('/api/auth/check', async (req, res) => {
@@ -248,85 +222,56 @@ io.use(async (socket, next) => {
       return next(new Error('Authentication required'));
     }
 
-    console.log('Received token for validation');
-    
-    // Try multiple approaches to validate the token
-    let user = null;
-    
-    // First try to get user info from ASafariM API
+    // First try to verify the token locally
     try {
-      console.log('Attempting to validate token with API...');
-      const response = await fetch('https://asafarim.com/api/auth/current-user', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (response.ok) {
-        user = await response.json();
-        console.log('API validation successful');
-        socket.request.user = user;
-        return next();
-      } else {
-        console.log('API validation failed, status:', response.status);
-      }
-    } catch (apiError) {
-      console.error('API request error:', apiError);
-    }
-    
-    // If API validation fails, try local JWT verification
-    try {
-      console.log('Attempting local JWT verification...');
-      // Try with the configured secret
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'asafarim-secret-key');
-      
-      if (decoded) {
-        console.log('Local JWT verification successful');
-        // Extract user info from token
-        socket.request.user = {
-          ...decoded,
-          // Add standard properties that might be checked
-          isAdmin: decoded.isAdmin || 
-                  decoded.role === 'Admin' || 
-                  (decoded.roles && decoded.roles.includes('Admin')),
-          isSuperAdmin: decoded.isSuperAdmin || 
-                       decoded.role === 'SuperAdmin' || 
-                       (decoded.roles && decoded.roles.includes('SuperAdmin'))
-        };
-        return next();
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      if (!decoded) {
+        console.error('Invalid token');
+        return next(new Error('Invalid token'));
       }
     } catch (jwtError) {
-      console.error('Local JWT verification failed:', jwtError);
-      
-      // As a last resort, try to parse the token without verification
-      try {
-        console.log('Attempting to parse token without verification...');
-        const tokenParts = token.split('.');
-        if (tokenParts.length === 3) {
-          const payload = JSON.parse(Buffer.from(tokenParts[1], 'base64').toString());
-          console.log('Token payload parsed:', payload);
-          
-          // Use the payload directly
-          socket.request.user = {
-            ...payload,
-            // Add standard properties that might be checked
-            isAdmin: payload.isAdmin || 
-                    payload.role === 'Admin' || 
-                    (payload.roles && payload.roles.includes('Admin')),
-            isSuperAdmin: payload.isSuperAdmin || 
-                         payload.role === 'SuperAdmin' || 
-                         (payload.roles && payload.roles.includes('SuperAdmin'))
-          };
-          return next();
-        }
-      } catch (parseError) {
-        console.error('Token parsing failed:', parseError);
-      }
+      console.error('JWT verification failed:', jwtError);
+      return next(new Error('Invalid token'));
     }
-    
-    // If all validation attempts fail
-    return next(new Error('Invalid token'));
+
+    // Verify token locally first
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      if (!decoded) {
+        console.error('Invalid token');
+        return next(new Error('Invalid token'));
+      }
+
+      // Get user info from ASafariM API
+      const response = await fetch('https://asafarim.com/api/auth/validate-token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ token })
+      });
+
+      if (!response.ok) {
+        console.error('API verification failed:', response.status);
+        // Use local token verification as fallback
+        socket.request.user = decoded;
+        return next();
+      }
+
+      const user = await response.json();
+      socket.request.user = user;
+      return next();
+    } catch (apiError) {
+      console.error('API request error:', apiError);
+      // On API error, just use local JWT verification
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      if (decoded) {
+        socket.request.user = decoded;
+        return next();
+      }
+      return next(new Error('Authentication failed'));
+    }
   } catch (error) {
     console.error('Socket auth error:', error);
     next(new Error('Invalid token'));
@@ -339,18 +284,13 @@ io.on('connection', (socket) => {
     console.log('A user connected');
     console.log('Auth token:', socket.handshake.auth.token);
     
-    // Check if user has Admin privileges based on JWT token
-    const user = socket.request.user;
-    console.log('User from JWT:', user);
+    // Check if user has Admin role based on JWT token
+    const userRole = socket.request.user?.role;
+    console.log('User role from JWT:', userRole);
     
-    // Check for admin privileges in multiple possible formats
-    const hasAdminPrivileges = 
-      (user?.role === 'Admin' || user?.role === 'SuperAdmin') || // Check role property
-      (user?.roles && (user.roles.includes('Admin') || user.roles.includes('SuperAdmin'))) || // Check roles array
-      user?.isAdmin || user?.isSuperAdmin; // Check boolean flags
-    
-    if (!hasAdminPrivileges) {
-      console.error('Access denied - User data:', user);
+    // Check if user has Admin or SuperAdmin role
+    if (!(userRole === 'Admin' || userRole === 'SuperAdmin')) {
+      console.error('Access denied - User roles:', socket.request.user);
       socket.emit('error', 'Access denied. SuperAdmin or Admin privileges required.');
       socket.disconnect(true);
       return;
@@ -368,9 +308,6 @@ io.on('connection', (socket) => {
       stdio: 'pipe'
     });
     
-    // Track active script processes for interactive input
-    const activeScriptProcesses = new Map();
-    
     // Track the current command being built
     let currentCommand = '';
     
@@ -378,19 +315,9 @@ io.on('connection', (socket) => {
     let commandHistory = [];
     let historyPosition = -1;
     
-    // Track the current working directory
-    let currentWorkingDirectory = process.env.HOME || '/var/www';
-    
-    // Function to get a formatted prompt with the current directory
-    const getPrompt = () => {
-      // Get the last part of the path for a cleaner prompt
-      const dirName = path.basename(currentWorkingDirectory);
-      return `\r\n[${dirName}]$ `;
-    };
-
     // Send initial prompt
     setTimeout(() => {
-      socket.emit('terminal-output', '\r\nWelcome to ASafariM CLI' + getPrompt());
+      socket.emit('terminal-output', '\r\nWelcome to ASafariM CLI\r\n$ ');
     }, 500);
 
     // Send shell output to terminal
@@ -404,41 +331,21 @@ io.on('connection', (socket) => {
       socket.emit('terminal-output', output);
     });
 
-    // Track if an interactive script is currently running
-    let interactiveScriptRunning = false;
-    let interactiveScriptProcess = null;
-
     // Receive user input from terminal and send to shell
     socket.on('input', (data) => {
       try {
-        // If we have an interactive script running, send input directly to it
-        if (interactiveScriptRunning && interactiveScriptProcess) {
-          // For enter key, send the current command to the script
-          if (data === '\r' || data === '\n' || data === '\r\n') {
-            interactiveScriptProcess.stdin.write(currentCommand + '\n');
-            currentCommand = '';
-            return;
-          } else {
-            // For other keys, add to the current command
-            currentCommand += data;
-            return;
-          }
-        }
-        
         // Don't echo input - the terminal already does this
         
         // Add to command buffer or execute based on input
         if (data === '\r' || data === '\n' || data === '\r\n') {
   if (currentCommand.trim()) {
-    // Create an array with numbers 1-99
-    const numberCommands = Array.from({length: 99}, (_, i) => (i + 1).toString());
-    const allowedCommands = ['ls', 'echo', 'cd', 'whoami', 'where', 'asm', 'asafarim', 'pnpm', 'npm', 'yarn', 'bun', 'npx', ...numberCommands];
+    const allowedCommands = ['ls', 'echo'];
     const trimmedCmd = currentCommand.trim();
     const cmdName = trimmedCmd.split(/\s+/)[0];
     // Disallow shell metacharacters for extra safety
     const forbiddenPattern = /[;&|`$()<>]/;
     if (!allowedCommands.includes(cmdName) || forbiddenPattern.test(trimmedCmd)) {
-      socket.emit('terminal-output', '\r\nError: Only basic commands like "ls", "cd", "echo", numbers 1-99, and package managers are allowed.' + getPrompt());
+      socket.emit('terminal-output', '\r\nError: Only "ls" and "echo" commands are allowed.\r\n$ ');
       currentCommand = '';
       return;
     }
@@ -449,71 +356,11 @@ io.on('connection', (socket) => {
     }
     // Reset history position to the end
     historyPosition = commandHistory.length;
-    // Handle cd command specially to track directory changes
-    if (cmdName === 'cd') {
-      try {
-        // Extract the target directory
-        const targetDir = trimmedCmd.substring(2).trim();
-        
-        // Handle special cases
-        if (!targetDir || targetDir === '~') {
-          currentWorkingDirectory = process.env.HOME || '/var/www';
-        } else if (targetDir === '-') {
-          // Not implementing cd - (previous directory) for simplicity
-          socket.emit('terminal-output', '\r\ncd - not supported in this terminal\r\n');
-        } else {
-          // Resolve the path (handle relative paths)
-          const newPath = path.resolve(currentWorkingDirectory, targetDir);
-          
-          // Check if directory exists
-          try {
-            // Use a synchronous spawn to check if directory exists
-            const checkDirProcess = spawn('test', ['-d', newPath], {
-              stdio: 'pipe',
-              shell: true
-            });
-            
-            // Wait for the process to complete
-            const exitCode = require('child_process').spawnSync('test', ['-d', newPath], {
-              stdio: 'pipe',
-              shell: true
-            }).status;
-            
-            if (exitCode === 0) {
-              currentWorkingDirectory = newPath;
-              socket.emit('terminal-output', `\r\nChanged directory to: ${newPath}` + getPrompt());
-            } else {
-              socket.emit('terminal-output', `\r\ncd: ${targetDir}: No such directory` + getPrompt());
-            }
-          } catch (error) {
-            socket.emit('terminal-output', `\r\ncd: ${error.message}` + getPrompt());
-          }
-        }
-        currentCommand = '';
-        return;
-      } catch (error) {
-        socket.emit('terminal-output', `\r\ncd: ${error.message}` + getPrompt());
-        currentCommand = '';
-        return;
-      }
-    }
-    
-    // Check if this is a script that might need interactive input
-    const isInteractiveScript = currentCommand.includes('./publish.sh') || currentCommand.includes('pnpm asm') || currentCommand.includes('npm run asm') || currentCommand.includes('pnpm run asm');
-    
-    // Execute commands in the current working directory, with pseudo-TTY for interactive scripts
+    // Execute the command directly in a new process
     const cmdProcess = spawn('/bin/bash', ['-c', currentCommand], {
-      cwd: currentWorkingDirectory,
-      stdio: 'pipe',  // Always use pipe for better control
-      env: { ...process.env, TERM: 'xterm-256color' }
+      cwd: process.env.HOME || process.cwd(),
+      stdio: 'pipe'
     });
-    
-    // If this is an interactive script, set up for interactive mode
-    if (isInteractiveScript) {
-      interactiveScriptRunning = true;
-      interactiveScriptProcess = cmdProcess;
-      socket.emit('terminal-output', '\r\n[Interactive mode enabled for script]\r\n');
-    }
     // Capture command output
     cmdProcess.stdout.on('data', (output) => {
       socket.emit('terminal-output', '\r\n' + output.toString());
@@ -523,33 +370,17 @@ io.on('connection', (socket) => {
     });
     // Display new prompt when command completes
     cmdProcess.on('close', () => {
-      // Reset interactive script state if needed
-      if (interactiveScriptRunning && interactiveScriptProcess === cmdProcess) {
-        interactiveScriptRunning = false;
-        interactiveScriptProcess = null;
-        socket.emit('terminal-output', '\r\n[Interactive mode disabled]');
-      }
-      socket.emit('terminal-output', getPrompt());
+      socket.emit('terminal-output', '\r\n$ ');
     });
     // Reset command buffer
     currentCommand = '';
   } else {
     // Just a new line, add a new prompt
-    socket.emit('terminal-output', getPrompt());
+    socket.emit('terminal-output', '\r\n$ ');
   }
         } else {
-          // Handle backspace (ASCII 8 or 127)
-          if (data === '\b' || data.charCodeAt(0) === 127) {
-            // Remove the last character from the command buffer if it's not empty
-            if (currentCommand.length > 0) {
-              currentCommand = currentCommand.slice(0, -1);
-              // Send a backspace to the terminal to move cursor back
-              socket.emit('terminal-output', '\b \b');
-            }
-          } else {
-            // Add character to command buffer
-            currentCommand += data;
-          }
+          // Add character to command buffer
+          currentCommand += data;
         }
       } catch (error) {
         console.error('Error processing command:', error);
@@ -620,17 +451,8 @@ io.on('connection', (socket) => {
 
 // Start the server
 const PORT = process.env.PORT || 3001;
+const scr= process.env.JWT_SECRET;
 
-// Set a default JWT secret if not provided in environment
-if (!process.env.JWT_SECRET) {
-  process.env.JWT_SECRET = 'asafarim-default-secret-key';
-  console.log('WARNING: Using default JWT secret key. Set JWT_SECRET in .env for production.');
-}
-
-// Log detailed server information
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT} → http://localhost:${PORT}/`);
-  console.log(`Socket.IO path: ${io.path()}`);
-  console.log(`Available transports: ${io.engine.opts.transports.join(', ')}`);
-  console.log(`CORS settings: ${JSON.stringify(io.engine.opts.cors)}`);
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT} → http://localhost:${PORT}/ \n with secret code (${scr})`);
 });

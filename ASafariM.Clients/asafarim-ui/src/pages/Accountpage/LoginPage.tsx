@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useState } from "react";
 import Wrapper from "../../layout/Wrapper";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +7,16 @@ import { isAxiosError } from "axios";
 import DeletedAccountMessage from "../../components/DeletedAccountMessage";
 import { logger } from "@/utils/logger";
 
+/**
+ * LoginPage component - handles user login and demo login
+ *
+ * @returns {React.ReactElement} - LoginPage component
+ *
+ * @example
+ * import LoginPage from "./LoginPage";
+ *
+ * <LoginPage />
+ */
 const LoginPage = () => {
   logger.info("LoginPage component mounted");
   const [email, setEmail] = useState("");
@@ -25,10 +36,14 @@ const LoginPage = () => {
     {
       email: "demo_user@example.com",
       password: "Demo+123456/",
-      label: "Demo User",
+      label: "Demo Standard User",
     },
   ];
 
+  /**
+   * Handles login form submission
+   * @param e - Form event
+   */
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     logger.info("Login button clicked");

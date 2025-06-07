@@ -9,10 +9,16 @@ const apiUrls = (host: string): string => {
         const productionUrls: { [key: string]: string } = {
             'bibliography.asafarim.com': 'https://bibliography.asafarim.com/api',
             'www.bibliography.asafarim.com': 'https://bibliography.asafarim.com/api',
+            'bibliography.asafarim.be': 'https://bibliography.asafarim.be/api',
+            'www.bibliography.asafarim.be': 'https://bibliography.asafarim.be/api',
             'blog.asafarim.com': 'https://blog.asafarim.com/api',
             'www.blog.asafarim.com': 'https://blog.asafarim.com/api',
+            'blog.asafarim.be': 'https://blog.asafarim.be/api',
+            'www.blog.asafarim.be': 'https://blog.asafarim.be/api',
             'asafarim.com': 'https://asafarim.com/api',
             'www.asafarim.com': 'https://asafarim.com/api',
+            'asafarim.be': 'https://asafarim.be/api',
+            'www.asafarim.be': 'https://asafarim.be/api',
         };
 
         // Return the production URL if the host matches, otherwise use the local development URL

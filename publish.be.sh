@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set Variables
-BASE_DIR="/var/www"
+BASE_DIR="/var/www/asafarim.be"
 JWT_SECRET="0+a0ZklJy6DVL6osEj73W6P9inMk3+Ocn8KkQoUDR78="
 REPO_DIR="$BASE_DIR/asafarim"
 FRONTEND_DIR="$REPO_DIR/ASafariM.Clients/asafarim-ui"
@@ -9,7 +9,7 @@ BLOG_DIR="$REPO_DIR/ASafariM.Clients/asafarim-blog"
 BIBLIOGRAPHY_DIR="$REPO_DIR/ASafariM.Clients/asafarim-bibliography"
 PBK_DIR="$REPO_DIR/ASafariM.Clients/asafarim-pbk"
 BACKEND_DIR="$REPO_DIR/ASafariM.Api"
-FRONTEND_DEPLOY_DIR="$BASE_DIR/asafarim-be/public_html"
+FRONTEND_DEPLOY_DIR="$BASE_DIR/asafarim/ui/public_html"
 FRONTEND_BACKUP_DIR="$REPO_DIR/backups/frontends"
 BLOG_DEPLOY_DIR="$BASE_DIR/asafarim-blog/public_html"
 BLOG_BACKUP_DIR="$REPO_DIR/backups/blogs"
@@ -44,7 +44,7 @@ SERVICE_NAME="asafarim-api"
 SERVICE_FILE="/etc/systemd/system/$SERVICE_NAME.service"
 MAX_RETRIES=5
 HEALTH_CHECK_URL="http://localhost:5000/api/health"
-LOG_DIR="/var/www/asafarim/logs"
+LOG_DIR="/var/www/asafarim.be/asafarim/logs"
 Environment=NODE_ENV=production
 Environment=PORT=3001
 # Ensure log directory exists
@@ -305,6 +305,7 @@ Environment=ASPNETCORE_ENVIRONMENT=$environment
 Environment=ASPNETCORE_URLS=http://localhost:$port
 Environment=JWT_SECRET=$jwt_secret
 Environment=JWT_EXPIRATION=24h
+Environment=LOG_DIR=/var/www/asafarim.be/asafarim/logs
 
 [Install]
 WantedBy=multi-user.target

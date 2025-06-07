@@ -34,45 +34,58 @@ namespace ASafariM.Presentation.Controllers
         /// Retrieves health status information for the application.
         /// </summary>
         /// <returns>Health status information</returns>
-        [HttpGet]
-        public IActionResult GetHealthStatus()
+    [HttpGet]
+    public IActionResult GetHealthStatus()
+    {
+        try
         {
+            Log.Information("Starting health check");
+
+            // Safely get the git commit hash
+            string commitHash;
             try
             {
-                Log.Information("Starting health check");
-                var healthStatus = new
-                {
-                    status = "healthy",
-                    version = "1.0.0",
-                    buildDate = GetBuildDate(),
-                    buildCommit = GetGitCommitHash()?.Substring(0, 8),
-                    buildBranch = GetGitBranchName(),
-                    buildAuthor = "A. Safari M.",
-                    timestamp = DateTime.UtcNow,
-                    services = new
-                    {
-                        database = CheckDatabaseHealth(),
-                        cache = CheckCacheHealth(),
-                        session = CheckSessionHealth(),
-                        api = "healthy",
-                    },
-                    uptime = GetUptime(),
-                    memoryUsage = GetMemoryUsage(),
-                    cpuUsage = GetCpuUsage(),
-                    diskSpace = GetDiskSpace(),
-                    environment = GetEnvironmentDetails(),
-                    activeThreads = GetActiveThreads(),
-                };
-
-                Log.Information("Health check completed successfully");
-                return Ok(healthStatus);
+                commitHash = GetGitCommitHash();
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Health check failed");
-                return StatusCode(500, new { status = "unhealthy", error = ex.Message });
+                Log.Warning(ex, "Failed to get git commit hash");
+                commitHash = "N/A";
             }
+
+            var healthStatus = new
+            {
+                status = "healthy",
+                version = "1.0.0",
+                buildDate = GetBuildDate(),
+                buildCommit = commitHash,
+                buildBranch = GetGitBranchName(),
+                buildAuthor = "A. Safari M.",
+                timestamp = DateTime.UtcNow,
+                services = new
+                {
+                    database = CheckDatabaseHealth(),
+                    cache = CheckCacheHealth(),
+                    session = CheckSessionHealth(),
+                    api = "healthy",
+                },
+                uptime = GetUptime(),
+                memoryUsage = GetMemoryUsage(),
+                cpuUsage = GetCpuUsage(),
+                diskSpace = GetDiskSpace(),
+                environment = GetEnvironmentDetails(),
+                activeThreads = GetActiveThreads(),
+            };
+
+            Log.Information("Health check completed successfully");
+            return Ok(healthStatus);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Health check failed");
+            return StatusCode(500, new { status = "unhealthy", error = ex.Message });
+        }
+    }
 
         /// <summary>
         /// Retrieves the uptime of the application.
@@ -331,74 +344,7 @@ namespace ASafariM.Presentation.Controllers
         {
             try
             {
-                // Try multiple possible locations for the .git directory
-                var possiblePaths = new[]
-                {
-                    "/var/www/asafarim", // Main project directory
-                    Directory.GetCurrentDirectory(), // Current directory
-                    Path.GetDirectoryName(Directory.GetCurrentDirectory()), // Parent of current directory
-                    Environment.GetEnvironmentVariable("GIT_DIR"), // From environment variable
-                }
-                    .Where(p => !string.IsNullOrEmpty(p))
-                    .Select(p => Path.Combine(p, ".git", "HEAD"))
-                    .Where(p => System.IO.File.Exists(p));
-
-                Log.Debug("Searching for git info in: {Paths}", string.Join(", ", possiblePaths));
-
-                foreach (var gitHeadPath in possiblePaths)
-                {
-                    Log.Debug("Checking git path: {GitPath}", gitHeadPath);
-                    var refPath = System.IO.File.ReadAllText(gitHeadPath).Trim();
-
-                    if (refPath.StartsWith("ref: "))
-                    {
-                        // It's a reference, follow it
-                        var gitDir = Path.GetDirectoryName(gitHeadPath); // Path to .git directory
-                        if (gitDir == null)
-                        {
-                            Log.Warning(
-                                "Could not determine git directory from path: {GitPath}",
-                                gitHeadPath
-                            );
-                            continue;
-                        }
-
-                        var branchRef = refPath.Substring(5).Trim(); // Remove "ref: "
-                        if (string.IsNullOrEmpty(branchRef))
-                        {
-                            Log.Warning("Branch reference is empty");
-                            continue;
-                        }
-
-                        // Try in .git directory
-                        var commitPath = Path.Combine(gitDir, branchRef);
-                        if (System.IO.File.Exists(commitPath))
-                        {
-                            var hash = System.IO.File.ReadAllText(commitPath).Trim();
-                            Log.Debug("Found commit hash in {Path}: {Hash}", commitPath, hash);
-                            return hash;
-                        }
-
-                        // Try in .git/refs directory
-                        commitPath = Path.Combine(gitDir, "refs", branchRef);
-                        if (System.IO.File.Exists(commitPath))
-                        {
-                            var hash = System.IO.File.ReadAllText(commitPath).Trim();
-                            Log.Debug("Found commit hash in refs: {Hash}", hash);
-                            return hash;
-                        }
-
-                        Log.Warning("Could not find commit file at {Path}", commitPath);
-                    }
-                    else
-                    {
-                        // It's a direct commit hash
-                        Log.Debug("Found direct commit hash: {Hash}", refPath);
-                        return refPath;
-                    }
-                }
-
-                // If we get here, try to get it from an environment variable
+                // Try to get it from an environment variable first
                 var envCommit = Environment.GetEnvironmentVariable("GIT_COMMIT");
                 if (!string.IsNullOrEmpty(envCommit))
                 {
@@ -406,13 +352,97 @@ namespace ASafariM.Presentation.Controllers
                     return envCommit;
                 }
 
+                // Try multiple possible locations for the .git directory
+                var possiblePaths = new[]
+                {
+                    "/var/www/asafarim.be/asafarim", // Main project directory
+                    Directory.GetCurrentDirectory(), // Current directory
+                    Path.GetDirectoryName(Directory.GetCurrentDirectory()), // Parent of current directory
+                    Environment.GetEnvironmentVariable("GIT_DIR"), // From environment variable
+                }
+                .Where(p => !string.IsNullOrEmpty(p))
+                .Select(p => Path.Combine(p, ".git", "HEAD"))
+                .Where(p => System.IO.File.Exists(p))
+                .ToList();
+
+                Log.Debug("Searching for git info in: {Paths}", string.Join(", ", possiblePaths));
+
+                foreach (var gitHeadPath in possiblePaths)
+                {
+                    try
+                    {
+                        Log.Debug("Checking git path: {GitPath}", gitHeadPath);
+                        var refPath = System.IO.File.ReadAllText(gitHeadPath).Trim();
+
+                        if (string.IsNullOrEmpty(refPath))
+                        {
+                            Log.Warning("HEAD file is empty at {GitPath}", gitHeadPath);
+                            continue;
+                        }
+
+                        if (refPath.StartsWith("ref: "))
+                        {
+                            var gitDir = Path.GetDirectoryName(gitHeadPath);
+                            if (gitDir == null)
+                            {
+                                Log.Warning("Could not determine git directory from path: {GitPath}", gitHeadPath);
+                                continue;
+                            }
+
+                            var branchRef = refPath.Substring(5).Trim(); // Remove "ref: "
+                            if (string.IsNullOrEmpty(branchRef))
+                            {
+                                Log.Warning("Branch reference is empty");
+                                continue;
+                            }
+
+                            // Try in .git directory
+                            var commitPath = Path.Combine(gitDir, branchRef);
+                            if (System.IO.File.Exists(commitPath))
+                            {
+                                var hash = System.IO.File.ReadAllText(commitPath).Trim();
+                                if (!string.IsNullOrEmpty(hash))
+                                {
+                                    Log.Debug("Found commit hash in {Path}: {Hash}", commitPath, hash);
+                                    return hash;
+                                }
+                            }
+
+                            // Try in .git/refs directory
+                            commitPath = Path.Combine(gitDir, "refs", branchRef);
+                            if (System.IO.File.Exists(commitPath))
+                            {
+                                var hash = System.IO.File.ReadAllText(commitPath).Trim();
+                                if (!string.IsNullOrEmpty(hash))
+                                {
+                                    Log.Debug("Found commit hash in refs: {Hash}", hash);
+                                    return hash;
+                                }
+                            }
+
+                            Log.Warning("Could not find commit file at {Path}", commitPath);
+                        }
+                        else if (!string.IsNullOrEmpty(refPath))
+                        {
+                            // It's a direct commit hash
+                            Log.Debug("Found direct commit hash: {Hash}", refPath);
+                            return refPath;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Warning(ex, "Failed to process git path: {GitPath}", gitHeadPath);
+                        // Continue to next path
+                    }
+                }
+
                 Log.Warning("Could not find git commit hash in any location");
-                return "Unknown";
+                return string.Empty;
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "Failed to retrieve Git commit hash");
-                return "Unknown";
+                return string.Empty;
             }
         }
 

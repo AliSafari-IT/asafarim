@@ -37,11 +37,31 @@ DotNetEnv.Env.Load();
 var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 Console.WriteLine($"ASPNETCORE_ENVIRONMENT: {environment}");
 
-var logDirectory =
-    environment?.ToLower() == "production" ? "/var/www/asafarim/logs" : "D:/repos/ASafariM/Logs";
+string baseDir = "/var/www/asafarim.be/asafarim";
+string logDirectory = Path.Combine(baseDir, "logs");
 
-Console.WriteLine($"Log Directory: {logDirectory}"); // Debugging line
-Directory.CreateDirectory(logDirectory);
+try {
+    if (!Directory.Exists(baseDir)) {
+        Console.WriteLine($"Base directory {baseDir} does not exist");
+        // Fall back to a directory we know we can write to
+        logDirectory = "/tmp/asafarim/logs";
+    }
+    
+    Console.WriteLine($"Creating log directory: {logDirectory}");
+    Directory.CreateDirectory(logDirectory);
+    
+    // Verify we can write to it
+    string testFile = Path.Combine(logDirectory, "test.txt");
+    File.WriteAllText(testFile, "Test");
+    File.Delete(testFile);
+} catch (Exception ex) {
+    Console.WriteLine($"Error creating log directory: {ex.Message}");
+    // Fall back to /tmp
+    logDirectory = "/tmp/asafarim/logs";
+    Directory.CreateDirectory(logDirectory);
+}
+
+Console.WriteLine($"Using log directory: {logDirectory}");
 var logFilePath = Path.Combine(logDirectory, "api_.log");
 Console.WriteLine($"Log File Path: {logFilePath}"); // Debugging line
 var line = new string('-', 100);
@@ -63,16 +83,10 @@ try
     builder.Environment.EnvironmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
 
     // // Configure Kestrel to listen on any IP and port
-    // builder.WebHost.ConfigureKestrel(options =>
-    // {
-    //     options.ListenAnyIP(5000);
-    // });
-
-    // // Ensure the API listens on HTTP (not HTTPS)
-    // builder.WebHost.UseKestrel(options =>
-    // {
-    //     options.ListenAnyIP(5000); // Bind to all interfaces
-    // });
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        options.ListenAnyIP(5000); // Listen on all network interfaces
+    });
 
     builder.Services.AddHttpContextAccessor();
 
@@ -242,7 +256,12 @@ try
                         "http://asafarim.com",
                         "https://asafarim.com",
                         "http://www.asafarim.com",
-                        "https://www.asafarim.com"
+                        "https://www.asafarim.com",
+                         "http://asafarim.be",
+                        "https://asafarim.be",
+                        "http://www.asafarim.be",
+                        "https://www.asafarim.be",
+                        "http://82.25.116.73"
                     )
                     .AllowAnyMethod()
                     .AllowAnyHeader()

@@ -10,6 +10,7 @@
     "publishToASafariM": "bash ./publish.sh",
     "asm": "bash ./publish.sh",
     "asm:be": "bash ./publish.be.sh",
+    "asm:com": "bash ./publish.com.sh",
     "asm:cli": "echo \"7\" | bash ./publish.sh",
     "deploy:cli": "bash ./deploy-cli.sh",
     "nt:install": "pnpm --filter asafarim-terminal install",

@@ -28,6 +28,8 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import AccountSettings from "./pages/Accountpage/AccountSettings";
 import { getAllMdFiles } from "./utils/mdFilesUtils";
 import { useAuth } from "./contexts/AuthContext";
+import { TimeoutNotification } from "./components/TimeoutNotification";
+import { ConnectionStatus } from "./components/ConnectionStatus";
 import React from "react";
 import AddProject from "./pages/Project/AddProject";
 import ViewProject from "./pages/Project/ViewProject";
@@ -48,6 +50,7 @@ import PostsList from "./pages/Blog/PostsList";
 import CreatePost from "./pages/Blog/CreatePost";
 import HealthCheck from "./pages/HealthCheck/HealthCheck";
 import ViewUser from "./pages/User/ViewUser";
+import NetworkSettings from "./pages/Settings/NetworkSettings";
 import EditProject from "./pages/Project/EditProject";
 import UnderConstruction from "./pages/UnderConstruction";
 import { trackPageView } from "./services/analyticsService";
@@ -474,11 +477,16 @@ function App() {
             }
           />
           <Route path="/system-health" element={<HealthCheck />} />
+          <Route path="/network-settings" element={<NetworkSettings />} />
           <Route path="/activity" element={<ActivityPage />} />
           <Route path="/navbar-demo" element={<NavbarDemo />} />
           <Route path="/access-denied" element={<AccessDenied />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        
+        {/* Timeout and Connection Management Components */}
+        <TimeoutNotification />
+        <ConnectionStatus showDetails={false} className="fixed bottom-4 right-4 z-50" />
       </div>
     </ThemeProvider>
   );

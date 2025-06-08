@@ -36,7 +36,6 @@ export default defineConfig({
   define: {
     'process.env': {
       NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-      VITE_API_URL: JSON.stringify('http://localhost:5000'),
     },
   },
   server: {

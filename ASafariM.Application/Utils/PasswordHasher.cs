@@ -3,6 +3,7 @@ using System.Collections;
 using System.Security.Cryptography;
 using System.Text;
 using System.Linq;
+using Serilog;
 
 namespace ASafariM.Application.Utils;
 
@@ -20,18 +21,46 @@ public static class PasswordHasher
 
     public static bool VerifyPassword(string password, string storedHash)
     {
-        if (string.IsNullOrEmpty(password))
-            throw new ArgumentException("Password cannot be null or empty", nameof(password));
-        if (string.IsNullOrEmpty(storedHash))
-            throw new ArgumentException("Stored hash cannot be null or empty", nameof(storedHash));
-
         try
         {
+            // Check if the password is null or empty
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                return false;
+            }
+
+            // Check if the stored hash is null or empty
+            if (string.IsNullOrWhiteSpace(storedHash))
+            {
+                return false;
+            }
+
+            // Verify the password against the stored hash
             return BCrypt.Net.BCrypt.Verify(password, storedHash);
         }
-        catch (Exception ex)
+        catch (BCrypt.Net.SaltParseException)
         {
-            throw new ArgumentException("Invalid hash format or failed to verify password", nameof(storedHash), ex);
+            // Log this for monitoring corrupted password hashes
+            Log.Warning(
+                "BCrypt salt parse error - corrupted password hash detected. Hash: {Hash}",
+                storedHash
+            );
+            return false;
+        }
+        catch (ArgumentException ex)
+        {
+            // Log BCrypt-related argument exceptions
+            Log.Warning(
+                "BCrypt argument exception during password verification: {Message}, Hash: {Hash}",
+                ex.Message,
+                storedHash
+            );
+            return false;
+        }
+        catch (Exception)
+        {
+            // Handle any other unexpected exceptions
+            return false;
         }
     }
 }

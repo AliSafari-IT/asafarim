@@ -1,11 +1,9 @@
 // src/pages/Project/AddProject.tsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { IField } from "@/interfaces/IField";
 import Wrapper from "@/layout/Wrapper";
 import entityServices from "@/api/entityServices";
 import { logger } from "@/utils/logger";
-import { jwtDecode } from "jwt-decode";
 import { TextField } from "@fluentui/react/lib/TextField";
 import { PrimaryButton, DefaultButton, IconButton, ActionButton } from "@fluentui/react/lib/Button";
 import { Text } from "@fluentui/react/lib/Text";
@@ -20,15 +18,12 @@ import {
   Search24Regular, 
   ArrowLeft24Regular, 
   Save20Regular,
-  Warning24Regular,
   CheckmarkCircle24Regular,
-  DismissCircle24Regular,
-  InfoRegular
-} from "@fluentui/react-icons";
+  DismissCircle24Regular} from "@fluentui/react-icons";
 import axios from "axios";
 import Toolbar from "@/components/Toolbars/Toolbar";
 import { useAuth } from '@/contexts/AuthContext';
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 interface FieldError {
   name: string;
@@ -277,9 +272,31 @@ const AddProject: React.FC = () => {
   const fetchGithubRepos = async () => {
     try {
       setIsLoadingRepos(true);
-      const response = await axios.get('https://api.github.com/users/AliSafari-IT/repos');
-      setGithubRepos(response.data);
-      logger.info(`Fetched ${response.data.length} GitHub repositories`);
+      let allRepos: any[] = [];
+      let page = 1;
+      const perPage = 100; // Maximum allowed per page
+      
+      while (true) {
+        const response = await axios.get(`https://api.github.com/users/AliSafari-IT/repos?page=${page}&per_page=${perPage}&sort=updated`);
+        const repos = response.data;
+        
+        if (repos.length === 0) {
+          // No more repositories to fetch
+          break;
+        }
+        
+        allRepos = [...allRepos, ...repos];
+        
+        // If we got less than perPage repos, we've reached the end
+        if (repos.length < perPage) {
+          break;
+        }
+        
+        page++;
+      }
+      
+      setGithubRepos(allRepos);
+      logger.info(`Fetched ${allRepos.length} GitHub repositories across ${page} pages`);
     } catch (error) {
       logger.error('Error fetching GitHub repositories: ' + error);
       setError('Failed to fetch GitHub repositories');
@@ -292,9 +309,31 @@ const AddProject: React.FC = () => {
   const fetchGithubGists = async () => {
     try {
       setIsLoadingGists(true);
-      const response = await axios.get('https://api.github.com/users/AliSafari-IT/gists');
-      setGithubGists(response.data);
-      logger.info(`Fetched ${response.data.length} GitHub gists`);
+      let allGists: any[] = [];
+      let page = 1;
+      const perPage = 100; // Maximum allowed per page
+      
+      while (true) {
+        const response = await axios.get(`https://api.github.com/users/AliSafari-IT/gists?page=${page}&per_page=${perPage}`);
+        const gists = response.data;
+        
+        if (gists.length === 0) {
+          // No more gists to fetch
+          break;
+        }
+        
+        allGists = [...allGists, ...gists];
+        
+        // If we got less than perPage gists, we've reached the end
+        if (gists.length < perPage) {
+          break;
+        }
+        
+        page++;
+      }
+      
+      setGithubGists(allGists);
+      logger.info(`Fetched ${allGists.length} GitHub gists across ${page} pages`);
     } catch (error) {
       logger.error('Error fetching GitHub gists: ' + error);
       setError('Failed to fetch GitHub gists');
@@ -322,44 +361,45 @@ const AddProject: React.FC = () => {
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Mark all fields as touched
-    const allFields = Object.keys(formData);
-    setTouchedFields(new Set(allFields));
-    
-    // Validate all fields
-    if (!validateForm()) {
-      // Scroll to the first field with an error
-      if (fieldErrors.length > 0) {
-        const firstErrorField = document.getElementsByName(fieldErrors[0].name)[0];
-        if (firstErrorField) {
-          firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          firstErrorField.focus();
-        }
-      }
-      
-      setError("Please correct the highlighted fields before submitting");
-      return;
-    }
-    
     setLoading(true);
     setError(null);
     setSuccess(null);
+    setFieldErrors([]);
 
     try {
-      // Check if user is authenticated using the useAuth hook
+      // Enhanced authentication check with detailed logging
       if (!authenticated || !authenticatedUser) {
-        logger.error("No authenticated user found");
-        setError("You must be logged in to create a project");
+        logger.error("Authentication check failed:", { authenticated, authenticatedUser });
+        setError("You must be logged in to create a project. Please log in and try again.");
         setLoading(false);
         return;
       }
 
-      // Use the user ID from the authenticated user object
-      const userId = authenticatedUser.id;
+      // Enhanced user ID validation with multiple fallback options
+      let userId = authenticatedUser.id || authenticatedUser.Id || authenticatedUser.userId || authenticatedUser.UserId;
+      
       if (!userId) {
-        logger.error("User ID not found in authenticated user object");
-        setError("Unable to determine user ID. Please try logging out and back in.");
+        logger.error("User ID extraction failed. Available user properties:", Object.keys(authenticatedUser));
+        logger.error("Full authenticated user object:", authenticatedUser);
+        setError("Unable to determine user ID. Please log out and log back in, then try again.");
+        setLoading(false);
+        return;
+      }
+
+      logger.info("Creating project with user ID:", userId);
+
+      // Check if auth token is available
+      const token = localStorage.getItem('auth') || sessionStorage.getItem('auth');
+      if (!token) {
+        logger.error("No authentication token found in storage");
+        setError("Authentication token not found. Please log in again.");
+        setLoading(false);
+        return;
+      }
+
+      // Validate form data before sending
+      if (!formData.name.trim()) {
+        setError("Project name is required");
         setLoading(false);
         return;
       }
@@ -387,8 +427,8 @@ const AddProject: React.FC = () => {
       const todayFormatted = today.toISOString().split('T')[0];
 
       const projectData = {
-        Name: formData.name,
-        Description: formData.description,
+        Name: formData.name.trim(),
+        Description: formData.description.trim(),
         // Use today's date as default if not provided
         StartDate: formData.startDate ? formData.startDate : todayFormatted,
         // Set EndDate to null if not provided (optional field)
@@ -424,7 +464,7 @@ const AddProject: React.FC = () => {
           }
         }
         
-        logger.info("Sending project data with formatted dates: " + JSON.stringify(projectData));
+        logger.info("Sending project data with formatted dates:", JSON.stringify(projectData, null, 2));
         
         // Show a temporary success message
         setSuccess("Creating your project...");
@@ -433,7 +473,7 @@ const AddProject: React.FC = () => {
         const result = await entityServices.addEntity("project", projectData);
 
         if (result) {
-          logger.info("Project created successfully: " + JSON.stringify(result));
+          logger.info("Project created successfully:", JSON.stringify(result));
           setSuccess("Project created successfully! Redirecting...");
           
           // Redirect after a short delay to show the success message
@@ -446,7 +486,7 @@ const AddProject: React.FC = () => {
       } catch (formatError) {
         // Handle date formatting errors gracefully
         setError("There was an issue with the date format. Using today's date for start date.");
-        logger.warn("Date formatting error, using defaults: " + formatError);
+        logger.warn("Date formatting error, using defaults:", formatError);
         
         // Try again with today's date
         projectData.StartDate = todayFormatted;
@@ -455,7 +495,7 @@ const AddProject: React.FC = () => {
         try {
           const result = await entityServices.addEntity("project", projectData);
           if (result) {
-            logger.info("Project created successfully with default dates: " + JSON.stringify(result));
+            logger.info("Project created successfully with default dates:", JSON.stringify(result));
             setSuccess("Project created successfully! Redirecting...");
             
             // Redirect after a short delay to show the success message
@@ -470,79 +510,100 @@ const AddProject: React.FC = () => {
         }
       }
     } catch (error) {
-      logger.error("Error creating project: " + JSON.stringify(error));
+      logger.error("Error creating project:", error);
+      logger.error("Error details:", {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined,
+        response: axios.isAxiosError(error) ? error.response : undefined
+      });
       setSuccess(null);
       
-      // Extract more specific error messages from the API response
-      if (axios.isAxiosError(error) && error.response) {
-        const { status, data } = error.response;
+      // Enhanced error handling with more specific messages
+      if (axios.isAxiosError(error)) {
+        const { response, request, message } = error;
         
-        if (status === 400) {
-          // Handle validation errors from the API
-          if (data.errors) {
-            // If we have a structured validation errors object
-            const apiFieldErrors: FieldError[] = [];
-            
-            Object.entries(data.errors).forEach(([field, messages]) => {
-              const fieldName = field.toLowerCase();
-              const message = Array.isArray(messages) ? messages.join(', ') : String(messages);
+        if (response) {
+          // Server responded with error status
+          const { status, data } = response;
+          logger.error(`API Error Response - Status: ${status}, Data:`, data);
+          
+          if (status === 400) {
+            // Handle validation errors from the API
+            if (data.errors) {
+              // If we have a structured validation errors object
+              const apiFieldErrors: FieldError[] = [];
               
-              // Clean up technical error messages
-              let userFriendlyMessage = message;
-              if (message.includes("JSON value could not be converted to System.DateTime")) {
-                userFriendlyMessage = "Please enter a valid date format";
-              } else if (message.includes("projectDto field is required")) {
-                userFriendlyMessage = "This field is required";
+              Object.entries(data.errors).forEach(([field, messages]) => {
+                const fieldName = field.toLowerCase();
+                const message = Array.isArray(messages) ? messages.join(', ') : String(messages);
+                
+                // Clean up technical error messages
+                let userFriendlyMessage = message;
+                if (message.includes("JSON value could not be converted to System.DateTime")) {
+                  userFriendlyMessage = "Please enter a valid date format";
+                } else if (message.includes("projectDto field is required")) {
+                  userFriendlyMessage = "This field is required";
+                }
+                
+                // Add to field errors
+                apiFieldErrors.push({ name: fieldName, message: userFriendlyMessage });
+                
+                // Mark field as touched
+                setTouchedFields(prev => new Set(prev).add(fieldName));
+              });
+              
+              setFieldErrors(apiFieldErrors);
+              
+              // Create a summary error message
+              const errorFields = apiFieldErrors.map(err => {
+                const fieldLabel = err.name.charAt(0).toUpperCase() + err.name.slice(1);
+                return fieldLabel;
+              }).join(', ');
+              
+              setError(`Please fix the following fields: ${errorFields}`);
+              
+              // Scroll to the first field with an error
+              if (apiFieldErrors.length > 0) {
+                const firstErrorField = document.getElementsByName(apiFieldErrors[0].name)[0];
+                if (firstErrorField) {
+                  firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  firstErrorField.focus();
+                }
               }
-              
-              // Add to field errors
-              apiFieldErrors.push({ name: fieldName, message: userFriendlyMessage });
-              
-              // Mark field as touched
-              setTouchedFields(prev => new Set(prev).add(fieldName));
-            });
-            
-            setFieldErrors(apiFieldErrors);
-            
-            // Create a summary error message
-            const errorFields = apiFieldErrors.map(err => {
-              const fieldLabel = err.name.charAt(0).toUpperCase() + err.name.slice(1);
-              return fieldLabel;
-            }).join(', ');
-            
-            setError(`Please fix the following fields: ${errorFields}`);
-            
-            // Scroll to the first field with an error
-            if (apiFieldErrors.length > 0) {
-              const firstErrorField = document.getElementsByName(apiFieldErrors[0].name)[0];
-              if (firstErrorField) {
-                firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                firstErrorField.focus();
-              }
+            } else if (data.message) {
+              // If we have a single error message
+              setError(data.message);
+            } else if (typeof data === 'string') {
+              // If the response is a string
+              setError(data);
+            } else {
+              // Fallback for other 400 errors
+              setError("Please check your input and try again.");
             }
-          } else if (data.message) {
-            // If we have a single error message
-            setError(data.message);
-          } else if (typeof data === 'string') {
-            // If the response is a string
-            setError(data);
+          } else if (status === 401) {
+            setError("Your session has expired. Please log in again to continue.");
+          } else if (status === 403) {
+            setError("You don't have permission to create projects.");
+          } else if (status === 500) {
+            setError("We're experiencing technical difficulties. Please try again later.");
           } else {
-            // Fallback for other 400 errors
-            setError("Please check your input and try again.");
+            // Generic error with status code
+            setError(`Something went wrong (${status}). Please try again.`);
           }
-        } else if (status === 401) {
-          setError("Your session has expired. Please log in again to continue.");
-        } else if (status === 403) {
-          setError("You don't have permission to create projects.");
-        } else if (status === 500) {
-          setError("We're experiencing technical difficulties. Please try again later.");
+        } else if (request) {
+          // Request was made but no response received - this is the "Network Error" case
+          logger.error("Network Error - No response received:", request);
+          setError("Network Error: Unable to connect to the server. Please check your internet connection and ensure the API service is running. If you're in development mode, make sure the backend API is started on the correct port.");
         } else {
-          // Generic error with status code
-          setError(`Something went wrong (${status}). Please try again.`);
+          // Something else happened
+          logger.error("Request setup error:", message);
+          setError(`Request Error: ${message}. Please try again.`);
         }
       } else {
         // Non-Axios error
-        setError(error instanceof Error ? error.message : "Unable to create project. Please try again.");
+        const errorMessage = error instanceof Error ? error.message : "Unable to create project. Please try again.";
+        logger.error("Non-Axios error:", errorMessage);
+        setError(errorMessage);
       }
     } finally {
       setLoading(false);
@@ -846,6 +907,7 @@ const AddProject: React.FC = () => {
               <div className="max-h-80 overflow-y-auto border border-[var(--border-primary)] rounded-md">
                 <List
                   items={filteredRepos}
+                  getPageSpecification={() => ({ itemCount: filteredRepos.length })}
                   onRenderCell={(item?: {name: string, html_url: string, description?: string}) => (
                     <div 
                       className="p-3 border-b border-[var(--border-primary)] hover:bg-[var(--bg-secondary)] flex items-center cursor-pointer"
@@ -927,6 +989,7 @@ const AddProject: React.FC = () => {
               <div className="max-h-80 overflow-y-auto border border-[var(--border-primary)] rounded-md">
                 <List
                   items={filteredGists}
+                  getPageSpecification={() => ({ itemCount: filteredGists.length })}
                   onRenderCell={(item?: {description: string, html_url: string, files?: any}) => (
                     <div 
                       className="p-3 border-b border-[var(--border-primary)] hover:bg-[var(--bg-secondary)] flex items-center cursor-pointer"

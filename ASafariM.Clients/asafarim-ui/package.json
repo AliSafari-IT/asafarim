@@ -13,7 +13,7 @@
     "clean": "rm -rf node_modules .pnpm pnpm-lock.yaml",
     "reinstall": "echo \" 📦 Clearing cache and installing dependencies...\" && pnpm store prune && pnpm clean && pnpm install",
     "start": "npx kill-port 3000 && vite --port 3000",
-    "build:prod": "pnpm reinstall && tsc --noEmit && echo \" ⚙️  Starting production build...\" && vite build",
+    "build:prod": "pnpm reinstall && tsc --noEmit && echo \" ⚙️ Starting production build...\" && vite build",
     "build:dev": "pnpm install && tsc --noEmit && vite build",
     "build": "cross-env NODE_ENV=production pnpm exec vite build",
     "build:npx": "cross-env NODE_ENV=production npx vite build",

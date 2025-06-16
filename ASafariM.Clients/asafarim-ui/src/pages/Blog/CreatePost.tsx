@@ -12,7 +12,7 @@ import {
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-import Wrapper from '@/layout/Wrapper/Wrapper';
+import Wrapper from '@/layout/Wrapper';
 import Header from '@/layout/Header/Header';
 import apiUrls from '@/api/getApiUrls';
 import './BlogPost.scss';

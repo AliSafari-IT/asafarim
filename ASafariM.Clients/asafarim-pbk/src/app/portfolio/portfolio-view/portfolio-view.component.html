@@ -1,0 +1,8 @@
+<!-- portfolio-view.component.html -->
+<h2>{{ portfolio?.headline }}</h2>
+<p>{{ portfolio?.biography }}</p>
+
+<section>
+  <h4>Experience</h4>
+  <markdown [data]="portfolio?.experienceMarkdown"></markdown>
+</section>

@@ -1,6 +1,7 @@
+import React from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import useAuth from '../hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import AccessDenied from '../pages/AccessDenied';
 import {logger} from '@/utils/logger';
 

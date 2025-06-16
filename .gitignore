@@ -42,6 +42,8 @@ dist/**
 .env.development.local
 .env.test.local
 .env.production.local
+.env.development
+.env.production
 
 # Ignore log files
 npm-debug.log*
@@ -123,10 +125,24 @@ log-*.txt
 yarn.lock
 yarn.lock
 
-ASafariM.Clients/asafarim-ui/stats.html
-ASafariM.Clients/asafarim-ui/stats.html
-ASafariM.Clients/asafarim-ui/stats.html
-ASafariM.Clients/asafarim-ui/stats.html
+# Ignore ASafariM.Api
 ASafariM.Api/Properties/launchSettings.Development.json
 ASafariM.Api/Properties/launchSettings.production.json
 ASafariM.Api/Properties/launchSettings.json
+
+# Ignore ASafariM.Clients/asafarim-blog
+ASafariM.Clients/asafarim-blog/stats.html
+**/.docusaurus/*
+ASafariM.Clients/asafarim-blog/.docusaurus/client-manifest.json
+ASafariM.Clients/asafarim-blog/.docusaurus/client-modules.js
+ASafariM.Clients/asafarim-blog/.docusaurus/docusaurus.config.mjs
+ASafariM.Clients/asafarim-blog/.docusaurus/docusaurus-plugin-content-blog/default/p/*.json
+
+# Ignore ASafariM.Clients/asafarim-ui
+ASafariM.Clients/asafarim-ui/stats.html
+
+
+
+.qodo
+
+ASafariM.Clients/asafarim-cli/ .env

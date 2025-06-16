@@ -13,8 +13,9 @@ namespace ASafariM.Test.DomainTests.Entities
         private User _user;
 
         [TestInitialize]
-        public void Setup()
+        public override void Setup()
         {
+            base.Setup(); // Call the base class Setup method
             _user = new User();
         }
     }

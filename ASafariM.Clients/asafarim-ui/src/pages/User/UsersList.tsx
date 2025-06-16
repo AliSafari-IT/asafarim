@@ -3,13 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { IUser } from '../../interfaces/IUser';
 import { deleteUserByAdmin, getUsers, getRolesByUserId, getRoles } from '../../api/userService';
-import Wrapper from '../../layout/Wrapper/Wrapper';
+import Wrapper from '../../layout/Wrapper';
 import Footer from '../../layout/Footer/Footer';
 import Header from '@/layout/Header/Header';
 import { EditSvgIcon } from '@/assets/SvgIcons/EditSvgIcon';
 import { DeleteSvgIcon } from '@/assets/SvgIcons/DeleteSvgIcon';
 import { ViewSvgIcon } from '@/assets/SvgIcons/ViewSvgIcon';
-import useAuth from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import axios from 'axios'; // Import axios
 import Notification from '@/components/Notification/Notification';
 import { IApiResponse, IRole, IUserRole } from '@/interfaces';

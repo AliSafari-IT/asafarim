@@ -5,7 +5,7 @@ import Header from '../../layout/Header/Header';
 import Footer from '../../layout/Footer/Footer';
 import axios from 'axios';
 import { trackEvent } from '../../services/analyticsService';
-import useAuth from '../../hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import { logger } from '@/utils/logger';
 
 // Activity interface

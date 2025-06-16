@@ -39,6 +39,7 @@ namespace ASafariM.Api
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<ITopicRepository, TopicRepository>();
             services.AddScoped<ISitemapItemRepository, SitemapItemRepository>();
+            services.AddScoped<IBibliographyRepository, BibliographyRepository>();
         }
 
         private static void RegisterApplicationServices(IServiceCollection services)
@@ -49,6 +50,7 @@ namespace ASafariM.Api
             services.AddScoped<JwtTokenService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
+            services.AddScoped<IBibliographyService, BibliographyService>();
 
             // Register IEntityService<T>
             services.AddScoped(typeof(IEntityService<>), typeof(EntityService<>));

@@ -16,6 +16,9 @@ using Serilog;
 
 namespace ASafariM.Presentation.Controllers
 {
+    /// <summary>
+    /// Provides access to posts.
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class PostsController : ControllerBase
@@ -49,7 +52,12 @@ namespace ASafariM.Presentation.Controllers
         private bool IsGuest => User.IsInRole(RoleEnum.Guest.ToString());
         private bool IsUser => User.IsInRole(RoleEnum.User.ToString());
 
-        // [Authorize(Roles = "Admin,SuperAdmin,Editor,Moderator,User")]
+        /// <summary>
+        /// Creates a new post.
+        /// </summary>
+        /// <param name="command">Create post command</param>
+        /// <returns>Created post</returns>
+        [Authorize(Roles = "Admin,SuperAdmin,Editor,Moderator,User")]
         [HttpPost("create")]
         public async Task<ActionResult<PostDto>> CreatePost([FromBody] CreatePostCommand command)
         {
@@ -107,7 +115,11 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
-        // GET: api/Posts/5
+        /// <summary>
+        /// Retrieves a post by ID.
+        /// </summary>
+        /// <param name="id">ID of the post to retrieve</param>
+        /// <returns>Post details</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<PostDto>> GetPost(Guid id)
         {
@@ -131,8 +143,11 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
-        // [Authorize(Roles = "Admin,SuperAdmin,Editor,Moderator,User")]
-        // GET: api/Posts
+        /// <summary>
+        /// Retrieves all posts.
+        /// </summary>
+        /// <returns>Collection of posts</returns>
+        [Authorize(Roles = "Admin,SuperAdmin,Editor,Moderator,User")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PostDto>>> GetPosts()
         {

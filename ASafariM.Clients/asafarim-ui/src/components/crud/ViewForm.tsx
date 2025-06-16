@@ -1,5 +1,5 @@
 import { IField } from "@/interfaces/IField";
-import Wrapper from "@/layout/Wrapper/Wrapper";
+import Wrapper from "@/layout/Wrapper";
 import React from "react";
 
 interface ViewFormProps {

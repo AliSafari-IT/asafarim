@@ -1,7 +1,5 @@
 import Layout from "../../layout/Layout";
-import NotAuthenticated from "../../components/NotAuthenticated";
 import HomePanels from "./HomePanels";
-import useAuth from "../../hooks/useAuth";
 import StacksPage from "../../components/Stacks/StacksPage";
 import DisplayMd from "@/components/MarkdownPage/DisplayMd";
 import { useLocation } from "react-router-dom";
@@ -12,7 +10,6 @@ import HeroSection from "./HeroSection";
 import TechSkillsSection from "./TechSkillsSection";
 
 export const Home = () => {
-  const user = useAuth();
   const location = useLocation();
   var isUnderConstruction = false;
 
@@ -25,22 +22,17 @@ export const Home = () => {
     loadMarkdownContent();
   }, [location.pathname]);
 
-  if (!user) {
-    return (
-      <Layout header={<></>} pageTitle="NotAuthenticated Page">
-        <div
-          className="w-full mt-3 alert alert-danger alert-dismissible fade show"
-          role="alert"
-        >
-          <NotAuthenticated />
-        </div>
-      </Layout>
-    );
-  }
-
+  // Removed authentication check to allow all users to see the home page
   return (
     <Layout header={<></>} pageTitle="Home">
-      {isUnderConstruction && <UnderConstruction />}
+      {isUnderConstruction && (
+        <UnderConstruction 
+          title="Under Construction"
+          description="This page is currently under construction."
+          constructionTips={["Check back soon for updates", "We're working hard to improve this page"]}
+          bodyText="Thank you for your patience while we improve this page."
+        />
+      )}
       <HeroSection />
       <TechSkillsSection />
       <DisplayMd markdownContent={mdFile} id="readMe" />

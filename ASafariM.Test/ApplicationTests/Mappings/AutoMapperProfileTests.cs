@@ -3,41 +3,23 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace ASafariM.Test
+namespace ASafariM.Test.ApplicationTests.Mappings
 {
-    public abstract class TestBase
+    [TestClass]
+    public class AutoMapperProfileTests : TestBase
     {
-        public AppDbContext Context { get; set; }
-        protected string DatabaseName { get; }
-
-        public TestBase()
-        {
-            DatabaseName = $"TestDb_{Guid.NewGuid()}"; // Unique database name for each test
-            var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase(databaseName: DatabaseName)
-                .Options;
-            Context = new AppDbContext(options);
-        }
-
         [TestInitialize]
-        public virtual void Initialize()
+        public override void Setup()
         {
-            base.Setup(); // Call base setup if needed
+            base.Setup(); // Call base setup
+            // Add any AutoMapper-specific setup here
         }
 
-        [TestCleanup]
-        public virtual void Cleanup()
+        [TestMethod]
+        public void AutoMapper_Configuration_IsValid()
         {
-            Context?.Dispose();
-        }
-
-        protected static Mock<AppDbContext> CreateMockContext()
-        {
-            return new Mock<AppDbContext>(
-                new DbContextOptionsBuilder<AppDbContext>()
-                    .UseInMemoryDatabase($"MockDb_{Guid.NewGuid()}")
-                    .Options
-            );
+            // TODO: Implement AutoMapper configuration validation test
+            Assert.IsTrue(true, "Placeholder test - implement actual AutoMapper validation");
         }
     }
 }

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { FaKey, FaTrash, FaDownload, FaUser } from "react-icons/fa";
-import Wrapper from "@/layout/Wrapper/Wrapper";
+import Wrapper from "@/layout/Wrapper";
 import Header from "@/layout/Header/Header";
 import Footer from "@/layout/Footer/Footer";
-import useAuth from "@/hooks/useAuth";
+import { useAuth } from '@/contexts/AuthContext';
 import DeleteAccount from "../User/DeleteAccount";
 import ExportData from "../User/ExportData";
 import { useNavigate } from "react-router-dom";
@@ -143,6 +143,7 @@ const AccountSettings: React.FC = () => {
               }
               className="px-6 py-2.5 bg-[var(--info)] hover:bg-[var(--info-dark)] text-white font-medium rounded-lg shadow-md transition-all duration-200 flex items-center"
               disabled={loading}
+              data-testid="update-profile-button"
             >
               {loading ? (
                 <>
@@ -184,6 +185,7 @@ const AccountSettings: React.FC = () => {
               onClick={handleUpdatePassword}
               className="px-6 py-2.5 bg-[var(--info)] hover:bg-[var(--info-dark)] text-white font-medium rounded-lg shadow-md transition-all duration-200 flex items-center"
               disabled={loading || !currentPassword || !newPassword}
+              data-testid="update-password-button"
             >
               {loading ? (
                 <>
@@ -224,7 +226,7 @@ const AccountSettings: React.FC = () => {
     return (
       <Wrapper header={<Header />} footer={<Footer />}>
         <div className="flex justify-center items-center h-[70vh]">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[var(--info)]"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[var(--info)]" data-testid="loading-spinner"></div>
         </div>
       </Wrapper>
     );
@@ -234,11 +236,12 @@ const AccountSettings: React.FC = () => {
     return (
       <Wrapper header={<Header />} footer={<Footer />}>
         <div className="flex items-center justify-center h-[70vh]">
-          <div className="bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-lg max-w-lg">
+          <div className="bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-lg max-w-lg" data-testid="error-container">
             <p className="font-medium">{error}</p>
             <button
               className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
               onClick={() => setError(null)}
+              data-testid="dismiss-error-button"
             >
               Dismiss
             </button>
@@ -258,15 +261,16 @@ const AccountSettings: React.FC = () => {
               <img 
                 src={authenticatedUser.profilePicture} 
                 alt={`${authenticatedUser.firstName} ${authenticatedUser.lastName}`}
-                className="w-16 h-16 rounded-full object-cover border-4 border-white shadow-md" 
+                className="w-16 h-16 rounded-full object-cover border-4 border-white shadow-md"
+                data-testid="user-profile-image"
               />
             ) : (
-              <div className="w-16 h-16 rounded-full bg-white text-[var(--info)] flex items-center justify-center text-xl font-bold border-4 border-white shadow-md">
+              <div className="w-16 h-16 rounded-full bg-white text-[var(--info)] flex items-center justify-center text-xl font-bold border-4 border-white shadow-md" data-testid="user-initials">
                 {getUserInitials()}
               </div>
             )}
             <div className="ml-6 text-white">
-              <h1 className="text-2xl font-bold">Account Settings</h1>
+              <h1 className="text-2xl font-bold" data-testid="account-settings-title">Account Settings</h1>
               <p className="opacity-90">Manage your preferences and security settings</p>
             </div>
           </div>
@@ -288,6 +292,7 @@ const AccountSettings: React.FC = () => {
               tabs={tabs}
               defaultActiveKey="email"
               onTabChange={handleTabChange}
+              data-testid="account-settings-tabs"
             />
           </div>
         </Suspense>

@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { logger } from '@/utils/logger';
-import useAuth from '../../hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 
 const LogoutPage = () => {
   const navigate = useNavigate();
@@ -38,10 +38,10 @@ const LogoutPage = () => {
   }, [navigate, previousLocation, logout]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100" data-testid="logout-page">
       <div className="p-8 bg-white rounded shadow-md">
-        <h1 className="text-2xl font-bold mb-4">Logging out...</h1>
-        <p>Please wait while we log you out.</p>
+        <h1 className="text-2xl font-bold mb-4" data-testid="logout-heading">Logging out...</h1>
+        <p data-testid="logout-message">Please wait while we log you out.</p>
       </div>
     </div>
   );

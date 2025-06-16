@@ -45,20 +45,15 @@ export const updateUsername = async (model: { userId: string; newUsername: strin
 export const updatePassword = async (model: { Id: string; currentPassword: string; newPassword: string }) => {
   try {
     const url = `${API_URL}/change-password`;
-    logger.log("updatePassword → model for url  is:" + url, model);
-
-    try{
-      const response = await axios.post(url, model);
-      return response.data;
-    }
-    catch(error){
-      logger.log("updatePassword → error is:", error);
-    }
+    logger.log("updatePassword → model for url is:" + url, model);
+    
+    const response = await axios.post(url, model);
+    return response.data;
   } catch (error) {
     // Use the centralized error handler
     const err = error as AxiosError;
     const message = handleError(err); 
-    logger.log('Error message when updating password:', message);
+    logger.error('Error message when updating password:', message);
     return { message };
   }
 };

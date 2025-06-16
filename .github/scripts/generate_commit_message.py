@@ -1,8 +1,8 @@
+#!/usr/bin/env python3
 import subprocess
 import logging
-from openai import OpenAI, OpenAIError, RateLimitError
-from dotenv import load_dotenv
 import os
+import sys
 import time
 
 # Created by Ali Safari, Senior Software Engineer at ASafariM
@@ -12,22 +12,49 @@ import time
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# Load environment variables from .env file
-load_dotenv()
+# Try to import dependencies with fallback
+OPENAI_AVAILABLE = False
+client = None
 
-# Initialize OpenAI client
 try:
-    client = OpenAI(
-        organization=os.getenv("OPENAI_ORG_ID"), api_key=os.getenv("OPENAI_API_KEY")
-    )
+    from openai import OpenAI, OpenAIError, RateLimitError
+    from dotenv import load_dotenv
+    
+    # Load environment variables from .env file
+    load_dotenv()
+    
+    # Initialize OpenAI client
+    api_key = os.getenv("OPENAI_API_KEY")
+    if api_key:
+        client = OpenAI(
+            organization=os.getenv("OPENAI_ORG_ID"), 
+            api_key=api_key
+        )
+        OPENAI_AVAILABLE = True
+        logging.info("OpenAI client initialized successfully")
+    else:
+        logging.warning("OPENAI_API_KEY not found in environment variables")
+        
+except ImportError as e:
+    logging.warning(f"OpenAI dependencies not available: {e}")
+    logging.info("Falling back to simple commit message generation")
 except Exception as e:
-    logging.error(f"Failed to initialize OpenAI client: {e}")
-    raise SystemExit(e)
+    logging.warning(f"Failed to initialize OpenAI client: {e}")
+    logging.info("Falling back to simple commit message generation")
 
 
 def get_git_diff():
     """Get a summary of changes from git."""
     try:
+        # Check if there are staged changes
+        staged_status = subprocess.check_output(
+            ["git", "diff", "--cached", "--name-only"], encoding="utf-8"
+        ).strip()
+        
+        if not staged_status:
+            logging.info("No staged changes found")
+            return None
+            
         # Get list of changed files
         files_changed = subprocess.check_output(
             ["git", "diff", "--cached", "--name-status"], encoding="utf-8"
@@ -52,25 +79,38 @@ def get_git_diff():
         return None
 
 
-# Define a list of GPT engines to use
-gpt_engines = [
-    "o1-mini",
-    "gpt-3.5-turbo",
-    "o1-preview",
-    "gpt-4o",
-    "gpt-4",
-    "gpt-4o-mini-realtime-preview",
-    "gpt-4o-realtime-preview",
-    "gpt-4-turbo",
-    "gpt-4o-mini",
-    "chatgpt-4o-latest",
-]
-
-gpt_engine = gpt_engines[1]
+def generate_simple_commit_message(diff):
+    """Generate a simple commit message based on file changes."""
+    if not diff:
+        return "chore: update files"
+    
+    # Simple logic based on file extensions and content
+    if ".py" in diff:
+        return "feat(scripts): update Python scripts"
+    elif ".json" in diff and "package.json" in diff:
+        return "chore(deps): update package configuration"
+    elif ".md" in diff:
+        return "docs: update documentation"
+    elif any(ext in diff for ext in [".js", ".ts", ".jsx", ".tsx", ".vue"]):
+        return "feat(frontend): update frontend code"
+    elif ".cs" in diff:
+        return "feat(backend): update backend code"
+    elif ".yml" in diff or ".yaml" in diff:
+        return "chore(config): update configuration files"
+    elif ".sql" in diff:
+        return "feat(database): update database schema"
+    elif ".sh" in diff or ".bash" in diff:
+        return "chore(scripts): update shell scripts"
+    else:
+        return "chore: update files"
 
 
 def generate_commit_message(diff):
-    """Generate a commit message using OpenAI's GPT model."""
+    """Generate a commit message using OpenAI's GPT model or fallback."""
+    if not OPENAI_AVAILABLE or not client:
+        logging.info("Using simple commit message generation")
+        return generate_simple_commit_message(diff)
+    
     prompt = (
         "Generate a concise, conventional commit message for the following changes.\n"
         "Use the format: <type>(<scope>): <description>\n"
@@ -83,115 +123,33 @@ def generate_commit_message(diff):
     for i in range(retries):
         try:
             response = client.chat.completions.create(
-                model="gpt-3.5-turbo",  # Use 3.5-turbo for faster response and lower token limit
+                model="gpt-3.5-turbo",
                 messages=[{"role": "user", "content": prompt}],
-                max_tokens=100  # Limit response length
+                max_tokens=100
             )
-            message = response.choices[-1].message.content
+            message = response.choices[0].message.content
             # Remove backticks and 'commit message:' prefix if present
             message = message.strip('`').replace('commit message:', '').strip()
             return message
         except (OpenAIError, RateLimitError) as e:
-            logging.warning(f"Attempt {i + 1}: Error generating commit message using GPT {gpt_engine}: {e}")
+            logging.warning(f"Attempt {i + 1}: Error generating commit message: {e}")
             time.sleep(2 ** i)  # Exponential backoff
         except Exception as e:
             logging.error(f"Unexpected error: {e}")
             break
-    return None
-
-
-def is_branch_up_to_date():
-    try:
-        # Fetch remote changes without merging
-        subprocess.run(['git', 'fetch'], check=True)
-        
-        # Compare local and remote branches
-        status = subprocess.check_output(
-            ['git', 'status', '-uno'], encoding='utf-8'
-        )
-        return 'Your branch is up to date' in status
-    except subprocess.CalledProcessError as e:
-        logging.error(f'Error checking branch status: {e}')
-        return False
-
-
-def stash_changes():
-    try:
-        subprocess.run(['git', 'stash'], check=True)
-        logging.info('Stashed uncommitted changes')
-        return True
-    except subprocess.CalledProcessError as e:
-        logging.error(f'Error stashing changes: {e}')
-        return False
-
-
-def unstash_changes():
-    try:
-        subprocess.run(['git', 'stash', 'pop'], check=True)
-        logging.info('Restored stashed changes')
-        return True
-    except subprocess.CalledProcessError as e:
-        logging.error(f'Error unstashing changes: {e}')
-        return False
-
-
-def pull_changes():
-    try:
-        # Check if there are uncommitted changes
-        status = subprocess.check_output(
-            ['git', 'status', '--porcelain'], encoding='utf-8'
-        )
-        
-        stashed = False
-        if status.strip():  # If there are uncommitted changes
-            if not stash_changes():
-                return False
-            stashed = True
-            
-        # Perform the pull with rebase
-        subprocess.run(['git', 'pull', '--rebase'], check=True)
-        logging.info('Successfully pulled remote changes')
-        
-        # Restore stashed changes if we stashed them
-        if stashed:
-            if not unstash_changes():
-                return False
-                
-        return True
-    except subprocess.CalledProcessError as e:
-        logging.error(f'Error pulling changes: {e}')
-        return False
-
-
-def stage_changes():
-    try:
-        subprocess.run(['git', 'add', '.'], check=True)
-        logging.info('Staged all changes')
-        return True
-    except subprocess.CalledProcessError as e:
-        logging.error(f'Error staging changes: {e}')
-        return False
+    
+    # Fallback to simple generation if AI fails
+    logging.warning("AI generation failed, using simple fallback")
+    return generate_simple_commit_message(diff)
 
 
 def main():
-    # Check if branch is up to date
-    if not is_branch_up_to_date():
-        logging.info('Local branch is behind remote. Pulling changes...')
-        if not pull_changes():
-            logging.error('Failed to pull changes. Aborting commit.')
-            return
-
-    # Stage changes before getting diff
-    if not stage_changes():
-        logging.error('Failed to stage changes. Aborting commit.')
-        return
-
+    # Remove the automatic staging since it's done in package.json
     diff = get_git_diff()
     if diff:
         commit_message = generate_commit_message(diff)
         if commit_message:
-            logging.info('Generated Commit Message:')
-            logging.info(commit_message)
+            logging.info(f'Generated Commit Message: {commit_message}')
 
             # Create the commit with the generated message
             try:
@@ -199,10 +157,19 @@ def main():
                 logging.info('Commit created successfully!')
             except subprocess.CalledProcessError as e:
                 logging.error(f'Error creating commit: {e}')
+                sys.exit(1)
         else:
-            logging.warning('Failed to generate commit message.')
+            logging.warning('Failed to generate commit message. Using fallback.')
+            # Fallback commit message
+            try:
+                subprocess.run(['git', 'commit', '-m', 'chore: update files'], check=True)
+                logging.info('Fallback commit created successfully!')
+            except subprocess.CalledProcessError as e:
+                logging.error(f'Error creating fallback commit: {e}')
+                sys.exit(1)
     else:
-        logging.info('No changes to commit.')
+        logging.info('No staged changes found.')
+        sys.exit(0)
 
 
 if __name__ == "__main__":

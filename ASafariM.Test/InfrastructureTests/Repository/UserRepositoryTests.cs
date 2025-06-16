@@ -20,19 +20,19 @@ namespace ASafariM.Test.InfrastructureTests.Repository
     [TestClass]
     public class UserRepositoryTests : TestBase
     {
-        private UserRepository _userRepository;
-        private Mock<ILogger<UserRepository>> _loggerMock;
-        private IMapper _mapper;
+        private readonly IUserRepository _userRepository;
+        private readonly Mock<ILogger<UserRepository>> _loggerMock = new Mock<ILogger<UserRepository>>();
+
+        public UserRepositoryTests()
+        {
+            // Create the repository with the initialized dependencies
+            _userRepository = new UserRepository(Context, _loggerMock.Object);
+        }
 
         [TestInitialize]
         public override void Setup()
         {
             base.Setup(); // Call base setup
-            _loggerMock = new Mock<ILogger<UserRepository>>();
-            _mapper = new Mapper(
-                new MapperConfiguration(cfg => cfg.AddProfile(new MappingProfile()))
-            );
-            _userRepository = new UserRepository(Context, _loggerMock.Object);
         }
 
         [TestCleanup]
@@ -84,6 +84,10 @@ namespace ASafariM.Test.InfrastructureTests.Repository
             var user = new User
             {
                 Email = "test@example.com",
+                FirstName = "Test",
+                LastName = "User",
+                UserName = "testuser",
+                PasswordHash = "hashedpassword123",
                 ConcurrencyStamp = Guid.NewGuid().ToString(),
                 SecurityStamp = Guid.NewGuid().ToString(),
             };
@@ -115,6 +119,10 @@ namespace ASafariM.Test.InfrastructureTests.Repository
             {
                 Id = Guid.NewGuid(),
                 Email = "test@example.com",
+                FirstName = "Test",
+                LastName = "User",
+                UserName = "testuser",
+                PasswordHash = "hashedpassword123",
                 ConcurrencyStamp = Guid.NewGuid().ToString(),
                 SecurityStamp = Guid.NewGuid().ToString(),
             };
@@ -135,12 +143,20 @@ namespace ASafariM.Test.InfrastructureTests.Repository
             var user1 = new User
             {
                 Email = "user1@example.com",
+                FirstName = "Test",
+                LastName = "User",
+                UserName = "testuser1",
+                PasswordHash = "hashedpassword123",
                 ConcurrencyStamp = Guid.NewGuid().ToString(),
                 SecurityStamp = Guid.NewGuid().ToString(),
             };
             var user2 = new User
             {
                 Email = "user2@example.com",
+                FirstName = "Test",
+                LastName = "User",
+                UserName = "testuser2",
+                PasswordHash = "hashedpassword123",
                 ConcurrencyStamp = Guid.NewGuid().ToString(),
                 SecurityStamp = Guid.NewGuid().ToString(),
             };
@@ -183,6 +199,10 @@ namespace ASafariM.Test.InfrastructureTests.Repository
             var user = new User
             {
                 Email = "test@example.com",
+                FirstName = "Test",
+                LastName = "User",
+                UserName = "testuser",
+                PasswordHash = "hashedpassword123",
                 ConcurrencyStamp = Guid.NewGuid().ToString(),
                 SecurityStamp = Guid.NewGuid().ToString(),
             };
@@ -206,6 +226,9 @@ namespace ASafariM.Test.InfrastructureTests.Repository
             {
                 UserName = "testuser",
                 Email = "test@example.com",
+                FirstName = "Test",
+                LastName = "User",
+                PasswordHash = "hashedpassword123",
                 ConcurrencyStamp = Guid.NewGuid().ToString(),
                 SecurityStamp = Guid.NewGuid().ToString(),
             };
@@ -227,6 +250,10 @@ namespace ASafariM.Test.InfrastructureTests.Repository
             {
                 PhoneNumber = "1234567890",
                 Email = "test@example.com",
+                FirstName = "Test",
+                LastName = "User",
+                UserName = "testuser",
+                PasswordHash = "hashedpassword123",
                 ConcurrencyStamp = Guid.NewGuid().ToString(),
                 SecurityStamp = Guid.NewGuid().ToString(),
             };
@@ -247,6 +274,10 @@ namespace ASafariM.Test.InfrastructureTests.Repository
             var user = new User
             {
                 Email = "test@example.com",
+                FirstName = "Test",
+                LastName = "User",
+                UserName = "testuser",
+                PasswordHash = "hashedpassword123",
                 ConcurrencyStamp = Guid.NewGuid().ToString(),
                 SecurityStamp = Guid.NewGuid().ToString(),
             };
@@ -274,6 +305,10 @@ namespace ASafariM.Test.InfrastructureTests.Repository
             var user = new User
             {
                 Email = "test@example.com",
+                FirstName = "Test",
+                LastName = "User",
+                UserName = "testuser",
+                PasswordHash = "hashedpassword123",
                 ConcurrencyStamp = Guid.NewGuid().ToString(),
                 SecurityStamp = Guid.NewGuid().ToString(),
             };
@@ -292,6 +327,10 @@ namespace ASafariM.Test.InfrastructureTests.Repository
             var user = new User
             {
                 Email = "test@example.com",
+                FirstName = "Test",
+                LastName = "User",
+                UserName = "testuser",
+                PasswordHash = "hashedpassword123",
                 ConcurrencyStamp = Guid.NewGuid().ToString(),
                 SecurityStamp = Guid.NewGuid().ToString(),
             };
@@ -320,6 +359,10 @@ namespace ASafariM.Test.InfrastructureTests.Repository
             var user = new User
             {
                 Email = "test@example.com",
+                FirstName = "Test",
+                LastName = "User",
+                UserName = "testuser",
+                PasswordHash = "hashedpassword123",
                 ConcurrencyStamp = Guid.NewGuid().ToString(),
                 SecurityStamp = Guid.NewGuid().ToString(),
             };
@@ -348,6 +391,10 @@ namespace ASafariM.Test.InfrastructureTests.Repository
             var user = new User
             {
                 Email = "test@example.com",
+                FirstName = "Test",
+                LastName = "User",
+                UserName = "testuser2",
+                PasswordHash = "hashedpassword123",
                 ConcurrencyStamp = Guid.NewGuid().ToString(),
                 SecurityStamp = Guid.NewGuid().ToString(),
             };

@@ -7,6 +7,9 @@ using Microsoft.Extensions.Logging;
 
 namespace ASafariM.Presentation.Controllers;
 
+/// <summary>
+/// Controller for tracking visitor data.
+/// </summary>
 [ApiController]
 [Route("api/visitor")]
 public class VisitorController : ControllerBase

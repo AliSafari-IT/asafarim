@@ -149,6 +149,29 @@
   .modal-footer {
     border-top-color: rgba(255, 255, 255, 0.1);
   }
+  
+  /* Enhanced dark mode styling for modal */
+  .stack-modal-container {
+    background-color: var(--bg-secondary, #1f2937) !important;
+    color: var(--text-primary, #f3f4f6) !important;
+  }
+  
+  .modal-body {
+    color: var(--text-primary, #f3f4f6) !important;
+  }
+  
+  /* Make sure text is clearly visible */
+  .modal-body p, 
+  .modal-body h1, 
+  .modal-body h2, 
+  .modal-body h3, 
+  .modal-body h4, 
+  .modal-body h5, 
+  .modal-body h6,
+  .modal-body span,
+  .modal-body div {
+    color: var(--text-primary, #f3f4f6) !important;
+  }
 }
 
 /* Responsive Adjustments */

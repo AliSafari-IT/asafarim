@@ -4,6 +4,7 @@ import {
   Body1,
   Caption1,
   Button,
+  mergeClasses,
 } from "@fluentui/react-components";
 import { ArrowReplyRegular, ShareRegular } from "@fluentui/react-icons";
 import {
@@ -15,7 +16,7 @@ import {
 import {
   Delete16Regular as IconDelete,
   Edit16Regular as IconEdit,
-} from "@fluentui/react-icons/fonts";
+} from "@fluentui/react-icons";
 import { useNavigate } from "react-router-dom";
 
 const resolveAsset = (asset?: string) => {
@@ -90,7 +91,7 @@ export const DashCard: React.FC<DashCardProps> = ({
   const navigate = useNavigate();
 
   return (
-    <Card className={`${styles.card} ${styles.cardHover} ${styles.cardFocus}`}>
+    <Card className={mergeClasses(styles.card, styles.cardHover, styles.cardFocus)}>
       <CardHeader
         image={
           <img

@@ -1,0 +1,486 @@
+/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import '@fortawesome/fontawesome-free/css/all.min.css';
+
+:root {
+  /* Light theme variables */
+  --bg-primary: #ffffff;
+  --bg-dark: #ebe8e8;
+  --bg-light: #111010;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #ebe8e8;
+  --bg-success: #92c353;
+  --bg-warning: #f8d22a;
+  --bg-danger: #dd4b4b;
+  --bg-error: #e23838;
+  --bg-info: #4f6bed;
+  --bg-inverted: #c2c2c2;
+  --bg-transparent: rgba(255, 255, 255, 0);
+  --bg-white: #ffffff;
+  --bg-black: #000000;
+  --bg-muted: #f3f4f6;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #272c36;
+  --gray-800: #111010;
+  --gray-900: #000000;
+  --text-color: #333333;
+  --text-muted: #6c757d;
+  --text-metallic: #8b8b8b;
+  --bg-metallic: #f7f9fc;
+  --border-color: #dee2e6;
+  --primary-color: #3b82f6;
+  --primary-hover: #2563eb;
+  --primary-rgb: 59, 130, 246;
+  --warning-color: #f59e0b;
+  --warning-hover: #d6720b;
+  --info-color: #06b6d4;
+  --info-hover: #0096c7;
+  --success-color: #22c55d;
+  --success-hover: #16a34a;
+  --danger-color: #ef4444;
+  --danger-hover: #d72638;
+  --light-color: #e5e7eb;
+  --light-hover: #d1d5db;
+  --dark-color: #1e293b;
+  --dark-hover: #161e2b;
+  --card-bg: #ffffff;
+  --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] {
+  /* Dark theme variables */
+  --bg-primary: #1a1a1a;
+  --bg-dark: #111010;
+  --bg-light: #ebe8e8;
+  --bg-secondary: #2d3748;
+  --bg-tertiary: #ebe8e8;
+  --bg-success: #92c353;
+  --bg-warning: #f8d22a;
+  --bg-danger: #dd4b4b;
+  --bg-error: #e23838;
+  --bg-info: #4f6bed;
+  --bg-inverted: #201f1f;
+  --bg-transparent: rgba(255, 255, 255, 0);
+  --bg-white: #ffffff;
+  --bg-black: #000000;
+  --bg-muted: #f3f4f6;
+  --bg-metallic: #201f1f;
+  --text-color: #f8f9fa;
+  --text-muted: #a0aec0;
+  --text-metallic: #8b8b8b;
+  --border-color: #4a5568;
+  --primary-color: #4299e1;
+  --primary-hover: #3182ce;
+  --primary-rgb: 66, 153, 225;
+  --warning-color: #e29208;
+  --warning-hover: #b66009;
+  --info-color: #09a3be;
+  --info-hover: #0483ad;
+  --success-color: #118d3f;
+  --success-hover: #146e35;
+  --danger-color: #cc2e2e;
+  --danger-hover: #b62121;
+  --light-color: #d0d1d4;
+  --light-hover: #b9b9b9;
+  --dark-color: #121a27;
+  --dark-hover: #0a0f18;
+  --card-bg: #2d3748;
+  --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-color);
+  }
+}
+
+/* Components */
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+.btn-warning {
+  background-color: var(--warning-color);
+  color: white;
+}
+
+.btn-warning:hover {
+  background-color: var(--warning-hover);
+}
+
+.btn-secondary {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: var(--secondary-hover);
+}
+
+.btn-success {
+  background-color: var(--success-color);
+  color: white;
+}
+
+.btn-success:hover {
+  background-color: var(--success-hover);
+}
+
+.btn-danger {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: var(--danger-hover);
+}
+
+.btn-info {
+  background-color: var(--info-color);
+  color: white;
+}
+
+.btn-info:hover {
+  background-color: var(--info-hover);
+}
+
+.btn-light {
+  background-color: var(--light-color);
+  color: white;
+}
+
+.btn-light:hover {
+  background-color: var(--light-hover);
+}
+
+.btn-dark {
+  background-color: var(--dark-color);
+  color: white;
+}
+
+.btn-dark:hover {
+  background-color: var(--dark-hover);
+}
+
+.card {
+  background-color: var(--card-bg);
+  box-shadow: var(--card-shadow);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  transition: box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+/* Navbar styles */
+nav {
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-color);
+}
+
+nav.scrolled {
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] nav {
+  background-color: rgba(26, 26, 26, 0.8);
+}
+
+[data-theme="dark"] nav.scrolled {
+  background-color: rgba(26, 26, 26, 0.95);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Utility classes */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Grid system */
+.grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .md-grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.gap-6 {
+  gap: 1.5rem;
+}
+
+/* Flex utilities */
+.flex {
+  display: flex;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.space-x-4 > * + * {
+  margin-left: 1rem;
+}
+
+/* Typography */
+.text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.mb-8 {
+  margin-bottom: 2rem;
+}
+
+.mb-12 {
+  margin-bottom: 3rem;
+}
+
+/* Colors */
+.text-gray-600 {
+  color: #4b5563;
+}
+
+.text-gray-800 {
+  color: #1f2937;
+}
+
+.bg-white {
+  background-color: #ffffff;
+}
+
+/* Dark mode colors */
+.dark-bg-gray-800 {
+  background-color: #1f2937;
+}
+
+.dark-bg-gray-900 {
+  background-color: #111827;
+}
+
+.dark-text-white {
+  color: #ffffff;
+}
+
+.dark-text-gray-300 {
+  color: #d1d5db;
+}
+
+/* Additional styles for resume page */
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.border-b {
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #e5e7eb;
+}
+
+.pb-2 {
+  padding-bottom: 0.5rem;
+}
+
+.py-8 {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.py-1 {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.px-3 {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.max-w-4xl {
+  max-width: 56rem;
+}
+
+.rounded-full {
+  border-radius: 9999px;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.inline-flex {
+  display: inline-flex;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.mt-8 {
+  margin-top: 2rem;
+}
+
+.mr-2 {
+  margin-right: 0.5rem;
+}
+
+.h-5 {
+  height: 1.25rem;
+}
+
+.w-5 {
+  width: 1.25rem;
+}
+
+.border-l-4 {
+  border-left-width: 4px;
+  border-left-style: solid;
+}
+
+.border-blue-500 {
+  border-color: #3b82f6;
+}
+
+.text-blue-600 {
+  color: #2563eb;
+}
+
+.text-blue-800 {
+  color: #1e40af;
+}
+
+.bg-blue-100 {
+  background-color: #dbeafe;
+}
+
+.bg-gray-100 {
+  background-color: #f3f4f6;
+}
+
+.dark-text-blue-400 {
+  color: #60a5fa;
+}
+
+.dark-text-blue-200 {
+  color: #bfdbfe;
+}
+
+.dark-bg-blue-900 {
+  background-color: #1e3a8a;
+}
+
+.dark-bg-gray-700 {
+  background-color: #374151;
+}
+
+.hover-underline:hover {
+  text-decoration: underline;
+}
+
+@media (min-width: 768px) {
+  .md-text-5xl {
+    font-size: 3rem;
+    line-height: 1;
+  }
+  
+  .md-flex-row {
+    flex-direction: row;
+  }
+  
+  .md-justify-between {
+    justify-content: space-between;
+  }
+}

@@ -1,0 +1,333 @@
+<section class="resume-section printable-resume">
+  <div class="container">
+    <!-- Profile Header -->
+    <div class="resume-layout">
+      <!-- Left Column -->
+      <div class="resume-left-column">
+        <div class="profile-image-container pt-4">
+          <div class="profile-image">
+            <img src="ali-photo.jpg" alt="Alireza Safari" class="avatar" />
+          </div>
+        </div>
+
+        <h1 class="profile-name">{{ personalInfo.name }}</h1>
+        <p class="profile-title">{{ personalInfo.title }}</p>
+
+        <!-- Languages -->
+        <div class="sidebar-section">
+          <h3 class="sidebar-title">Languages</h3>
+          <div class="languages-list">
+            <div
+              *ngFor="let language of personalInfo.languages"
+              class="language-item"
+            >
+              <span class="language-name">{{ language.name }}:</span>
+              <span class="language-level">{{ language.level }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Google Scholar Link -->
+        <div class="sidebar-section no-print">
+          <a
+            href="https://scholar.google.com/citations?user=YZs9ktMAAAAJ"
+            target="_blank"
+            class="scholar-link"
+          >
+            <img
+              src="Google_Scholar_logo.svg"
+              alt="Google Scholar Logo"
+              class="scholar-logo"
+            />
+            <span>Google Scholar Profile</span>
+          </a>
+        </div>
+
+        <!-- Social Links -->
+        <div class="sidebar-section no-print space-y-3">
+          <a
+            href="https://www.linkedin.com/in/ali-safari-m/"
+            target="_blank"
+            class="flex justify-between items-center dark:text-[var(--primary-color)]"
+          >
+            <span>LinkedIn</span>
+            <img src="images/linkedin.svg" alt="LinkedIn" class="icon" />
+          </a>
+
+          <a
+            href="https://github.com/alisafari-IT"
+            target="_blank"
+            class="flex justify-between items-center dark:text-[var(--primary-color)]"
+          >
+            <span>GitHub</span>
+            <img src="images/github.svg" alt="GitHub" class="icon" />
+          </a>
+
+          <a
+            href="https://www.asafarim.com"
+            target="_blank"
+            class="flex justify-between items-center dark:text-[var(--primary-color)]"
+          >
+            <span>Website</span>
+            <img src="images/globe.svg" alt="Website" class="icon" />
+          </a>
+        </div>
+
+        <!-- contact me -->
+        <div class="sidebar-section no-print space-y-3">
+          <a
+            href="mailto:asafarim@gmail.com"
+            target="_blank"
+            class="flex justify-between items-center dark:text-[var(--primary-color)]"
+          >
+            <span>Contact Me</span>
+            <img src="images/envelope.svg" alt="Contact" class="icon" />
+          </a>
+          <!-- goto contact page asafarim.com/contact  -->
+          <a
+            href="https://www.asafarim.com/contact"
+            target="_blank"
+            class="flex justify-between items-center dark:text-[var(--primary-color)]"
+          >
+            <span>Go to Contact Page</span>
+            <img src="images/globe.svg" alt="Contact" class="icon" />
+          </a>
+        </div>
+        <!-- contact me on print-->
+        <div class="sidebar-section print-only space-y-2">
+          <h5>Contact Me:</h5>
+          <a
+            href="mailto:asafarim@gmail.com"
+            target="_blank"
+            class="flex justify-between items-center dark:text-[var(--primary-color)]"
+          >
+            <img src="images/envelope.svg" alt="" class="icon" />
+            <span>asafarim&#64;gmail.com</span>
+          </a>
+          <!-- goto contact page asafarim.com/contact  -->
+          <a
+            href="https://www.asafarim.com/contact"
+            target="_blank"
+            class="flex justify-between items-center dark:text-[var(--primary-color)]"
+          >
+            <img src="images/globe.svg" alt="" class="icon" />
+            <span>asafarim.com/contact</span>
+          </a>
+        </div>
+
+        <!-- Download Resume Button -->
+        <div class="resume-actions no-print space-y-3 mb-4">
+          <a
+            (click)="downloadResume()"
+            class="btn btn-primary download-button"
+            role="button"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="download-icon"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              width="48px"
+              height="48px"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+            Download Resume
+          </a>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div class="resume-right-column">
+        <!-- Summary Section -->
+        <section class="content-section">
+          <h2 class="section-title">Summary</h2>
+          <div class="summary-content">
+            <p>{{ personalInfo.summary }}</p>
+          </div>
+        </section>
+
+        <!-- Key Skills Section -->
+        <!-- Key Skills Section -->
+        <section class="content-section">
+          <h2 class="section-title">
+            <i class="fas fa-tools section-icon"></i> Key Skills
+          </h2>
+          <div class="key-skills-list">
+            <div *ngFor="let skillGroup of skills" class="key-skill-item">
+              <div class="key-skill-row">
+                <div class="key-skill-category">
+                  <h3 class="key-skill-title">
+                    <span class="category-icon">⚡</span>
+                    {{ skillGroup.category }}
+                  </h3>
+                </div>
+                <div class="key-skill-content">
+                  <div class="key-skill-tags">
+                    <span
+                      *ngFor="let item of skillGroup.items"
+                      class="skill-tag"
+                    >
+                      {{ item }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Professional Experience Section -->
+        <section class="content-section">
+          <h2 class="section-title">
+            <i class="fas fa-briefcase section-icon"></i> Professional
+            Experience
+          </h2>
+
+          <div class="experience-timeline-container">
+            <div class="timeline-vertical-line"></div>
+
+            <div
+              *ngFor="let exp of experiences"
+              class="experience-timeline-item"
+            >
+              <div class="timeline-marker">
+                <div class="timeline-dot"></div>
+              </div>
+
+              <div class="experience-card">
+                <div class="experience-header">
+                  <div class="experience-company-role">
+                    <h3 class="experience-company">
+                      <i class="fas fa-building"></i>
+                      {{ exp.company }}
+                      <span class="experience-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        {{ exp.location }}
+                      </span>
+                    </h3>
+                    <p class="experience-role">
+                      <i class="fas fa-user-tie"></i>
+                      {{ exp.title }}
+                      <span class="experience-period">
+                        <i class="far fa-calendar-alt"></i>
+                        {{ exp.period }}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+
+                <div class="experience-content">
+                  <ul class="experience-achievements">
+                    <li *ngFor="let achievement of exp.achievements">
+                      {{ achievement }}
+                    </li>
+                  </ul>
+
+                  <div class="experience-tech-container">
+                    <div class="tech-badge">
+                      <i class="fas fa-code"></i>
+                      Technologies:
+                    </div>
+                    <div class="experience-tech">
+                      <span *ngFor="let tech of exp.skills" class="tech-tag">
+                        {{ tech }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Education Section -->
+        <section class="content-section">
+          <h2 class="section-title">Academic Journey</h2>
+
+          <div class="education-timeline-container">
+            <div class="timeline-vertical-line"></div>
+
+            <div *ngFor="let edu of education" class="education-timeline-item">
+              <div class="timeline-marker">
+                <div class="timeline-dot"></div>
+              </div>
+
+              <div class="education-card">
+                <div class="education-header">
+                  <h3 class="education-degree">
+                    <i class="fas fa-graduation-cap"></i>
+                    {{ edu.degree }}
+                  </h3>
+                  <span class="education-year">
+                    <i class="far fa-calendar-alt"></i>
+                    {{ edu.period }}
+                  </span>
+                </div>
+
+                <p class="education-institution">
+                  <i class="fas fa-university"></i>
+                  {{ edu.institution }}
+                  <span *ngIf="edu.location" class="education-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    {{ edu.location }}
+                  </span>
+                </p>
+
+                <div
+                  *ngIf="edu.skills && edu.skills.length"
+                  class="education-skills"
+                >
+                  <div class="skills-badge">
+                    <i class="fas fa-tools"></i>
+                    Skills Gained:
+                  </div>
+                  <div class="skills-container">
+                    <span
+                      *ngFor="let skill of edu.skills.slice(0, 3)"
+                      class="edu-skill-tag"
+                    >
+                      {{ skill }}
+                    </span>
+                    <span *ngIf="edu.skills.length > 3" class="more-skills">
+                      +{{ edu.skills.length - 3 }} more
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Certifications Section -->
+        <section class="content-section">
+          <h2 class="section-title">Certifications</h2>
+          <div class="certifications-list">
+            <div *ngFor="let cert of certifications" class="certification-item">
+              <h3 class="certification-name">
+                <a
+                  *ngIf="cert.credentialUrl"
+                  [href]="cert.credentialUrl"
+                  target="_blank"
+                  class="cert-link"
+                  >{{ cert.name }}</a
+                >
+                <span *ngIf="!cert.credentialUrl">{{ cert.name }}</span>
+              </h3>
+              <div class="certification-details">
+                <span class="certification-issuer">{{ cert.issuer }}</span>
+                <span class="certification-year">{{ cert.issuedDate }}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,1 @@
+pnpm --filter asafarim-terminal run clean

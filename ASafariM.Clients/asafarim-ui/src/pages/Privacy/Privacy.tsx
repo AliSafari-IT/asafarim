@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import Wrapper from '../../layout/Wrapper/Wrapper';
+import Wrapper from '../../layout/Wrapper';
 import DisplayMd from '../../components/MarkdownPage/DisplayMd';
 import Button from '../../components/Button/Button';
 import eulaMd from './eula.md?raw';

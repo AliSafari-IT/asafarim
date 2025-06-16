@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 import { getUserById } from '@/api/userService';
-import useAuth from '@/hooks/useAuth';
 import { IUser } from '@/interfaces';
-import Wrapper from '@/layout/Wrapper/Wrapper';
-import Header from '@/layout/Header/Header';
-import Footer from '@/layout/Footer/Footer';
+import Wrapper from '@/layout/Wrapper';
 import { logger } from '@/utils/logger';
 
 const UserProfile: React.FC = () => {
@@ -26,6 +24,7 @@ const UserProfile: React.FC = () => {
             try {
                 setLoading(true);
                 const data = await getUserById(authenticatedUser.id);
+                console.log('Received dateOfBirth from API:', data.dateOfBirth, _isActive); // <--- Add this line
                 setUserInfo(data);
             } catch (err) {
                 logger.error('Error fetching user information:', err);
@@ -36,7 +35,7 @@ const UserProfile: React.FC = () => {
         };
 
         fetchUserInfo();
-    }, [authenticated, authenticatedUser, token, navigate]);
+    }, [authenticated, authenticatedUser, token, navigate, _isActive]);
 
     useEffect(
         () => {
@@ -58,7 +57,7 @@ const UserProfile: React.FC = () => {
 
     if (loading) {
         return (
-            <Wrapper header={<Header />} footer={<Footer />}>
+            <Wrapper>
                 <div className="flex justify-center items-center h-[70vh]">
                     <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[var(--info)]"></div>
                 </div>
@@ -68,7 +67,7 @@ const UserProfile: React.FC = () => {
 
     if (error) {
         return (
-            <Wrapper header={<Header />} footer={<Footer />}>
+            <Wrapper>
                 <div className="flex items-center justify-center h-[70vh]">
                     <div className="bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-lg max-w-lg">
                         <p className="font-medium">{error}</p>
@@ -80,7 +79,7 @@ const UserProfile: React.FC = () => {
 
     if (!userInfo) {
         return (
-            <Wrapper header={<Header />} footer={<Footer />}>
+            <Wrapper>
                 <div className="flex items-center justify-center h-[70vh]">
                     <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-6 py-4 rounded-lg max-w-lg">
                         <p className="font-medium">User information is not available.</p>
@@ -91,7 +90,7 @@ const UserProfile: React.FC = () => {
     }
 
     return (
-        <Wrapper header={<Header />} footer={<Footer />}>
+        <Wrapper>
             <div className="container mx-auto px-4 py-8 max-w-5xl">
                 <div className="flex items-center justify-between mb-6">
                     <div>
@@ -112,16 +111,45 @@ const UserProfile: React.FC = () => {
                 <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
                     {/* User Header with Avatar */}
                     <div className="bg-gradient-to-r from-[var(--info-light)] to-[var(--info)] p-6 flex items-center">
-                        {userInfo.profilePicture ? (
+                        {(userInfo?.profilePicture !== 'https://asafarim.com/logoT.svg') && (userInfo?.profilePicture && userInfo.profilePicture.trim() !== '') ? (
                             <img 
                                 src={userInfo.profilePicture} 
                                 alt={`${userInfo.firstName} ${userInfo.lastName}`}
                                 className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-md" 
+                                onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                                    logger.error('Profile picture failed to load, falling back to random avatar');
+                                    // If user's profile picture fails, try random avatar
+                                    const target = e.target as HTMLImageElement;
+                                    target.src = `https://avatar.iran.liara.run/public?seed=${userInfo.id || 'user'}`;
+                                    // If random avatar also fails, we'll handle it with a simpler approach
+                                    target.onerror = () => {
+                                        logger.error('Random avatar failed to load, falling back to initials');
+                                        // Hide the image
+                                        target.style.display = 'none';
+                                        // Create a fallback element with initials
+                                        const fallback = document.createElement('div');
+                                        fallback.className = 'w-20 h-20 rounded-full bg-white text-[var(--info)] flex items-center justify-center text-2xl font-bold border-4 border-white shadow-md';
+                                        fallback.textContent = getUserInitials();
+                                        target.parentNode?.insertBefore(fallback, target);
+                                    };
+                                }}
                             />
                         ) : (
-                            <div className="w-20 h-20 rounded-full bg-white text-[var(--info)] flex items-center justify-center text-2xl font-bold border-4 border-white shadow-md">
-                                {getUserInitials()}
-                            </div>
+                            <img
+                                src={`https://avatar.iran.liara.run/public?seed=${userInfo.id || 'user'}`}
+                                alt={`${userInfo.firstName} ${userInfo.lastName}`}
+                                className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-md"
+                                onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                                    logger.error('Random avatar failed to load, falling back to initials');
+                                    // Fallback to initials if the avatar fails to load
+                                    const target = e.target as HTMLImageElement;
+                                    target.style.display = 'none';
+                                    const fallback = document.createElement('div');
+                                    fallback.className = 'w-20 h-20 rounded-full bg-white text-[var(--info)] flex items-center justify-center text-2xl font-bold border-4 border-white shadow-md';
+                                    fallback.textContent = getUserInitials();
+                                    target.parentNode?.insertBefore(fallback, target);
+                                }}
+                            />
                         )}
                         <div className="ml-6 text-white">
                             <h2 className="text-2xl font-bold">{userInfo.firstName} {userInfo.lastName}</h2>

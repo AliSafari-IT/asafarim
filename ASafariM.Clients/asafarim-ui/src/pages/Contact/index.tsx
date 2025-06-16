@@ -1,3 +1,4 @@
+// ASafariM.Clients/asafarim-ui/src/pages/Contact/index.tsx
 import Layout from "@/layout/Layout";
 import AvailabilitySection from "./components/AvailabilitySection";
 import ContactInfo from "./components/ContactInfo";

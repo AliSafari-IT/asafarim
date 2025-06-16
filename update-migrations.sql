@@ -1,0 +1,41 @@
+-- Update the EF Core migration history table to mark existing migrations as applied
+USE asmDB;
+
+-- First check if the table exists
+CREATE TABLE IF NOT EXISTS `__EFMigrationsHistory` (
+    `MigrationId` varchar(150) NOT NULL,
+    `ProductVersion` varchar(32) NOT NULL,
+    PRIMARY KEY (`MigrationId`)
+);
+
+-- Insert migrations that have already been applied to the database
+-- Make sure not to insert duplicates
+INSERT IGNORE INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`) VALUES
+('20250209203021_AddLanguageId', '9.0.1'),
+('20250210185953_AddUserFields', '9.0.1'),
+('20250214094625_UpdateUserAndSerilogConfig', '9.0.1'),
+('20250214125033_SeedUpdated', '9.0.1'),
+('20250214125631_SeedUsernameFixed', '9.0.1'),
+('20250214131323_AddUserUniqueConstraints', '9.0.1'),
+('20250214141510_UserUpdated', '9.0.1'),
+('20250215162530_UserSeeded', '9.0.1'),
+('20250216145832_UserReactivation', '9.0.1'),
+('20250226084701_ProjectUpdated', '9.0.1'),
+('20250304122105_FixUserAndEntityImplementations', '9.0.1'),
+('20250304153912_AddPostRelatedPostRelationship', '9.0.1'),
+('20250304154945_UpdateProjectSchema', '9.0.1'),
+('20250305122127_ColumnIsLoggedInAdded', '9.0.1'),
+('20250305134903_AddIsLoggedInField', '9.0.1'),
+('20250312154653_AddProjectIdToLinks', '9.0.1'),
+('20250312155127_AddLinksToProjects', '9.0.1'),
+('20250312222857_AddLinksTable', '9.0.1'),
+('20250313212953_visitorlogsAdded', '9.0.1'),
+('20250313213406_AddVisitorLogsTable', '9.0.1'),
+('20250323011405_BibliographyItems', '9.0.1'),
+('20250323012038_BibliographyTable', '9.0.1'),
+('20250323020500_AddBibliographyItemsTableManually', '9.0.1'),
+('20250325090500_FixProjectMembersPrimaryKey', '9.0.1'),
+('20250401115104_AddPortfolioEntity', '9.0.1'),
+('20250401160532_AddPortfoliosTable', '9.0.1'),
+('20250401171911_CreatePortfoliosTable', '9.0.1'),
+('20250606153225_UpdateDatabaseUser', '9.0.1');

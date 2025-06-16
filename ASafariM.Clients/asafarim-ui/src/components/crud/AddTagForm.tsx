@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, makeStyles } from '@fluentui/react-components';
 import { useNavigate } from 'react-router-dom';
 import { TextField } from '@fluentui/react';
-import Wrapper from '../../layout/Wrapper/Wrapper';
+import Wrapper from '../../layout/Wrapper';
 import dashboardServices from '../../api/entityServices';
 import { isAxiosError } from 'axios';
 import {logger} from '@/utils/logger';

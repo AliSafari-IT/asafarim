@@ -1,0 +1,7 @@
+<!-- portfolio-list.component.html -->
+<h2>All Portfolios</h2>
+<ul class="list-group">
+  <li *ngFor="let p of portfolios" class="list-group-item">
+    <a [routerLink]="['/portfolios', p.userId]">{{ p.headline }}</a>
+  </li>
+</ul>

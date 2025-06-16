@@ -9,14 +9,14 @@ const ResponsiveDropdownMenu: React.FC<DropdownProps> = ({
   className = '',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeMenus, setActiveMenus] = useState<Set<string>>(new Set());
+  const [activeMenus, setActiveMenus] = useState<Record<string, boolean>>({});
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
-        setActiveMenus(new Set());
+        setActiveMenus({});
       }
     };
 
@@ -25,20 +25,15 @@ const ResponsiveDropdownMenu: React.FC<DropdownProps> = ({
   }, []);
 
   const handleMenuClick = (menuId: string) => {
-    setActiveMenus(prevActiveMenus => {
-      const newActiveMenus = new Set(prevActiveMenus);
-      if (newActiveMenus.has(menuId)) {
-        newActiveMenus.delete(menuId);
-      } else {
-        newActiveMenus.add(menuId);
-      }
-      return newActiveMenus;
-    });
+    setActiveMenus(prev => ({
+      ...prev,
+      [menuId]: !prev[menuId]
+    }));
   };
 
   const handleClose = () => {
     setIsOpen(false);
-    setActiveMenus(new Set());
+    setActiveMenus({});
   };
 
   return (
@@ -54,7 +49,7 @@ const ResponsiveDropdownMenu: React.FC<DropdownProps> = ({
           <MenuItem
             key={item.id}
             item={item}
-            isActive={activeMenus.has(item.id)}
+            isActive={!!activeMenus[item.id]}
             onMenuClick={handleMenuClick}
             onClose={handleClose}
           />

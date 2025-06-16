@@ -12,6 +12,9 @@ using Serilog;
 
 namespace ASafariM.Presentation.Controllers
 {
+    /// <summary>
+    /// Provides access to tags.
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class TagsController : ControllerBase
@@ -25,6 +28,10 @@ namespace ASafariM.Presentation.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Retrieves all tags.
+        /// </summary>
+        /// <returns>Collection of tags</returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TagDto>>> GetTags()
         {
@@ -42,6 +49,11 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Creates a new tag.
+        /// </summary>
+        /// <param name="command">Command model containing tag details</param>
+        /// <returns>Created tag</returns>
         [HttpPost]
         public async Task<IActionResult> CreateTag(CreateTagCommand command)
         {
@@ -80,6 +92,11 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Retrieves a tag by ID.
+        /// </summary>
+        /// <param name="id">ID of the tag to retrieve</param>
+        /// <returns>Tag with the specified ID</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<TagDto>> GetTag(Guid id)
         {
@@ -104,6 +121,11 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Retrieves a tag by slug.
+        /// </summary>
+        /// <param name="slug">Slug of the tag to retrieve</param>
+        /// <returns>Tag with the specified slug</returns>
         [HttpGet("slug/{slug}")]
         public async Task<ActionResult<TagDto>> GetTagBySlug(string slug)
         {
@@ -128,6 +150,11 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Retrieves tags by post ID.
+        /// </summary>
+        /// <param name="postId">ID of the post</param>
+        /// <returns>Collection of tags associated with the specified post</returns>
         [HttpGet("post/{postId}")]
         public async Task<ActionResult<IEnumerable<TagDto>>> GetTagsByPost(Guid postId)
         {
@@ -149,6 +176,12 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Updates an existing tag.
+        /// </summary>
+        /// <param name="id">ID of the tag to update</param>
+        /// <param name="command">Command model containing tag details</param>
+        /// <returns>Updated tag</returns>
         [HttpPut("{id}")]
         public async Task<ActionResult<TagDto>> UpdateTag(Guid id, UpdateTagCommand command)
         {
@@ -190,6 +223,11 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes a tag by ID.
+        /// </summary>
+        /// <param name="id">ID of the tag to delete</param>
+        /// <returns>Result of the deletion</returns>
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteTag(Guid id)
         {

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ASafariM ~ CLI</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/xterm@5.1.0/css/xterm.css"
+    />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background-color: #1e1e1e;
+        color: #f0f0f0;
+        font-family: "Courier New", monospace;
+      }
+      #header {
+        background-color: #2d2d2d;
+        padding: 10px;
+        text-align: center;
+        border-bottom: 1px solid #444;
+      }
+      #terminal-container {
+        flex: 1;
+        padding: 10px;
+        background-color: #1e1e1e;
+        display: none;
+      }
+      #unauthorized-container {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #1e1e1e;
+      }
+      #terminal {
+        width: 100%;
+        height: 100%;
+      }
+      .error-message {
+        color: #ff6b6b;
+        padding: 20px;
+        text-align: center;
+      }
+      .login-button {
+        padding: 8px 16px;
+        background: #4a9eff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="header">
+      <h2 style="color: skyblue">ASafariM - Node.js Terminal</h2>
+      <p style="color: rgb(198, 232, 245); font-size: 14px">
+        A fully functional terminal with proper prompt support
+      </p>
+      <p style="color: rgb(198, 232, 245); font-size: 12px; margin-top: 5px; text-align: center; color: #bfcbf3">
+        for Administrators
+      </p>
+    </div>
+    <div id="unauthorized-container" style="display: flex">
+      <div class="error-message">
+        <h3>⚠️ Error</h3>
+        <p>Please log in first</p>
+        <button
+          onclick="window.location.href='https://asafarim.com/login'"
+          class="login-button"
+        >
+          Login
+        </button>
+      </div>
+    </div>
+    <div id="terminal-container">
+      <div id="terminal"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/xterm@5.1.0/lib/xterm.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.7.0/lib/xterm-addon-fit.js"></script>
+    <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+    <script>
+      async function checkAuth() {
+        try {
+          const authData = localStorage.getItem("auth");
+          if (!authData) {
+            throw new Error("Not authenticated");
+          }
+
+          const auth = JSON.parse(authData);
+          if (!auth.token || !auth.authenticatedUser) {
+            throw new Error("Invalid authentication data");
+          }
+
+          const user = auth.authenticatedUser;
+          if (
+            user.isAdmin &&
+            user.isSuperAdmin &&
+            !user.isBlocked &&
+            !user.isDeleted &&
+            user.isActive
+          ) {
+            document.getElementById("unauthorized-container").style.display =
+              "none";
+            document.getElementById("terminal-container").style.display =
+              "flex";
+            await initializeTerminal(auth);
+          } else {
+            throw new Error("Insufficient permissions");
+          }
+        } catch (error) {
+          console.error("Auth check failed:", error);
+          document.getElementById("unauthorized-container").style.display =
+            "flex";
+          document.getElementById("terminal-container").style.display = "none";
+        }
+      }
+
+      async function initializeTerminal(auth) {
+        try {
+          const term = new Terminal({
+            cols: 80,
+            rows: 24,
+            cursorBlink: true,
+            disableStdin: false,
+            allowProposedApi: false,
+            convertEol: true,
+            scrollback: 1000,
+            theme: {
+              background: "#1e1e1e",
+              foreground: "#f0f0f0",
+              cursor: "#ffffff",
+              cursorAccent: "#000000",
+              selection: "rgba(255, 255, 255, 0.3)",
+            },
+            fontFamily: '"Courier New", monospace',
+            fontSize: 14,
+          });
+
+          const fitAddon = new FitAddon.FitAddon();
+          term.loadAddon(fitAddon);
+
+          // Open the terminal in the container
+          term.open(document.getElementById("terminal"));
+          fitAddon.fit();
+
+          // Connect to socket with auth token
+          const socket = io({
+            auth: {
+              token: auth.token,
+            },
+            query: {
+              disableShellIntegration: "true",
+            },
+            path: '/cli/socket.io',  // Add path prefix to match nginx configuration
+            reconnection: true,
+            reconnectionAttempts: 5,
+            reconnectionDelay: 1000,
+            timeout: 10000,
+          });
+
+          // Handle initial connection
+          socket.io.on("open", () => {
+            console.log("Transport open");
+            term.write("\r\nConnecting to server...\r\n");
+          });
+
+          socket.on("connect", () => {
+            console.log("Socket connected");
+            term.write("\r\nConnected to ASafariM CLI\r\n$ ");
+          });
+
+          socket.on("connect_error", (error) => {
+            console.error("Socket connection error:", error);
+            term.write("\r\nConnection error: " + error.message + "\r\n");
+
+            // Try to reconnect after a delay
+            setTimeout(() => {
+              if (!socket.connected) {
+                console.log("Attempting to reconnect...");
+                socket.connect();
+              }
+            }, 2000);
+          });
+
+          socket.on("error", (error) => {
+            console.error("Socket error:", error);
+            term.write("\r\nError: " + error + "\r\n");
+
+            // Try to reconnect if disconnected
+            if (!socket.connected) {
+              console.log("Attempting to reconnect after error...");
+              socket.connect();
+            }
+          });
+
+          socket.on("disconnect", (reason) => {
+            console.log("Socket disconnected:", reason);
+            term.write("\r\nDisconnected from server: " + reason + "\r\n");
+
+            // Try to reconnect if not intentionally closed
+            if (reason !== "io client disconnect") {
+              console.log("Attempting to reconnect...");
+              socket.connect();
+            }
+          });
+
+          // Handle terminal output
+          socket.on("terminal-output", (data) => {
+            console.log("Received output:", data);
+            term.write(data);
+          });
+
+          // Handle terminal input with better command handling
+          term.onData((data) => {
+            if (socket.connected) {
+              // Handle special keys
+              if (data.length === 3 && data.charCodeAt(0) === 27 && data.charCodeAt(1) === 91) {
+                // Arrow keys: ESC [ A/B/C/D
+                const key = data.charCodeAt(2);
+                
+                if (key === 65) { // Up arrow
+                  socket.emit("special-key", "arrow-up");
+                  return;
+                } else if (key === 66) { // Down arrow
+                  socket.emit("special-key", "arrow-down");
+                  return;
+                }
+                // We don't need to handle left/right arrows here as they're handled by terminal
+              }
+              
+              // Echo the input locally for immediate feedback
+              term.write(data);
+              
+              // Regular input - send to server
+              socket.emit("input", data);
+              
+              // If Enter key is pressed, add a small delay before allowing more input
+              if (data === '\r' || data === '\n') {
+                console.log('Enter key pressed, sending command');
+              }
+            }
+          });
+
+          // Handle history command replacement
+          socket.on("history-command", (command) => {
+            // Clear the current line
+            term.write('\r$ ' + ' '.repeat(100) + '\r$ ' + command);
+          });
+
+          // Handle terminal resize
+          window.addEventListener("resize", () => {
+            fitAddon.fit();
+            const dimensions = { cols: term.cols, rows: term.rows };
+            socket.emit("terminal-resize", dimensions);
+          });
+
+          // Initial resize
+          setTimeout(() => {
+            fitAddon.fit();
+            const dimensions = { cols: term.cols, rows: term.rows };
+            socket.emit("terminal-resize", dimensions);
+          }, 100);
+
+          // Initial message
+          term.write("\r\nConnected to ASafariM CLI\r\n");
+          term.write("$ ");
+        } catch (error) {
+          console.error("Terminal initialization failed:", error);
+          document.getElementById("terminal-container").style.display = "none";
+          document.getElementById("unauthorized-container").style.display =
+            "flex";
+        }
+      }
+
+      // Check authentication when page loads
+      document.addEventListener("DOMContentLoaded", checkAuth);
+    </script>
+  </body>
+</html>

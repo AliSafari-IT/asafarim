@@ -1,17 +1,23 @@
 import { ICreateUserModel } from '@/interfaces/ICreateUserModel';
 import { logger } from '@/utils/logger';
 import axios from 'axios';
+import { getApiConfig } from '@/config/apiConfig';
+import { handleApiError, retryRequest } from '@/utils/apiErrorHandler';
+
+// Get current API configuration
+const apiConfig = getApiConfig();
 const isDevelopment = import.meta.env.VITE_ENVIRONMENT === 'development';
 const BASE_API_URL = isDevelopment ? 'http://localhost:5000/api' : 'https://asafarim.com/api';
-const USERS_URL = `${BASE_API_URL}/users`;  // Changed to lowercase to match backend route
+const USERS_URL = `${BASE_API_URL}/users`;
 
 const api = axios.create({
-    baseURL: BASE_API_URL,  // Adjust according to your backend URL
+    baseURL: BASE_API_URL,
+    timeout: apiConfig.timeout, // Use configurable timeout
     headers: {
         'Content-Type': 'application/json',
-        'Accept': '*/*'  // Match the curl request
+        'Accept': '*/*'
     },
-    withCredentials: false // Changed to false since the backend doesn't require credentials
+    withCredentials: false
 });
 
 // Add request interceptor for handling errors
@@ -31,8 +37,16 @@ api.interceptors.response.use(
         return response;
     },
     (error) => {
-        if (error.message === 'Network Error') {
+        if (error.code === 'ECONNABORTED') {
+            logger.error('Request timeout - The server took too long to respond');
+        } else if (error.message === 'Network Error') {
             logger.error('Network Error - Please check if the API server is running and CORS is properly configured');
+        } else if (error.response) {
+            logger.error(`API Error ${error.response.status}: ${error.response.data?.message || error.response.statusText}`);
+        } else if (error.request) {
+            logger.error('No response received from server');
+        } else {
+            logger.error('Error setting up request:', error.message);
         }
         return Promise.reject(error);
     }
@@ -41,7 +55,7 @@ api.interceptors.response.use(
 // Create User
 export const createUser = async (userData: ICreateUserModel) => {
     try {
-        logger.debug("ASafariM.Clients/asafarim-ui/src/api/userManagerApi.ts createUser", userData);
+        logger.debug("userManagerApi.ts createUser", userData);
         const response = await api.post(USERS_URL, userData, {
             headers: {
                 'Accept': '*/*',
@@ -50,28 +64,21 @@ export const createUser = async (userData: ICreateUserModel) => {
         });
         logger.debug("userManagerApi.ts createUser: response", response);
         
-        // Check if the response status indicates success (200 or 201)
         if (response.status === 201 || response.status === 200) {
             return { success: true, data: response.data };
         }
         
-        throw new Error(`Failed to create user. Server returned status: ${response.status}`);
+        return { success: false, message: 'Unexpected response status' };
     } catch (error) {
-        logger.error("Error in createUser:", error);
-        if (axios.isAxiosError(error)) {
-            if (error.message === 'Network Error') {
-                throw new Error('Unable to connect to the server. Please check if the API server is running.');
-            }
-            throw new Error(error.response?.data?.message || 'Failed to create user');
-        }
-        throw error; // Re-throw to handle in component
+        logger.error('Error creating user:', error);
+        throw new Error(handleApiError(error));
     }
 };
 
 // Create User by Admin
 export const addUserByAdmin = async (userData: ICreateUserModel) => {
     try {
-        logger.debug("ASafariM.Clients/asafarim-ui/src/api/userManagerApi.ts addUserByAdmin", userData);
+        logger.debug("userManagerApi.ts addUserByAdmin", userData);
         const response = await api.post(`${USERS_URL}/admin`, userData, {
             headers: {
                 'Accept': '*/*',
@@ -84,44 +91,63 @@ export const addUserByAdmin = async (userData: ICreateUserModel) => {
             return { success: true, data: response.data };
         }
         
-        throw new Error(`Failed to create user. Server returned status: ${response.status}`);
+        return { success: false, message: 'Unexpected response status' };
     } catch (error) {
-        logger.error("Error in addUserByAdmin:", error);
-        if (axios.isAxiosError(error)) {
-            if (error.message === 'Network Error') {
-                throw new Error('Unable to connect to the server. Please check if the API server is running.');
-            }
-            throw new Error(error.response?.data?.message || 'Failed to create user');
-        }
-        throw error;
+        logger.error('Error in addUserByAdmin:', error);
+        throw new Error(handleApiError(error));
     }
 };
 
-// Fetch Users
+// Fetch Users (with retry for better reliability)
 export const getUsers = async () => {
-    const response = await api.get('/users');
-    logger.debug("userManagerApi.ts getUsers: response.data", response.data);
-    return response.data;
+    try {
+        return await retryRequest(
+            async () => {
+                const response = await api.get('/users');
+                logger.debug("userManagerApi.ts getUsers: response.data", response.data);
+                return response.data;
+            },
+            'getUsers'
+        );
+    } catch (error) {
+        logger.error('Error fetching users:', error);
+        throw new Error(handleApiError(error));
+    }
 };
 
 // Get User by ID
 export const getUserById = async (id: string) => {
-    const response = await api.get(`/users/${id}`);
-    logger.debug("userManagerApi.ts getUserById: response.data", response.data);
-    return response.data;
+    try {
+        const response = await api.get(`/users/${id}`);
+        logger.debug("userManagerApi.ts getUserById: response.data", response.data);
+        return response.data;
+    } catch (error) {
+        logger.error('Error fetching user by ID:', error);
+        throw new Error(handleApiError(error));
+    }
 };
 
 // Update User
 export const updateUser = async (id: string, userData: { fullName: string, isAdmin: boolean }) => {
-    logger.debug("userManagerApi.ts updateUser: userData", userData);
-    const response = await api.put(`/users/${id}`, userData);
-    logger.debug("userManagerApi.ts updateUser: response.data", response.data);
-    return response.data;
+    try {
+        logger.debug("userManagerApi.ts updateUser: userData", userData);
+        const response = await api.put(`/users/${id}`, userData);
+        logger.debug("userManagerApi.ts updateUser: response.data", response.data);
+        return response.data;
+    } catch (error) {
+        logger.error('Error updating user:', error);
+        throw new Error(handleApiError(error));
+    }
 };
 
 // Delete User
 export const deleteUser = async (id: string) => {
-    const response = await api.delete(`/users/${id}`);
-    logger.debug("userManagerApi.ts deleteUser: response.data", response.data);
-    return response.data;
+    try {
+        const response = await api.delete(`/users/${id}`);
+        logger.debug("userManagerApi.ts deleteUser: response.data", response.data);
+        return response.data;
+    } catch (error) {
+        logger.error('Error deleting user:', error);
+        throw new Error(handleApiError(error));
+    }
 };

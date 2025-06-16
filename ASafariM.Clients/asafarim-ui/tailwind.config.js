@@ -154,6 +154,7 @@ const config = {
     },
   },
   plugins: [
+    require('@tailwindcss/aspect-ratio'),
     forms({
       strategy: 'class', // When using the class strategy, form elements are styled with form-{name} classes, otherwise using the base strategy, form elements are styled globally, and no form-{name} classes are generated.
     }),

@@ -1,5 +1,4 @@
-// apps/frontends/asafarim-client/src/api/authapi.ts
-// 
+// D:\repos\ASafariM\ASafariM.Clients\asafarim-ui\src\api\authapi.ts
 import axios, { AxiosError, isAxiosError } from 'axios';
 import { ILoginModel } from '../interfaces/ILoginModel';
 import { IRegisterModel } from '../interfaces/IRegisterModel';
@@ -31,14 +30,14 @@ const getAuthToken = () => {
       const parsedAuth = JSON.parse(localAuth);
       return parsedAuth.token || parsedAuth.Token;
     }
-    
+
     // Then check sessionStorage
     const sessionAuth = sessionStorage.getItem('auth');
     if (sessionAuth) {
       const parsedAuth = JSON.parse(sessionAuth);
       return parsedAuth.token || parsedAuth.Token;
     }
-    
+
     return null;
   } catch (error) {
     logger.error("Error getting auth token:", error);
@@ -68,7 +67,7 @@ api.interceptors.request.use(
   (config) => {
     // Get auth token from storage using the helper function
     const token = getAuthToken();
-    
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
       logger.log('Added authorization header to request');
@@ -95,36 +94,36 @@ export const login = async (credentials: ILoginModel) => {
   try {
     logger.info(`Attempting to login user with credentials: ${JSON.stringify(credentials)}`);
     logger.log('Login API request:', credentials);
-    
+
     const response = await api.post('auth/login', credentials, {
-        headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' },
     });
-    
+
     logger.info(`Login successful, response received: ${JSON.stringify(response.data)}`);
     logger.log('Login API raw response:', response);
     logger.log('Login API response data:', response.data);
-    
+
     // Normalize the response to ensure consistent property names
     const normalizedResponse = {
       token: response.data.Token || response.data.token,
       authenticatedUser: response.data.AuthenticatedUser || response.data.authenticatedUser || response.data.user,
-      authenticated: response.data.Authenticated !== undefined ? response.data.Authenticated : 
-                    (response.data.authenticated !== undefined ? response.data.authenticated : true)
+      authenticated: response.data.Authenticated !== undefined ? response.data.Authenticated :
+        (response.data.authenticated !== undefined ? response.data.authenticated : true)
     };
-    
+
     logger.log('Normalized login response:', normalizedResponse);
-    
+
     // Validate the response structure
     if (!normalizedResponse.token) {
       logger.error('Login API response missing token:', response.data);
       throw new Error('Invalid response from server: missing authentication token');
     }
-    
+
     if (!normalizedResponse.authenticatedUser) {
       logger.error('Login API response missing user data:', response.data);
       throw new Error('Invalid response from server: missing user data');
     }
-    
+
     return normalizedResponse;
   } catch (error) {
     logger.error('Login API error:', error);
@@ -140,10 +139,11 @@ export const login = async (credentials: ILoginModel) => {
     throw error;
   }
 };
+
 export const requestAccountReactivation = async (email: string) => {
   try {
     logger.info(`Attempting to request account reactivation for email: ${email}`);
-    const response = await axios.post(`${baseURL}/auth/request-account-reactivation`, { 
+    const response = await axios.post(`${baseURL}/auth/request-account-reactivation`, {
       email,
       reactivationReason: "User requested account reactivation"
     });
@@ -152,7 +152,7 @@ export const requestAccountReactivation = async (email: string) => {
   } catch (error) {
     const err = error as AxiosError<ErrorResponse>;
     logger.error(`Error during account reactivation request: ${err.message}`);
-    
+
     const errorMessage = err.response?.data?.message || err.response?.data?.error;
     if (errorMessage) {
       throw errorMessage;
@@ -188,10 +188,10 @@ export const requestPasswordReset = async (email: string) => {
 export const resetPassword = async (email: string, newPassword: string, token: string) => {
   try {
     logger.info(`Attempting to reset password for email: ${email}`);
-    const response = await axios.post(`${baseURL}/auth/reset-password`, { 
-      Email: email, 
-      NewPassword: newPassword, 
-      Token: token 
+    const response = await axios.post(`${baseURL}/auth/reset-password`, {
+      Email: email,
+      NewPassword: newPassword,
+      Token: token
     });
     logger.info(`Password reset successful, response received: ${JSON.stringify(response.data)}`);
     return response.data;
@@ -234,53 +234,53 @@ export const getUserProfile = async (userId: string | undefined) => {
 
 // Update user profile by ID
 export const updateUserProfile = async (user: any): Promise<any> => {
-    try {
-        // Get auth token from storage
-        const authData = localStorage.getItem('auth') || sessionStorage.getItem('auth');
-        
-        if (!authData) {
-            logger.error('No auth data found in storage');
-            throw new Error('No authentication data found');
-        }
-        
-        // Log the auth data for debugging (hide sensitive data)
-        const parsedAuthData = JSON.parse(authData);
-        logger.log('Auth data found:', {
-            hasToken: !!parsedAuthData.token,
-            tokenLength: parsedAuthData.token ? parsedAuthData.token.length : 0,
-            hasUser: !!parsedAuthData.authenticatedUser,
-            userId: parsedAuthData.authenticatedUser?.id
-        });
-        
-        // Create request data with all available profile fields
-        const requestData = {
-            userId: user.id,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-            phoneNumber: user.phoneNumber || undefined,
-            userName: user.userName || undefined,
-            profilePicture: user.profilePicture || undefined,
-            biography: user.biography || undefined
-        };
+  try {
+    // Get auth token from storage
+    const authData = localStorage.getItem('auth') || sessionStorage.getItem('auth');
 
-        // Log request details
-        logger.log('Updating profile with request:', {
-            endpoint: 'auth/update-profile',
-            method: 'POST',
-            data: requestData
-        });
-
-        // Use the api instance which already has the auth interceptor
-        // that adds the Authorization header automatically
-        const response = await api.post('auth/update-profile', requestData);
-        
-        logger.log('Profile update successful:', response.data);
-        return response.data;
-    } catch (error) {
-        logger.error('Error updating profile:', error);
-        throw error;
+    if (!authData) {
+      logger.error('No auth data found in storage');
+      throw new Error('No authentication data found');
     }
+
+    // Log the auth data for debugging (hide sensitive data)
+    const parsedAuthData = JSON.parse(authData);
+    logger.log('Auth data found:', {
+      hasToken: !!parsedAuthData.token,
+      tokenLength: parsedAuthData.token ? parsedAuthData.token.length : 0,
+      hasUser: !!parsedAuthData.authenticatedUser,
+      userId: parsedAuthData.authenticatedUser?.id
+    });
+
+    // Create request data with all available profile fields
+    const requestData = {
+      userId: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      phoneNumber: user.phoneNumber || undefined,
+      userName: user.userName || undefined,
+      profilePicture: user.profilePicture || undefined,
+      biography: user.biography || undefined
+    };
+
+    // Log request details
+    logger.log('Updating profile with request:', {
+      endpoint: 'auth/update-profile',
+      method: 'POST',
+      data: requestData
+    });
+
+    // Use the api instance which already has the auth interceptor
+    // that adds the Authorization header automatically
+    const response = await api.post('auth/update-profile', requestData);
+
+    logger.log('Profile update successful:', response.data);
+    return response.data;
+  } catch (error) {
+    logger.error('Error updating profile:', error);
+    throw error;
+  }
 };
 
 // Logout a user
@@ -288,15 +288,20 @@ export const logout = async () => {
   try {
     logger.info('Attempting to logout user');
     logger.log('Logout API request sent');
-    
+
     const response = await api.post('auth/logout');
-    
+
     logger.info(`Logout successful, response received: ${JSON.stringify(response.data)}`);
     logger.log('Logout API response:', response.data);
-    
+
+    // ✅ Clear storage on success
+    localStorage.clear();
+    sessionStorage.clear();
+
     return response.data;
   } catch (error) {
     logger.error('Logout API error:', error);
+
     if (isAxiosError(error)) {
       if (error.response) {
         logger.error('Logout API error response:', error.response.data);
@@ -306,7 +311,26 @@ export const logout = async () => {
         logger.error('Logout API error during setup:', error.message);
       }
     }
-    // Even if the API call fails, we should still clear local storage
+
+    // ✅ Clear storage even if logout fails
+    localStorage.clear();
+    sessionStorage.clear();
+
     return { message: 'Logged out locally' };
   }
 };
+
+export function getAuthenticatedUser() {
+  logger.info('Getting authenticated user from session storage');
+  try {
+    const authData = sessionStorage.getItem('auth');
+    if (!authData) {
+      logger.info('No auth data found in session storage');
+      return null;
+    }
+    return JSON.parse(authData).authenticatedUser;
+  } catch (error) {
+    logger.error('Error getting authenticated user:', error);
+    return null;
+  }
+}

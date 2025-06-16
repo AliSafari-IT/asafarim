@@ -1,13 +1,13 @@
 import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Wrapper from '@/layout/Wrapper/Wrapper';
+import Wrapper from '@/layout/Wrapper';
 import Footer from '@/layout/Footer/Footer';
 import Header from '@/layout/Header/Header';
 import { IField } from '@/interfaces';
 import { addUserByAdmin } from '@/api/userManagerApi';
 import AddForm from '@/components/crud/AddForm';
 import { IFormData } from '@/interfaces/IFormData';
-import useAuth from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import { isAxiosError } from 'axios';
 import axios from 'axios';
 import { debounce } from 'lodash';
@@ -162,13 +162,20 @@ const CreateUser: React.FC = () => {
     };
 };
 
-  // Helper function to format date as yyyy-MM-dd
-  const formatDate = (dateString: string): string => {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+  // Helper function to convert local date string (YYYY-MM-DD) to ISO string at UTC midnight
+  const convertLocalDateToISOString = (localDateString: string): string | undefined => {
+    if (!localDateString) return undefined;
+    try {
+      // Create date parts assuming local time
+      const [year, month, day] = localDateString.split('-').map(Number);
+      // Construct a Date object using UTC values to represent the local date at midnight
+      const utcDate = new Date(Date.UTC(year, month - 1, day));
+      // Return the ISO string (which will end in Z for UTC)
+      return utcDate.toISOString();
+    } catch (e) {
+      logger.error("Error converting local date string to ISO:", e);
+      return undefined;
+    }
   };
 
 // Usage in handleSubmit
@@ -177,9 +184,7 @@ const handleSubmit = async (formData: FormData): Promise<void> => {
 
     try {
       // Transform form data to match API expectations
-      const dateOfBirth = iFormData.dateOfBirth 
-        ? formatDate(iFormData.dateOfBirth as string)
-        : undefined;
+      const dateOfBirth = convertLocalDateToISOString(iFormData.dateOfBirth as string);
       
       const userData: ICreateUserModel = {
         firstName: iFormData.firstName as string,

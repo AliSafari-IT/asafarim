@@ -9,6 +9,9 @@ using Serilog;
 
 namespace ASafariM.Presentation.Controllers;
 
+/// <summary>
+/// Provides access to application logs.
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class LogsController : ControllerBase
@@ -25,6 +28,12 @@ public class LogsController : ControllerBase
         _logger = logger;
     }
 
+    /// <summary>
+    /// Retrieves application logs.
+    /// </summary>
+    /// <param name="page">Page number (1-based)</param>
+    /// <param name="pageSize">Number of lines per page</param>
+    /// <returns>Application logs</returns>
     [HttpGet]
     public async Task<IActionResult> GetLogs(
         [FromQuery] int page = 1,
@@ -107,6 +116,11 @@ public class LogsController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Sends a log message.
+    /// </summary>
+    /// <param name="message">Log message</param>
+    /// <returns>Response indicating success or failure</returns>
     [HttpPost]
     public IActionResult PostLog([FromBody] LogMessage message)
     {
@@ -120,13 +134,18 @@ public class LogsController : ControllerBase
     }
 }
 
+/// <summary>
+/// Log message model.
+/// </summary>
 public class LogMessage
 {
     public string? Message { get; set; }
     public string? Level { get; set; }
 }
 
-// Custom FileCallbackResult for streaming response
+/// <summary>
+/// Custom FileCallbackResult for streaming response.
+/// </summary>
 public class FileCallbackResult : FileResult
 {
     private readonly Func<Stream, ActionContext, Task> _callback;

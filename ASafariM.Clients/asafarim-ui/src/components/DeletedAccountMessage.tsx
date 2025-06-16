@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { requestAccountReactivation } from '../api/authapi';
 import { logger } from '@/utils/logger';
 
-interface DeletedAccountMessageProps {
-  email: string;
-  onClose: () => void;
+export interface DeletedAccountMessageProps {
+  email?: string;
+  onClose?: () => void;
 }
 
-const DeletedAccountMessage: React.FC<DeletedAccountMessageProps> = ({ email, onClose }) => {
+const DeletedAccountMessage: React.FC<DeletedAccountMessageProps> = ({ email = "unknown@example.com", onClose = () => {} }) => {
   const [requestSent, setRequestSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -24,7 +24,7 @@ const DeletedAccountMessage: React.FC<DeletedAccountMessageProps> = ({ email, on
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center" data-testid="deleted-account-message">
       <div className="relative mx-auto p-8 w-full max-w-md bg-white rounded-lg shadow-2xl transform transition-all">
         <div className="text-center">
           {/* Warning Icon */}

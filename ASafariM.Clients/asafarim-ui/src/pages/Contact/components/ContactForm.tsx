@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
-import useAuth from "@/hooks/useAuth";
+import { useAuth } from "@/contexts/AuthContext";
 import ContactPageLayout from "./ContactPageLayout";
 import { logger } from "@/utils/logger";
 

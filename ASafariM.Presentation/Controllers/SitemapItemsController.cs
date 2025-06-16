@@ -12,6 +12,9 @@ using Serilog;
 
 namespace ASafariM.Presentation.Controllers
 {
+    /// <summary>
+    /// Provides access to sitemap items.
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class SitemapItemsController : ControllerBase
@@ -25,6 +28,10 @@ namespace ASafariM.Presentation.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Retrieves all sitemap items.
+        /// </summary>
+        /// <returns>Collection of sitemap items</returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SitemapItemDto>>> GetSitemapItems()
         {
@@ -45,6 +52,10 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Retrieves all root sitemap items.
+        /// </summary>
+        /// <returns>Collection of root sitemap items</returns>
         [HttpGet("root")]
         public async Task<ActionResult<IEnumerable<SitemapItemDto>>> GetRootItems()
         {
@@ -65,6 +76,11 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Retrieves a sitemap item by ID.
+        /// </summary>
+        /// <param name="id">ID of the sitemap item to retrieve</param>
+        /// <returns>Sitemap item details</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<SitemapItemDto>> GetSitemapItem(Guid id)
         {
@@ -88,6 +104,11 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Retrieves a sitemap item by slug.
+        /// </summary>
+        /// <param name="slug">Slug of the sitemap item to retrieve</param>
+        /// <returns>Sitemap item details</returns>
         [HttpGet("slug/{slug}")]
         public async Task<ActionResult<SitemapItemDto>> GetSitemapItemBySlug(string slug)
         {
@@ -111,6 +132,11 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Retrieves child sitemap items for a specific sitemap item.
+        /// </summary>
+        /// <param name="id">ID of the parent sitemap item</param>
+        /// <returns>Collection of child sitemap items</returns>
         [HttpGet("{id}/children")]
         public async Task<ActionResult<IEnumerable<SitemapItemDto>>> GetChildItems(Guid id)
         {
@@ -136,6 +162,11 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Creates a new sitemap item.
+        /// </summary>
+        /// <param name="command">Command model containing sitemap item details</param>
+        /// <returns>Created sitemap item</returns>
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<SitemapItemDto>> CreateSitemapItem(
@@ -191,6 +222,12 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Updates an existing sitemap item.
+        /// </summary>
+        /// <param name="id">ID of the sitemap item to update</param>
+        /// <param name="command">Command model containing updated sitemap item details</param>
+        /// <returns>Updated sitemap item</returns>
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<ActionResult<SitemapItemDto>> UpdateSitemapItem(
@@ -253,6 +290,11 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes a sitemap item by ID.
+        /// </summary>
+        /// <param name="id">ID of the sitemap item to delete</param>
+        /// <returns>Result of the deletion operation</returns>
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteSitemapItem(Guid id)

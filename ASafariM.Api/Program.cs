@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using ASafariM.Api;
 using ASafariM.Api.Extensions;
 using ASafariM.Application;
@@ -25,7 +26,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using MySqlConnector; // Add this line
+using MySqlConnector;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Serilog;
 using Serilog.Context;
@@ -36,11 +37,31 @@ DotNetEnv.Env.Load();
 var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 Console.WriteLine($"ASPNETCORE_ENVIRONMENT: {environment}");
 
-var logDirectory =
-    environment == "Production" ? "/var/www/asafarim/logs" : "D:/repos/ASafariM/Logs";
+string baseDir = "/var/www/asafarim.be/asafarim";
+string logDirectory = Path.Combine(baseDir, "logs");
 
-Console.WriteLine($"Log Directory: {logDirectory}"); // Debugging line
-Directory.CreateDirectory(logDirectory);
+try {
+    if (!Directory.Exists(baseDir)) {
+        Console.WriteLine($"Base directory {baseDir} does not exist");
+        // Fall back to a directory we know we can write to
+        logDirectory = "/tmp/asafarim/logs";
+    }
+    
+    Console.WriteLine($"Creating log directory: {logDirectory}");
+    Directory.CreateDirectory(logDirectory);
+    
+    // Verify we can write to it
+    string testFile = Path.Combine(logDirectory, "test.txt");
+    File.WriteAllText(testFile, "Test");
+    File.Delete(testFile);
+} catch (Exception ex) {
+    Console.WriteLine($"Error creating log directory: {ex.Message}");
+    // Fall back to /tmp
+    logDirectory = "/tmp/asafarim/logs";
+    Directory.CreateDirectory(logDirectory);
+}
+
+Console.WriteLine($"Using log directory: {logDirectory}");
 var logFilePath = Path.Combine(logDirectory, "api_.log");
 Console.WriteLine($"Log File Path: {logFilePath}"); // Debugging line
 var line = new string('-', 100);
@@ -50,7 +71,7 @@ if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ASPNETCORE_URLS")))
 {
     Environment.SetEnvironmentVariable(
         "ASPNETCORE_URLS",
-        "http://localhost:5000;https://localhost:5001"
+        "http://localhost:5000;https://localhost:5001;http://localhost:3005"
     );
 }
 
@@ -58,17 +79,14 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    // // Configure Kestrel to listen on any IP and port
-    // builder.WebHost.ConfigureKestrel(options =>
-    // {
-    //     options.ListenAnyIP(5000);
-    // });
+    // Set the environment
+    builder.Environment.EnvironmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
 
-    // // Ensure the API listens on HTTP (not HTTPS)
-    // builder.WebHost.UseKestrel(options =>
-    // {
-    //     options.ListenAnyIP(5000); // Bind to all interfaces
-    // });
+    // // Configure Kestrel to listen on any IP and port
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        options.ListenAnyIP(5000); // Listen on all network interfaces
+    });
 
     builder.Services.AddHttpContextAccessor();
 
@@ -199,6 +217,9 @@ try
     // Register application services
     try
     {
+        // Register the database initialization service
+        builder.Services.AddScoped<DatabaseInitializationService>();
+
         ServiceRegistration.RegisterServices(builder);
         Log.Information("Services registered successfully");
     }
@@ -220,12 +241,27 @@ try
                     .WithOrigins(
                         "http://localhost:3000",
                         "https://localhost:3000",
+                        "http://localhost:3001",
+                        "https://localhost:3001",
+                        "http://localhost:3002",
+                        "https://localhost:3002",
+                        "http://localhost:3003",
+                        "https://localhost:3003",
+                        "http://localhost:3004",
+                        "https://localhost:3004",
+                        "http://localhost:3005",
+                        "https://localhost:3005",
                         "http://localhost:5000",
                         "https://localhost:5001",
                         "http://asafarim.com",
                         "https://asafarim.com",
                         "http://www.asafarim.com",
-                        "https://www.asafarim.com"
+                        "https://www.asafarim.com",
+                         "http://asafarim.be",
+                        "https://asafarim.be",
+                        "http://www.asafarim.be",
+                        "https://www.asafarim.be",
+                        "http://82.25.116.73"
                     )
                     .AllowAnyMethod()
                     .AllowAnyHeader()
@@ -240,18 +276,22 @@ try
         .Services.AddControllers()
         .AddJsonOptions(options =>
         {
-            options.JsonSerializerOptions.ReferenceHandler = System
-                .Text
-                .Json
-                .Serialization
-                .ReferenceHandler
-                .Preserve;
-            options.JsonSerializerOptions.MaxDepth = 64; // Increase max depth if needed
+            options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+            options.JsonSerializerOptions.MaxDepth = 64;
+            // Add custom converters for consistent UTC DateTime handling
+            options.JsonSerializerOptions.Converters.Add(new UtcDateTimeConverter());
+            options.JsonSerializerOptions.Converters.Add(new UtcDateTimeNotNullableConverter());
+            // Set naming policy to camelCase to match frontend JSON
+            options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
         })
+        // Chain AddApplicationPart here
         .AddApplicationPart(
             typeof(ASafariM.Presentation.Controllers.MarkdownFilesController).Assembly
         )
         .AddApplicationPart(typeof(ASafariM.Presentation.Controllers.ProjectsController).Assembly)
+        .AddApplicationPart(
+            typeof(ASafariM.Presentation.Controllers.BibliographyController).Assembly
+        )
         .AddApplicationPart(
             typeof(ASafariM.Presentation.Controllers.HealthCheckController).Assembly
         );
@@ -276,6 +316,23 @@ try
     // Build the application
     Log.Information("Building the application...");
     var app = builder.Build();
+
+    // Initialize the database on startup
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbInitService =
+            scope.ServiceProvider.GetRequiredService<DatabaseInitializationService>();
+        try
+        {
+            Log.Information("Initializing database...");
+            dbInitService.InitializeDatabaseAsync().Wait();
+            Log.Information("Database initialization completed successfully.");
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "An error occurred while initializing the database.");
+        }
+    }
 
     // Configure the HTTP request pipeline
     Log.Information("Configuring the HTTP request pipeline...");

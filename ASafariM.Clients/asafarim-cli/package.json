@@ -1,0 +1,31 @@
+{
+  "name": "asafarim-cli",
+  "version": "1.1.0",
+  "description": "A simple terminal interface using Node.js",
+  "main": "server.js",
+  "scripts": {
+    "co": "cd ../.. && pnpm co",
+    "stop": "npx kill-port 3001",
+    "deploy": "cd ../.. && echo \" 📦 Deploying CLI App...\" && echo 7 | pnpm asm",
+    "start": "node server.js",
+    "restart": "echo \" 📦 Re-installing dependencies and restarting a clean app \" && pnpm reinstall && pnpm start ",
+    "clean": "rm -rf node_modules .pnpm pnpm-lock.yaml",
+    "reinstall": "echo \" 📦 Clearing cache and installing dependencies...\" && pnpm store prune && pnpm clean && pnpm install --force && pnpm approve-builds",
+    "rebuild": "node-gyp rebuild",
+    "build:prod": "pnpm install --production",
+    "build:dev": "pnpm install && node-gyp rebuild",
+    "kill": "pkill -f 'node server.js'"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.5.0",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "node-fetch": "^3.3.2",
+    "socket.io": "^4.7.2",
+    "ws": "^8.11.0"
+  },
+  "devDependencies": {
+    "nan": "^2.18.0"
+  }
+}

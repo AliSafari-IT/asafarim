@@ -14,8 +14,8 @@ export interface IProject {
   client?: IUser;
   ownerId: string;
   owner?: IUser;
-  dateCreated?: Date;  // Made optional
-  dateModified?: Date;  // Made optional
+  createdAt?: Date;  // Made optional
+  updatedAt?: Date;  // Made optional
   visibility?: number;  // Changed to lowercase to match API
   status?: number;     // Changed to lowercase to match API
   // Frontend presentation

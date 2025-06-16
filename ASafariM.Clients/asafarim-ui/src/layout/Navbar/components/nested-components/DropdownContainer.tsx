@@ -5,7 +5,7 @@ const DropdownContainer: React.FC<DropdownContainerProps> = ({ isOpen, children 
   if (!isOpen) return null;
 
   return (
-    <div className="lg:absolute lg:left-0 lg:mt-2 w-full lg:w-48 bg-[var(--bg-primary)] shadow-lg rounded-md">
+    <div className="absolute left-0 mt-2 w-48 bg-[var(--bg-primary)] shadow-lg rounded-md z-10">
       {children}
     </div>
   );

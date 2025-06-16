@@ -19,6 +19,9 @@ using Serilog;
 
 namespace ASafariM.Presentation.Controllers;
 
+/// <summary>
+/// Controller for handling authentication and authorization
+/// </summary>
 [ApiController]
 [Route("api/auth")]
 public class AuthController : ControllerBase
@@ -30,12 +33,31 @@ public class AuthController : ControllerBase
     private readonly CurrentUserService _currentUserService;
     private readonly IEmailService _emailService;
 
+    /// <summary>
+    /// Request object for authorization
+    /// </summary>
     public class AuthorizeRequest
     {
+        /// <summary>
+        /// User ID to authorize
+        /// </summary>
         public Guid UserId { get; set; }
+
+        /// <summary>
+        /// Policy name to check against
+        /// </summary>
         public string PolicyName { get; set; } = "";
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AuthController"/> class
+    /// </summary>
+    /// <param name="userRepository">User repository</param>
+    /// <param name="jwtTokenService">JWT token service</param>
+    /// <param name="userService">User service</param>
+    /// <param name="authorizationService">Authorization service</param>
+    /// <param name="currentUserService">Current user service</param>
+    /// <param name="emailService">Email service</param>
     public AuthController(
         IUserRepository userRepository,
         JwtTokenService jwtTokenService,
@@ -53,6 +75,10 @@ public class AuthController : ControllerBase
         _emailService = emailService;
     }
 
+    /// <summary>
+    /// Gets the current authenticated user
+    /// </summary>
+    /// <returns>Current user details</returns>
     [HttpGet("current-user")]
     public async Task<IActionResult> GetCurrentUser()
     {
@@ -85,6 +111,11 @@ public class AuthController : ControllerBase
         );
     }
 
+    /// <summary>
+    /// Authorizes a user against a specific policy
+    /// </summary>
+    /// <param name="request">Authorization request</param>
+    /// <returns>Authorization result</returns>
     [HttpPost("authorize")]
     public async Task<IActionResult> Authorize([FromBody] AuthorizeRequest request)
     {
@@ -137,6 +168,11 @@ public class AuthController : ControllerBase
         return Ok(new { isAuthorized });
     }
 
+    /// <summary>
+    /// Registers a new user
+    /// </summary>
+    /// <param name="command">User registration command</param>
+    /// <returns>Registration result</returns>
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] CreateUserCommand command)
     {
@@ -161,6 +197,11 @@ public class AuthController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Authenticates a user and generates a JWT token
+    /// </summary>
+    /// <param name="command">Login credentials</param>
+    /// <returns>Authentication result with JWT token</returns>
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginUserCommand command)
     {
@@ -293,6 +334,10 @@ public class AuthController : ControllerBase
         );
     }
 
+    /// <summary>
+    /// Logs out the current user
+    /// </summary>
+    /// <returns>Logout result</returns>
     [HttpPost("logout")]
     public async Task<IActionResult> Logout()
     {
@@ -306,6 +351,11 @@ public class AuthController : ControllerBase
         return Ok(new { message = "Logout successful" });
     }
 
+    /// <summary>
+    /// Resets a user's password
+    /// </summary>
+    /// <param name="command">Password reset command</param>
+    /// <returns>Password reset result</returns>
     [HttpPost("reset-password")]
     [AllowAnonymous]
     public async Task<IActionResult> ResetPassword(ResetPasswordCommand command)
@@ -406,6 +456,11 @@ public class AuthController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Initiates password recovery process
+    /// </summary>
+    /// <param name="command">Password recovery command</param>
+    /// <returns>Password recovery result</returns>
     [HttpPost("forgot-password")]
     public async Task<IActionResult> ForgotPassword(ForgotPasswordCommand command)
     {
@@ -481,6 +536,11 @@ public class AuthController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Changes a user's password
+    /// </summary>
+    /// <param name="command">Password change command</param>
+    /// <returns>Password change result</returns>
     [HttpPost("change-password")]
     public async Task<IActionResult> ChangePassword(ChangePasswordCommand command)
     {
@@ -498,6 +558,11 @@ public class AuthController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Updates a user's profile
+    /// </summary>
+    /// <param name="command">Profile update command</param>
+    /// <returns>Profile update result</returns>
     [HttpPost("update-profile")]
     [Authorize]
     public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileCommand command)
@@ -553,11 +618,13 @@ public class AuthController : ControllerBase
         }
     }
 
-    // requestAccountReactivation
+    /// <summary>
+    /// Requests account reactivation
+    /// </summary>
+    /// <param name="command">Account reactivation command</param>
+    /// <returns>Reactivation request result</returns>
     [HttpPost("request-account-reactivation")]
-    public async Task<IActionResult> RequestAccountReactivation(
-        RequestAccountReactivationCommand command
-    )
+    public async Task<IActionResult> RequestAccountReactivation(RequestAccountReactivationCommand command)
     {
         Log.Information("Account reactivation request received for email: {Email}", command.Email);
 
@@ -589,20 +656,37 @@ public class AuthController : ControllerBase
                 return BadRequest(new { message = "Account is not deleted" });
             }
 
-            await _userService.RequestAccountReactivationAsync(command);
+            try
+            {
+                await _userService.RequestAccountReactivationAsync(command);
+                
+                Log.Information(
+                    "Account reactivation request processed successfully for email: {Email}",
+                    command.Email
+                );
 
-            Log.Information(
-                "Account reactivation request processed successfully for email: {Email}",
-                command.Email
-            );
-
-            return Ok(
-                new
-                {
-                    message = "Account reactivation request sent successfully",
-                    email = command.Email,
-                }
-            );
+                return Ok(
+                    new
+                    {
+                        message = "Account reactivation request sent successfully",
+                        email = command.Email,
+                    }
+                );
+            }
+            catch (ApplicationException ex) when (ex.Message.Contains("Failed to send reactivation email"))
+            {
+                // Specific handling for email sending failures
+                Log.Error(
+                    ex,
+                    "Failed to send reactivation email for email: {Email}. Error: {Message}",
+                    command.Email,
+                    ex.Message
+                );
+                return StatusCode(
+                    500,
+                    new { message = "Failed to send reactivation request. Please try again later." }
+                );
+            }
         }
         catch (Exception ex)
         {

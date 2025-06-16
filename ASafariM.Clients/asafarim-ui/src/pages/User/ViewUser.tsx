@@ -2,7 +2,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { getUserById, getRolesByUserId, getRoles } from '../../api/userService';
 import { IUser } from '../../interfaces/IUser';
-import Wrapper from '../../layout/Wrapper/Wrapper';
+import Wrapper from '../../layout/Wrapper';
 import Footer from '../../layout/Footer/Footer';
 import Header from '@/layout/Header/Header';
 import { logger } from '@/utils/logger';

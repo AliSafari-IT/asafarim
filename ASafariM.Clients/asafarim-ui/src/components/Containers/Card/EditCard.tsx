@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Button, FluentProvider, makeStyles } from "@fluentui/react-components";
+import { Button, FluentProvider, makeStyles, mergeClasses } from "@fluentui/react-components";
 import { Stack, TextField, VirtualizedComboBox } from "@fluentui/react";
 import dashboardServices from "../../../api/entityServices";
 import { getFluentProviderTheme } from "../../../utils/themeUtils";
@@ -129,7 +129,12 @@ const EditCard: React.FC = () => {
       <div className={classes.formContainer}>
         <h2>Edit {model?.toUpperCase()}</h2>
         <div
-          className={`${classes.card} hover:${classes.cardHover} focus:${classes.cardFocus} flex flex-col p-5 gap-1 border border-gray-300 rounded md:p-2`}
+          className={mergeClasses(
+            classes.card, 
+            classes.cardHover, 
+            classes.cardFocus, 
+            "flex flex-col p-5 gap-1 border border-gray-300 rounded md:p-2"
+          )}
         >
           {" "}
           {typedData ? (

@@ -1,39 +1,58 @@
 // src/pages/Project/AddProject.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { IField } from "@/interfaces/IField";
-import Wrapper from "@/layout/Wrapper/Wrapper";
+import Wrapper from "@/layout/Wrapper";
 import entityServices from "@/api/entityServices";
 import { logger } from "@/utils/logger";
-import { jwtDecode } from "jwt-decode";
-import Notification from "@/components/Notification/Notification";
 import { TextField } from "@fluentui/react/lib/TextField";
 import { PrimaryButton, DefaultButton, IconButton, ActionButton } from "@fluentui/react/lib/Button";
 import { Text } from "@fluentui/react/lib/Text";
 import { Dialog, DialogType, DialogFooter } from "@fluentui/react/lib/Dialog";
 import { Spinner, SpinnerSize } from "@fluentui/react/lib/Spinner";
-import { List } from "@fluentui/react/lib/List";
 import { Stack } from "@fluentui/react/lib/Stack";
 import { Dropdown, IDropdownOption } from "@fluentui/react/lib/Dropdown";
-import { Add20Regular, Delete24Regular, Search24Regular, ArrowLeft24Regular, Save20Regular } from "@fluentui/react-icons";
+import { 
+  Add20Regular, 
+  Delete24Regular, 
+  Search24Regular, 
+  ArrowLeft24Regular, 
+  Save20Regular,
+  CheckmarkCircle24Regular,
+  DismissCircle24Regular} from "@fluentui/react-icons";
 import axios from "axios";
 import Toolbar from "@/components/Toolbars/Toolbar";
-import useAuth from "@/hooks/useAuth";
+import { useAuth } from '@/contexts/AuthContext';
+import { motion } from "framer-motion";
 
-interface JwtPayload {
-  nameid?: string;
-  unique_name?: string;
-  role?: string;
-  exp?: number;
+interface FieldError {
+  name: string;
+  message: string;
 }
 
 const AddProject: React.FC = () => {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [repoLinks, setRepoLinks] = useState<string[]>([]);
   const [newRepoLink, setNewRepoLink] = useState("");
   const { authenticated, authenticatedUser } = useAuth();
+  const [fieldErrors, setFieldErrors] = useState<FieldError[]>([]);
+  const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
+  
+  // Check authentication when component mounts
+  useEffect(() => {
+    if (!authenticated) {
+      logger.warn("Unauthenticated user attempted to access AddProject page");
+      // Store notification message in sessionStorage to display it on the projects page
+      sessionStorage.setItem('projectNotification', JSON.stringify({
+        type: 'warning',
+        message: 'You must be logged in to add or edit a project'
+      }));
+      // Redirect to projects list page
+      navigate('/projects');
+    }
+  }, [authenticated, navigate]);
   
   // Form state
   const [formData, setFormData] = useState({
@@ -53,16 +72,102 @@ const AddProject: React.FC = () => {
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isGistModalOpen, setIsGistModalOpen] = useState(false);
-  const [githubRepos, setGithubRepos] = useState<{name: string, html_url: string, description?: string}[]>([]);
-  const [githubGists, setGithubGists] = useState<{description: string, html_url: string, files?: any}[]>([]);
+  const [githubRepos, setGithubRepos] = useState<any[]>([]);
+  const [githubGists, setGithubGists] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [gistSearchQuery, setGistSearchQuery] = useState('');
   const [isLoadingRepos, setIsLoadingRepos] = useState(false);
   const [isLoadingGists, setIsLoadingGists] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [gistSearchQuery, setGistSearchQuery] = useState("");
+  const [repoCurrentPage, setRepoCurrentPage] = useState(1);
+  const [gistCurrentPage, setGistCurrentPage] = useState(1);
+  const [hasMoreRepos, setHasMoreRepos] = useState(true);
+  const [hasMoreGists, setHasMoreGists] = useState(true);
+  const perPage = 30; // GitHub's default per page
   
   // State for delete confirmation dialog
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [linkToDeleteIndex, setLinkToDeleteIndex] = useState<number | null>(null);
+  
+  // Validate a single field
+  const validateField = (name: string, value: any): string | null => {
+    switch(name) {
+      case 'name':
+        return !value || value.trim() === '' 
+          ? 'Project name is required' 
+          : null;
+      case 'description':
+        return value && value.length > maxDescriptionLength 
+          ? `Description must be ${maxDescriptionLength} characters or less` 
+          : null;
+      case 'startDate':
+        if (formData.endDate && value) {
+          const start = new Date(value);
+          const end = new Date(formData.endDate);
+          return start > end 
+            ? 'Start date cannot be after end date' 
+            : null;
+        }
+        return null;
+      case 'endDate':
+        if (formData.startDate && value) {
+          const start = new Date(formData.startDate);
+          const end = new Date(value);
+          return end < start 
+            ? 'End date cannot be before start date' 
+            : null;
+        }
+        return null;
+      case 'budget':
+        return value && isNaN(parseFloat(value)) 
+          ? 'Budget must be a valid number' 
+          : null;
+      default:
+        return null;
+    }
+  };
+  
+  // Validate all fields
+  const validateForm = (): boolean => {
+    const errors: FieldError[] = [];
+    
+    // Required fields
+    if (!formData.name || formData.name.trim() === '') {
+      errors.push({ name: 'name', message: 'Project name is required' });
+    }
+    
+    // Description length
+    if (formData.description && formData.description.length > maxDescriptionLength) {
+      errors.push({ 
+        name: 'description', 
+        message: `Description must be ${maxDescriptionLength} characters or less` 
+      });
+    }
+    
+    // Date validation
+    if (formData.startDate && formData.endDate) {
+      const start = new Date(formData.startDate);
+      const end = new Date(formData.endDate);
+      if (start > end) {
+        errors.push({ name: 'startDate', message: 'Start date cannot be after end date' });
+        errors.push({ name: 'endDate', message: 'End date cannot be before start date' });
+      }
+    }
+    
+    // Budget validation
+    if (formData.budget && isNaN(parseFloat(formData.budget))) {
+      errors.push({ name: 'budget', message: 'Budget must be a valid number' });
+    }
+    
+    setFieldErrors(errors);
+    return errors.length === 0;
+  };
+  
+  // Get error message for a field
+  const getFieldError = (fieldName: string): string | undefined => {
+    if (!touchedFields.has(fieldName)) return undefined;
+    const error = fieldErrors.find(err => err.name === fieldName);
+    return error?.message;
+  };
   
   // Handle form changes
   const handleChange = (
@@ -73,12 +178,29 @@ const AddProject: React.FC = () => {
     const name = target.name;
     const value = newValue || target.value;
     
+    // Mark field as touched
+    setTouchedFields(prev => new Set(prev).add(name));
+    
     // Update character count for description field
     if (name === "description") {
       setDescriptionCharCount(value.length);
     }
     
-    setFormData({ ...formData, [name]: value });
+    // Update form data
+    setFormData(prev => {
+      const updated = { ...prev, [name]: value };
+      
+      // Validate the field
+      const errorMessage = validateField(name, value);
+      
+      // Update field errors
+      setFieldErrors(prev => {
+        const filtered = prev.filter(err => err.name !== name);
+        return errorMessage ? [...filtered, { name, message: errorMessage }] : filtered;
+      });
+      
+      return updated;
+    });
   };
 
   const handleDropdownChange = (
@@ -87,10 +209,26 @@ const AddProject: React.FC = () => {
     name?: string
   ) => {
     if (option && name) {
-      setFormData({ ...formData, [name]: option.key.toString() });
+      // Mark field as touched
+      setTouchedFields(prev => new Set(prev).add(name));
+      
+      setFormData(prev => {
+        const updated = { ...prev, [name]: option.key.toString() };
+        
+        // Validate the field
+        const errorMessage = validateField(name, option.key.toString());
+        
+        // Update field errors
+        setFieldErrors(prev => {
+          const filtered = prev.filter(err => err.name !== name);
+          return errorMessage ? [...filtered, { name, message: errorMessage }] : filtered;
+        });
+        
+        return updated;
+      });
     }
   };
-  
+
   // Repository links handlers
   const handleAddRepoLink = () => {
     if (newRepoLink && newRepoLink.trim() !== '') {
@@ -135,13 +273,24 @@ const AddProject: React.FC = () => {
   };
 
   // GitHub repositories handlers
-  const fetchGithubRepos = async () => {
+  const fetchGithubRepos = async (page = 1) => {
     try {
       setIsLoadingRepos(true);
-      const response = await axios.get('https://api.github.com/users/AliSafari-IT/repos');
-      setGithubRepos(response.data);
-      logger.info(`Fetched ${response.data.length} GitHub repositories`);
+      setRepoCurrentPage(page);
+      
+      console.log(`Fetching GitHub repositories page ${page} with ${perPage} items per page...`);
+      const response = await axios.get(`https://api.github.com/users/AliSafari-IT/repos?page=${page}&per_page=${perPage}&sort=updated`);
+      const repos = response.data;
+      
+      console.log(`Received ${repos.length} repositories from page ${page}`);
+      
+      // If we got less than perPage repos, we've reached the end
+      setHasMoreRepos(repos.length === perPage);
+      
+      setGithubRepos(repos);
+      logger.info(`Fetched ${repos.length} GitHub repositories for page ${page}`);
     } catch (error) {
+      console.error('Error fetching GitHub repositories:', error);
       logger.error('Error fetching GitHub repositories: ' + error);
       setError('Failed to fetch GitHub repositories');
     } finally {
@@ -150,13 +299,24 @@ const AddProject: React.FC = () => {
   };
   
   // GitHub gists handlers
-  const fetchGithubGists = async () => {
+  const fetchGithubGists = async (page = 1) => {
     try {
       setIsLoadingGists(true);
-      const response = await axios.get('https://api.github.com/users/AliSafari-IT/gists');
-      setGithubGists(response.data);
-      logger.info(`Fetched ${response.data.length} GitHub gists`);
+      setGistCurrentPage(page);
+      
+      console.log(`Fetching GitHub gists page ${page} with ${perPage} items per page...`);
+      const response = await axios.get(`https://api.github.com/users/AliSafari-IT/gists?page=${page}&per_page=${perPage}`);
+      const gists = response.data;
+      
+      console.log(`Received ${gists.length} gists from page ${page}`);
+      
+      // If we got less than perPage gists, we've reached the end
+      setHasMoreGists(gists.length === perPage);
+      
+      setGithubGists(gists);
+      logger.info(`Fetched ${gists.length} GitHub gists for page ${page}`);
     } catch (error) {
+      console.error('Error fetching GitHub gists:', error);
       logger.error('Error fetching GitHub gists: ' + error);
       setError('Failed to fetch GitHub gists');
     } finally {
@@ -170,6 +330,10 @@ const AddProject: React.FC = () => {
         repo.name.toLowerCase().includes(searchQuery.toLowerCase()))
     : githubRepos;
     
+  // Debug repositories count
+  console.log(`Total GitHub repositories in state: ${githubRepos.length}`);
+  console.log(`Filtered repositories to display: ${filteredRepos.length}`);
+    
   // Filter gists based on search query
   const filteredGists = gistSearchQuery
     ? githubGists.filter(gist => {
@@ -180,39 +344,52 @@ const AddProject: React.FC = () => {
       })
     : githubGists;
     
+  // Debug gists count
+  console.log(`Total GitHub gists in state: ${githubGists.length}`);
+  console.log(`Filtered gists to display: ${filteredGists.length}`);
+    
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError(null); // Clear any previous errors
+    setError(null);
+    setSuccess(null);
+    setFieldErrors([]);
 
     try {
-      if (!formData.name) {
-        setError("Project name is required");
-        setLoading(false);
-        return;
-      }
-      
-      // Check description length
-      if (formData.description && formData.description.length > maxDescriptionLength) {
-        setError(`Description must be ${maxDescriptionLength} characters or less`);
-        setLoading(false);
-        return;
-      }
-
-      // Check if user is authenticated using the useAuth hook
+      // Enhanced authentication check with detailed logging
       if (!authenticated || !authenticatedUser) {
-        logger.error("No authenticated user found");
-        setError("You must be logged in to create a project");
+        logger.error("Authentication check failed:", { authenticated, authenticatedUser });
+        setError("You must be logged in to create a project. Please log in and try again.");
         setLoading(false);
         return;
       }
 
-      // Use the user ID from the authenticated user object
-      const userId = authenticatedUser.id;
+      // Enhanced user ID validation with multiple fallback options
+      let userId = authenticatedUser.id || authenticatedUser.Id || authenticatedUser.userId || authenticatedUser.UserId;
+      
       if (!userId) {
-        logger.error("User ID not found in authenticated user object");
-        setError("Unable to determine user ID. Please try logging out and back in.");
+        logger.error("User ID extraction failed. Available user properties:", Object.keys(authenticatedUser));
+        logger.error("Full authenticated user object:", authenticatedUser);
+        setError("Unable to determine user ID. Please log out and log back in, then try again.");
+        setLoading(false);
+        return;
+      }
+
+      logger.info("Creating project with user ID:", userId);
+
+      // Check if auth token is available
+      const token = localStorage.getItem('auth') || sessionStorage.getItem('auth');
+      if (!token) {
+        logger.error("No authentication token found in storage");
+        setError("Authentication token not found. Please log in again.");
+        setLoading(false);
+        return;
+      }
+
+      // Validate form data before sending
+      if (!formData.name.trim()) {
+        setError("Project name is required");
         setLoading(false);
         return;
       }
@@ -235,15 +412,17 @@ const AddProject: React.FC = () => {
         logger.warn(`Filtered out ${repoLinks.length - validLinks.length} invalid repository links`);
       }
 
+      // Get current date in ISO format (YYYY-MM-DD)
+      const today = new Date();
+      const todayFormatted = today.toISOString().split('T')[0];
+
       const projectData = {
-        Name: formData.name,
-        Description: formData.description,
-        StartDate: formData.startDate
-          ? new Date(formData.startDate).toISOString()
-          : null,
-        EndDate: formData.endDate
-          ? new Date(formData.endDate).toISOString()
-          : null,
+        Name: formData.name.trim(),
+        Description: formData.description.trim(),
+        // Use today's date as default if not provided
+        StartDate: formData.startDate ? formData.startDate : todayFormatted,
+        // Set EndDate to null if not provided (optional field)
+        EndDate: formData.endDate || null,
         Budget: parseFloat(formData.budget) || 0,
         Visibility: parseInt(formData.visibility, 10) || 0,
         Status: parseInt(formData.status, 10) || 0,
@@ -251,20 +430,171 @@ const AddProject: React.FC = () => {
         RepoLinks: validLinks // Add validated repository links to the project data
       };
 
-      logger.info("Sending project data: " + JSON.stringify(projectData));
-      
-      // Use the standard addEntity function now that the backend supports repository links
-      const result = await entityServices.addEntity("project", projectData);
+      // Format dates properly for the API
+      try {
+        // Always ensure StartDate is properly formatted
+        const startDate = new Date(projectData.StartDate);
+        if (isNaN(startDate.getTime())) {
+          // If invalid, use today's date
+          projectData.StartDate = todayFormatted;
+        } else {
+          // Format date as yyyy-MM-dd to avoid timezone issues
+          projectData.StartDate = startDate.toISOString().split('T')[0];
+        }
+        
+        // Format EndDate if provided
+        if (projectData.EndDate) {
+          const endDate = new Date(projectData.EndDate);
+          if (isNaN(endDate.getTime())) {
+            // If invalid, set to null (optional field)
+            projectData.EndDate = null;
+          } else {
+            // Format date as yyyy-MM-dd to avoid timezone issues
+            projectData.EndDate = endDate.toISOString().split('T')[0];
+          }
+        }
+        
+        logger.info("Sending project data with formatted dates:", JSON.stringify(projectData, null, 2));
+        
+        // Show a temporary success message
+        setSuccess("Creating your project...");
+        
+        // Use the standard addEntity function now that the backend supports repository links
+        const result = await entityServices.addEntity("project", projectData);
 
-      if (result) {
-        logger.info("Project created successfully: " + JSON.stringify(result));
-        window.location.href = "/projects";
-      } else {
-        throw new Error("Failed to create project - no result returned");
+        if (result) {
+          logger.info("Project created successfully:", JSON.stringify(result));
+          setSuccess("Project created successfully! Redirecting...");
+          
+          // Redirect after a short delay to show the success message
+          setTimeout(() => {
+            window.location.href = "/projects";
+          }, 1500);
+        } else {
+          throw new Error("Failed to create project - no result returned");
+        }
+      } catch (formatError) {
+        // Handle date formatting errors gracefully
+        setError("There was an issue with the date format. Using today's date for start date.");
+        logger.warn("Date formatting error, using defaults:", formatError);
+        
+        // Try again with today's date
+        projectData.StartDate = todayFormatted;
+        projectData.EndDate = null;
+        
+        try {
+          const result = await entityServices.addEntity("project", projectData);
+          if (result) {
+            logger.info("Project created successfully with default dates:", JSON.stringify(result));
+            setSuccess("Project created successfully! Redirecting...");
+            
+            // Redirect after a short delay to show the success message
+            setTimeout(() => {
+              window.location.href = "/projects";
+            }, 1500);
+          } else {
+            throw new Error("Failed to create project - no result returned");
+          }
+        } catch (retryError) {
+          throw retryError; // Re-throw to be handled by the outer catch block
+        }
       }
     } catch (error) {
-      logger.error("Error creating project: " + error);
-      setError(error instanceof Error ? error.message : "Failed to create project");
+      logger.error("Error creating project:", error);
+      logger.error("Error details:", {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined,
+        response: axios.isAxiosError(error) ? error.response : undefined
+      });
+      setSuccess(null);
+      
+      // Enhanced error handling with more specific messages
+      if (axios.isAxiosError(error)) {
+        const { response, request, message } = error;
+        
+        if (response) {
+          // Server responded with error status
+          const { status, data } = response;
+          logger.error(`API Error Response - Status: ${status}, Data:`, data);
+          
+          if (status === 400) {
+            // Handle validation errors from the API
+            if (data.errors) {
+              // If we have a structured validation errors object
+              const apiFieldErrors: FieldError[] = [];
+              
+              Object.entries(data.errors).forEach(([field, messages]) => {
+                const fieldName = field.toLowerCase();
+                const message = Array.isArray(messages) ? messages.join(', ') : String(messages);
+                
+                // Clean up technical error messages
+                let userFriendlyMessage = message;
+                if (message.includes("JSON value could not be converted to System.DateTime")) {
+                  userFriendlyMessage = "Please enter a valid date format";
+                } else if (message.includes("projectDto field is required")) {
+                  userFriendlyMessage = "This field is required";
+                }
+                
+                // Add to field errors
+                apiFieldErrors.push({ name: fieldName, message: userFriendlyMessage });
+                
+                // Mark field as touched
+                setTouchedFields(prev => new Set(prev).add(fieldName));
+              });
+              
+              setFieldErrors(apiFieldErrors);
+              
+              // Create a summary error message
+              const errorFields = apiFieldErrors.map(err => {
+                const fieldLabel = err.name.charAt(0).toUpperCase() + err.name.slice(1);
+                return fieldLabel;
+              }).join(', ');
+              
+              setError(`Please fix the following fields: ${errorFields}`);
+              
+              // Scroll to the first field with an error
+              if (apiFieldErrors.length > 0) {
+                const firstErrorField = document.getElementsByName(apiFieldErrors[0].name)[0];
+                if (firstErrorField) {
+                  firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  firstErrorField.focus();
+                }
+              }
+            } else if (data.message) {
+              // If we have a single error message
+              setError(data.message);
+            } else if (typeof data === 'string') {
+              // If the response is a string
+              setError(data);
+            } else {
+              // Fallback for other 400 errors
+              setError("Please check your input and try again.");
+            }
+          } else if (status === 401) {
+            setError("Your session has expired. Please log in again to continue.");
+          } else if (status === 403) {
+            setError("You don't have permission to create projects.");
+          } else if (status === 500) {
+            setError("We're experiencing technical difficulties. Please try again later.");
+          } else {
+            // Generic error with status code
+            setError(`Something went wrong (${status}). Please try again.`);
+          }
+        } else if (request) {
+          // Request was made but no response received - this is the "Network Error" case
+          logger.error("Network Error - No response received:", request);
+          setError("Network Error: Unable to connect to the server. Please check your internet connection and ensure the API service is running. If you're in development mode, make sure the backend API is started on the correct port.");
+        } else {
+          // Something else happened
+          logger.error("Request setup error:", message);
+          setError(`Request Error: ${message}. Please try again.`);
+        }
+      } else {
+        // Non-Axios error
+        const errorMessage = error instanceof Error ? error.message : "Unable to create project. Please try again.";
+        logger.error("Non-Axios error:", errorMessage);
+        setError(errorMessage);
+      }
     } finally {
       setLoading(false);
     }
@@ -276,22 +606,39 @@ const AddProject: React.FC = () => {
     label: string;
     type: string;
   }) => {
+    const errorMessage = getFieldError(field.name);
+    const hasError = !!errorMessage;
+    
     return (
       <div
         key={field.name}
-        className="p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md"
+        className={`p-4 bg-[var(--bg-secondary)] border ${hasError ? 'border-red-400' : 'border-[var(--border-primary)]'} rounded-lg shadow-md transition-all duration-200 ${hasError ? 'shadow-red-100' : ''}`}
       >
-        <Text
-          as="label"
-          className="block text-[var(--text-primary)] font-medium mb-2"
-        >
-          {field.label}:
-          {field.name === "description" && (
-            <span className={`ml-2 text-sm ${descriptionCharCount > maxDescriptionLength ? 'text-red-500 font-bold' : 'text-gray-500'}`}>
-              {descriptionCharCount}/{maxDescriptionLength}
-            </span>
+        <div className="flex justify-between items-center mb-2">
+          <Text
+            as="label"
+            className={`block font-medium ${hasError ? 'text-red-600' : 'text-[var(--text-primary)]'}`}
+          >
+            {field.label}{field.name === 'name' && <span className="text-red-500 ml-1">*</span>}:
+            {field.name === "description" && (
+              <span className={`ml-2 text-sm ${descriptionCharCount > maxDescriptionLength ? 'text-red-500 font-bold' : 'text-gray-500'}`}>
+                {descriptionCharCount}/{maxDescriptionLength}
+              </span>
+            )}
+          </Text>
+          
+          {hasError && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex items-center text-red-600 text-sm"
+            >
+              <DismissCircle24Regular className="mr-1" />
+              <span>{errorMessage}</span>
+            </motion.div>
           )}
-        </Text>
+        </div>
+        
         {field.type === "select" ? (
           <Dropdown
             placeholder="Select an option"
@@ -300,6 +647,16 @@ const AddProject: React.FC = () => {
             }
             selectedKey={formData[field.name as keyof typeof formData]}
             onChange={(e, option) => handleDropdownChange(e, option, field.name)}
+            styles={{
+              root: { 
+                borderColor: hasError ? 'var(--red-400)' : undefined,
+                selectors: {
+                  ':hover': {
+                    borderColor: hasError ? 'var(--red-500)' : undefined
+                  }
+                }
+              }
+            }}
           />
         ) : (
           <TextField
@@ -309,9 +666,18 @@ const AddProject: React.FC = () => {
             onChange={handleChange}
             multiline={field.type === "textarea"}
             rows={field.type === "textarea" ? 4 : undefined}
-            errorMessage={field.name === "description" && descriptionCharCount > maxDescriptionLength 
-              ? `Description must be ${maxDescriptionLength} characters or less` 
-              : undefined}
+            errorMessage={errorMessage}
+            className={hasError ? 'error-field' : ''}
+            styles={{
+              fieldGroup: { 
+                borderColor: hasError ? 'var(--red-400)' : undefined,
+                selectors: {
+                  ':hover': {
+                    borderColor: hasError ? 'var(--red-500)' : undefined
+                  }
+                }
+              }
+            }}
           />
         )}
       </div>
@@ -357,9 +723,47 @@ const AddProject: React.FC = () => {
   return (
     <Wrapper>
       {error && (
-        <Stack className="max-w-5xl mx-auto p-8">
-          <Notification type="error" text={error} />
-        </Stack>
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-5xl mx-auto p-4 mb-4 bg-red-50 border-l-4 border-red-500 rounded-md shadow-md"
+        >
+          <div className="flex items-start">
+            <div className="flex-shrink-0 pt-0.5">
+              <DismissCircle24Regular className="h-5 w-5 text-red-500" />
+            </div>
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-red-800">
+                There was an error creating your project
+              </h3>
+              <div className="mt-2 text-sm text-red-700">
+                {error}
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {success && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-5xl mx-auto p-4 mb-4 bg-green-50 border-l-4 border-green-500 rounded-md shadow-md"
+        >
+          <div className="flex items-start">
+            <div className="flex-shrink-0 pt-0.5">
+              <CheckmarkCircle24Regular className="h-5 w-5 text-green-500" />
+            </div>
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-green-800">
+                Success
+              </h3>
+              <div className="mt-2 text-sm text-green-700">
+                {success}
+              </div>
+            </div>
+          </div>
+        </motion.div>
       )}
       
       <div className="w-2/3 mx-auto p-6 md:p-10 bg-[var(--bg-primary)] shadow-lg rounded-xl">
@@ -490,43 +894,60 @@ const AddProject: React.FC = () => {
                 <Spinner size={SpinnerSize.large} label="Loading repositories..." />
               </div>
             ) : filteredRepos.length > 0 ? (
-              <div className="max-h-80 overflow-y-auto border border-[var(--border-primary)] rounded-md">
-                <List
-                  items={filteredRepos}
-                  onRenderCell={(item?: {name: string, html_url: string, description?: string}) => (
-                    <div 
-                      className="p-3 border-b border-[var(--border-primary)] hover:bg-[var(--bg-secondary)] flex items-center cursor-pointer"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        if (item) {
-                          logger.debug('Selected repository:', item.name);
-                          // Add the URL directly to the repoLinks array
-                          const newLinks = [...repoLinks];
-                          if (!newLinks.includes(item.html_url)) {
-                            newLinks.push(item.html_url);
-                            setRepoLinks(newLinks);
-                            logger.debug('Added repository:', item.name);
-                            logger.debug('New links array:', newLinks);
-                          }
-                          setIsModalOpen(false);
-                        }
-                      }}
-                    >
-                      <div className="flex-shrink-0 mr-3 text-teal-500 hover:text-teal-600">
-                        <Add20Regular />
-                      </div>
-                      <div className="flex-grow min-w-0">
-                        <Text className="font-medium">{item?.name}</Text>
-                        <Text className="text-sm text-[var(--text-secondary)] truncate">{item?.html_url}</Text>
-                        {item?.description && (
-                          <Text className="text-xs text-[var(--text-secondary)] truncate mt-1">{item.description}</Text>
-                        )}
-                      </div>
+              <div>
+                <div className="max-h-80 overflow-y-auto border border-[var(--border-primary)] rounded-md">
+                  <div className="text-center p-2 bg-gray-100 border-b border-[var(--border-primary)]">
+                    Page {repoCurrentPage} - Showing {filteredRepos.length} repositories
+                  </div>
+                  {filteredRepos.map((item, index) => (
+                  <div 
+                    key={`${item.name}-${index}`}
+                    className="p-3 border-b border-[var(--border-primary)] hover:bg-[var(--bg-secondary)] flex items-center cursor-pointer"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      logger.debug('Selected repository:', item.name);
+                      // Add the URL directly to the repoLinks array
+                      const newLinks = [...repoLinks];
+                      if (!newLinks.includes(item.html_url)) {
+                        newLinks.push(item.html_url);
+                        setRepoLinks(newLinks);
+                        logger.debug('Added repository:', item.name);
+                        logger.debug('New links array:', newLinks);
+                      }
+                      setIsModalOpen(false);
+                    }}
+                  >
+                    <div className="flex-shrink-0 mr-3 text-teal-500 hover:text-teal-600">
+                      <Add20Regular />
                     </div>
-                  )}
-                />
+                    <div className="flex-grow min-w-0">
+                      <Text className="font-medium">{item.name}</Text>
+                      <Text className="text-sm text-[var(--text-secondary)] truncate">{item.html_url}</Text>
+                      {item.description && (
+                        <Text className="text-xs text-[var(--text-secondary)] truncate mt-1">{item.description}</Text>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
+              <div className="flex justify-between mt-2">
+                <PrimaryButton 
+                  disabled={repoCurrentPage <= 1 || isLoadingRepos}
+                  onClick={() => fetchGithubRepos(repoCurrentPage - 1)}
+                  className="w-24"
+                >
+                  Previous
+                </PrimaryButton>
+                <PrimaryButton 
+                  disabled={!hasMoreRepos || isLoadingRepos}
+                  onClick={() => fetchGithubRepos(repoCurrentPage + 1)}
+                  className="w-24"
+                >
+                  Next
+                </PrimaryButton>
+              </div>
+            </div>
             ) : (
               <Text className="text-center py-4 text-[var(--text-secondary)]">
                 No repositories found
@@ -571,42 +992,59 @@ const AddProject: React.FC = () => {
                 <Spinner size={SpinnerSize.large} label="Loading gists..." />
               </div>
             ) : filteredGists.length > 0 ? (
-              <div className="max-h-80 overflow-y-auto border border-[var(--border-primary)] rounded-md">
-                <List
-                  items={filteredGists}
-                  onRenderCell={(item?: {description: string, html_url: string, files?: any}) => (
+              <div>
+                <div className="max-h-80 overflow-y-auto border border-[var(--border-primary)] rounded-md">
+                  <div className="text-center p-2 bg-gray-100 border-b border-[var(--border-primary)]">
+                    Page {gistCurrentPage} - Showing {filteredGists.length} gists
+                  </div>
+                  {filteredGists.map((item, index) => (
                     <div 
+                      key={`${item.description}-${index}`}
                       className="p-3 border-b border-[var(--border-primary)] hover:bg-[var(--bg-secondary)] flex items-center cursor-pointer"
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        if (item) {
-                          logger.debug('Selected gist:', item.description);
-                          // Add the URL directly to the repoLinks array
-                          const newLinks = [...repoLinks];
-                          if (!newLinks.includes(item.html_url)) {
-                            newLinks.push(item.html_url);
-                            setRepoLinks(newLinks);
-                            logger.debug('Added gist:', item.description);
-                            logger.debug('New links array:', newLinks);
-                          }
-                          setIsGistModalOpen(false);
+                        logger.debug('Selected gist:', item.description);
+                        // Add the URL directly to the repoLinks array
+                        const newLinks = [...repoLinks];
+                        if (!newLinks.includes(item.html_url)) {
+                          newLinks.push(item.html_url);
+                          setRepoLinks(newLinks);
+                          logger.debug('Added gist:', item.description);
+                          logger.debug('New links array:', newLinks);
                         }
+                        setIsGistModalOpen(false);
                       }}
                     >
                       <div className="flex-shrink-0 mr-3 text-teal-500 hover:text-teal-600">
                         <Add20Regular />
                       </div>
                       <div className="flex-grow min-w-0">
-                        <Text className="font-medium">{item?.description}</Text>
-                        <Text className="text-sm text-[var(--text-secondary)] truncate">{item?.html_url}</Text>
-                        {item?.files && (
+                        <Text className="font-medium">{item.description || item.name}</Text>
+                        <Text className="text-sm text-[var(--text-secondary)] truncate">{`> ${item.html_url}`}</Text>
+                        {item.files && (
                           <Text className="text-xs text-[var(--text-secondary)] truncate mt-1">{Object.keys(item.files).join(', ')}</Text>
                         )}
                       </div>
                     </div>
-                  )}
-                />
+                  ))}
+                </div>
+                <div className="flex justify-between mt-2">
+                  <PrimaryButton 
+                    disabled={gistCurrentPage <= 1 || isLoadingGists}
+                    onClick={() => fetchGithubGists(gistCurrentPage - 1)}
+                    className="w-24"
+                  >
+                    Previous
+                  </PrimaryButton>
+                  <PrimaryButton 
+                    disabled={!hasMoreGists || isLoadingGists}
+                    onClick={() => fetchGithubGists(gistCurrentPage + 1)}
+                    className="w-24"
+                  >
+                    Next
+                  </PrimaryButton>
+                </div>
               </div>
             ) : (
               <Text className="text-center py-4 text-[var(--text-secondary)]">

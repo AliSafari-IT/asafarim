@@ -30,4 +30,4 @@ I'm open to new opportunities and collaborations. You can reach me through:
 - **LinkedIn**: [linkedin.com/in/ali-safari-m](https://www.linkedin.com/in/ali-safari-m/)
 - **GitHub**: [github.com/AliSafari-IT](https://github.com/AliSafari-IT)
 
-Or send me a message through our [contact form](/contact-asafarim).
+Or send me a message through our [contact form](/contact).

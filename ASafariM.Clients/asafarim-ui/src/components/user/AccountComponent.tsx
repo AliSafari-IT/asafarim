@@ -6,7 +6,7 @@ import {
   PersonAccounts24Filled as IconLogin, 
   SignOut24Regular as IconLogout 
 } from '@fluentui/react-icons';
-import useAuth from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface AccountComponentProps {
   isMobile?: boolean; // Prop to differentiate between mobile and desktop

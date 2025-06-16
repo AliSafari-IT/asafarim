@@ -11,6 +11,9 @@ using Serilog;
 
 namespace ASafariM.Presentation.Controllers
 {
+    /// <summary>
+    /// Controller for managing users
+    /// </summary>
     [ApiController]
     [Route("api/users")]
     public class UsersController : ControllerBase
@@ -24,6 +27,11 @@ namespace ASafariM.Presentation.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Retrieves all users.
+        /// </summary>
+        /// <param name="includeSoftDeleted">Whether to include soft deleted users</param>
+        /// <returns>Collection of users</returns>
         [HttpGet]
         public async Task<IActionResult> GetAllUsers([FromQuery] bool includeSoftDeleted = false)
         {
@@ -44,6 +52,11 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Creates a new user.
+        /// </summary>
+        /// <param name="command">Command model containing user details</param>
+        /// <returns>Result of the user creation</returns>
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserCommand command)
         {
@@ -68,6 +81,11 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Creates a new user by admin.
+        /// </summary>
+        /// <param name="command">Command model containing user details</param>
+        /// <returns>Result of the user creation</returns>
         [HttpPost("admin")]
         public async Task<IActionResult> CreateUserByAdmin(
             [FromBody] CreateUserByAdminCommand command
@@ -92,7 +110,12 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
-        // In UserController.cs
+        /// <summary>
+        /// Updates an existing user.
+        /// </summary>
+        /// <param name="id">ID of the user to update</param>
+        /// <param name="command">Command model containing user details</param>
+        /// <returns>Result of the user update</returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(string id, [FromBody] UpdateUserCommand command)
         {
@@ -102,6 +125,12 @@ namespace ASafariM.Presentation.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Updates an existing user by admin.
+        /// </summary>
+        /// <param name="id">ID of the user to update</param>
+        /// <param name="command">Command model containing user details</param>
+        /// <returns>Result of the user update</returns>
         [HttpPut("admin/{id}")]
         public async Task<IActionResult> UpdateUserByAdmin(
             [FromRoute] Guid id,
@@ -119,6 +148,9 @@ namespace ASafariM.Presentation.Controllers
                 );
                 return BadRequest("ID mismatch between route and command");
             }
+
+            // Log the received DateOfBirth *before* calling the service
+            Log.Information("Received DateOfBirth in command: {DateOfBirth}", command.DateOfBirth);
 
             try
             {
@@ -139,6 +171,12 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes a user.
+        /// </summary>
+        /// <param name="id">ID of the user to delete</param>
+        /// <param name="command">Command model containing user details</param>
+        /// <returns>Result of the user deletion</returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(
             [FromRoute] Guid id,
@@ -172,6 +210,12 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes a user by admin.
+        /// </summary>
+        /// <param name="id">ID of the user to delete</param>
+        /// <param name="command">Command model containing user details</param>
+        /// <returns>Result of the user deletion</returns>
         [HttpDelete("admin/{id}")]
         public async Task<IActionResult> DeleteUserByAdmin(
             [FromRoute] Guid id,
@@ -208,6 +252,11 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Retrieves a user by ID.
+        /// </summary>
+        /// <param name="id">ID of the user to retrieve</param>
+        /// <returns>User details</returns>
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<UserDto>> GetUserById(Guid id)
         {
@@ -232,6 +281,11 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Retrieves a user by ID.
+        /// </summary>
+        /// <param name="id">ID of the user to retrieve</param>
+        /// <returns>User details</returns>
         [HttpGet("search")]
         public async Task<ActionResult<IEnumerable<UserDto>>> SearchUsers(
             [FromQuery] string? username = null,
@@ -262,6 +316,11 @@ namespace ASafariM.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Changes a user's password.
+        /// </summary>
+        /// <param name="command">Password change command</param>
+        /// <returns>Password change result</returns>
         [HttpPut("change-password")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand command)
         {
@@ -287,7 +346,7 @@ namespace ASafariM.Presentation.Controllers
         }
 
         /// <summary>
-        /// Check availability
+        /// Checks the availability of a username and email.
         /// </summary>
         /// <param name="username"></param>
         /// <param name="email"></param>

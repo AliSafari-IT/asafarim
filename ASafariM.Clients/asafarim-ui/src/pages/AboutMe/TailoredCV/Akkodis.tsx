@@ -1,6 +1,6 @@
 // E:\asm\apps\dashboard-client\src\pages\AboutMe\TailoredCV\Akkodis.tsx
 import DisplayMd from "../../../components/MarkdownPage/DisplayMd";
-import Wrapper from "../../../layout/Wrapper/Wrapper";
+import Wrapper from "../../../layout/Wrapper";
 import Akkodis from './Akkodis.md?raw';
 
 export default function AkkodisTargetedResume(): JSX.Element {

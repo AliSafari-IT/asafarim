@@ -5,6 +5,16 @@ echo
 echo "=== Adding Migration to Database ==="
 echo
 
+# Navigate to your project directory
+#cd D:\repos\ASafariM
+
+# Create a new migration
+#dotnet ef migrations add $MIGRATION_NAME --project ASafariM.Infrastructure --startup-project ASafariM.Api
+
+# Apply the migration
+#dotnet ef database update $MIGRATION_NAME --project ASafariM.Infrastructure --startup-project ASafariM.Api
+
+
 # Ensure the script runs from the project root
 SCRIPT_DIR=$(dirname "$0")
 PROJECT_ROOT=$(cd "$SCRIPT_DIR/../../" && pwd)

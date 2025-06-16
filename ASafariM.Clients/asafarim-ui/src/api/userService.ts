@@ -27,7 +27,6 @@ interface UserUpdateValidation {
 }
 
 // Validate user update data
-// Validate user update data
 const validateUserUpdate = (user: IUserModelUpdate): UserUpdateValidation => {
   const errors: string[] = [];
 
@@ -151,7 +150,7 @@ export const createUser = async (user: IUserModel): Promise<IUser> => {
 };
 
 // Update an existing user
-export const updateUser = async (user: IUserModelUpdate): Promise<IUserModelUpdate> => {
+export const updateUser = async (p0: string, p1: { fullName: string; isAdmin: boolean; firstName: string; lastName: string; email: string; userName: string; password: string; dateOfBirth?: string; profilePicture?: string; }, user: IUserModelUpdate): Promise<IUserModelUpdate> => {
   logger.log("updateUser - Starting update with data:", user);
   const validation = validateUserUpdate(user);
   if (!validation.isValid) {

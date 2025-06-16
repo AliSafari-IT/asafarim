@@ -9,7 +9,6 @@ import { PrimaryButton, DefaultButton, IconButton, ActionButton } from "@fluentu
 import { Text } from "@fluentui/react/lib/Text";
 import { Dialog, DialogType, DialogFooter } from "@fluentui/react/lib/Dialog";
 import { Spinner, SpinnerSize } from "@fluentui/react/lib/Spinner";
-import { List } from "@fluentui/react/lib/List";
 import { Stack } from "@fluentui/react/lib/Stack";
 import { Dropdown, IDropdownOption } from "@fluentui/react/lib/Dropdown";
 import { 
@@ -905,42 +904,37 @@ const AddProject: React.FC = () => {
               </div>
             ) : filteredRepos.length > 0 ? (
               <div className="max-h-80 overflow-y-auto border border-[var(--border-primary)] rounded-md">
-                <List
-                  items={filteredRepos}
-                  getPageSpecification={() => ({ itemCount: filteredRepos.length })}
-                  onRenderCell={(item?: {name: string, html_url: string, description?: string}) => (
-                    <div 
-                      className="p-3 border-b border-[var(--border-primary)] hover:bg-[var(--bg-secondary)] flex items-center cursor-pointer"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        if (item) {
-                          logger.debug('Selected repository:', item.name);
-                          // Add the URL directly to the repoLinks array
-                          const newLinks = [...repoLinks];
-                          if (!newLinks.includes(item.html_url)) {
-                            newLinks.push(item.html_url);
-                            setRepoLinks(newLinks);
-                            logger.debug('Added repository:', item.name);
-                            logger.debug('New links array:', newLinks);
-                          }
-                          setIsModalOpen(false);
-                        }
-                      }}
-                    >
-                      <div className="flex-shrink-0 mr-3 text-teal-500 hover:text-teal-600">
-                        <Add20Regular />
-                      </div>
-                      <div className="flex-grow min-w-0">
-                        <Text className="font-medium">{item?.name}</Text>
-                        <Text className="text-sm text-[var(--text-secondary)] truncate">{item?.html_url}</Text>
-                        {item?.description && (
-                          <Text className="text-xs text-[var(--text-secondary)] truncate mt-1">{item.description}</Text>
-                        )}
-                      </div>
+                {filteredRepos.map((item, index) => (
+                  <div 
+                    key={`${item.name}-${index}`}
+                    className="p-3 border-b border-[var(--border-primary)] hover:bg-[var(--bg-secondary)] flex items-center cursor-pointer"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      logger.debug('Selected repository:', item.name);
+                      // Add the URL directly to the repoLinks array
+                      const newLinks = [...repoLinks];
+                      if (!newLinks.includes(item.html_url)) {
+                        newLinks.push(item.html_url);
+                        setRepoLinks(newLinks);
+                        logger.debug('Added repository:', item.name);
+                        logger.debug('New links array:', newLinks);
+                      }
+                      setIsModalOpen(false);
+                    }}
+                  >
+                    <div className="flex-shrink-0 mr-3 text-teal-500 hover:text-teal-600">
+                      <Add20Regular />
                     </div>
-                  )}
-                />
+                    <div className="flex-grow min-w-0">
+                      <Text className="font-medium">{item.name}</Text>
+                      <Text className="text-sm text-[var(--text-secondary)] truncate">{item.html_url}</Text>
+                      {item.description && (
+                        <Text className="text-xs text-[var(--text-secondary)] truncate mt-1">{item.description}</Text>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
             ) : (
               <Text className="text-center py-4 text-[var(--text-secondary)]">
@@ -987,42 +981,39 @@ const AddProject: React.FC = () => {
               </div>
             ) : filteredGists.length > 0 ? (
               <div className="max-h-80 overflow-y-auto border border-[var(--border-primary)] rounded-md">
-                <List
-                  items={filteredGists}
-                  getPageSpecification={() => ({ itemCount: filteredGists.length })}
-                  onRenderCell={(item?: {description: string, html_url: string, files?: any}) => (
+                <div className="max-h-80 overflow-y-auto">
+                  {filteredGists.map((item, index) => (
                     <div 
+                      key={`${item.description}-${index}`}
                       className="p-3 border-b border-[var(--border-primary)] hover:bg-[var(--bg-secondary)] flex items-center cursor-pointer"
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        if (item) {
-                          logger.debug('Selected gist:', item.description);
-                          // Add the URL directly to the repoLinks array
-                          const newLinks = [...repoLinks];
-                          if (!newLinks.includes(item.html_url)) {
-                            newLinks.push(item.html_url);
-                            setRepoLinks(newLinks);
-                            logger.debug('Added gist:', item.description);
-                            logger.debug('New links array:', newLinks);
-                          }
-                          setIsGistModalOpen(false);
+                        logger.debug('Selected gist:', item.description);
+                        // Add the URL directly to the repoLinks array
+                        const newLinks = [...repoLinks];
+                        if (!newLinks.includes(item.html_url)) {
+                          newLinks.push(item.html_url);
+                          setRepoLinks(newLinks);
+                          logger.debug('Added gist:', item.description);
+                          logger.debug('New links array:', newLinks);
                         }
+                        setIsGistModalOpen(false);
                       }}
                     >
                       <div className="flex-shrink-0 mr-3 text-teal-500 hover:text-teal-600">
                         <Add20Regular />
                       </div>
                       <div className="flex-grow min-w-0">
-                        <Text className="font-medium">{item?.description}</Text>
-                        <Text className="text-sm text-[var(--text-secondary)] truncate">{item?.html_url}</Text>
-                        {item?.files && (
+                        <Text className="font-medium">{item.description}</Text>
+                        <Text className="text-sm text-[var(--text-secondary)] truncate">{item.html_url}</Text>
+                        {item.files && (
                           <Text className="text-xs text-[var(--text-secondary)] truncate mt-1">{Object.keys(item.files).join(', ')}</Text>
                         )}
                       </div>
                     </div>
-                  )}
-                />
+                  ))}
+                </div>
               </div>
             ) : (
               <Text className="text-center py-4 text-[var(--text-secondary)]">

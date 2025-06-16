@@ -72,12 +72,17 @@ const AddProject: React.FC = () => {
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isGistModalOpen, setIsGistModalOpen] = useState(false);
-  const [githubRepos, setGithubRepos] = useState<{name: string, html_url: string, description?: string}[]>([]);
-  const [githubGists, setGithubGists] = useState<{description: string, html_url: string, files?: any}[]>([]);
+  const [githubRepos, setGithubRepos] = useState<any[]>([]);
+  const [githubGists, setGithubGists] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [gistSearchQuery, setGistSearchQuery] = useState('');
   const [isLoadingRepos, setIsLoadingRepos] = useState(false);
   const [isLoadingGists, setIsLoadingGists] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [gistSearchQuery, setGistSearchQuery] = useState("");
+  const [repoCurrentPage, setRepoCurrentPage] = useState(1);
+  const [gistCurrentPage, setGistCurrentPage] = useState(1);
+  const [hasMoreRepos, setHasMoreRepos] = useState(true);
+  const [hasMoreGists, setHasMoreGists] = useState(true);
+  const perPage = 30; // GitHub's default per page
   
   // State for delete confirmation dialog
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -268,35 +273,24 @@ const AddProject: React.FC = () => {
   };
 
   // GitHub repositories handlers
-  const fetchGithubRepos = async () => {
+  const fetchGithubRepos = async (page = 1) => {
     try {
       setIsLoadingRepos(true);
-      let allRepos: any[] = [];
-      let page = 1;
-      const perPage = 100; // Maximum allowed per page
+      setRepoCurrentPage(page);
       
-      while (true) {
-        const response = await axios.get(`https://api.github.com/users/AliSafari-IT/repos?page=${page}&per_page=${perPage}&sort=updated`);
-        const repos = response.data;
-        
-        if (repos.length === 0) {
-          // No more repositories to fetch
-          break;
-        }
-        
-        allRepos = [...allRepos, ...repos];
-        
-        // If we got less than perPage repos, we've reached the end
-        if (repos.length < perPage) {
-          break;
-        }
-        
-        page++;
-      }
+      console.log(`Fetching GitHub repositories page ${page} with ${perPage} items per page...`);
+      const response = await axios.get(`https://api.github.com/users/AliSafari-IT/repos?page=${page}&per_page=${perPage}&sort=updated`);
+      const repos = response.data;
       
-      setGithubRepos(allRepos);
-      logger.info(`Fetched ${allRepos.length} GitHub repositories across ${page} pages`);
+      console.log(`Received ${repos.length} repositories from page ${page}`);
+      
+      // If we got less than perPage repos, we've reached the end
+      setHasMoreRepos(repos.length === perPage);
+      
+      setGithubRepos(repos);
+      logger.info(`Fetched ${repos.length} GitHub repositories for page ${page}`);
     } catch (error) {
+      console.error('Error fetching GitHub repositories:', error);
       logger.error('Error fetching GitHub repositories: ' + error);
       setError('Failed to fetch GitHub repositories');
     } finally {
@@ -305,35 +299,24 @@ const AddProject: React.FC = () => {
   };
   
   // GitHub gists handlers
-  const fetchGithubGists = async () => {
+  const fetchGithubGists = async (page = 1) => {
     try {
       setIsLoadingGists(true);
-      let allGists: any[] = [];
-      let page = 1;
-      const perPage = 100; // Maximum allowed per page
+      setGistCurrentPage(page);
       
-      while (true) {
-        const response = await axios.get(`https://api.github.com/users/AliSafari-IT/gists?page=${page}&per_page=${perPage}`);
-        const gists = response.data;
-        
-        if (gists.length === 0) {
-          // No more gists to fetch
-          break;
-        }
-        
-        allGists = [...allGists, ...gists];
-        
-        // If we got less than perPage gists, we've reached the end
-        if (gists.length < perPage) {
-          break;
-        }
-        
-        page++;
-      }
+      console.log(`Fetching GitHub gists page ${page} with ${perPage} items per page...`);
+      const response = await axios.get(`https://api.github.com/users/AliSafari-IT/gists?page=${page}&per_page=${perPage}`);
+      const gists = response.data;
       
-      setGithubGists(allGists);
-      logger.info(`Fetched ${allGists.length} GitHub gists across ${page} pages`);
+      console.log(`Received ${gists.length} gists from page ${page}`);
+      
+      // If we got less than perPage gists, we've reached the end
+      setHasMoreGists(gists.length === perPage);
+      
+      setGithubGists(gists);
+      logger.info(`Fetched ${gists.length} GitHub gists for page ${page}`);
     } catch (error) {
+      console.error('Error fetching GitHub gists:', error);
       logger.error('Error fetching GitHub gists: ' + error);
       setError('Failed to fetch GitHub gists');
     } finally {
@@ -347,6 +330,10 @@ const AddProject: React.FC = () => {
         repo.name.toLowerCase().includes(searchQuery.toLowerCase()))
     : githubRepos;
     
+  // Debug repositories count
+  console.log(`Total GitHub repositories in state: ${githubRepos.length}`);
+  console.log(`Filtered repositories to display: ${filteredRepos.length}`);
+    
   // Filter gists based on search query
   const filteredGists = gistSearchQuery
     ? githubGists.filter(gist => {
@@ -356,6 +343,10 @@ const AddProject: React.FC = () => {
                fileNames.toLowerCase().includes(gistSearchQuery.toLowerCase());
       })
     : githubGists;
+    
+  // Debug gists count
+  console.log(`Total GitHub gists in state: ${githubGists.length}`);
+  console.log(`Filtered gists to display: ${filteredGists.length}`);
     
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
@@ -903,8 +894,12 @@ const AddProject: React.FC = () => {
                 <Spinner size={SpinnerSize.large} label="Loading repositories..." />
               </div>
             ) : filteredRepos.length > 0 ? (
-              <div className="max-h-80 overflow-y-auto border border-[var(--border-primary)] rounded-md">
-                {filteredRepos.map((item, index) => (
+              <div>
+                <div className="max-h-80 overflow-y-auto border border-[var(--border-primary)] rounded-md">
+                  <div className="text-center p-2 bg-gray-100 border-b border-[var(--border-primary)]">
+                    Page {repoCurrentPage} - Showing {filteredRepos.length} repositories
+                  </div>
+                  {filteredRepos.map((item, index) => (
                   <div 
                     key={`${item.name}-${index}`}
                     className="p-3 border-b border-[var(--border-primary)] hover:bg-[var(--bg-secondary)] flex items-center cursor-pointer"
@@ -936,6 +931,23 @@ const AddProject: React.FC = () => {
                   </div>
                 ))}
               </div>
+              <div className="flex justify-between mt-2">
+                <PrimaryButton 
+                  disabled={repoCurrentPage <= 1 || isLoadingRepos}
+                  onClick={() => fetchGithubRepos(repoCurrentPage - 1)}
+                  className="w-24"
+                >
+                  Previous
+                </PrimaryButton>
+                <PrimaryButton 
+                  disabled={!hasMoreRepos || isLoadingRepos}
+                  onClick={() => fetchGithubRepos(repoCurrentPage + 1)}
+                  className="w-24"
+                >
+                  Next
+                </PrimaryButton>
+              </div>
+            </div>
             ) : (
               <Text className="text-center py-4 text-[var(--text-secondary)]">
                 No repositories found
@@ -980,8 +992,11 @@ const AddProject: React.FC = () => {
                 <Spinner size={SpinnerSize.large} label="Loading gists..." />
               </div>
             ) : filteredGists.length > 0 ? (
-              <div className="max-h-80 overflow-y-auto border border-[var(--border-primary)] rounded-md">
-                <div className="max-h-80 overflow-y-auto">
+              <div>
+                <div className="max-h-80 overflow-y-auto border border-[var(--border-primary)] rounded-md">
+                  <div className="text-center p-2 bg-gray-100 border-b border-[var(--border-primary)]">
+                    Page {gistCurrentPage} - Showing {filteredGists.length} gists
+                  </div>
                   {filteredGists.map((item, index) => (
                     <div 
                       key={`${item.description}-${index}`}
@@ -1005,14 +1020,30 @@ const AddProject: React.FC = () => {
                         <Add20Regular />
                       </div>
                       <div className="flex-grow min-w-0">
-                        <Text className="font-medium">{item.description}</Text>
-                        <Text className="text-sm text-[var(--text-secondary)] truncate">{item.html_url}</Text>
+                        <Text className="font-medium">{item.description || item.name}</Text>
+                        <Text className="text-sm text-[var(--text-secondary)] truncate">{`> ${item.html_url}`}</Text>
                         {item.files && (
                           <Text className="text-xs text-[var(--text-secondary)] truncate mt-1">{Object.keys(item.files).join(', ')}</Text>
                         )}
                       </div>
                     </div>
                   ))}
+                </div>
+                <div className="flex justify-between mt-2">
+                  <PrimaryButton 
+                    disabled={gistCurrentPage <= 1 || isLoadingGists}
+                    onClick={() => fetchGithubGists(gistCurrentPage - 1)}
+                    className="w-24"
+                  >
+                    Previous
+                  </PrimaryButton>
+                  <PrimaryButton 
+                    disabled={!hasMoreGists || isLoadingGists}
+                    onClick={() => fetchGithubGists(gistCurrentPage + 1)}
+                    className="w-24"
+                  >
+                    Next
+                  </PrimaryButton>
                 </div>
               </div>
             ) : (

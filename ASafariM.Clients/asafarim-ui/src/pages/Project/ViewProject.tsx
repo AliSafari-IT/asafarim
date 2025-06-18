@@ -1,17 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { IField } from "@/interfaces/IField";
-import { getVisibilityLabel, getStatusLabel } from "@/interfaces/ProjectEnums";
 import { IProject } from "@/interfaces/IProject";
 import { useNavigate, useParams } from "react-router-dom";
 import Loading from "@/components/Loading/Loading";
 import Wrapper from "@/layout/Wrapper";
 import Notification from "@/components/Notification/Notification";
 import { Stack } from "@fluentui/react/lib/Stack";
-import { Text } from "@fluentui/react";
-import { ActionButton } from "@fluentui/react/lib/Button";
-import { ArrowLeft24Regular, Edit20Regular } from "@fluentui/react-icons";
-import { useAuth } from '@/contexts/AuthContext';
-import Toolbar from "@/components/Toolbars/Toolbar";
+import { useAuth } from "@/contexts/AuthContext";
 import { logger } from "@/utils/logger";
 import entityServices from "@/api/entityServices";
 
@@ -26,7 +20,7 @@ const ViewProject: React.FC = () => {
   const [showAuthErrorNotification, setShowAuthErrorNotification] =
     useState(false);
 
-  const [repoLinks, setRepoLinks] = useState<string[]>([]);
+  const [, setRepoLinks] = useState<string[]>([]);
 
   // Function to fetch repository links
   const fetchRepoLinks = async (projectId: string) => {
@@ -197,43 +191,43 @@ const ViewProject: React.FC = () => {
   }, [project, authenticated, authenticatedUser, navigate, id]);
 
   // Define form fields
-  const fields: IField[] = [
-    { name: "name", label: "Project Name", type: "text" },
-    { name: "description", label: "Description", type: "textarea" },
-    { name: "startDate", label: "Start Date", type: "date" },
-    { name: "endDate", label: "End Date", type: "date" },
-    { name: "budget", label: "Budget", type: "number" },
-    { name: "visibilityLabel", label: "Visibility", type: "text" },
-    { name: "statusLabel", label: "Status", type: "text" },
-  ];
+  // const fields: IField[] = [
+  //   { name: "name", label: "Project Name", type: "text" },
+  //   { name: "description", label: "Description", type: "textarea" },
+  //   { name: "startDate", label: "Start Date", type: "date" },
+  //   { name: "endDate", label: "End Date", type: "date" },
+  //   { name: "budget", label: "Budget", type: "number" },
+  //   { name: "visibilityLabel", label: "Visibility", type: "text" },
+  //   { name: "statusLabel", label: "Status", type: "text" },
+  // ];
 
-  // Get field value dynamically
-  const getFieldValue = (field: IField) => {
-    if (!project) return "Loading...";
+  // // Get field value dynamically
+  // const getFieldValue = (field: IField) => {
+  //   if (!project) return "Loading...";
 
-    switch (field.name) {
-      case "name":
-        return project.name || "No Name Available";
-      case "description":
-        return project.description || "No Description";
-      case "startDate":
-        return project.startDate
-          ? new Date(project.startDate).toLocaleDateString()
-          : "N/A";
-      case "endDate":
-        return project.endDate
-          ? new Date(project.endDate).toLocaleDateString()
-          : "N/A";
-      case "budget":
-        return project.budget?.toLocaleString() || "0";
-      case "visibilityLabel":
-        return getVisibilityLabel(project.visibility ?? 0);
-      case "statusLabel":
-        return getStatusLabel(project.status ?? 0);
-      default:
-        return "Information not available";
-    }
-  };
+  //   switch (field.name) {
+  //     case "name":
+  //       return project.name || "No Name Available";
+  //     case "description":
+  //       return project.description || "No Description";
+  //     case "startDate":
+  //       return project.startDate
+  //         ? new Date(project.startDate).toLocaleDateString()
+  //         : "N/A";
+  //     case "endDate":
+  //       return project.endDate
+  //         ? new Date(project.endDate).toLocaleDateString()
+  //         : "N/A";
+  //     case "budget":
+  //       return project.budget?.toLocaleString() || "0";
+  //     case "visibilityLabel":
+  //       return getVisibilityLabel(project.visibility ?? 0);
+  //     case "statusLabel":
+  //       return getStatusLabel(project.status ?? 0);
+  //     default:
+  //       return "Information not available";
+  //   }
+  // };
 
   // Remove the mock repository links approach and use the real API
   useEffect(() => {
@@ -293,99 +287,100 @@ const ViewProject: React.FC = () => {
     );
   }
 
-  const isPermitted =
-    showAuthErrorNotification ||
-    (authenticated &&
-      (authenticatedUser?.role !== "Admin" ||
-        authenticatedUser?.id !== project?.ownerId));
+  // const isPermitted =
+  //   showAuthErrorNotification ||
+  //   (authenticated &&
+  //     (authenticatedUser?.role !== "Admin" ||
+  //       authenticatedUser?.id !== project?.ownerId));
 
-        return (
-          <Wrapper>
-            <div className="w-2/3 mx-auto p-6 md:p-10 bg-[var(--bg-primary)] shadow-lg rounded-xl">
-              {/* Title */}
-              <Text
-                as="h1"
-                className="text-[var(--text-primary)] text-2xl font-bold mb-6"
-              >
-                Project Details
-              </Text>
-      
-              {/* Project Fields in Two Columns */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                {fields.map((field) => (
-                  <div
-                    key={field.name}
-                    className="p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md"
-                  >
-                    <Text
-                      as="label"
-                      className="block text-[var(--text-primary)] font-medium mb-2"
-                    >
-                      {field.label}:
-                    </Text>
-                    <Text className="text-[var(--text-secondary)] font-semibold">
-                      {getFieldValue(field)}
-                    </Text>
-                  </div>
-                ))}
-              </div>
-      
-              {/* Repository Links Section */}
-              {repoLinks.length > 0 && (
-                <div className="mt-6 p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md">
-                  <Text
-                    as="h2"
-                    className="text-[var(--text-primary)] text-xl font-bold mb-3"
-                  >
-                    Repository Links
-                  </Text>
-                  <ul className="list-disc list-inside">
-                    {repoLinks.map((repo, index) => (
-                      <li key={index}>
-                        <a
-                          href={repo}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-teal-500 underline hover:text-teal-700"
-                        >
-                          {repo}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-      
-              {/* Buttons moved to the bottom */}
-              <Toolbar
-                className="flex justify-between items-center mt-8"
-                aria-label=""
-              >
-                <>
-                  <ActionButton
-                    className="bg-lime-500 text-gray-700 hover:bg-lime-700  px-4 py-2 rounded-lg"
-                    iconProps={{ iconName: "Back" }}
-                    onClick={() => navigate(-1)}
-                  >
-                    <ArrowLeft24Regular className="mr-2" /> Back
-                  </ActionButton>
-      
-                  {/* Only show Edit button for authenticated users who are admins or project owners */}
-                  {authenticated &&
-                    (authenticatedUser?.isAdmin ||
-                      authenticatedUser?.id === project?.ownerId) && (
-                      <ActionButton
-                        className="bg-teal-500 dark:text-primary hover:bg-success dark:hover:bg-success text-[var(--text-primary)]  px-4 py-2 rounded-lg"
-                        onClick={() => navigate(`/projects/edit/${id}`)}
-                      >
-                        <Edit20Regular className="mr-2" /> Edit Project
-                      </ActionButton>
-                    )}
-                </>
-              </Toolbar>
-            </div>
-          </Wrapper>
-        );
-      };
-      
-      export default ViewProject;
+  //       return (
+  //         <Wrapper>
+  //           <div className="w-2/3 mx-auto p-6 md:p-10 bg-[var(--bg-primary)] shadow-lg rounded-xl">
+  //             {/* Title */}
+  //             <Text
+  //               as="h1"
+  //               className="text-[var(--text-primary)] text-2xl font-bold mb-6"
+  //             >
+  //               Project Details
+  //             </Text>
+
+  //             {/* Project Fields in Two Columns */}
+  //             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+  //               {fields.map((field) => (
+  //                 <div
+  //                   key={field.name}
+  //                   className="p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md"
+  //                 >
+  //                   <Text
+  //                     as="label"
+  //                     className="block text-[var(--text-primary)] font-medium mb-2"
+  //                   >
+  //                     {field.label}:
+  //                   </Text>
+  //                   <Text className="text-[var(--text-secondary)] font-semibold">
+  //                     {getFieldValue(field)}
+  //                   </Text>
+  //                 </div>
+  //               ))}
+  //             </div>
+
+  //             {/* Repository Links Section */}
+  //             {repoLinks.length > 0 && (
+  //               <div className="mt-6 p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md">
+  //                 <Text
+  //                   as="h2"
+  //                   className="text-[var(--text-primary)] text-xl font-bold mb-3"
+  //                 >
+  //                   Repository Links
+  //                 </Text>
+  //                 <ul className="list-disc list-inside">
+  //                   {repoLinks.map((repo, index) => (
+  //                     <li key={index}>
+  //                       <a
+  //                         href={repo}
+  //                         target="_blank"
+  //                         rel="noopener noreferrer"
+  //                         className="text-teal-500 underline hover:text-teal-700"
+  //                       >
+  //                         {repo}
+  //                       </a>
+  //                     </li>
+  //                   ))}
+  //                 </ul>
+  //               </div>
+  //             )}
+
+  //             {/* Buttons moved to the bottom */}
+  //             <Toolbar
+  //               className="flex justify-between items-center mt-8"
+  //               aria-label=""
+  //             >
+  //               <>
+  //                 <ActionButton
+  //                   className="bg-lime-500 text-gray-700 hover:bg-lime-700  px-4 py-2 rounded-lg"
+  //                   iconProps={{ iconName: "Back" }}
+  //                   onClick={() => navigate(-1)}
+  //                 >
+  //                   <ArrowLeft24Regular className="mr-2" /> Back
+  //                 </ActionButton>
+
+  //                 {/* Only show Edit button for authenticated users who are admins or project owners */}
+  //                 {authenticated &&
+  //                   (authenticatedUser?.isAdmin ||
+  //                     authenticatedUser?.id === project?.ownerId) && (
+  //                     <ActionButton
+  //                       className="bg-teal-500 dark:text-primary hover:bg-success dark:hover:bg-success text-[var(--text-primary)]  px-4 py-2 rounded-lg"
+  //                       onClick={() => navigate(`/projects/edit/${id}`)}
+  //                     >
+  //                       <Edit20Regular className="mr-2" /> Edit Project
+  //                     </ActionButton>
+  //                   )}
+  //               </>
+  //             </Toolbar>
+  //           </div>
+  //         </Wrapper>
+  //       );
+  //
+};
+
+export default ViewProject;

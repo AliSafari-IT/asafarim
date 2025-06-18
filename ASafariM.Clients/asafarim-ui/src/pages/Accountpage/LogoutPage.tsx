@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { logger } from '@/utils/logger';
 import { useAuth } from '@/contexts/AuthContext';
+import React from 'react';
 
 const LogoutPage = () => {
   const navigate = useNavigate();

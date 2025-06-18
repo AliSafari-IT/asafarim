@@ -2,7 +2,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import Register from "../Accountpage/Register";
 import { ThemeProvider } from "@/contexts/ThemeContext";
-import { ReactNode } from "react";
+import React from "react";
 
 // Mock ModernNavbar to prevent filepath split errors
 vi.mock("@/layout/Navbar/ModernNavbar", () => ({

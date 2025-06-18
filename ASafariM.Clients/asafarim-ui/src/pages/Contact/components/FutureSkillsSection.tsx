@@ -1,3 +1,5 @@
+import React from "react";
+
 const FutureSkillsSection = () => {
     return (
       <div className="bg-gradient-to-r from-teal-500 to-blue-500 dark:from-teal-600 dark:to-blue-600 rounded-xl shadow-lg p-8 text-white">

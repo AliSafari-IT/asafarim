@@ -6,6 +6,7 @@ import AdditionalInfo from "./AdditionalInfo";
 import { TechStackSection } from "./TechStackSection";
 import { ExperienceTimeline } from "./ExperienceTimeline";
 import { useState } from "react";
+import React from "react";
 
 export default function About(): JSX.Element {
   const [isExpanded, setIsExpanded] = useState(false);

@@ -4,6 +4,7 @@ import AvailabilitySection from "./components/AvailabilitySection";
 import ContactInfo from "./components/ContactInfo";
 import FutureSkillsSection from "./components/FutureSkillsSection";
 import ContactForm from "./components/ContactForm";
+import React from "react";
 
 export const ContactUs = () => {
  

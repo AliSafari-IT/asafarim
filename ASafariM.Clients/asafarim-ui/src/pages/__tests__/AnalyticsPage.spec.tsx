@@ -3,6 +3,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import AnalyticsPage from "../Analytics/AnalyticsPage";
 import * as analyticsService from "@/services/analyticsService";
 import * as logger from "@/utils/logger";
+import React from "react";
 
 // Mock logger
 vi.mock("@/utils/logger", () => ({

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Modal, TextField, DefaultButton, PrimaryButton, Dropdown, IDropdownOption, useTheme } from '@fluentui/react';
 import { ISitemapItem } from '../../services/sitemapService';
+import React from 'react';
 
 interface CreateNewModalProps {
   isOpen: boolean;

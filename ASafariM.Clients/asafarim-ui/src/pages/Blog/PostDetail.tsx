@@ -7,6 +7,7 @@ import dashboardServices from "@/api/entityServices";
 import { ITag } from "@fluentui/react";
 import apiUrls from "@/api/getApiUrls";
 import { logger } from "@/utils/logger";
+import React from "react";
 
 const PostDetail = () => {
     const { slug } = useParams<{ slug: string }>();

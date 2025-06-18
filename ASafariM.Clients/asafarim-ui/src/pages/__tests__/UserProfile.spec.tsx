@@ -6,6 +6,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import * as userService from "@/api/userService";
 import { IUser } from "@/interfaces";
 import { ReactNode } from "react";
+import React from "react";
 
 // Mock the logger
 vi.mock('@/utils/logger', () => ({

@@ -1,3 +1,5 @@
+import React from "react";
+
 const TechSkillsSection = () => {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 mb-10">

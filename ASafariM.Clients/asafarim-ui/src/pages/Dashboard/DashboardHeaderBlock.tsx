@@ -1,3 +1,5 @@
+import React from "react";
+
 export const DashboardHeaderBlock = () => {
   return (
     <div className="w-full text-center mx-auto m-0 text-gray-200 py-4 bg-gray-700">

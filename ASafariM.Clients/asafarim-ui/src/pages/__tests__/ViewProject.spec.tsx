@@ -4,6 +4,7 @@ import ViewProject from '../Project/ViewProject';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { ReactNode } from 'react';
+import React from 'react';
 
 const mockNavigate = vi.fn();
 vi.mock('react-router-dom', async () => {

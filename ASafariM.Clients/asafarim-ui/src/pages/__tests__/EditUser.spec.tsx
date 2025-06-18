@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { describe, it, beforeEach, vi, expect } from 'vitest';
 import * as userService from '@/api/userService';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import React from 'react';
 
 // Mock all dependencies
 vi.mock('@/contexts/AuthContext', () => ({

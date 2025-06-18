@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import ForgotPasswordPage from "../Accountpage/ForgotPasswordPage";
 import { useNavigate } from "react-router-dom";
 import { requestPasswordReset } from "../../api/authapi";
-import { logger } from "@/utils/logger";
+import React from "react";
 
 // Mock dependencies
 vi.mock("react-router-dom", () => ({

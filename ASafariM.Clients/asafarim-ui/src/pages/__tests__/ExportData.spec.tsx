@@ -2,6 +2,7 @@ import { describe, it, vi, expect, beforeEach } from 'vitest';
 import {render, fireEvent, screen} from '@testing-library/react';
 import ExportData from '../User/ExportData';
 import { useAuth } from '@/contexts/AuthContext';
+import React from 'react';
 
 vi.mock('@/contexts/AuthContext', () => ({
   useAuth: vi.fn()

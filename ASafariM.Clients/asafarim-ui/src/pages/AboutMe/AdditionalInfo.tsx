@@ -1,3 +1,4 @@
+import React from "react";
 import DisplayMd from "../../components/MarkdownPage/DisplayMd";
 import additionalInfoMd from "./additional-info.md?raw";
 

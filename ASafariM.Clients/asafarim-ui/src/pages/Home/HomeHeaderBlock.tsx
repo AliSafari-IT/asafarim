@@ -1,3 +1,5 @@
+import React from "react";
+
   export const HomeHeaderBlock = () => {
     return (
       <div className="w-full text-center mx-auto m-0 text-gray-200 py-1 bg-blue-700">

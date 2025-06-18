@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import Wrapper from '@/layout/Wrapper';
 import Button from '../../components/Button/Button';
 import { IUserInfo } from '@/interfaces/IUserInfo';
 import { logger } from "@/utils/logger";

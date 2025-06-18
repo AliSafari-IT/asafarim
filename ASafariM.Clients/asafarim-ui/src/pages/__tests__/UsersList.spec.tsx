@@ -5,8 +5,9 @@ import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import * as userService from "@/api/userService";
-import { IApiResponse, IRole, IRoleEnum, IUser, IUserRole } from "@/interfaces";
+import { IApiResponse, IRole, IUser, IUserRole } from "@/interfaces";
 import { ReactNode } from "react";
+import React from "react";
 
 // Mock the logger
 vi.mock('@/utils/logger', () => ({

@@ -4,6 +4,7 @@ import AddProject from "../Project/AddProject";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { ReactNode } from "react";
+import React from "react";
 
 // Mock the logger
 vi.mock("@/utils/logger", () => ({

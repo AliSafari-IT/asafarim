@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import myPic from "./ali_profile.jpg";
+import React from "react";
 
 const HeroSection = () => {
   return (

@@ -1,3 +1,4 @@
+import React from 'react';
 import DisplayMd from '../../../../../../components/MarkdownPage/DisplayMd';
 import Wrapper from '../../../../../../layout/Wrapper';
 import mdFile from './dynamic-nav.md?raw';

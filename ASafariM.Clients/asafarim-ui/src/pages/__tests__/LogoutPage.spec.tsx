@@ -4,6 +4,7 @@ import LogoutPage from "../Accountpage/LogoutPage";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { logger } from "@/utils/logger";
+import React from "react";
 
 // Mock dependencies
 vi.mock("react-router-dom", () => ({

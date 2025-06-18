@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { requestPasswordReset } from '../../api/authapi';
 import { isAxiosError } from 'axios';
 import { logger } from '@/utils/logger';
+import React from 'react';
 
 const ForgotPasswordPage = () => {
   logger.info('ForgotPasswordPage component mounted');

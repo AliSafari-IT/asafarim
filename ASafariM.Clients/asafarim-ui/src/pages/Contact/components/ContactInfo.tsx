@@ -1,3 +1,5 @@
+import React from "react";
+
 export const ContactInfo = () => {
   return (
     <div className="flex flex-col gap-8">

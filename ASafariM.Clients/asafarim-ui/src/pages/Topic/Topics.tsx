@@ -4,6 +4,7 @@ import { NotebookSectionArrowRight24Regular } from "@fluentui/react-icons";
 import { useMemo } from "react";
 import { IPost } from "../../interfaces/post-types";
 import Loading from "../../components/Loading/Loading";
+import React from "react";
 
 interface TopicsProps {
   topics: ITopic[];

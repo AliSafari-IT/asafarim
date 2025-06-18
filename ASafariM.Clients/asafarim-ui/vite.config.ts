@@ -56,34 +56,31 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
-    sourcemap: true,
-    minify: 'terser',
-    chunkSizeWarningLimit: 1000, // Increased from default 500kb to 1000kb
-    terserOptions: {
-      // Preserve function and class names for D3
-      keep_fnames: true,
-      keep_classnames: true,
-    },
+    // Disable sourcemap generation to reduce memory usage
+    sourcemap: false,
+    // Use esbuild minifier which is faster and uses less memory
+    minify: 'esbuild',
+    chunkSizeWarningLimit: 2000,
+    // Optimize build for memory usage
+    target: 'es2018',
     rollupOptions: {
       output: {
-        manualChunks: {
-          'd3': ['d3'],
-          'vendor': [
-            'react',
-            'react-dom'
-          ],
-          'fluentui': [
-            '@fluentui/react-components',
-            '@fluentui/react',
-            '@fluentui/react-icons'
-          ],
-          'charts': [
-            'd3-selection',
-            'd3-scale',
-            'd3-shape',
-            'd3-axis',
-            'd3-time-format'
-          ]
+        // Increase chunking to reduce individual file sizes
+        manualChunks: (id) => {
+          // Core libraries
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
+            return 'vendor-react';
+          }
+          if (id.includes('node_modules/@fluentui')) {
+            return 'vendor-fluentui';
+          }
+          if (id.includes('node_modules/d3')) {
+            return 'vendor-d3';
+          }
+          // Group other node_modules
+          if (id.includes('node_modules')) {
+            return 'vendor-others';
+          }
         },
       },
     },

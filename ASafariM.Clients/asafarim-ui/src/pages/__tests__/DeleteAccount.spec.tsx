@@ -3,6 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 import DeleteAccount from "../User/DeleteAccount";
 import { describe, it, vi, beforeEach, expect } from "vitest";
 import { IUserInfo } from "@/interfaces";
+import React from "react";
 
 // Mock userService
 vi.mock("@/api/userService", () => ({

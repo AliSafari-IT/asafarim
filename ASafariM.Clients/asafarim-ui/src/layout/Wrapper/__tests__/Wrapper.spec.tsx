@@ -4,6 +4,7 @@ import Wrapper from "..";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { AuthProvider } from "@/contexts/AuthContext";
+import React from "react";
 
 // Mock the Footer component to avoid navigation elements in tests
 vi.mock("../../Footer/Footer", () => ({

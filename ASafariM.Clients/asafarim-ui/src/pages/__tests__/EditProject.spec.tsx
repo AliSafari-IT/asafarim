@@ -5,6 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { ReactNode } from "react";
 import entityServices from "@/api/entityServices";
+import React from "react";
 
 // Mock the logger
 vi.mock("@/utils/logger", () => ({

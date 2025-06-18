@@ -9,6 +9,7 @@ import { IField } from "@/interfaces";
 
 // Import the module to mock
 import * as userManagerApi from "@/api/userManagerApi";
+import React from "react";
 
 // Mock axios before any imports that use it
 vi.mock("axios", () => {

@@ -2,8 +2,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import ResetPasswordPage from "../Accountpage/ResetPasswordPage";
 import { useNavigate, useLocation } from "react-router-dom";
-import { resetPassword } from "../../api/authapi";
-import { logger } from "@/utils/logger";
+import React from "react";
 
 // Mock dependencies
 vi.mock("react-router-dom", () => ({

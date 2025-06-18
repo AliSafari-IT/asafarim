@@ -10,6 +10,7 @@ import { ISitemapItem } from '../../services/sitemapService';
 import CreateNewModal from './CreateNewModal';
 import { handleError } from '../../utils/handleError';
 import { logger } from '../../utils/logger';
+import React from 'react';
 
 const SitemapPage = () => {
   const [sitemapData, setSitemapData] = useState<ISitemapItem[]>([]);

@@ -6,7 +6,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { updatePassword } from "@/api/authService";
 import { useNavigate } from "react-router-dom";
 import { logger } from "@/utils/logger";
-import handleUpdateProfile from "../Accountpage/handleUpdateProfile";
 
 // Mock dependencies
 vi.mock("@/contexts/AuthContext", () => ({
@@ -50,13 +49,13 @@ vi.mock("@/layout/Footer/Footer", () => ({
 
 // Mock sub-components
 vi.mock("../User/DeleteAccount", () => ({
-  default: ({ currentUserInfo }: { currentUserInfo: any }) => (
+  default: () => (
     <div data-testid="mock-delete-account">Delete Account</div>
   ),
 }));
 
 vi.mock("../User/ExportData", () => ({
-  default: ({ currentUserInfo }: { currentUserInfo: any }) => (
+  default: () => (
     <div data-testid="mock-export-data">Export Data</div>
   ),
 }));

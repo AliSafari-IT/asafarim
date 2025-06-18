@@ -24,6 +24,7 @@ import ErrorBoundary from "@/components/D3/ErrorBoundary";
 import { Hierarchy } from "@/components/D3/Hierarchy";
 import { treeMapData2 } from "@/components/D3/data/treeMapData2";
 import { logger } from "@/utils/logger";
+import React from "react";
 
 interface Data {
   date: Date | null;
@@ -358,8 +359,13 @@ const HomePanels = () => {
 
   const renderChart = (index: number) => {
     return (
-      <ErrorBoundary fallback={<div className="chart-error">Error loading chart</div>}>
-        <div className="chart-container" style={{ width: "100%", height: "100%" }}>
+      <ErrorBoundary
+        fallback={<div className="chart-error">Error loading chart</div>}
+      >
+        <div
+          className="chart-container"
+          style={{ width: "100%", height: "100%" }}
+        >
           {d3Components[index]}
         </div>
       </ErrorBoundary>

@@ -1,3 +1,5 @@
+import React from "react";
+
 export const TechStackSection = () => {
   return (
     <div className="relative py-8 px-6 rounded-xl bg-gradient-to-b from-[var(--bg-primary)] to-[var(--bg-secondary)] shadow-lg">

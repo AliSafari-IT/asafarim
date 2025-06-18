@@ -1,3 +1,5 @@
+import React from "react";
+
 export const ExperienceTimeline = () => {
   return (
     <div className="relative p-8 rounded-3xl bg-gradient-to-br from-[var(--bg-primary)] to-[var(--bg-secondary)] shadow-2xl backdrop-blur-lg">

@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import ViewUser from "../User/ViewUser";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import * as userService from "@/api/userService";
 import { IUser, IUserRole, IRoleEnum, IApiResponse, IRole } from "@/interfaces";
 import { ReactNode } from "react";
+import React from "react";
 
 // Mock the logger
 vi.mock('@/utils/logger', () => ({

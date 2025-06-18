@@ -6,6 +6,7 @@ import { isAxiosError } from 'axios';
 import { logger } from '@/utils/logger';
 import { validatePassword, getPasswordValidationMessage } from './validatePassword';
 import PasswordRequirements from './PasswordRequirements';
+import React from 'react';
 
 const ResetPasswordPage = () => {
   logger.info('ResetPasswordPage component mounted');

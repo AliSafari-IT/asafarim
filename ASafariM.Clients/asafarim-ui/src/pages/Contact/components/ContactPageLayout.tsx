@@ -1,3 +1,4 @@
+import React from 'react';
 import { ReactNode } from 'react';
 
 export const ContactPageLayout = ({ children }: { children: ReactNode }) => {

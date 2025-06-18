@@ -19,7 +19,7 @@ vi.mock('@/utils/logger', () => ({
 }));
 
 // Store original env
-const originalEnv = { ...process.env };
+// const originalEnv = { ...process.env };
 
 describe('analyticsService', () => {
   beforeEach(() => {

@@ -72,8 +72,8 @@ const AddProject: React.FC = () => {
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isGistModalOpen, setIsGistModalOpen] = useState(false);
-  const [githubRepos, setGithubRepos] = useState<any[]>([]);
-  const [githubGists, setGithubGists] = useState<any[]>([]);
+  const [githubRepos, setGithubRepos] = useState<unknown[]>([]);
+  const [githubGists, setGithubGists] = useState<unknown[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [gistSearchQuery, setGistSearchQuery] = useState('');
   const [isLoadingRepos, setIsLoadingRepos] = useState(false);
@@ -89,19 +89,19 @@ const AddProject: React.FC = () => {
   const [linkToDeleteIndex, setLinkToDeleteIndex] = useState<number | null>(null);
   
   // Validate a single field
-  const validateField = (name: string, value: any): string | null => {
+  const validateField = (name: string, value: unknown): string | null => {
     switch(name) {
       case 'name':
-        return !value || value.trim() === '' 
+        return !value || (typeof value === 'string' && value.trim() === '') 
           ? 'Project name is required' 
           : null;
       case 'description':
-        return value && value.length > maxDescriptionLength 
+        return typeof value === 'string' && value.length > maxDescriptionLength 
           ? `Description must be ${maxDescriptionLength} characters or less` 
           : null;
       case 'startDate':
         if (formData.endDate && value) {
-          const start = new Date(value);
+          const start = new Date(value as string);
           const end = new Date(formData.endDate);
           return start > end 
             ? 'Start date cannot be after end date' 
@@ -111,14 +111,14 @@ const AddProject: React.FC = () => {
       case 'endDate':
         if (formData.startDate && value) {
           const start = new Date(formData.startDate);
-          const end = new Date(value);
+          const end = new Date(value as string);
           return end < start 
             ? 'End date cannot be before start date' 
             : null;
         }
         return null;
       case 'budget':
-        return value && isNaN(parseFloat(value)) 
+        return value && isNaN(parseFloat(value as string)) 
           ? 'Budget must be a valid number' 
           : null;
       default:
@@ -159,6 +159,12 @@ const AddProject: React.FC = () => {
     }
     
     setFieldErrors(errors);
+    
+    // Mark all fields with errors as touched
+    const newTouchedFields = new Set(touchedFields);
+    errors.forEach(error => newTouchedFields.add(error.name));
+    setTouchedFields(newTouchedFields);
+    
     return errors.length === 0;
   };
   
@@ -242,7 +248,7 @@ const AddProject: React.FC = () => {
         setRepoLinks(newLinks);
         setNewRepoLink('');
       } catch (e) {
-        setError('Please enter a valid URL');
+        setError('Please enter a valid URL' + (e instanceof Error ? `: ${e.message}` : ''));
         setTimeout(() => setError(null), 3000); // Clear error after 3 seconds
       }
     } else {
@@ -327,7 +333,7 @@ const AddProject: React.FC = () => {
   // Filter repositories based on search query
   const filteredRepos = searchQuery
     ? githubRepos.filter(repo => 
-        repo.name.toLowerCase().includes(searchQuery.toLowerCase()))
+        (repo as { name: string }).name.toLowerCase().includes(searchQuery.toLowerCase()))
     : githubRepos;
     
   // Debug repositories count
@@ -337,8 +343,9 @@ const AddProject: React.FC = () => {
   // Filter gists based on search query
   const filteredGists = gistSearchQuery
     ? githubGists.filter(gist => {
-        const description = gist.description || '';
-        const fileNames = gist.files ? Object.keys(gist.files).join(' ') : '';
+        const description = (gist as { description?: string }).description || '';
+        const files = (gist as { files?: Record<string, unknown> }).files;
+        const fileNames = files ? Object.keys(files).join(' ') : '';
         return description.toLowerCase().includes(gistSearchQuery.toLowerCase()) || 
                fileNames.toLowerCase().includes(gistSearchQuery.toLowerCase());
       })
@@ -347,14 +354,19 @@ const AddProject: React.FC = () => {
   // Debug gists count
   console.log(`Total GitHub gists in state: ${githubGists.length}`);
   console.log(`Filtered gists to display: ${filteredGists.length}`);
-    
-  // Handle form submission
+      // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
     setSuccess(null);
-    setFieldErrors([]);
+
+    // Validate form before proceeding
+    if (!validateForm()) {
+      setError("Please fix the validation errors before submitting.");
+      setLoading(false);
+      return;
+    }
 
     try {
       // Enhanced authentication check with detailed logging
@@ -366,8 +378,8 @@ const AddProject: React.FC = () => {
       }
 
       // Enhanced user ID validation with multiple fallback options
-      let userId = authenticatedUser.id || authenticatedUser.Id || authenticatedUser.userId || authenticatedUser.UserId;
-      
+      const userId = authenticatedUser.id || authenticatedUser.Id || authenticatedUser.userId || authenticatedUser.UserId;
+      logger.debug("Extracted user ID:", userId);
       if (!userId) {
         logger.error("User ID extraction failed. Available user properties:", Object.keys(authenticatedUser));
         logger.error("Full authenticated user object:", authenticatedUser);
@@ -403,7 +415,7 @@ const AddProject: React.FC = () => {
           new URL(link);
           return true;
         } catch (e) {
-          logger.warn(`Invalid repository URL: ${link}`);
+          logger.warn(`Invalid repository URL: ${link}` + (e instanceof Error ? `: ${e.message}` : ''));
           return false;
         }
       });
@@ -482,21 +494,18 @@ const AddProject: React.FC = () => {
         projectData.StartDate = todayFormatted;
         projectData.EndDate = null;
         
-        try {
-          const result = await entityServices.addEntity("project", projectData);
-          if (result) {
-            logger.info("Project created successfully with default dates:", JSON.stringify(result));
-            setSuccess("Project created successfully! Redirecting...");
-            
-            // Redirect after a short delay to show the success message
-            setTimeout(() => {
-              window.location.href = "/projects";
-            }, 1500);
-          } else {
-            throw new Error("Failed to create project - no result returned");
-          }
-        } catch (retryError) {
-          throw retryError; // Re-throw to be handled by the outer catch block
+        // Try with default dates
+        const result = await entityServices.addEntity("project", projectData);
+        if (result) {
+          logger.info("Project created successfully with default dates:", JSON.stringify(result));
+          setSuccess("Project created successfully! Redirecting...");
+          
+          // Redirect after a short delay to show the success message
+          setTimeout(() => {
+            window.location.href = "/projects";
+          }, 1500);
+        } else {
+          throw new Error("Failed to create project - no result returned");
         }
       }
     } catch (error) {
@@ -901,18 +910,18 @@ const AddProject: React.FC = () => {
                   </div>
                   {filteredRepos.map((item, index) => (
                   <div 
-                    key={`${item.name}-${index}`}
+                    key={`${(item as { name: string }).name}-${index}`}
                     className="p-3 border-b border-[var(--border-primary)] hover:bg-[var(--bg-secondary)] flex items-center cursor-pointer"
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      logger.debug('Selected repository:', item.name);
+                      logger.debug('Selected repository:', (item as { name: string }).name);
                       // Add the URL directly to the repoLinks array
                       const newLinks = [...repoLinks];
-                      if (!newLinks.includes(item.html_url)) {
-                        newLinks.push(item.html_url);
+                      if (!newLinks.includes((item as { html_url: string }).html_url)) {
+                        newLinks.push((item as { html_url: string }).html_url);
                         setRepoLinks(newLinks);
-                        logger.debug('Added repository:', item.name);
+                        logger.debug('Added repository:', (item as { name: string }).name);
                         logger.debug('New links array:', newLinks);
                       }
                       setIsModalOpen(false);
@@ -922,14 +931,15 @@ const AddProject: React.FC = () => {
                       <Add20Regular />
                     </div>
                     <div className="flex-grow min-w-0">
-                      <Text className="font-medium">{item.name}</Text>
-                      <Text className="text-sm text-[var(--text-secondary)] truncate">{item.html_url}</Text>
-                      {item.description && (
-                        <Text className="text-xs text-[var(--text-secondary)] truncate mt-1">{item.description}</Text>
+                      <Text className="font-medium">{(item as { name: string }).name}</Text>
+                      <Text className="text-sm text-[var(--text-secondary)] truncate">{(item as { html_url: string }).html_url}</Text>
+                      {(item as { description?: string }).description && (
+                        <Text className="text-xs text-[var(--text-secondary)] truncate mt-1">{(item as { description?: string }).description}</Text>
                       )}
                     </div>
                   </div>
-                ))}
+                )
+                 )}
               </div>
               <div className="flex justify-between mt-2">
                 <PrimaryButton 
@@ -997,20 +1007,27 @@ const AddProject: React.FC = () => {
                   <div className="text-center p-2 bg-gray-100 border-b border-[var(--border-primary)]">
                     Page {gistCurrentPage} - Showing {filteredGists.length} gists
                   </div>
-                  {filteredGists.map((item, index) => (
+{filteredGists.map((item, index) => {
+  const gistItem = item as {
+    files: Record<string, unknown>;
+    name?: string;
+    description?: string;
+    html_url: string 
+  };
+  return (
                     <div 
-                      key={`${item.description}-${index}`}
+                      key={`${gistItem.description || index}`}
                       className="p-3 border-b border-[var(--border-primary)] hover:bg-[var(--bg-secondary)] flex items-center cursor-pointer"
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        logger.debug('Selected gist:', item.description);
+                        logger.debug('Selected gist:', gistItem.description);
                         // Add the URL directly to the repoLinks array
                         const newLinks = [...repoLinks];
-                        if (!newLinks.includes(item.html_url)) {
-                          newLinks.push(item.html_url);
+                        if (!newLinks.includes(gistItem.html_url)) {
+                          newLinks.push(gistItem.html_url);
                           setRepoLinks(newLinks);
-                          logger.debug('Added gist:', item.description);
+                          logger.debug('Added gist:', gistItem.description);
                           logger.debug('New links array:', newLinks);
                         }
                         setIsGistModalOpen(false);
@@ -1020,14 +1037,15 @@ const AddProject: React.FC = () => {
                         <Add20Regular />
                       </div>
                       <div className="flex-grow min-w-0">
-                        <Text className="font-medium">{item.description || item.name}</Text>
-                        <Text className="text-sm text-[var(--text-secondary)] truncate">{`> ${item.html_url}`}</Text>
-                        {item.files && (
-                          <Text className="text-xs text-[var(--text-secondary)] truncate mt-1">{Object.keys(item.files).join(', ')}</Text>
+                        <Text className="font-medium">{gistItem.description || gistItem.name}</Text>
+                        <Text className="text-sm text-[var(--text-secondary)] truncate">{`> ${gistItem.html_url}`}</Text>
+                        {gistItem.files && (
+                          <Text className="text-xs text-[var(--text-secondary)] truncate mt-1">{Object.keys(gistItem.files).join(', ')}</Text>
                         )}
                       </div>
                     </div>
-                  ))}
+                  );
+                })}
                 </div>
                 <div className="flex justify-between mt-2">
                   <PrimaryButton 

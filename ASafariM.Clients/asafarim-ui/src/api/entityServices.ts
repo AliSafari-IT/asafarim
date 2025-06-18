@@ -344,14 +344,19 @@ const fetchEntityRepoLinks = async (entityTableName: string, entityId: string) =
 
     // Otherwise, return an empty array
     logger.log('Returning empty array as fallback');
-    return [];
-  } catch (error) {
+    return [];  } catch (error) {
     const axiosError = error as AxiosError;
 
     // If it's an authentication error, we should propagate it
     if (axiosError.response?.status === 401) {
       logger.error(`Authentication error when fetching repository links: ${axiosError.message}`);
       throw error; // Re-throw authentication errors to be handled by caller
+    }
+
+    // If it's a 404, it just means no repository links exist for this project
+    if (axiosError.response?.status === 404) {
+      logger.info(`No repository links found for ${entityTableName} with ID ${entityId} (404 - not an error)`);
+      return [];
     }
 
     // For other errors, log and return empty array

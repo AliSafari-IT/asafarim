@@ -20,7 +20,7 @@ const ViewProject: React.FC = () => {
   const [showAuthErrorNotification, setShowAuthErrorNotification] =
     useState(false);
 
-  const [, setRepoLinks] = useState<string[]>([]);
+  const [repoLinks, setRepoLinks] = useState<string[]>([]);
 
   // Function to fetch repository links
   const fetchRepoLinks = async (projectId: string) => {
@@ -105,21 +105,24 @@ const ViewProject: React.FC = () => {
               error
             );
           }
-        }
-      } catch (error: any) {
+        }      } catch (error: unknown) {
         logger.error("Error fetching project data:", error);
 
         // Check for authentication errors
-        if (error?.response?.status === 401) {
-          setShowAuthErrorNotification(true);
-          setTimeout(() => {
-            navigate("/login", {
-              state: { returnUrl: `/projects/view/${id}` },
-            });
-          }, 3000);
-        } else {
-          setError("Failed to fetch project data. Please try again later.");
+        if (error && typeof error === 'object' && 'response' in error) {
+          const axiosError = error as { response?: { status: number } };
+          if (axiosError.response?.status === 401) {
+            setShowAuthErrorNotification(true);
+            setTimeout(() => {
+              navigate("/login", {
+                state: { returnUrl: `/projects/view/${id}` },
+              });
+            }, 3000);
+            return;
+          }
         }
+        
+        setError("Failed to fetch project data. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -275,7 +278,6 @@ const ViewProject: React.FC = () => {
       </Wrapper>
     );
   }
-
   // Render project not found state
   if (!project) {
     return (
@@ -287,100 +289,139 @@ const ViewProject: React.FC = () => {
     );
   }
 
-  // const isPermitted =
-  //   showAuthErrorNotification ||
-  //   (authenticated &&
-  //     (authenticatedUser?.role !== "Admin" ||
-  //       authenticatedUser?.id !== project?.ownerId));
+  // Helper functions for formatting
+  const getVisibilityLabel = (visibility: number): string => {
+    switch (visibility) {
+      case 0: return "Public";
+      case 1: return "Members Only";
+      case 2: return "Private";
+      default: return "Unknown";
+    }
+  };
 
-  //       return (
-  //         <Wrapper>
-  //           <div className="w-2/3 mx-auto p-6 md:p-10 bg-[var(--bg-primary)] shadow-lg rounded-xl">
-  //             {/* Title */}
-  //             <Text
-  //               as="h1"
-  //               className="text-[var(--text-primary)] text-2xl font-bold mb-6"
-  //             >
-  //               Project Details
-  //             </Text>
+  const getStatusLabel = (status: number): string => {
+    switch (status) {
+      case 0: return "In Progress";
+      case 1: return "Completed";
+      case 2: return "Cancelled";
+      case 3: return "Paused";
+      case 4: return "Extended";
+      default: return "Unknown";
+    }
+  };
 
-  //             {/* Project Fields in Two Columns */}
-  //             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-  //               {fields.map((field) => (
-  //                 <div
-  //                   key={field.name}
-  //                   className="p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md"
-  //                 >
-  //                   <Text
-  //                     as="label"
-  //                     className="block text-[var(--text-primary)] font-medium mb-2"
-  //                   >
-  //                     {field.label}:
-  //                   </Text>
-  //                   <Text className="text-[var(--text-secondary)] font-semibold">
-  //                     {getFieldValue(field)}
-  //                   </Text>
-  //                 </div>
-  //               ))}
-  //             </div>
+  // Define form fields
+  const fields = [
+    { name: "name", label: "Project Name", type: "text" },
+    { name: "description", label: "Description", type: "textarea" },
+    { name: "startDate", label: "Start Date", type: "date" },
+    { name: "endDate", label: "End Date", type: "date" },
+    { name: "budget", label: "Budget", type: "number" },
+    { name: "visibilityLabel", label: "Visibility", type: "text" },
+    { name: "statusLabel", label: "Status", type: "text" },
+  ];
+  // Get field value dynamically
+  const getFieldValue = (field: { name: string; label: string; type: string }) => {
+    if (!project) return "Loading...";
 
-  //             {/* Repository Links Section */}
-  //             {repoLinks.length > 0 && (
-  //               <div className="mt-6 p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md">
-  //                 <Text
-  //                   as="h2"
-  //                   className="text-[var(--text-primary)] text-xl font-bold mb-3"
-  //                 >
-  //                   Repository Links
-  //                 </Text>
-  //                 <ul className="list-disc list-inside">
-  //                   {repoLinks.map((repo, index) => (
-  //                     <li key={index}>
-  //                       <a
-  //                         href={repo}
-  //                         target="_blank"
-  //                         rel="noopener noreferrer"
-  //                         className="text-teal-500 underline hover:text-teal-700"
-  //                       >
-  //                         {repo}
-  //                       </a>
-  //                     </li>
-  //                   ))}
-  //                 </ul>
-  //               </div>
-  //             )}
+    switch (field.name) {
+      case "name":
+        return project.name || "No Name Available";
+      case "description":
+        return project.description || "No Description";
+      case "startDate":
+        return project.startDate
+          ? new Date(project.startDate).toLocaleDateString()
+          : "N/A";
+      case "endDate":
+        return project.endDate
+          ? new Date(project.endDate).toLocaleDateString()
+          : "N/A";
+      case "budget":
+        return project.budget?.toLocaleString() || "0";
+      case "visibilityLabel":
+        return getVisibilityLabel(project.visibility ?? 0);
+      case "statusLabel":
+        return getStatusLabel(project.status ?? 0);
+      default:
+        return "Information not available";
+    }
+  };
 
-  //             {/* Buttons moved to the bottom */}
-  //             <Toolbar
-  //               className="flex justify-between items-center mt-8"
-  //               aria-label=""
-  //             >
-  //               <>
-  //                 <ActionButton
-  //                   className="bg-lime-500 text-gray-700 hover:bg-lime-700  px-4 py-2 rounded-lg"
-  //                   iconProps={{ iconName: "Back" }}
-  //                   onClick={() => navigate(-1)}
-  //                 >
-  //                   <ArrowLeft24Regular className="mr-2" /> Back
-  //                 </ActionButton>
+  return (
+    <Wrapper>
+      <div className="w-2/3 mx-auto p-6 md:p-10 bg-[var(--bg-primary)] shadow-lg rounded-xl">
+        {/* Title */}
+        <div className="text-[var(--text-primary)] text-2xl font-bold mb-6">
+          Project Details
+        </div>
 
-  //                 {/* Only show Edit button for authenticated users who are admins or project owners */}
-  //                 {authenticated &&
-  //                   (authenticatedUser?.isAdmin ||
-  //                     authenticatedUser?.id === project?.ownerId) && (
-  //                     <ActionButton
-  //                       className="bg-teal-500 dark:text-primary hover:bg-success dark:hover:bg-success text-[var(--text-primary)]  px-4 py-2 rounded-lg"
-  //                       onClick={() => navigate(`/projects/edit/${id}`)}
-  //                     >
-  //                       <Edit20Regular className="mr-2" /> Edit Project
-  //                     </ActionButton>
-  //                   )}
-  //               </>
-  //             </Toolbar>
-  //           </div>
-  //         </Wrapper>
-  //       );
-  //
+        {/* Project Fields in Two Columns */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          {fields.map((field) => (
+            <div
+              key={field.name}
+              className="p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md"
+            >
+              <div className="block text-[var(--text-primary)] font-medium mb-2">
+                {field.label}:
+              </div>
+              <div className="text-[var(--text-secondary)] font-semibold">
+                {getFieldValue(field)}
+              </div>
+            </div>
+          ))}
+        </div>        {/* Repository Links Section */}
+        <div className="mt-6 p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-md">
+          <div className="text-[var(--text-primary)] text-xl font-bold mb-3">
+            Repository Links
+          </div>
+          {repoLinks && repoLinks.length > 0 ? (
+            <ul className="list-disc list-inside">
+              {repoLinks.map((repo, index) => (
+                <li key={index}>
+                  <a
+                    href={repo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-teal-500 underline hover:text-teal-700"
+                  >
+                    {repo}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="text-[var(--text-secondary)]">
+              No repository links available for this project.
+            </div>
+          )}
+        </div>
+
+        {/* Buttons moved to the bottom */}
+        <div className="flex justify-between items-center mt-8">
+          <button
+            className="bg-lime-500 text-gray-700 hover:bg-lime-700 px-4 py-2 rounded-lg flex items-center"
+            onClick={() => navigate(-1)}
+          >
+            Back
+          </button>
+
+          {/* Only show Edit button for authenticated users who are admins or project owners */}
+          {authenticated &&
+            (authenticatedUser?.isAdmin ||
+              authenticatedUser?.id === project?.ownerId) && (
+              <button
+                className="bg-teal-500 text-white hover:bg-teal-700 px-4 py-2 rounded-lg flex items-center"
+                onClick={() => navigate(`/projects/edit/${id}`)}
+              >
+                Edit Project
+              </button>
+            )}
+        </div>
+      </div>
+    </Wrapper>
+  );
 };
 
 export default ViewProject;

@@ -294,11 +294,11 @@ const AddProject: React.FC = () => {
       setHasMoreRepos(repos.length === perPage);
       
       setGithubRepos(repos);
-      logger.info(`Fetched ${repos.length} GitHub repositories for page ${page}`);
-    } catch (error) {
-      console.error('Error fetching GitHub repositories:', error);
-      logger.error('Error fetching GitHub repositories: ' + error);
-      setError('Failed to fetch GitHub repositories');
+      logger.info(`Fetched ${repos.length} GitHub repositories for page ${page}`);    } catch (error) {
+      console.warn('Unable to fetch GitHub repositories (this is normal if rate limited or network issues):', error);
+      logger.warn('GitHub repositories fetch failed: ' + error);
+      setGithubRepos([]);
+      // Don't set error state for GitHub API issues as they're not critical
     } finally {
       setIsLoadingRepos(false);
     }
@@ -320,11 +320,11 @@ const AddProject: React.FC = () => {
       setHasMoreGists(gists.length === perPage);
       
       setGithubGists(gists);
-      logger.info(`Fetched ${gists.length} GitHub gists for page ${page}`);
-    } catch (error) {
-      console.error('Error fetching GitHub gists:', error);
-      logger.error('Error fetching GitHub gists: ' + error);
-      setError('Failed to fetch GitHub gists');
+      logger.info(`Fetched ${gists.length} GitHub gists for page ${page}`);    } catch (error) {
+      console.warn('Unable to fetch GitHub gists (this is normal if rate limited or network issues):', error);
+      logger.warn('GitHub gists fetch failed: ' + error);
+      setGithubGists([]);
+      // Don't set error state for GitHub API issues as they're not critical
     } finally {
       setIsLoadingGists(false);
     }
@@ -932,14 +932,12 @@ const AddProject: React.FC = () => {
                     </div>
                     <div className="flex-grow min-w-0">
                       <Text className="font-medium">{(item as { name: string }).name}</Text>
-                      <Text className="text-sm text-[var(--text-secondary)] truncate">{(item as { html_url: string }).html_url}</Text>
-                      {(item as { description?: string }).description && (
+                      <Text className="text-sm text-[var(--text-secondary)] truncate">{(item as { html_url: string }).html_url}</Text>                      {(item as { description?: string }).description && (
                         <Text className="text-xs text-[var(--text-secondary)] truncate mt-1">{(item as { description?: string }).description}</Text>
                       )}
                     </div>
                   </div>
-                )
-                 )}
+                ))}
               </div>
               <div className="flex justify-between mt-2">
                 <PrimaryButton 

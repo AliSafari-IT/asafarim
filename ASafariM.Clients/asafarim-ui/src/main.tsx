@@ -11,10 +11,13 @@ initializeGA();
 
 // Initialize FluentUI icons - with error handling
 try {
-  const { initializeIcons } = require('@fluentui/font-icons-mdl2');
-  initializeIcons();
+  import('@fluentui/font-icons-mdl2').then(({ initializeIcons }) => {
+    initializeIcons();
+  }).catch((error) => {
+    console.warn('Failed to initialize FluentUI icons:', error);
+  });
 } catch (error) {
-  console.warn('Failed to initialize FluentUI icons:', error);
+  console.warn('Failed to load FluentUI icons module:', error);
 }
 
 const theme = AzureDarkTheme;

@@ -14,7 +14,6 @@ const BookList: React.FC<BookListProps> = ({ onSelectBook }) => {
   const dispatch = useAppDispatch();
   const { books, loading, error } = useAppSelector(state => state.books);
   const [editBook, setEditBook] = useState<Book | null>(null);
-  const [isConfirmingDelete, setIsConfirmingDelete] = useState<string | null>(null);
 
   useEffect(() => {
     dispatch(fetchBooks());

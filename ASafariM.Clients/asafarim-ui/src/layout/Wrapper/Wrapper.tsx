@@ -93,7 +93,7 @@ const Wrapper: React.FC<LayoutProps> = ({
     };
   }, [isMobileMenuOpen]);
   return (
-    <div id={id || 'wrapper'} className={`flex flex-col bg-[var(--bg-primary)] text-[var(--text-primary)] ${className}`}>
+    <div id={id || 'wrapper'} className={`flex flex-col min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] ${className}`}>
       {!removeNavbar && <ModernNavbar />}
       {/* Mobile Sidebar Overlay */}
       {isMobileMenuOpen && (

@@ -1,3 +1,4 @@
+import React from "react";
 import Wrapper from "./Wrapper";
 
 const Layout = ({ children, topbar, sidebar, header, footer, pageTitle, pageDescription }:   

@@ -70,7 +70,7 @@ const UnderConstruction: React.FC<UnderConstructionProps> = ({
 
   // Navigate back to dashboard
   const goBack = () => {
-    navigate("/");
+    navigate("/dashboard");
   };
 
   return (
@@ -84,7 +84,7 @@ const UnderConstruction: React.FC<UnderConstructionProps> = ({
               onClick={goBack}
               className="back-button"
             >
-              Back to Dashboard
+              Goto to Dashboard
             </Button>
           </div>
 

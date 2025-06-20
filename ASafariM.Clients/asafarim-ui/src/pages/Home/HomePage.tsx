@@ -11,7 +11,7 @@ import TechSkillsSection from "./TechSkillsSection";
 
 export const Home = () => {
   const location = useLocation();
-  var isUnderConstruction = false;
+  const isUnderConstruction = false;
 
   const [mdFile, setMdFile] = React.useState<string>("");
   useEffect(() => {

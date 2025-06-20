@@ -53,19 +53,19 @@ export const useApiConfig = (): UseApiConfigReturn => {
         const monitorPerformance = () => {
             // Listen for fetch events to monitor API performance
             const originalFetch = window.fetch;
-            
+
             window.fetch = async (...args) => {
                 const startTime = Date.now();
-                
+
                 try {
                     const response = await originalFetch(...args);
                     const responseTime = Date.now() - startTime;
-                    
+
                     // Update connection health on successful request
                     setConnectionHealth(prev => {
                         const newResponses = [...prev.recentResponses, responseTime].slice(-10); // Keep last 10 responses
                         const avgResponseTime = newResponses.reduce((sum, time) => sum + time, 0) / newResponses.length;
-                        
+
                         return {
                             isConnected: true,
                             lastSuccessfulRequest: new Date(),
@@ -74,7 +74,7 @@ export const useApiConfig = (): UseApiConfigReturn => {
                             recentResponses: newResponses
                         };
                     });
-                    
+
                     return response;
                 } catch (error) {
                     // Update connection health on failed request
@@ -83,11 +83,11 @@ export const useApiConfig = (): UseApiConfigReturn => {
                         isConnected: false,
                         consecutiveFailures: prev.consecutiveFailures + 1
                     }));
-                    
+
                     throw error;
                 }
             };
-            
+
             return () => {
                 window.fetch = originalFetch;
             };
@@ -100,7 +100,7 @@ export const useApiConfig = (): UseApiConfigReturn => {
     // Generate recommendations based on connection health
     useEffect(() => {
         const { consecutiveFailures, averageResponseTime, isConnected } = connectionHealth;
-        
+
         if (consecutiveFailures >= 3) {
             setRecommendedConfig({
                 timeout: 30000,
@@ -135,8 +135,8 @@ export const useApiConfig = (): UseApiConfigReturn => {
     const resetToDefaults = useCallback(() => {
         localStorage.removeItem('api-config');
         setConfig(getApiConfig());
-        window.dispatchEvent(new CustomEvent('api-config-changed', { 
-            detail: getApiConfig() 
+        window.dispatchEvent(new CustomEvent('api-config-changed', {
+            detail: getApiConfig()
         }));
     }, []);
 
@@ -145,14 +145,14 @@ export const useApiConfig = (): UseApiConfigReturn => {
             const startTime = Date.now();
             const isDevelopment = import.meta.env.VITE_ENVIRONMENT === 'development';
             const baseUrl = isDevelopment ? 'http://localhost:5000' : 'https://asafarim.com';
-            
-            const response = await fetch(`${baseUrl}/health`, {
+
+            const response = await fetch(`${baseUrl}/api/health`, {
                 method: 'GET',
                 signal: AbortSignal.timeout(config.timeout)
             });
-            
+
             const responseTime = Date.now() - startTime;
-            
+
             if (response.ok) {
                 setConnectionHealth(prev => ({
                     ...prev,
@@ -176,6 +176,7 @@ export const useApiConfig = (): UseApiConfigReturn => {
                 isConnected: false,
                 consecutiveFailures: prev.consecutiveFailures + 1
             }));
+            console.error('Error testing connection:', error);
             return false;
         }
     }, [config.timeout]);

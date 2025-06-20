@@ -1,6 +1,7 @@
 import { Link } from "@fluentui/react";
 import { useLocation } from "react-router-dom";
 import AlertContainer from "./AlertContainer";
+import React from "react";
 
 const NotAuthenticated: React.FC = () => {
     const location = useLocation();

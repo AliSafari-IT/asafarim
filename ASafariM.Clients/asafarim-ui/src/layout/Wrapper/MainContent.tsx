@@ -9,7 +9,7 @@ interface MainContentProps {
 
 const MainContent: React.FC<MainContentProps> = ({ children, className, header }) => {
     return (
-        <div className={`${className} flex flex-col flex-1 overflow-y-auto focus:outline-none`}>
+        <div className={`${className} flex flex-col flex-1 overflow-hidden focus:outline-none`}>
             {header}
             {children}
         </div>

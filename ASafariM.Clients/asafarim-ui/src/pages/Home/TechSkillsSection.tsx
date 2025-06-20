@@ -38,10 +38,9 @@ const TechSkillsSection = () => {
       {/* Background decoration */}
       <div className="absolute inset-0 bg-gradient-to-r from-blue-50/50 via-teal-50/50 to-purple-50/50 dark:from-gray-800/50 dark:via-gray-900/50 dark:to-gray-800/50 rounded-3xl"></div>
       
-      <div className="relative max-w-7xl mx-auto">
-        {/* Section Header */}
+      <div className="relative max-w-7xl mx-auto">        {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-teal-600 to-blue-600 bg-clip-text text-transparent mb-4">
+          <h2 className="text-4xl lg:text-5xl font-bold text-teal-600 dark:text-teal-400 mb-4">
             Technical Expertise
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
@@ -75,10 +74,9 @@ const TechSkillsSection = () => {
                 {/* Animated border */}
                 <div className={`absolute inset-0 bg-gradient-to-r ${skill.gradient} rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-xl`}></div>
               </div>
-              
-              {/* Content */}
+                {/* Content */}
               <div className="relative">
-                <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-teal-600 group-hover:to-blue-600 transition-all duration-300">
+                <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-all duration-300">
                   {skill.title}
                 </h3>
                 

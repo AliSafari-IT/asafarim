@@ -39,16 +39,14 @@ export const Home = () => {
       )}
       
       {/* Modern Layout with Creative Sections */}
-      <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-        
-        {/* Hero Section - Full width with parallax effect */}
-        <section className="relative overflow-hidden">
+      <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>        {/* Hero Section - Full width with parallax effect */}
+        <section className="relative">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-teal-500/10 to-purple-600/10 animate-pulse"></div>
           <HeroSection />
         </section>
 
         {/* Content Grid Layout */}
-        <div className="container mx-auto px-4 -mt-10 relative z-10">
+        <div className="container mx-auto px-4 relative z-10">
           
           {/* Tech Skills in a floating card */}
           <div className="transform hover:scale-105 transition-transform duration-300 mb-16">
@@ -86,12 +84,10 @@ export const Home = () => {
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Interactive Data Panels Section */}
+          </div>          {/* Interactive Data Panels Section */}
           <section className="mb-16">
             <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold bg-gradient-to-r from-teal-600 to-blue-600 bg-clip-text text-transparent mb-4">
+              <h2 className="text-4xl font-bold text-teal-600 dark:text-teal-400 mb-4">
                 Interactive Data Visualizations
               </h2>
               <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">

@@ -56,10 +56,8 @@ const HeroSection = () => {
   const handleSkillNavigation = (skillName: string) => {
     // Navigate to portfolio filtered by this technology
     window.open(`https://pbk.asafarim.com?filter=${skillName.toLowerCase()}`, '_blank');
-  };
-
-  return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
+  };  return (
+    <div className="relative h-[85vh] flex items-center justify-center">
       {/* Animated background */}
       <div className="absolute inset-0 bg-gradient-to-br from-teal-600 via-blue-700 to-purple-800">
         <div 
@@ -76,7 +74,7 @@ const HeroSection = () => {
         <div className="absolute bottom-20 right-20 w-24 h-24 bg-purple-400/20 transform rotate-12 animate-float-delay-3"></div>
       </div>
 
-      <div className="relative z-10 container mx-auto max-w-7xl px-6 py-20">
+      <div className="relative z-10 container mx-auto max-w-7xl px-6 py-12">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
           
           {/* Content */}
@@ -209,7 +207,7 @@ const HeroSection = () => {
           </div>
         </div>
       </div>      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white animate-bounce">
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white animate-bounce">
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
         </svg>

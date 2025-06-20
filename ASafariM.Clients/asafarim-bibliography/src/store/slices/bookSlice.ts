@@ -90,6 +90,85 @@ export const addBook = createAsyncThunk(
   }
 );
 
+// Async thunk for updating a book
+export const updateBook = createAsyncThunk(
+  'books/updateBook',
+  async ({ id, bookData }: { id: string; bookData: Partial<Book> }, { rejectWithValue }) => {
+    try {
+      // Add timeout to handle potential connection issues
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      
+      const response = await fetch(`/api/books/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...bookData,
+          id: id, // Ensure ID is included and matches URL parameter
+          // Make sure all required fields are present
+          updatedAt: bookData.updatedAt || new Date().toISOString(),
+          updatedBy: bookData.updatedBy || 'Frontend User',
+          // These fields are from BaseEntity and might be required
+          createdBy: bookData.createdBy || 'Frontend User',
+          isActive: bookData.isActive !== undefined ? bookData.isActive : true,
+          isDeleted: bookData.isDeleted !== undefined ? bookData.isDeleted : false,
+        }),
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new Error(
+          errorData?.error || `Failed to update book: ${response.status} ${response.statusText}`
+        );
+      }
+      
+      return await response.json();
+    } catch (error: unknown) {
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        return rejectWithValue('Request timed out. The API server might be unavailable.');
+      }
+      return rejectWithValue(error instanceof Error ? error.message : 'An unknown error occurred');
+    }
+  }
+);
+
+// Async thunk for deleting a book
+export const deleteBook = createAsyncThunk(
+  'books/deleteBook',
+  async (id: string, { rejectWithValue }) => {
+    try {
+      // Add timeout to handle potential connection issues
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      
+      const response = await fetch(`/api/books/${id}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new Error(
+          errorData?.error || `Failed to delete book: ${response.status} ${response.statusText}`
+        );
+      }
+      
+      return id;
+    } catch (error: unknown) {
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        return rejectWithValue('Request timed out. The API server might be unavailable.');
+      }
+      return rejectWithValue(error instanceof Error ? error.message : 'An unknown error occurred');
+    }
+  }
+);
+
 const bookSlice = createSlice({
   name: 'books',
   initialState,
@@ -138,6 +217,41 @@ const bookSlice = createSlice({
         state.books.push(action.payload);
       })
       .addCase(addBook.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      // Handle updateBook
+      .addCase(updateBook.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateBook.fulfilled, (state, action) => {
+        state.loading = false;
+        const index = state.books.findIndex(book => book.id === action.payload.id);
+        if (index !== -1) {
+          state.books[index] = action.payload;
+        }
+        if (state.selectedBook?.id === action.payload.id) {
+          state.selectedBook = action.payload;
+        }
+      })
+      .addCase(updateBook.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      // Handle deleteBook
+      .addCase(deleteBook.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteBook.fulfilled, (state, action) => {
+        state.loading = false;
+        state.books = state.books.filter(book => book.id !== action.payload);
+        if (state.selectedBook?.id === action.payload) {
+          state.selectedBook = null;
+        }
+      })
+      .addCase(deleteBook.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

@@ -1,7 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
-import { fetchBooks, selectBook } from '../store/slices/bookSlice';
+import { fetchBooks, selectBook, deleteBook } from '../store/slices/bookSlice';
 import DatabaseErrorMessage from './DatabaseErrorMessage';
+import EditBookForm from './EditBookForm';
+import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { Book } from '../types/Book';
 
 interface BookListProps {
   onSelectBook: (id: string) => void;
@@ -10,6 +13,8 @@ interface BookListProps {
 const BookList: React.FC<BookListProps> = ({ onSelectBook }) => {
   const dispatch = useAppDispatch();
   const { books, loading, error } = useAppSelector(state => state.books);
+  const [editBook, setEditBook] = useState<Book | null>(null);
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState<string | null>(null);
 
   useEffect(() => {
     dispatch(fetchBooks());
@@ -18,6 +23,23 @@ const BookList: React.FC<BookListProps> = ({ onSelectBook }) => {
   const handleSelectBook = (id: string) => {
     dispatch(selectBook(id));
     onSelectBook(id);
+  };
+
+  const handleEditBook = (e: React.MouseEvent, book: Book) => {
+    e.stopPropagation(); // Prevent triggering the row click
+    setEditBook(book);
+  };
+
+  const handleDeleteBook = async (e: React.MouseEvent, bookId: string) => {
+    e.stopPropagation(); // Prevent triggering the row click
+    
+    if (window.confirm("Are you sure you want to delete this book?")) {
+      try {
+        await dispatch(deleteBook(bookId)).unwrap();
+      } catch (error) {
+        console.error("Failed to delete book:", error);
+      }
+    }
   };
 
   const handleRetry = () => {
@@ -59,11 +81,10 @@ const BookList: React.FC<BookListProps> = ({ onSelectBook }) => {
           {books.map(book => (
             <li 
               key={book.id} 
-              onClick={() => handleSelectBook(book.id)}
               className="py-4 px-2 hover:bg-gray-700 cursor-pointer rounded transition-colors"
             >
               <div className="flex justify-between items-start">
-                <div>
+                <div onClick={() => handleSelectBook(book.id)}>
                   <h3 className="text-lg font-semibold">{book.title}</h3>
                   <p className="text-gray-400">by {book.author} ({book.year})</p>
                   <p className="text-sm text-gray-500">{book.genre}</p>
@@ -71,10 +92,30 @@ const BookList: React.FC<BookListProps> = ({ onSelectBook }) => {
                 <span className={`px-2 py-1 text-xs rounded-full ${book.isRead ? 'bg-green-800 text-green-200' : 'bg-yellow-800 text-yellow-200'}`}>
                   {book.isRead ? 'Read' : 'Unread'}
                 </span>
+                <div className="ml-4 flex-shrink-0">
+                  <button 
+                    onClick={(e) => handleEditBook(e, book)}
+                    className="text-blue-500 hover:text-blue-700 transition-colors"
+                  >
+                    <PencilIcon className="w-5 h-5" />
+                  </button>
+                  <button 
+                    onClick={(e) => handleDeleteBook(e, book.id)}
+                    className="text-red-500 hover:text-red-700 transition-colors ml-2"
+                  >
+                    <TrashIcon className="w-5 h-5" />
+                  </button>
+                </div>
               </div>
             </li>
           ))}
         </ul>
+      )}
+      {editBook && (
+        <EditBookForm 
+          book={editBook} 
+          onClose={() => setEditBook(null)} 
+        />
       )}
     </div>
   );

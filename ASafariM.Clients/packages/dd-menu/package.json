@@ -1,7 +1,7 @@
 {
   "name": "@asafarim/dd-menu",
-  "version": "0.3.2",
-  "description": "A recursive dropdown menu React component with pure CSS and CSS variable theming. Supports unlimited nesting, theming (light/dark), and is mobile-friendly.",
+  "version": "1.1.0",
+  "description": "A minimal, elegant, and highly customizable dropdown menu React component. Perfect for navbar, sidebar, or any dropdown needs with beautiful theming and smooth animations.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",

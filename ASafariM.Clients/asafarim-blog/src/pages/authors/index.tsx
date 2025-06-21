@@ -4,7 +4,6 @@ import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import { useAuthorsData, Author } from "../../utils/authorsData";
 import styles from "./authors.module.css";
-import TestComponent from "./DDMenuTest";
 
 export default function AuthorsPage(): JSX.Element {
   const { siteConfig } = useDocusaurusContext();
@@ -53,7 +52,6 @@ export default function AuthorsPage(): JSX.Element {
             </div>
           ))}
         </div>
-        <TestComponent />
       </main>
     </Layout>
   );

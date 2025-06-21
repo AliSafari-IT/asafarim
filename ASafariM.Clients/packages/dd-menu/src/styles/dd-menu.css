@@ -393,81 +393,54 @@
   top: -8px;
 }
 
-/* Mobile styles */
-.dd-menu__mobile-toggle {
-  display: none;
-  position: absolute;
-  top: var(--dd-menu-spacing-lg);
-  right: var(--dd-menu-spacing-xl);
-  width: 48px;
-  height: 48px;
-  border: none;
-  background: var(--dd-menu-hover-gradient);
-  color: var(--dd-menu-text);
-  border-radius: var(--dd-menu-radius-lg);
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  z-index: 1001;
-  font-size: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--dd-menu-shadow-md);
-  border: 1px solid var(--dd-menu-border);
-}
-
-.dd-menu__mobile-toggle:hover {
-  background: var(--dd-menu-active-gradient);
-  transform: scale(1.05);
-  box-shadow: var(--dd-menu-shadow-lg);
-  border-color: var(--dd-menu-accent);
-}
+/* Mobile styles - no toggle needed, direct interaction */
 
 @media (max-width: 768px) {
   .dd-menu {
     min-width: 100%;
     max-width: 100%;
-    border-radius: 0;
-    border-left: none;
-    border-right: none;
+    border-radius: var(--dd-menu-radius-lg);
+    border: 1px solid var(--dd-menu-border);
     box-shadow: var(--dd-menu-shadow-lg);
-  }
-
-  .dd-menu__mobile-toggle {
-    display: flex;
+    margin: 0;
   }
 
   .dd-menu ul {
-    padding: 80px var(--dd-menu-spacing-lg) var(--dd-menu-spacing-xl);
+    padding: var(--dd-menu-spacing-lg);
   }
 
   .dd-menu__item {
-    margin: var(--dd-menu-spacing-sm) 0;
-    padding: var(--dd-menu-spacing-xl) var(--dd-menu-spacing-xl);
-    min-height: 60px;
-    border-radius: var(--dd-menu-radius-lg);
+    margin: var(--dd-menu-spacing-xs) 0;
+    padding: var(--dd-menu-spacing-lg) var(--dd-menu-spacing-lg);
+    min-height: 56px;
+    border-radius: var(--dd-menu-radius-md);
+    font-size: var(--dd-menu-font-size-base);
+  }
+
+  .dd-menu__item:hover {
+    transform: translateX(4px) scale(1.01);
   }
 
   .dd-menu__icon {
-    width: 36px;
-    height: 36px;
-    font-size: 20px;
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
   }
 
   .dd-menu__arrow {
-    width: 36px;
-    height: 36px;
-    font-size: 18px;
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
   }
 
   .dd-menu__submenu {
     position: static !important;
     display: none !important;
-    background: var(--dd-menu-hover-gradient);
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: var(--dd-menu-hover-bg);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
     border: 1px solid var(--dd-menu-divider);
-    border-radius: var(--dd-menu-radius-lg);
-    margin: var(--dd-menu-spacing-md) var(--dd-menu-spacing-xl) var(--dd-menu-spacing-lg) 48px;
+    border-radius: var(--dd-menu-radius-md);
+    margin: var(--dd-menu-spacing-sm) 0 var(--dd-menu-spacing-md) var(--dd-menu-spacing-xl);
     animation: none;
     backdrop-filter: none;
   }
@@ -477,9 +450,10 @@
   }
 
   .dd-menu__submenu .dd-menu__item {
-    margin: var(--dd-menu-spacing-xs) var(--dd-menu-spacing-md);
-    padding: var(--dd-menu-spacing-lg) var(--dd-menu-spacing-xl);
-    min-height: 52px;
+    margin: var(--dd-menu-spacing-xs) var(--dd-menu-spacing-sm);
+    padding: var(--dd-menu-spacing-md) var(--dd-menu-spacing-lg);
+    min-height: 48px;
+    font-size: var(--dd-menu-font-size-sm);
   }
 
   .dd-menu__submenu-anchor .dd-menu__arrow {
@@ -489,6 +463,50 @@
 
   .dd-menu__submenu-anchor[aria-expanded="true"] .dd-menu__arrow {
     transform: rotate(90deg);
+  }
+
+  /* Show submenu on hover/click in mobile */
+  .dd-menu__submenu-anchor:hover .dd-menu__submenu,
+  .dd-menu__submenu-anchor:focus-within .dd-menu__submenu,
+  .dd-menu__submenu-anchor:active .dd-menu__submenu {
+    display: block !important;
+  }
+}
+
+/* Touch-friendly mobile interactions */
+@media (max-width: 768px) and (hover: none) and (pointer: coarse) {
+  .dd-menu__item {
+    min-height: 64px;
+    padding: var(--dd-menu-spacing-xl);
+    touch-action: manipulation;
+  }
+  
+  .dd-menu__submenu-anchor {
+    position: relative;
+  }
+  
+  .dd-menu__submenu-anchor::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    cursor: pointer;
+  }
+  
+  /* Tap to reveal submenu */
+  .dd-menu__submenu-anchor:active .dd-menu__submenu,
+  .dd-menu__submenu-anchor:focus .dd-menu__submenu {
+    display: block !important;
+  }
+  
+  .dd-menu__icon,
+  .dd-menu__arrow {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
   }
 }
 

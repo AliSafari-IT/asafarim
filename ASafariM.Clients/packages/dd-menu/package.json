@@ -1,6 +1,6 @@
 {
   "name": "@asafarim/dd-menu",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "A recursive dropdown menu React component with pure CSS and CSS variable theming. Supports unlimited nesting, theming (light/dark), and is mobile-friendly.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -55,7 +55,7 @@
     "react-dom": ">=17.0.0 || >=18.0.0"
   },
   "devDependencies": {
-    "@types/react": "^19.1.8",
+    "@types/react": "^18.2.0",
     "tsup": "^7.2.0",
     "typescript": "^5.0.0"
   },

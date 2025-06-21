@@ -8,11 +8,11 @@ interface DDMenuProps {
   className?: string;
 }
 
-export const DDMenu: React.FC<DDMenuProps> = ({
+export function DDMenu ({
   items,
   theme = "light",
   className = "",
-}) => {
+}: DDMenuProps): React.ReactElement {
   const [openIndexes, setOpenIndexes] = useState<{ [key: string]: boolean }>({});
   const [mobileOpen, setMobileOpen] = useState(false);
 

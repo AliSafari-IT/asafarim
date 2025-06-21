@@ -21,7 +21,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@asafarim/dd-menu": "^0.1.4",
+    "@asafarim/dd-menu": "^0.1.5",
     "@docusaurus/core": "3.7.0",
     "@docusaurus/plugin-content-docs": "^3.7.0",
     "@docusaurus/plugin-content-pages": "^3.7.0",

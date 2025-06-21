@@ -4,6 +4,9 @@
     "baseUrl": ".",
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "@asafarim/dd-menu": ["../packages/dd-menu/dist/index.d.ts"]
+    }
   }
 }

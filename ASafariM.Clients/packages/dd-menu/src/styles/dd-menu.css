@@ -331,7 +331,7 @@
 .dd-menu__submenu {
   display: none;
   position: absolute;
-  left: calc(100% + 20px);
+  left: calc(100% + 8px);
   top: -8px;
   min-width: 280px;
   z-index: 1000;
@@ -389,7 +389,7 @@
 
 /* Nested submenu positioning */
 .dd-menu__submenu .dd-menu__submenu {
-  left: calc(100% + 16px);
+  left: calc(100% + 8px);
   top: -8px;
 }
 
@@ -545,7 +545,7 @@
 /* RTL support */
 [dir="rtl"] .dd-menu__submenu {
   left: auto;
-  right: calc(100% + 20px);
+  right: calc(100% + 8px);
 }
 
 [dir="rtl"] .dd-menu__arrow::before {

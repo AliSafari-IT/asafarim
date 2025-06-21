@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const TechSkillsSection = () => {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
@@ -106,16 +107,17 @@ const TechSkillsSection = () => {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Bottom CTA */}
+        </div>        {/* Bottom CTA */}
         <div className="text-center mt-16">
-          <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-teal-500 to-blue-600 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer group">
+          <Link 
+            to="/projects"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-teal-500 to-blue-600 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer group"
+          >
             <span className="font-semibold">Explore My Work</span>
             <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
-          </div>
+          </Link>
         </div>
       </div>
     </div>

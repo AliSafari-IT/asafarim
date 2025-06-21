@@ -5,3 +5,4 @@ packages:
   - ASafariM.Clients/asafarim-bibliography
   - ASafariM.Clients/asafarim-pbk
   - ASafariM.Clients/asafarim-cli
+  - ASafariM.Clients/packages/*

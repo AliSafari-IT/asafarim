@@ -3,9 +3,32 @@ import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
-import HomepageFeatures from '@site/src/components/HomepageFeatures';
-
+import HomepageFeatures from '../components/HomepageFeatures';
+import { DDMenu, MenuItem } from "@asafarim/dd-menu";
+import "@asafarim/dd-menu/dist/index.css";
 import styles from './index.module.css';
+
+// ...define menuItems and use as usual
+const menuItems: MenuItem[] = [
+  {
+    id: "goto",
+    label: "Go to",
+    link: undefined,
+    children: [
+      { id: "1", label: "Homepage", link: "https://asafarim.com" },
+      {
+        id: "2",
+        label: "Social Links",
+        children: [
+          { id: "2-1", label: "LinkedIn", link: "https://linkedin.com/in/ali-safari-m" },
+          { id: "2-2", label: "Twitter", link: "https://twitter.com/asafarim" },
+          { id: "2-3", label: "GitHub", link: "https://github.com/AliSafari-IT" }, 
+        ],
+      },
+      { id: "3", label: "About", link: "https://asafarim.com/about" },
+    ],
+  },
+];
 
 export function HomepageHeader() {
   const {siteConfig} = useDocusaurusContext();
@@ -31,6 +54,9 @@ export function HomepageHeader() {
                 to="/docs/intro">
                 Learn More
               </Link>
+               <div className={styles.authorMenu}>
+              <DDMenu items={menuItems} theme="dark" className={styles.menu} />
+            </div> 
             </div>
           </div>
           <div className={styles.heroImage}>

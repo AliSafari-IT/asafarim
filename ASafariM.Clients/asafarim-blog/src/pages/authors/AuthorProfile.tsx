@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Children } from "react";
 import Layout from "@theme/Layout";
 import Link from "@docusaurus/Link";
 import { usePluginData } from "@docusaurus/useGlobalData";
@@ -6,22 +6,7 @@ import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import { useAuthorsData, Author } from "../../utils/authorsData";
 import { BlogPost, useBlogPosts } from "../../utils/authorPosts";
 import styles from "./authors.module.css";
-import { DDMenu, MenuItem } from "@asafarim/dd-menu";
-import "@asafarim/dd-menu/dist/index.css";
 
-// ...define menuItems and use as usual
-const menuItems: MenuItem[] = [
-  { id: "1", label: "Home", link: "/" },
-  {
-    id: "2",
-    label: "Products",
-    children: [
-      { id: "2-1", label: "Phones", link: "/phones" },
-      { id: "2-2", label: "Laptops", link: "/laptops" },
-    ],
-  },
-  { id: "3", label: "About", link: "/about" },
-];
 // Icons for author details
 const LocationIcon = () => (
   <svg
@@ -261,11 +246,10 @@ export default function AuthorProfile({
                     </a>
                   );
                 })}
-            </div>
-          </div>          {/* Right Panel - Author's Blog Posts */}
+            </div>           
+          </div>
+          {/* Right Panel - Author's Blog Posts */}
           <div className={styles.authorPostsPanel}>
-            <DDMenu items={menuItems} theme="dark" key={"blog-posts-menu"} className={""} />
-
             <h2>Blog Posts by {author.name}</h2>
             {blogPosts?.length > 0 ? (
               <ul className={styles.authorPostsList}>

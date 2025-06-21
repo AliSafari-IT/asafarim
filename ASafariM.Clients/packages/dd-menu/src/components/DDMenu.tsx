@@ -8,11 +8,11 @@ interface DDMenuProps {
   className?: string;
 }
 
-export function DDMenu ({
+const DDMenu = ({
   items,
   theme = "light",
   className = "",
-}: DDMenuProps): React.ReactElement {
+}: DDMenuProps): JSX.Element => {
   const [openIndexes, setOpenIndexes] = useState<{ [key: string]: boolean }>({});
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -127,7 +127,9 @@ export function DDMenu ({
       >
         {mobileOpen ? "✕" : "☰"}
       </button>
-      {mobileOpen || window.innerWidth > 700 ? renderMenu(items) : null}
-    </nav>
+      {mobileOpen || window.innerWidth > 700 ? renderMenu(items) : null}    </nav>
   );
 };
+
+export { DDMenu };
+export default DDMenu;

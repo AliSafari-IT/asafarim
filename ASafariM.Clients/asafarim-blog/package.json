@@ -1,6 +1,6 @@
 {
   "name": "asafarim-blog",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "scripts": {
     "co": "cd ../.. && pnpm co",
@@ -21,7 +21,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@asafarim/dd-menu": "^0.1.5",
+    "@asafarim/dd-menu": "^0.1.6",
     "@docusaurus/core": "3.7.0",
     "@docusaurus/plugin-content-docs": "^3.7.0",
     "@docusaurus/plugin-content-pages": "^3.7.0",

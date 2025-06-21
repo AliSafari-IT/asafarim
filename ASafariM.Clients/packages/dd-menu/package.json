@@ -1,6 +1,6 @@
 {
   "name": "@asafarim/dd-menu",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "A recursive dropdown menu React component with pure CSS and CSS variable theming. Supports unlimited nesting, theming (light/dark), and is mobile-friendly.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -24,13 +24,8 @@
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts --out-dir dist",
     "prepare": "pnpm run build",
-    "prepublish": "pnpm run build",
-    "publish": "pnpm run build && pnpm publish",
-    "prepublishOnly": "pnpm run build",
     "view": "pnpm view @asafarim/dd-menu",
     "version": "pnpm view -s version",
-    "preversion": "pnpm run build",
-    "postversion": "git push && git push --tags && pnpm publish",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "test:unit": "echo \"No unit tests specified\" && exit 0",

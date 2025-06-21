@@ -67,6 +67,7 @@ const config = {
           },
           {to: '/blog', label: 'Blog', position: 'left'},
           {to: '/authors', label: 'Authors', position: 'left'},
+          {to: '/tags', label: 'Tags', position: 'left'}, 
         ],
       },
       footer: {

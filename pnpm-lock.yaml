@@ -141,6 +141,9 @@ importers:
 
   ASafariM.Clients/asafarim-blog:
     dependencies:
+      '@asafarim/dd-menu':
+        specifier: ^0.1.4
+        version: 0.1.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@docusaurus/core':
         specifier: 3.7.0
         version: 3.7.0(@mdx-js/react@3.1.0(@types/react@18.3.21)(react@18.3.1))(acorn@8.14.1)(eslint@9.26.0(jiti@2.4.2))(lightningcss@1.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)
@@ -1062,6 +1065,12 @@ packages:
 
   '@antfu/utils@8.1.1':
     resolution: {integrity: sha512-Mex9nXf9vR6AhcXmMrlz/HVgYYZpVGJ6YlPgwl7UnaFpnshXs6EK/oa5Gpf3CzENMjkvEx2tQtntGnb7UtSTOQ==}
+
+  '@asafarim/dd-menu@0.1.4':
+    resolution: {integrity: sha512-FEe7cwtoNXyrwUrYylsrhdp1Q/TEfS05Bf7UuDSFBInMXwpdqUyR0z8VAG4VEfGQwkJoL5jYx+XX9IEPhWbhQQ==}
+    peerDependencies:
+      react: '>=17.0.0 || >=18.0.0'
+      react-dom: '>=17.0.0 || >=18.0.0'
 
   '@asamuzakjp/css-color@3.1.7':
     resolution: {integrity: sha512-Ok5fYhtwdyJQmU1PpEv6Si7Y+A4cYb8yNM9oiIJC9TzXPMuN9fvdonKJqcnz9TbFqV6bQ8z0giRq0iaOpGZV2g==}
@@ -3321,6 +3330,7 @@ packages:
 
   '@fluentui/react-nav-preview@0.10.7':
     resolution: {integrity: sha512-i/GofnnFxj3KCxMsdyHDXP2YEarZOThaiSJqM6Rwdn+HsKAMLhKs8OR/1WzDiXqjE+c9wKsdvNNtgdL2Np4Gtw==}
+    deprecated: Deprecated in favor of stable release - use/migrate to @fluentui/react-nav
     peerDependencies:
       '@types/react': '>=16.14.0 <19.0.0'
       '@types/react-dom': '>=16.9.0 <19.0.0'
@@ -14318,6 +14328,11 @@ snapshots:
       tinyexec: 1.0.1
 
   '@antfu/utils@8.1.1': {}
+
+  '@asafarim/dd-menu@0.1.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   '@asamuzakjp/css-color@3.1.7':
     dependencies:

@@ -7,7 +7,7 @@ import { useAuthorsData, Author } from '../../utils/authorsData';
 import { BlogPost, useBlogPosts } from '../../utils/authorPosts';
 import styles from './authors.module.css';
 import { DDMenu, MenuItem } from "@asafarim/dd-menu";
-import "@asafarim/dd-menu/dist/dd-menu.css";
+import "@asafarim/dd-menu/dist/index.css";
 
 // ...define menuItems and use as usual
 

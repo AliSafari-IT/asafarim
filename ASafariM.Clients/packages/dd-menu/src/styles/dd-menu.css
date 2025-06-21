@@ -1,0 +1,151 @@
+:root {
+  --menu-bg: #fff;
+  --menu-color: #222;
+  --menu-hover-bg: #f7f7f7;
+  --menu-active-bg: #ececec;
+  --menu-disabled-color: #bbb;
+  --menu-border: #e5e5e5;
+  --menu-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+[data-theme="dark"], .dd-menu[data-theme="dark"] {
+  --menu-bg: #212229;
+  --menu-color: #eee;
+  --menu-hover-bg: #333646;
+  --menu-active-bg: #2d2e39;
+  --menu-disabled-color: #444;
+  --menu-border: #444;
+}
+
+.dd-menu {
+  background: var(--menu-bg);
+  color: var(--menu-color);
+  font-family: inherit;
+  min-width: 220px;
+  border-radius: 8px;
+  border: 1px solid var(--menu-border);
+  box-shadow: var(--menu-shadow);
+  overflow: visible;
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  padding: 0;
+}
+
+.dd-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dd-menu__item {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 12px 18px;
+  transition: background 0.15s;
+  border-bottom: 1px solid var(--menu-border);
+  position: relative;
+  background: none;
+  gap: 10px;
+}
+
+.dd-menu__item:last-child {
+  border-bottom: none;
+}
+
+.dd-menu__item:hover:not(.dd-menu__item--disabled),
+.dd-menu__item:focus-visible:not(.dd-menu__item--disabled) {
+  background: var(--menu-hover-bg);
+}
+
+.dd-menu__item--disabled {
+  color: var(--menu-disabled-color);
+  cursor: not-allowed;
+}
+
+.dd-menu__arrow {
+  margin-left: auto;
+  font-size: 13px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.dd-menu__submenu {
+  display: none;
+  position: absolute;
+  left: 100%;
+  top: 0;
+  min-width: 200px;
+  z-index: 100;
+  background: var(--menu-bg);
+  border: 1px solid var(--menu-border);
+  border-radius: 8px;
+  box-shadow: var(--menu-shadow);
+  margin-left: 3px;
+}
+
+.dd-menu__submenu--open {
+  display: block;
+}
+
+.dd-menu__submenu-anchor {
+  position: relative;
+}
+
+.dd-menu__submenu-anchor:hover > .dd-menu__submenu,
+.dd-menu__submenu-anchor:focus-within > .dd-menu__submenu {
+  display: block;
+}
+
+/* Mobile styles: */
+@media (max-width: 700px) {
+  .dd-menu {
+    min-width: unset;
+    max-width: unset;
+    width: 100vw;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+  .dd-menu ul,
+  .dd-menu__submenu {
+    position: static !important;
+    background: var(--menu-bg);
+    box-shadow: none;
+    border: none;
+    margin-left: 0;
+    min-width: unset;
+    width: 100%;
+  }
+  .dd-menu__submenu--open {
+    display: block;
+  }
+  .dd-menu__submenu-anchor {
+    position: static;
+  }
+  .dd-menu__arrow {
+    margin-left: 5px;
+  }
+}
+
+.dd-menu__mobile-toggle {
+  display: none;
+  position: absolute;
+  top: 10px;
+  right: 18px;
+  font-size: 22px;
+  background: transparent;
+  border: none;
+  color: var(--menu-color);
+}
+
+@media (max-width: 700px) {
+  .dd-menu__mobile-toggle {
+    display: block;
+    z-index: 110;
+  }
+  .dd-menu--closed {
+    display: none !important;
+  }
+}

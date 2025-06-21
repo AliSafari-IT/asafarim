@@ -102,6 +102,7 @@ $RECYCLE.BIN/
 
 # Ignore the local NuGet packages folder
 **/packages/*
+!ASafariM.Clients/packages/*
 
 # Ignore the .NET Core global tools folder
 .dotnet_tool/

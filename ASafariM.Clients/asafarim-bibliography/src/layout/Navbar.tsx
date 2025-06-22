@@ -8,6 +8,7 @@ import {
   PlusIcon,
 } from "@heroicons/react/24/outline";
 import TestComponent from "./DDMenuTest";
+import DDMenu, { MenuItem } from "@asafarim/dd-menu";
 
 const navigation = [
   { name: "Bibliography", href: "/", current: true },
@@ -24,7 +25,52 @@ export default function Navbar() {
   const handleNavigation = (name: string) => {
     setActiveItem(name);
   };
-
+  const theme = localStorage.getItem("theme") as "auto" | "light" | "dark";
+  const navMenuItems: MenuItem[] = [
+    {
+      id: "dashboard",
+      label: "Dashboard",
+      link: "/dashboard",
+      icon: "🏠",
+    },
+    {
+      id: "projects",
+      label: "Projects",
+      icon: "📁",
+      children: [
+        {
+          id: "active-projects",
+          label: "Active Projects",
+          link: "/projects/active",
+          icon: "⚡",
+        },
+        {
+          id: "completed",
+          label: "Completed",
+          link: "/projects/completed",
+          icon: "✅",
+        },
+        {
+          id: "archive",
+          label: "Archive",
+          link: "/projects/archive",
+          icon: "📦",
+        },
+      ],
+    },
+    {
+      id: "team",
+      label: "Team",
+      link: "/team",
+      icon: "👥",
+    },
+    {
+      id: "analytics",
+      label: "Analytics",
+      link: "/analytics",
+      icon: "📊",
+    },
+  ];
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
@@ -70,6 +116,30 @@ export default function Navbar() {
                         {item.name}
                       </Link>
                     ))}
+                    <DDMenu
+                      items={navMenuItems}
+                      placement="bottom-start"
+                      variant="default"
+                      style={{
+                        color: "#374151",
+                        fontWeight: "500",
+                      }}
+                      className="dd-menu--default dd-menu--md dd-menu--navbar dd-menu--navbar--md"
+                      closeOnClick={true}
+                      size="md"
+                      theme={theme || "auto"}
+                      trigger={
+                        <span
+                          style={{
+                            color: "#374151",
+                            fontWeight: "500",
+                            cursor: "pointer",
+                          }}
+                        >
+                          Click me ↓
+                        </span>
+                      }
+                    />
                   </div>
                 </div>
               </div>

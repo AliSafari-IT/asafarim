@@ -1,68 +1,190 @@
-# A recursive dropdown menu component for React (TypeScript)
-A recursive dropdown menu component for React (TypeScript), fully themeable (light/dark), pure CSS, and mobile-friendly.
+# @asafarim/dd-menu
 
-## 1. Package Layout
+[![npm version](https://img.shields.io/npm/v/@asafarim/dd-menu.svg)](https://www.npmjs.com/package/@asafarim/dd-menu)
+[![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-blue)](https://www.typescriptlang.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-```
-@asafarim/dd-menu/
-├── src/
-│   ├── components/
-│   │   └── DDMenu.tsx
-│   ├── types/
-│   │   └── menu.types.ts
-│   ├── styles/
-│   │   └── dd-menu.css
-│   └── index.ts
-├── package.json
-├── tsconfig.json
-├── README.md
-```
+A powerful, customizable dropdown menu component for React with TypeScript. Features recursive nesting, multiple themes, custom triggers, and accessibility support.
 
----
+![DD Menu Showcase](./public/dd-down.png)
 
-## 2. package name
-Package name is:  ***`@asafarim/dd-menu`***
+## Features
 
-### Install
+- 🔄 **Recursive Nesting**: Create unlimited nested dropdown menus
+- 🎨 **Multiple Variants**: Choose from navbar, minimal, and default styles
+- 🌓 **Theme Support**: Built-in light, dark, and auto themes
+- 📱 **Responsive**: Works perfectly on all device sizes
+- ♿ **Accessible**: Keyboard navigation and ARIA support
+- 🔧 **Highly Customizable**: Custom triggers, icons, and styling options
+- 🔍 **Searchable Option**: Filter dropdown items (with SearchableDropdown component)
+- 🧩 **Zero Dependencies**: Pure React and CSS implementation
 
-```sh
-yarn add @asafarim/dd-menu
-# or
+## Installation
+
+```bash
+# Using npm
 npm install @asafarim/dd-menu
-````
 
-## Usage
+# Using yarn
+yarn add @asafarim/dd-menu
+
+# Using pnpm
+pnpm add @asafarim/dd-menu
+```
+
+## Basic Usage
 
 ```tsx
-import { DDMenu, MenuItem } from "@asafarim/dd-menu";
-import "@asafarim/dd-menu/dist/dd-menu.css";
+import DDMenu, { MenuItem } from "@asafarim/dd-menu";
+import "@asafarim/dd-menu/dist/index.css";
 
-const menuItems: MenuItem[] = [
-  { id: "1", label: "Home", link: "/" },
-  {
-    id: "2",
-    label: "Products",
-    children: [
-      { id: "2-1", label: "Phones", link: "/phones" },
-      { id: "2-2", label: "Laptops", link: "/laptops" },
-    ],
-  },
-  { id: "3", label: "About", link: "/about" },
-];
+const App = () => {
+  const menuItems: MenuItem[] = [
+    { id: "home", label: "Home", link: "/", icon: "🏠" },
+    {
+      id: "products",
+      label: "Products",
+      icon: "📦",
+      children: [
+        { id: "electronics", label: "Electronics", link: "/products/electronics" },
+        { id: "clothing", label: "Clothing", link: "/products/clothing" },
+      ],
+    },
+    { id: "about", label: "About Us", link: "/about", icon: "ℹ️" },
+  ];
 
-export default function Navbar() {
-  return <DDMenu items={menuItems} theme="dark" />;
+  return (
+    <DDMenu 
+      items={menuItems} 
+      theme="auto" 
+      variant="default" 
+      size="md" 
+      placement="bottom-start"
+      closeOnClick={true}
+    />
+  );
+};
+```
+
+## Showcase Examples
+
+### Navigation Menu
+
+![Navbar Dropdown](./public/dd-navbar-item.png)
+
+```tsx
+<DDMenu
+  items={navMenuItems}
+  className="dd-menu--navbar"
+  placement="bottom"
+  closeOnClick={true}
+  size="lg"
+  theme="auto"
+  trigger={
+    <div className="dd-menu__trigger dd-menu__trigger--text">
+      Navigation
+    </div>
+  }
+/>
+```
+
+### User Profile Menu
+
+![User Profile Dropdown](./public/user-profile-showcase.png)
+
+```tsx
+<DDMenu
+  items={profileMenuItems}
+  className="dd-menu--navbar"
+  trigger={
+    <div className="user-profile-trigger">
+      <div className="avatar">JD</div>
+      <span>John Doe</span>
+    </div>
+  }
+  placement="bottom-end"
+/>
+```
+
+### Custom Button Trigger
+
+```tsx
+<DDMenu 
+  items={navMenuItems} 
+  className="dd-menu--minimal"
+  trigger={
+    <button className="action-button">
+      Action Menu
+    </button>
+  }
+/>
+```
+
+## API Reference
+
+### DDMenu Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `items` | `MenuItem[]` | Required | Array of menu items |
+| `theme` | `'light' \| 'dark' \| 'auto'` | `'auto'` | Menu theme |
+| `variant` | `'default' \| 'navbar' \| 'minimal'` | `'default'` | Menu variant style |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Menu size |
+| `placement` | `'bottom' \| 'bottom-start' \| 'bottom-end' \| 'top' \| 'top-start' \| 'top-end' \| 'right' \| 'right-start' \| 'right-end' \| 'left' \| 'left-start' \| 'left-end'` | `'bottom'` | Menu placement |
+| `closeOnClick` | `boolean` | `true` | Close menu when item is clicked |
+| `trigger` | `ReactNode` | Default button | Custom trigger element |
+| `className` | `string` | `''` | Additional CSS class names |
+| `style` | `CSSProperties` | `{}` | Inline styles for the menu |
+
+### MenuItem Type
+
+```ts
+type MenuItem = {
+  id: string;
+  label: string;
+  link?: string;
+  icon?: string | ReactNode;
+  onClick?: () => void;
+  disabled?: boolean;
+  children?: MenuItem[];
+};
+```
+
+## Styling
+
+The component includes default styling, but you can customize it by overriding CSS variables or using the provided class names:
+
+```css
+:root {
+  --dd-menu-bg: #ffffff;
+  --dd-menu-text: #333333;
+  --dd-menu-hover-bg: #f5f5f5;
+  --dd-menu-hover-text: #000000;
+  --dd-menu-disabled-text: #999999;
+  --dd-menu-border: #e0e0e0;
+  --dd-menu-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] {
+  --dd-menu-bg: #333333;
+  --dd-menu-text: #f5f5f5;
+  --dd-menu-hover-bg: #444444;
+  --dd-menu-hover-text: #ffffff;
+  --dd-menu-disabled-text: #777777;
+  --dd-menu-border: #444444;
+  --dd-menu-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 ```
 
-### Features
+## Accessibility
 
-* Recursive menu nesting (unlimited)
-* Pure CSS, zero dependencies
-* Theme support (light/dark/your own via CSS vars)
-* Mobile friendly: collapses to a hamburger on mobile
-* Supports icons, disabled, and links
+The dropdown menu is built with accessibility in mind:
 
-### License
+- Keyboard navigation (Tab, Enter, Escape, Arrow keys)
+- ARIA attributes for screen readers
+- Focus management for keyboard users
+- Proper contrast ratios for text
 
-MIT
+## License
+
+MIT © [Ali Safari](https://github.com/AliSafari-IT)

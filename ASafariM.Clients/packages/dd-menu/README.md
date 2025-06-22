@@ -16,7 +16,7 @@ A powerful, customizable dropdown menu component for React with TypeScript. Feat
 - 📱 **Responsive**: Works perfectly on all device sizes
 - ♿ **Accessible**: Keyboard navigation and ARIA support
 - 🔧 **Highly Customizable**: Custom triggers, icons, and styling options
-- 🔍 **Searchable Option**: Filter dropdown items (with SearchableDropdown component)
+- 🔍 **Searchable Option**: Case-insensitive search to filter dropdown items
 - 🧩 **Zero Dependencies**: Pure React and CSS implementation
 
 ## Installation
@@ -118,6 +118,46 @@ const App = () => {
     </button>
   }
 />
+```
+
+### Searchable Dropdown
+
+![Searchable Dropdown](./public/dd-searchable-option.png)
+
+```tsx
+<div className="searchable-dropdown">
+  <div className="searchable-dropdown__trigger">
+    <span>🔍</span> Search Menu Items
+  </div>
+  
+  {isOpen && (
+    <div className="searchable-dropdown__menu">
+      <div className="searchable-dropdown__search">
+        <input
+          type="text"
+          placeholder="Search items..."
+          value={searchTerm}
+          onChange={handleSearchChange}
+          autoFocus
+        />
+      </div>
+      
+      <div className="searchable-dropdown__items">
+        {filteredItems.map((item, index) => (
+          <div
+            key={item.id}
+            className={`searchable-dropdown__item ${focusedIndex === index ? 'focused' : ''}`}
+            onClick={() => handleItemClick(item)}
+            onMouseEnter={() => setFocusedIndex(index)}
+          >
+            {item.icon && <span>{item.icon}</span>}
+            <span>{item.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+</div>
 ```
 
 ## API Reference

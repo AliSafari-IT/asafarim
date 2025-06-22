@@ -1,11 +1,11 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import type { MenuItem } from "../types/menu.types";
 import "../styles/dd-menu.css";
 
 export type DDMenuVariant = "default" | "minimal" | "navbar" | "sidebar";
 export type DDMenuSize = "sm" | "md" | "lg";
 
-export interface DDMenuProps {
+interface DDMenuProps {
   items: MenuItem[];
   theme?: "light" | "dark" | "auto";
   variant?: DDMenuVariant;
@@ -25,6 +25,7 @@ export interface DDMenuProps {
   onItemClick?: (item: MenuItem) => void;
   closeOnClick?: boolean;
   disabled?: boolean;
+  hoverDelay?: number; // New prop for hover delay
 }
 
 const DDMenu = ({
@@ -39,12 +40,16 @@ const DDMenu = ({
   onItemClick,
   closeOnClick = true,
   disabled = false,
+  hoverDelay = 150, // Default 150ms delay
 }: DDMenuProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [openSubmenus, setOpenSubmenus] = useState<Set<string>>(new Set());
+  const [hoveringItem, setHoveringItem] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonTriggerRef = useRef<HTMLButtonElement>(null);
   const customTriggerRef = useRef<HTMLDivElement>(null);
+  const hoverTimeoutRef = useRef<number | null>(null);
+  const submenuTimeoutRef = useRef<Map<string, number>>(new Map());
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -58,18 +63,32 @@ const DDMenu = ({
       ) {
         setIsOpen(false);
         setOpenSubmenus(new Set());
+        setHoveringItem(null);
+        clearAllTimeouts();
       }
     };
 
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
-      return () =>
+      return () => {
         document.removeEventListener("mousedown", handleClickOutside);
+        clearAllTimeouts();
+      };
     }
   }, [isOpen]);
 
-  // Handle submenu toggle
-  const toggleSubmenu = (id: string) => {
+  // Clear all timeouts
+  const clearAllTimeouts = useCallback(() => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+      hoverTimeoutRef.current = null;
+    }
+    submenuTimeoutRef.current.forEach((timeout) => clearTimeout(timeout));
+    submenuTimeoutRef.current.clear();
+  }, []);
+
+  // Handle submenu toggle with improved logic
+  const toggleSubmenu = useCallback((id: string) => {
     setOpenSubmenus((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(id)) {
@@ -79,10 +98,65 @@ const DDMenu = ({
       }
       return newSet;
     });
-  };
+  }, []);
+
+  // Improved submenu opening with delay
+  const openSubmenuWithDelay = useCallback((id: string) => {
+    // Clear any existing timeout for this submenu
+    const existingTimeout = submenuTimeoutRef.current.get(id);
+    if (existingTimeout) {
+      clearTimeout(existingTimeout);
+    }
+
+    // For sidebar variant, open immediately
+    if (variant === "sidebar") {
+      setOpenSubmenus((prev) => new Set([...prev, id]));
+      return;
+    }
+
+    // For other variants, use hover delay
+    const timeout = setTimeout(() => {
+      setOpenSubmenus((prev) => new Set([...prev, id]));
+      submenuTimeoutRef.current.delete(id);
+    }, hoverDelay);
+
+    submenuTimeoutRef.current.set(id, timeout);
+  }, [variant, hoverDelay]);
+
+  // Improved submenu closing with delay
+  const closeSubmenuWithDelay = useCallback((id: string) => {
+    // Clear any opening timeout for this submenu
+    const existingTimeout = submenuTimeoutRef.current.get(id);
+    if (existingTimeout) {
+      clearTimeout(existingTimeout);
+      submenuTimeoutRef.current.delete(id);
+    }
+
+    // For sidebar variant, close immediately
+    if (variant === "sidebar") {
+      setOpenSubmenus((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(id);
+        return newSet;
+      });
+      return;
+    }
+
+    // For other variants, use hover delay
+    const timeout = setTimeout(() => {
+      setOpenSubmenus((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(id);
+        return newSet;
+      });
+      submenuTimeoutRef.current.delete(id);
+    }, hoverDelay);
+
+    submenuTimeoutRef.current.set(id, timeout);
+  }, [variant, hoverDelay]);
 
   // Handle item click
-  const handleItemClick = (item: MenuItem, event: React.MouseEvent) => {
+  const handleItemClick = useCallback((item: MenuItem, event: React.MouseEvent) => {
     if (item.disabled) {
       event.preventDefault();
       return;
@@ -108,11 +182,50 @@ const DDMenu = ({
     if (closeOnClick) {
       setIsOpen(false);
       setOpenSubmenus(new Set());
+      setHoveringItem(null);
+      clearAllTimeouts();
     }
-  };
+  }, [onItemClick, closeOnClick, toggleSubmenu, clearAllTimeouts]);
+
+  // Handle mouse enter for items
+  const handleItemMouseEnter = useCallback((item: MenuItem) => {
+    setHoveringItem(item.id);
+    
+    if (item.children?.length && variant !== "sidebar") {
+      openSubmenuWithDelay(item.id);
+    }
+  }, [variant, openSubmenuWithDelay]);
+
+  // Handle mouse leave for items
+  const handleItemMouseLeave = useCallback((item: MenuItem) => {
+    if (hoveringItem === item.id) {
+      setHoveringItem(null);
+    }
+
+    if (item.children?.length && variant !== "sidebar") {
+      closeSubmenuWithDelay(item.id);
+    }
+  }, [hoveringItem, variant, closeSubmenuWithDelay]);
+
+  // Handle submenu mouse enter (prevents closing)
+  const handleSubmenuMouseEnter = useCallback((itemId: string) => {
+    // Clear any pending close timeout
+    const existingTimeout = submenuTimeoutRef.current.get(itemId);
+    if (existingTimeout) {
+      clearTimeout(existingTimeout);
+      submenuTimeoutRef.current.delete(itemId);
+    }
+  }, []);
+
+  // Handle submenu mouse leave
+  const handleSubmenuMouseLeave = useCallback((itemId: string) => {
+    if (variant !== "sidebar") {
+      closeSubmenuWithDelay(itemId);
+    }
+  }, [variant, closeSubmenuWithDelay]);
 
   // Render menu items recursively
-  const renderMenuItems = (
+  const renderMenuItems = useCallback((
     menuItems: MenuItem[],
     level = 0
   ): React.ReactNode => {
@@ -129,26 +242,16 @@ const DDMenu = ({
               ${item.active ? "dd-menu__item--active" : ""}
               ${hasChildren ? "dd-menu__item--has-children" : ""}
               ${level > 0 ? "dd-menu__item--nested" : ""}
+              ${hoveringItem === item.id ? "dd-menu__item--hovering" : ""}
             `.trim()}
             onClick={(e) => handleItemClick(item, e)}
-            onMouseEnter={() => {
-              if (hasChildren && variant !== "sidebar") {
-                setOpenSubmenus((prev) => new Set([...prev, item.id]));
-              }
-            }}
-            onMouseLeave={() => {
-              if (hasChildren && variant !== "sidebar") {
-                setOpenSubmenus((prev) => {
-                  const newSet = new Set(prev);
-                  newSet.delete(item.id);
-                  return newSet;
-                });
-              }
-            }}
+            onMouseEnter={() => handleItemMouseEnter(item)}
+            onMouseLeave={() => handleItemMouseLeave(item)}
             role="menuitem"
             tabIndex={item.disabled ? -1 : 0}
             aria-disabled={item.disabled}
             aria-expanded={hasChildren ? isSubmenuOpen : undefined}
+            aria-haspopup={hasChildren ? "menu" : undefined}
           >
             {item.icon && (
               <span className="dd-menu__item-icon">
@@ -181,6 +284,10 @@ const DDMenu = ({
                   height="16"
                   viewBox="0 0 16 16"
                   fill="currentColor"
+                  style={{
+                    transform: variant === "sidebar" && isSubmenuOpen ? "rotate(90deg)" : undefined,
+                    transition: "transform 0.2s ease"
+                  }}
                 >
                   <path
                     d="M6 4l4 4-4 4"
@@ -203,6 +310,8 @@ const DDMenu = ({
                 ${isSubmenuOpen ? "dd-menu__submenu--open" : ""}
               `.trim()}
               role="menu"
+              onMouseEnter={() => handleSubmenuMouseEnter(item.id)}
+              onMouseLeave={() => handleSubmenuMouseLeave(item.id)}
             >
               {renderMenuItems(item.children!, level + 1)}
             </ul>
@@ -210,7 +319,17 @@ const DDMenu = ({
         </li>
       );
     });
-  };
+  }, [
+    openSubmenus,
+    hoveringItem,
+    handleItemClick,
+    handleItemMouseEnter,
+    handleItemMouseLeave,
+    handleSubmenuMouseEnter,
+    handleSubmenuMouseLeave,
+    variant
+  ]);
+
   // Default trigger if none provided
   const defaultTrigger = (
     <button
@@ -248,7 +367,8 @@ const DDMenu = ({
       `.trim()}
       style={style}
       data-theme={theme}
-    >      {trigger ? (
+    >
+      {trigger ? (
         <div
           ref={customTriggerRef}
           onClick={() => !disabled && setIsOpen(!isOpen)}

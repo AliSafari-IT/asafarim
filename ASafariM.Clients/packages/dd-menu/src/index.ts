@@ -7,6 +7,3 @@ export type {
   DDMenuVariant, 
   DDMenuSize, 
 } from "./components/DDMenu";
-
-// Also export the props interface
-export type { DDMenuProps } from "./components/DDMenu";

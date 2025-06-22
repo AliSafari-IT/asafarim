@@ -1,6 +1,7 @@
 import React from 'react';
 import { DDMenu, MenuItem } from '@asafarim/dd-menu';
 import '@asafarim/dd-menu/dist/index.css';
+import '../styles/enhanced-dropdown.css';
 
 const MinimalDDMenuShowcase: React.FC = () => {
   const menuItems: MenuItem[] = [
@@ -44,8 +45,8 @@ const MinimalDDMenuShowcase: React.FC = () => {
   return (
     <div style={{ 
       padding: '40px', 
-      background: '#fafbfc', 
-      minHeight: '100vh',
+      background: 'linear-gradient(to bottom, #f9fafb, #f3f4f6)', 
+      borderRadius: '12px',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif'
     }}>
       <div style={{ 
@@ -59,7 +60,10 @@ const MinimalDDMenuShowcase: React.FC = () => {
           fontWeight: '700', 
           color: '#1f2937',
           marginBottom: '16px',
-          letterSpacing: '-0.02em'
+          letterSpacing: '-0.02em',
+          background: 'linear-gradient(135deg, #3b82f6 0%, #6366f1 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent'
         }}>
           DDMenu - Minimal & Elegant
         </h1>
@@ -79,9 +83,9 @@ const MinimalDDMenuShowcase: React.FC = () => {
       <div style={{ 
         background: '#ffffff', 
         padding: '12px 24px',
-        borderRadius: '8px',
+        borderRadius: '12px',
         marginBottom: '40px',
-        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -91,15 +95,13 @@ const MinimalDDMenuShowcase: React.FC = () => {
         <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
           <DDMenu 
             items={menuItems} 
-            variant="navbar" 
-            size="md"
+            className="dd-menu--navbar dd-menu--md"
             trigger={<span style={{ padding: '8px 12px', cursor: 'pointer', color: '#374151' }}>Navigation</span>}
             placement="bottom-end"
           />
           <DDMenu 
             items={profileMenuItems} 
-            variant="minimal" 
-            size="sm"
+            className="dd-menu--minimal dd-menu--sm"
             trigger={
               <div style={{ 
                 width: '32px', 
@@ -137,7 +139,7 @@ const MinimalDDMenuShowcase: React.FC = () => {
           border: '1px solid #e5e7eb'
         }}>
           <h3 style={{ marginBottom: '16px', color: '#1f2937', fontSize: '16px', fontWeight: '600' }}>Default</h3>
-          <DDMenu items={menuItems} variant="default" size="md" />
+          <DDMenu items={menuItems} className="dd-menu--default dd-menu--md" />
         </div>
 
         {/* Minimal Variant */}
@@ -148,7 +150,7 @@ const MinimalDDMenuShowcase: React.FC = () => {
           border: '1px solid #e5e7eb'
         }}>
           <h3 style={{ marginBottom: '16px', color: '#1f2937', fontSize: '16px', fontWeight: '600' }}>Minimal</h3>
-          <DDMenu items={menuItems} variant="minimal" size="md" />
+          <DDMenu items={menuItems} className="dd-menu--minimal dd-menu--md" />
         </div>
 
         {/* Small Size */}
@@ -159,7 +161,7 @@ const MinimalDDMenuShowcase: React.FC = () => {
           border: '1px solid #e5e7eb'
         }}>
           <h3 style={{ marginBottom: '16px', color: '#1f2937', fontSize: '16px', fontWeight: '600' }}>Small Size</h3>
-          <DDMenu items={menuItems} variant="default" size="sm" />
+          <DDMenu items={menuItems} className="dd-menu--default dd-menu--sm" />
         </div>
 
         {/* Large Size */}
@@ -170,7 +172,7 @@ const MinimalDDMenuShowcase: React.FC = () => {
           border: '1px solid #e5e7eb'
         }}>
           <h3 style={{ marginBottom: '16px', color: '#1f2937', fontSize: '16px', fontWeight: '600' }}>Large Size</h3>
-          <DDMenu items={menuItems} variant="default" size="lg" />
+          <DDMenu items={menuItems} className="dd-menu--default dd-menu--lg" />
         </div>
       </div>
 
@@ -197,8 +199,8 @@ const MinimalDDMenuShowcase: React.FC = () => {
           justifyContent: 'center',
           flexWrap: 'wrap'
         }}>
-          <DDMenu items={menuItems} theme="dark" variant="default" size="md" />
-          <DDMenu items={menuItems} theme="dark" variant="minimal" size="md" />
+          <DDMenu items={menuItems} theme="dark" className="dd-menu--default dd-menu--md" />
+          <DDMenu items={menuItems} theme="dark" className="dd-menu--minimal dd-menu--md" />
         </div>
       </div>
 
@@ -227,7 +229,7 @@ const MinimalDDMenuShowcase: React.FC = () => {
           padding: '16px',
           background: '#f9fafb'
         }}>
-          <DDMenu items={menuItems} variant="sidebar" size="md" />
+          <DDMenu items={menuItems} className="dd-menu--sidebar dd-menu--md" />
         </div>
       </div>
 
@@ -257,7 +259,7 @@ const MinimalDDMenuShowcase: React.FC = () => {
           {/* Button Trigger */}
           <DDMenu 
             items={menuItems} 
-            variant="minimal"
+            className="dd-menu--minimal"
             trigger={
               <button style={{
                 background: '#3b82f6',
@@ -277,7 +279,7 @@ const MinimalDDMenuShowcase: React.FC = () => {
           {/* Icon Trigger */}
           <DDMenu 
             items={profileMenuItems} 
-            variant="minimal"
+            className="dd-menu--minimal"
             trigger={
               <div style={{
                 width: '40px',
@@ -300,7 +302,7 @@ const MinimalDDMenuShowcase: React.FC = () => {
           {/* Text Trigger */}
           <DDMenu 
             items={menuItems} 
-            variant="navbar"
+            className="dd-menu--navbar"
             trigger={
               <span style={{
                 color: '#3b82f6',

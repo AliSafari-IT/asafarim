@@ -335,7 +335,12 @@ const DDMenu = ({
     <button
       ref={buttonTriggerRef}
       className="dd-menu__trigger"
-      onClick={() => !disabled && setIsOpen(!isOpen)}
+      onClick={(e) => {
+        e.stopPropagation();
+        if (!disabled) {
+          setIsOpen(!isOpen);
+        }
+      }}
       disabled={disabled}
       aria-expanded={isOpen}
       aria-haspopup="menu"
@@ -371,7 +376,12 @@ const DDMenu = ({
       {trigger ? (
         <div
           ref={customTriggerRef}
-          onClick={() => !disabled && setIsOpen(!isOpen)}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!disabled) {
+              setIsOpen(!isOpen);
+            }
+          }}
           className="dd-menu__custom-trigger"
         >
           {trigger}

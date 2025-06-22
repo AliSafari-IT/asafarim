@@ -33,8 +33,11 @@ deploy/**
 build/
 dist/
 
-# Recursively ignore all files in dist/ directory
+# Recursively ignore all files in dist/ directory except dd-menu
 dist/**
+!ASafariM.Clients/packages/dd-menu/dist/**
+!ASafariM.Clients/packages/dd-menu/src/**
+!ASafariM.Clients/packages/dd-menu/src/components/**
 
 # Ignore .env files
 .env
@@ -101,8 +104,7 @@ Desktop.ini
 $RECYCLE.BIN/
 
 # Ignore the local NuGet packages folder
-**/packages/*
-!ASafariM.Clients/packages/*
+
 
 # Ignore the .NET Core global tools folder
 .dotnet_tool/

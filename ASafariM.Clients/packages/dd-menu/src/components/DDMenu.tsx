@@ -54,13 +54,13 @@ const DDMenu = ({
   // Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      // Prevent immediate closure by checking if the click target is part of the menu system
       const currentTrigger = buttonTriggerRef.current || customTriggerRef.current;
-      if (
-        menuRef.current &&
-        currentTrigger &&
-        !menuRef.current.contains(event.target as Node) &&
-        !currentTrigger.contains(event.target as Node)
-      ) {
+      const isClickInsideTrigger = currentTrigger && currentTrigger.contains(event.target as Node);
+      const isClickInsideMenu = menuRef.current && menuRef.current.contains(event.target as Node);
+      
+      // Only close if click is outside both trigger and menu
+      if (!isClickInsideTrigger && !isClickInsideMenu) {
         setIsOpen(false);
         setOpenSubmenus(new Set());
         setHoveringItem(null);
@@ -69,7 +69,11 @@ const DDMenu = ({
     };
 
     if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
+      // Use mousedown for better responsiveness, but add a small delay to prevent immediate closure
+      setTimeout(() => {
+        document.addEventListener("mousedown", handleClickOutside);
+      }, 50);
+      
       return () => {
         document.removeEventListener("mousedown", handleClickOutside);
         clearAllTimeouts();
@@ -336,7 +340,8 @@ const DDMenu = ({
       ref={buttonTriggerRef}
       className="dd-menu__trigger"
       onClick={(e) => {
-        e.stopPropagation();
+        e.preventDefault(); // Prevent default browser behavior
+        e.stopPropagation(); // Stop event propagation
         if (!disabled) {
           setIsOpen(!isOpen);
         }
@@ -377,7 +382,8 @@ const DDMenu = ({
         <div
           ref={customTriggerRef}
           onClick={(e) => {
-            e.stopPropagation();
+            e.preventDefault(); // Prevent default browser behavior
+            e.stopPropagation(); // Stop propagation to parent elements
             if (!disabled) {
               setIsOpen(!isOpen);
             }
@@ -396,6 +402,7 @@ const DDMenu = ({
           className={`dd-menu__content dd-menu__content--${placement}`}
           role="menu"
           aria-orientation="vertical"
+          onClick={(e) => e.stopPropagation()} /* Prevent clicks inside menu from bubbling up */
         >
           <ul className="dd-menu__list" role="none">
             {renderMenuItems(items)}

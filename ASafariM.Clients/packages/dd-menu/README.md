@@ -6,7 +6,7 @@
 
 A powerful, customizable dropdown menu component for React with TypeScript. Features recursive nesting, multiple themes, custom triggers, and accessibility support.
 
-![DD Menu Showcase](./public/dd-down.png)
+![DD Menu Showcase](./dist/dd-down.png)
 
 ## Features
 
@@ -70,7 +70,7 @@ const App = () => {
 
 ### Navigation Menu
 
-![Navbar Dropdown](./public/dd-navbar-item.png)
+![Navbar Dropdown](./dist/dd-navbar-item.png)
 
 ```tsx
 <DDMenu
@@ -90,7 +90,7 @@ const App = () => {
 
 ### User Profile Menu
 
-![User Profile Dropdown](./public/user-profile-showcase.png)
+![User Profile Dropdown](./dist/user-profile-showcase.png)
 
 ```tsx
 <DDMenu
@@ -122,7 +122,7 @@ const App = () => {
 
 ### Searchable Dropdown
 
-![Searchable Dropdown](./public/dd-searchable-option.png)
+![Searchable Dropdown](./dist/dd-searchable-option.png)
 
 ```tsx
 <div className="searchable-dropdown">

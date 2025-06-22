@@ -110,6 +110,7 @@ const DDMenu = ({
     const existingTimeout = submenuTimeoutRef.current.get(id);
     if (existingTimeout) {
       clearTimeout(existingTimeout);
+      submenuTimeoutRef.current.delete(id);
     }
 
     // For sidebar variant, open immediately
@@ -118,14 +119,18 @@ const DDMenu = ({
       return;
     }
 
-    // For other variants, use hover delay
+    // Set timeout to open submenu - use immediate opening (0ms delay) for better UX
     const timeout = setTimeout(() => {
-      setOpenSubmenus((prev) => new Set([...prev, id]));
+      setOpenSubmenus((prev) => {
+        const newSet = new Set(prev);
+        newSet.add(id);
+        return newSet;
+      });
       submenuTimeoutRef.current.delete(id);
-    }, hoverDelay);
+    }, 0);
 
     submenuTimeoutRef.current.set(id, timeout);
-  }, [variant, hoverDelay]);
+  }, [variant]);
 
   // Improved submenu closing with delay
   const closeSubmenuWithDelay = useCallback((id: string) => {

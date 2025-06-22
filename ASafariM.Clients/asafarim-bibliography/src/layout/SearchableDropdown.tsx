@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { MenuItem } from '@asafarim/dd-menu';
+import { DDMenu, MenuItem } from '@asafarim/dd-menu';
 import '@asafarim/dd-menu/dist/index.css';
 import '../styles/professional-dropdown.css';
-import StableDropdown from '../components/StableDropdown';
 
 const SearchableDropdown: React.FC = () => {
   // Sample data for demonstration
@@ -219,13 +218,13 @@ const SearchableDropdown: React.FC = () => {
       </p>
       
       <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-        {/* Custom searchable dropdown with StableDropdown wrapper */}
+        {/* Custom searchable dropdown */}
         <div>
-          <StableDropdown
+          <DDMenu
             items={allItems}
             className="pro-dropdown pro-dropdown--default pro-dropdown--md"
             trigger={customTrigger}
-            onItemClick={(item) => {
+            onItemClick={(item: MenuItem) => {
               if (item.onClick) item.onClick();
             }}
           />

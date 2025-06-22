@@ -1,7 +1,6 @@
 import React from 'react';
 import { DDMenu, MenuItem } from '@asafarim/dd-menu';
 import '@asafarim/dd-menu/dist/index.css';
-import StableDropdown from '../components/StableDropdown';
 
 const ElegantDropdownShowcase: React.FC = () => {
   // Main navigation menu items
@@ -153,7 +152,7 @@ const ElegantDropdownShowcase: React.FC = () => {
               alignItems: 'center' 
             }}>
               {/* Navigation Menu */}
-              <StableDropdown 
+              <DDMenu 
                 items={navMenuItems} 
                 className="dd-menu--navbar"
                 trigger={
@@ -174,7 +173,7 @@ const ElegantDropdownShowcase: React.FC = () => {
               />
 
               {/* Profile Menu */}
-              <StableDropdown 
+              <DDMenu 
                 items={profileMenuItems} 
                 className="dd-menu--navbar"
                 trigger={
@@ -258,7 +257,7 @@ const ElegantDropdownShowcase: React.FC = () => {
               }}>
                 Ultra Minimal
               </h3>
-              <StableDropdown 
+              <DDMenu 
                 items={navMenuItems} 
                 className="dd-menu--minimal dd-menu--md"
                 trigger={
@@ -298,7 +297,7 @@ const ElegantDropdownShowcase: React.FC = () => {
               }}>
                 Small Size
               </h3>
-              <StableDropdown 
+              <DDMenu 
                 items={navMenuItems} 
                 className="dd-menu--minimal dd-menu--sm"
                 trigger={
@@ -339,7 +338,7 @@ const ElegantDropdownShowcase: React.FC = () => {
               }}>
                 Large Size
               </h3>
-              <StableDropdown 
+              <DDMenu 
                 items={navMenuItems} 
                 className="dd-menu--minimal dd-menu--lg"
                 trigger={

@@ -2,7 +2,6 @@ import React from 'react';
 import { DDMenu, MenuItem } from '@asafarim/dd-menu';
 import '@asafarim/dd-menu/dist/index.css';
 import '../styles/professional-dropdown.css';
-import StableDropdown from '../components/StableDropdown';
 
 const ProfessionalDropdownShowcase: React.FC = () => {
   // Main navigation items
@@ -138,7 +137,7 @@ const ProfessionalDropdownShowcase: React.FC = () => {
           </div>
           
           <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
-            <StableDropdown 
+            <DDMenu 
               items={navItems} 
               className="pro-dropdown pro-dropdown--navbar pro-dropdown--md"
               trigger={
@@ -153,7 +152,7 @@ const ProfessionalDropdownShowcase: React.FC = () => {
               }
             />
             
-            <StableDropdown 
+            <DDMenu 
               items={profileItems} 
               className="pro-dropdown pro-dropdown--minimal pro-dropdown--md"
               trigger={
@@ -194,7 +193,7 @@ const ProfessionalDropdownShowcase: React.FC = () => {
             <h4 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: '500', color: '#475569' }}>
               Default Style
             </h4>
-            <StableDropdown 
+            <DDMenu 
               items={navItems} 
               className="pro-dropdown pro-dropdown--default pro-dropdown--md"
               trigger={
@@ -215,7 +214,7 @@ const ProfessionalDropdownShowcase: React.FC = () => {
             <h4 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: '500', color: '#475569' }}>
               Minimal Style
             </h4>
-            <StableDropdown 
+            <DDMenu 
               items={navItems} 
               className="pro-dropdown pro-dropdown--minimal pro-dropdown--md"
               trigger={
@@ -240,7 +239,7 @@ const ProfessionalDropdownShowcase: React.FC = () => {
             <h4 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: '500', color: '#f8fafc' }}>
               Dark Style
             </h4>
-            <StableDropdown 
+            <DDMenu 
               items={navItems} 
               className="pro-dropdown pro-dropdown--dark pro-dropdown--md"
               trigger={
@@ -266,7 +265,7 @@ const ProfessionalDropdownShowcase: React.FC = () => {
               Size Variants
             </h4>
             <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-              <StableDropdown 
+              <DDMenu 
                 items={navItems} 
                 className="pro-dropdown pro-dropdown--minimal pro-dropdown--sm"
                 trigger={
@@ -279,7 +278,7 @@ const ProfessionalDropdownShowcase: React.FC = () => {
                 }
               />
               
-              <StableDropdown 
+              <DDMenu 
                 items={navItems} 
                 className="pro-dropdown pro-dropdown--minimal pro-dropdown--md"
                 trigger={
@@ -289,7 +288,7 @@ const ProfessionalDropdownShowcase: React.FC = () => {
                 }
               />
               
-              <StableDropdown 
+              <DDMenu 
                 items={navItems} 
                 className="pro-dropdown pro-dropdown--minimal pro-dropdown--lg"
                 trigger={
@@ -332,7 +331,7 @@ const ProfessionalDropdownShowcase: React.FC = () => {
           {/* Button Trigger */}
           <div style={{ textAlign: 'center' }}>
             <p style={{ marginBottom: '12px', fontSize: '14px', color: '#64748b' }}>Button</p>
-            <StableDropdown 
+            <DDMenu 
               items={navItems} 
               className="pro-dropdown pro-dropdown--minimal pro-dropdown--md"
               trigger={
@@ -346,7 +345,7 @@ const ProfessionalDropdownShowcase: React.FC = () => {
           {/* Icon Trigger */}
           <div style={{ textAlign: 'center' }}>
             <p style={{ marginBottom: '12px', fontSize: '14px', color: '#64748b' }}>Icon</p>
-            <StableDropdown 
+            <DDMenu 
               items={profileItems} 
               className="pro-dropdown pro-dropdown--minimal pro-dropdown--md"
               trigger={
@@ -360,7 +359,7 @@ const ProfessionalDropdownShowcase: React.FC = () => {
           {/* Text Trigger */}
           <div style={{ textAlign: 'center' }}>
             <p style={{ marginBottom: '12px', fontSize: '14px', color: '#64748b' }}>Text</p>
-            <StableDropdown 
+            <DDMenu 
               items={navItems} 
               className="pro-dropdown pro-dropdown--minimal pro-dropdown--md"
               trigger={
@@ -374,7 +373,7 @@ const ProfessionalDropdownShowcase: React.FC = () => {
           {/* Avatar Trigger */}
           <div style={{ textAlign: 'center' }}>
             <p style={{ marginBottom: '12px', fontSize: '14px', color: '#64748b' }}>Avatar</p>
-            <StableDropdown 
+            <DDMenu 
               items={profileItems} 
               className="pro-dropdown pro-dropdown--minimal pro-dropdown--md"
               trigger={

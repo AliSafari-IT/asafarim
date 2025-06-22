@@ -1,11 +1,12 @@
 import React from "react";
-import ElegantDropdownShowcase from "./ElegantDropdownShowcase";
-import MinimalDDMenuShowcase from "./MinimalDDMenuShowcase";
-import ProfessionalDropdownShowcase from "./ProfessionalDropdownShowcase";
-import SearchableDropdown from "./SearchableDropdown";
-import "../styles/enhanced-dropdown.css";
-import '../styles/professional-dropdown.css';
-import DDMenu, { MenuItem } from "@asafarim/dd-menu";
+// import ElegantDropdownShowcase from "./ElegantDropdownShowcase";
+// import MinimalDDMenuShowcase from "./MinimalDDMenuShowcase";
+// import ProfessionalDropdownShowcase from "./ProfessionalDropdownShowcase";
+// import SearchableDropdown from "./SearchableDropdown";
+// import "../styles/enhanced-dropdown.css";
+// import '../styles/professional-dropdown.css';
+import DDMenu, { MenuItem } from "../../../packages/dd-menu";
+import "@asafarim/dd-menu/dist/index.css";
 
 const TestComponent: React.FC = () => {
   const navMenuItems: MenuItem[] = [

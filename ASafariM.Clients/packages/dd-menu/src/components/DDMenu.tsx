@@ -102,6 +102,9 @@ const DDMenu = ({
       }
       return newSet;
     });
+    
+    // Ensure the item is being hovered
+    setHoveringItem(id);
   }, []);
 
   // Improved submenu opening with delay
@@ -119,17 +122,12 @@ const DDMenu = ({
       return;
     }
 
-    // Set timeout to open submenu - use immediate opening (0ms delay) for better UX
-    const timeout = setTimeout(() => {
-      setOpenSubmenus((prev) => {
-        const newSet = new Set(prev);
-        newSet.add(id);
-        return newSet;
-      });
-      submenuTimeoutRef.current.delete(id);
-    }, 0);
-
-    submenuTimeoutRef.current.set(id, timeout);
+    // Open immediately for better UX
+    setOpenSubmenus((prev) => {
+      const newSet = new Set(prev);
+      newSet.add(id);
+      return newSet;
+    });
   }, [variant]);
 
   // Improved submenu closing with delay
@@ -201,6 +199,7 @@ const DDMenu = ({
     setHoveringItem(item.id);
     
     if (item.children?.length && variant !== "sidebar") {
+      // Immediately open submenu on hover
       openSubmenuWithDelay(item.id);
     }
   }, [variant, openSubmenuWithDelay]);
@@ -224,6 +223,16 @@ const DDMenu = ({
       clearTimeout(existingTimeout);
       submenuTimeoutRef.current.delete(itemId);
     }
+    
+    // Ensure the submenu stays open
+    setOpenSubmenus((prev) => {
+      const newSet = new Set(prev);
+      newSet.add(itemId);
+      return newSet;
+    });
+    
+    // Keep track of hovering item
+    setHoveringItem(itemId);
   }, []);
 
   // Handle submenu mouse leave

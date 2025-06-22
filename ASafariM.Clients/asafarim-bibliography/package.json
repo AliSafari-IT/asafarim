@@ -30,7 +30,7 @@
     ]
   },
   "dependencies": {
-    "@asafarim/dd-menu": "^1.1.7",
+    "@asafarim/dd-menu": "^1.1.8",
     "@headlessui/react": "^2.0.0",
     "@heroicons/react": "^2.1.1",
     "@reduxjs/toolkit": "^2.2.1",

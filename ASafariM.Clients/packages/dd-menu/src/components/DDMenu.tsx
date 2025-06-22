@@ -5,7 +5,7 @@ import "../styles/dd-menu.css";
 export type DDMenuVariant = "default" | "minimal" | "navbar" | "sidebar";
 export type DDMenuSize = "sm" | "md" | "lg";
 
-interface DDMenuProps {
+export interface DDMenuProps {
   items: MenuItem[];
   theme?: "light" | "dark" | "auto";
   variant?: DDMenuVariant;

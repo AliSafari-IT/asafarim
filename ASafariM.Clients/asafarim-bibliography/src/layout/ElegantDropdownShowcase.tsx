@@ -1,6 +1,7 @@
 import React from 'react';
 import { DDMenu, MenuItem } from '@asafarim/dd-menu';
 import '@asafarim/dd-menu/dist/index.css';
+import StableDropdown from '../components/StableDropdown';
 
 const ElegantDropdownShowcase: React.FC = () => {
   // Main navigation menu items
@@ -152,30 +153,30 @@ const ElegantDropdownShowcase: React.FC = () => {
               alignItems: 'center' 
             }}>
               {/* Navigation Menu */}
-              <DDMenu 
+              <StableDropdown 
                 items={navMenuItems} 
-                variant="navbar" 
-                size="md"
+                className="dd-menu--navbar"
                 trigger={
-                  <span style={{ 
-                    padding: '8px 16px', 
-                    cursor: 'pointer', 
-                    color: '#374151',
-                    fontWeight: '500',
-                    borderRadius: '6px',
-                    transition: 'all 0.12s ease'
-                  }}>
-                    Navigation
-                  </span>
+                  <div className="elegant-navbar__item">
+                    <span>Products</span>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                      <path
+                        d="M4 6l4 4 4-4"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </div>
                 }
-                placement="bottom-end"
               />
 
               {/* Profile Menu */}
-              <DDMenu 
+              <StableDropdown 
                 items={profileMenuItems} 
-                variant="navbar" 
-                size="md"
+                className="dd-menu--navbar"
                 trigger={
                   <div style={{
                     display: 'flex',
@@ -257,10 +258,9 @@ const ElegantDropdownShowcase: React.FC = () => {
               }}>
                 Ultra Minimal
               </h3>
-              <DDMenu 
+              <StableDropdown 
                 items={navMenuItems} 
-                variant="minimal" 
-                size="md"
+                className="dd-menu--minimal dd-menu--md"
                 trigger={
                   <span style={{ 
                     color: '#374151',
@@ -298,10 +298,9 @@ const ElegantDropdownShowcase: React.FC = () => {
               }}>
                 Small Size
               </h3>
-              <DDMenu 
+              <StableDropdown 
                 items={navMenuItems} 
-                variant="minimal" 
-                size="sm"
+                className="dd-menu--minimal dd-menu--sm"
                 trigger={
                   <span style={{ 
                     color: '#374151',
@@ -340,10 +339,9 @@ const ElegantDropdownShowcase: React.FC = () => {
               }}>
                 Large Size
               </h3>
-              <DDMenu 
+              <StableDropdown 
                 items={navMenuItems} 
-                variant="minimal" 
-                size="lg"
+                className="dd-menu--minimal dd-menu--lg"
                 trigger={
                   <span style={{ 
                     color: '#374151',

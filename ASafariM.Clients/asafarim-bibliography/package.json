@@ -1,6 +1,6 @@
 {
   "name": "asafarim-bibliography",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "repository": "https://github.com/AliSafari-IT/asafarim.git",
@@ -30,7 +30,7 @@
     ]
   },
   "dependencies": {
-    "@asafarim/dd-menu": "^1.1.8",
+    "@asafarim/dd-menu": "^1.1.9",
     "@headlessui/react": "^2.0.0",
     "@heroicons/react": "^2.1.1",
     "@reduxjs/toolkit": "^2.2.1",

@@ -6,8 +6,6 @@ import {
   XMarkIcon,
   BookOpenIcon,
   PlusIcon,
-  SunIcon,
-  MoonIcon,
 } from "@heroicons/react/24/outline";
 import DDMenu, { MenuItem } from "@asafarim/dd-menu";
 import { ThemeToggle, useTheme } from "@asafarim/react-themes";

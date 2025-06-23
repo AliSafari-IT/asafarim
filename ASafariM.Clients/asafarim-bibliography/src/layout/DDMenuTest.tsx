@@ -12,7 +12,12 @@ import "@asafarim/dd-menu/dist/index.css";
 const TestComponent: React.FC = () => {
   const theme = localStorage.getItem("theme") as "auto" | "light" | "dark";
   const allItems: MenuItem[] = [
-    { id: "dashboard", label: "Dashboard", link: "/dashboard", icon: "🏠" },
+    {
+      id: "dashboard",
+      label: "Dashboard",
+      link: "https://asafarim.com/dashboard",
+      icon: "🏠",
+    },
     { id: "projects", label: "Projects", link: "/projects", icon: "📁" },
     { id: "tasks", label: "Tasks", link: "/tasks", icon: "✅" },
     { id: "calendar", label: "Calendar", link: "/calendar", icon: "📅" },
@@ -96,9 +101,9 @@ const TestComponent: React.FC = () => {
         >
           <span>🔍</span> Search Menu Items
         </div>
-        
+
         {isOpen && (
-          <div 
+          <div
             className="searchable-dropdown__menu"
             style={{
               position: "absolute",
@@ -115,7 +120,7 @@ const TestComponent: React.FC = () => {
               flexDirection: "column",
             }}
           >
-            <div 
+            <div
               className="searchable-dropdown__search"
               style={{
                 padding: "12px",
@@ -141,25 +146,26 @@ const TestComponent: React.FC = () => {
                     setIsOpen(false);
                   } else if (e.key === "ArrowDown") {
                     e.preventDefault();
-                    setFocusedIndex(prev => 
+                    setFocusedIndex((prev) =>
                       prev < filteredItems.length - 1 ? prev + 1 : prev
                     );
                   } else if (e.key === "ArrowUp") {
                     e.preventDefault();
-                    setFocusedIndex(prev => prev > 0 ? prev - 1 : prev);
+                    setFocusedIndex((prev) => (prev > 0 ? prev - 1 : prev));
                   } else if (e.key === "Enter" && focusedIndex >= 0) {
                     const selectedItem = filteredItems[focusedIndex];
                     if (selectedItem && !selectedItem.disabled) {
                       if (selectedItem.onClick) selectedItem.onClick();
-                      if (selectedItem.link) window.location.href = selectedItem.link;
+                      if (selectedItem.link)
+                        window.location.href = selectedItem.link;
                       setIsOpen(false);
                     }
                   }
                 }}
               />
             </div>
-            
-            <div 
+
+            <div
               className="searchable-dropdown__items"
               style={{
                 overflowY: "auto",
@@ -170,14 +176,17 @@ const TestComponent: React.FC = () => {
                 filteredItems.map((item, index) => (
                   <div
                     key={item.id}
-                    className={`searchable-dropdown__item ${focusedIndex === index ? 'focused' : ''}`}
+                    className={`searchable-dropdown__item ${
+                      focusedIndex === index ? "focused" : ""
+                    }`}
                     style={{
                       padding: "8px 16px",
                       cursor: "pointer",
                       display: "flex",
                       alignItems: "center",
                       gap: "8px",
-                      backgroundColor: focusedIndex === index ? "#f3f4f6" : "transparent",
+                      backgroundColor:
+                        focusedIndex === index ? "#f3f4f6" : "transparent",
                       color: item.disabled ? "#9ca3af" : "#374151",
                     }}
                     onClick={() => {
@@ -194,7 +203,7 @@ const TestComponent: React.FC = () => {
                   </div>
                 ))
               ) : (
-                <div 
+                <div
                   style={{
                     padding: "16px",
                     textAlign: "center",
@@ -216,7 +225,7 @@ const TestComponent: React.FC = () => {
     {
       id: "dashboard",
       label: "Dashboard",
-      link: "/dashboard",
+      link: "https://asafarim.com/dashboard",
       icon: "🏠",
     },
     {
@@ -227,19 +236,19 @@ const TestComponent: React.FC = () => {
         {
           id: "active-projects",
           label: "Active Projects",
-          link: "/projects/active",
+          link: "https://asafarim.com/projects",
           icon: "⚡",
         },
         {
           id: "completed",
           label: "Completed",
-          link: "/projects/completed",
+          link: "https://asafarim.com/projects",
           icon: "✅",
         },
         {
           id: "archive",
           label: "Archive",
-          link: "/projects/archive",
+          link: "https://asafarim.com/projects",
           icon: "📦",
         },
       ],
@@ -552,89 +561,113 @@ const TestComponent: React.FC = () => {
       <div
         style={{ padding: "40px", background: "white", borderRadius: "12px" }}
       >
-        <h3
-          style={{
-            fontSize: "18px",
-            fontWeight: "600",
-            color: "#334155",
-            marginBottom: "20px",
-          }}
-        >
-          Searchable Dropdown Menu
-        </h3>
-
-        <p
-          style={{
-            fontSize: "15px",
-            color: "#64748b",
-            marginBottom: "20px",
-            maxWidth: "600px",
-          }}
-        >
-          This enhanced dropdown features a search input to quickly filter
-          through menu items. Perfect for menus with many options or for
-          improving user experience.
-        </p>
-
-        <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
-          {/* Custom searchable dropdown */}
-          <div style={{ position: "relative" }}>
-            <SearchableDropdownMenu />
-          </div>
-        </div>
-      </div>
-
-      {/* Features */}
-      <div
-        style={{
-          marginTop: "40px",
-          textAlign: "center",
-          background: "#ffffff",
-          padding: "32px",
-          borderRadius: "8px",
-          border: "1px solid #e5e7eb",
-        }}
-      >
-        <h3
-          style={{
-            fontSize: "18px",
-            fontWeight: "600",
-            color: "#1f2937",
-            marginBottom: "24px",
-          }}
-        >
-          Key Features
-        </h3>
+        {/* Sidebar Example */}
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-            gap: "16px",
+            maxWidth: "800px",
+            margin: "0 auto",
+            padding: "24px",
+            background: "#f9fafb",
+            borderRadius: "8px",
+            border: "1px solid #e5e7eb",
           }}
         >
-          {[
-            "🎨 Minimal & clean design",
-            "⚡ Multiple variants",
-            "🎯 TypeScript support",
-            "📱 Mobile responsive",
-            "♿ Accessible",
-            "🎨 Custom triggers",
-          ].map((feature, index) => (
-            <div
-              key={index}
-              style={{
-                padding: "12px",
-                background: "#f9fafb",
-                borderRadius: "6px",
-                border: "1px solid #e5e7eb",
-                color: "#6b7280",
-                fontSize: "13px",
-                fontWeight: "500",
-              }}
-            >
-              {feature}
+          <h2
+            style={{
+              color: "#1f2937",
+              marginBottom: "24px",
+              textAlign: "center",
+              fontSize: "20px",
+              fontWeight: "600",
+            }}
+          >
+            Sidebar Variant
+          </h2>
+            <DDMenu items={allItems} className="dd-menu--sidebar dd-menu--md" size="md" style={{width: "300px"}} theme={theme || "auto"}/>
+          <h3
+            style={{
+              fontSize: "18px",
+              fontWeight: "600",
+              color: "#334155",
+              marginBottom: "20px",
+            }}
+          >
+            Searchable Dropdown Menu
+          </h3>
+
+          <p
+            style={{
+              fontSize: "15px",
+              color: "#64748b",
+              marginBottom: "20px",
+              maxWidth: "600px",
+            }}
+          >
+            This enhanced dropdown features a search input to quickly filter
+            through menu items. Perfect for menus with many options or for
+            improving user experience.
+          </p>
+
+          <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
+            {/* Custom searchable dropdown */}
+            <div style={{ position: "relative" }}>
+              <SearchableDropdownMenu />
             </div>
-          ))}
+          </div>
+        </div>
+
+        {/* Features */}
+        <div
+          style={{
+            marginTop: "40px",
+            textAlign: "center",
+            background: "#ffffff",
+            padding: "32px",
+            borderRadius: "8px",
+            border: "1px solid #e5e7eb",
+          }}
+        >
+          <h3
+            style={{
+              fontSize: "18px",
+              fontWeight: "600",
+              color: "#1f2937",
+              marginBottom: "24px",
+            }}
+          >
+            Key Features
+          </h3>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+              gap: "16px",
+            }}
+          >
+            {[
+              "🎨 Minimal & clean design",
+              "⚡ Multiple variants",
+              "🎯 TypeScript support",
+              "📱 Mobile responsive",
+              "♿ Accessible",
+              "🎨 Custom triggers",
+            ].map((feature, index) => (
+              <div
+                key={index}
+                style={{
+                  padding: "12px",
+                  background: "#f9fafb",
+                  borderRadius: "6px",
+                  border: "1px solid #e5e7eb",
+                  color: "#6b7280",
+                  fontSize: "13px",
+                  fontWeight: "500",
+                }}
+              >
+                {feature}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

@@ -28,9 +28,9 @@ export default function Navbar() {
   const theme = localStorage.getItem("theme") as "auto" | "light" | "dark";
   const navMenuItems: MenuItem[] = [
     {
-      id: "dashboard",
-      label: "Dashboard",
-      link: "/dashboard",
+      id: "dd-menu",
+      label: "DD Menu",
+      link: "/dd",
       icon: "🏠",
     },
     {

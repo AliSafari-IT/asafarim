@@ -300,18 +300,144 @@ const TestComponent: React.FC = () => {
   ];
 
   return (
-    <div style={{ padding: "20px", maxWidth: "1200px", margin: "0 auto" }}>
-      <h1
+    <div style={{ padding: "20px", maxWidth: "1200px", margin: "0 auto" }}>      {/* Package Header */}
+      <div style={{ 
+        textAlign: "center", 
+        marginBottom: "40px",
+        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        padding: "32px 24px",
+        borderRadius: "16px",
+        color: "white",
+        position: "relative",
+        overflow: "hidden"
+      }}>
+        <div style={{ 
+          position: "relative", 
+          zIndex: 1 
+        }}>
+          <h1 style={{
+            fontSize: "36px",
+            fontWeight: "700",
+            marginBottom: "12px",
+            textShadow: "0 2px 4px rgba(0,0,0,0.1)"
+          }}>
+            @asafarim/dd-menu
+          </h1>
+          <p style={{
+            fontSize: "18px",
+            marginBottom: "20px",
+            opacity: 0.95,
+            fontWeight: "400"
+          }}>
+            A minimal, elegant, and highly customizable dropdown menu React component
+          </p>
+          <div style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "16px",
+            flexWrap: "wrap",
+            alignItems: "center"
+          }}>
+            <a 
+              href="https://www.npmjs.com/package/@asafarim/dd-menu" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "10px 20px",
+                background: "rgba(255, 255, 255, 0.2)",
+                borderRadius: "8px",
+                color: "white",
+                textDecoration: "none",
+                fontWeight: "500",
+                fontSize: "14px",
+                backdropFilter: "blur(10px)",
+                border: "1px solid rgba(255, 255, 255, 0.2)",
+                transition: "all 0.2s ease"
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.background = "rgba(255, 255, 255, 0.3)";
+                e.currentTarget.style.transform = "translateY(-2px)";
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.background = "rgba(255, 255, 255, 0.2)";
+                e.currentTarget.style.transform = "translateY(0)";
+              }}
+            >
+              📦 View on NPM
+            </a>
+            <span style={{
+              padding: "10px 20px",
+              background: "rgba(255, 255, 255, 0.15)",
+              borderRadius: "8px",
+              fontSize: "14px",
+              fontWeight: "500",
+              border: "1px solid rgba(255, 255, 255, 0.2)"
+            }}>
+              v1.2.3
+            </span>
+          </div>
+          <div style={{
+            marginTop: "24px",
+            display: "flex",
+            justifyContent: "center",
+            gap: "24px",
+            flexWrap: "wrap",
+            fontSize: "14px"
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <span>⚡</span> TypeScript Ready
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <span>🎨</span> Multiple Variants
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <span>📱</span> Mobile Responsive
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <span>♿</span> Accessible
+            </div>
+          </div>
+        </div>
+        
+        {/* Background decoration */}
+        <div style={{
+          position: "absolute",
+          top: "-50%",
+          right: "-20%",
+          width: "200px",
+          height: "200px",
+          background: "rgba(255, 255, 255, 0.1)",
+          borderRadius: "50%",
+          zIndex: 0
+        }} />
+        <div style={{
+          position: "absolute",
+          bottom: "-30%",
+          left: "-10%",
+          width: "150px",
+          height: "150px",
+          background: "rgba(255, 255, 255, 0.08)",
+          borderRadius: "50%",
+          zIndex: 0
+        }} />
+      </div>
+
+      <h2
         style={{
           marginBottom: "30px",
           textAlign: "center",
-          fontSize: "32px",
-          fontWeight: "bold",
+          fontSize: "28px",
+          fontWeight: "600",
           color: "#1e293b",
         }}
       >
-        Dropdown Menu Showcase
-      </h1>
+        Live Showcase & Examples
+      </h2>
+
+      {/* Elegant Dropdown Showcase */}
       <div
         style={{
           display: "flex",

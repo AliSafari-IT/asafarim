@@ -15,7 +15,7 @@ const TestComponent: React.FC = () => {
     {
       id: "dashboard",
       label: "Dashboard",
-      link: "https://asafarim.com/dashboard",
+      link: "https://asafarim.com/dashboard", 
       icon: "🏠",
     },
     { id: "projects", label: "Projects", link: "/projects", icon: "📁" },
@@ -583,7 +583,7 @@ const TestComponent: React.FC = () => {
           >
             Sidebar Variant
           </h2>
-            <DDMenu items={allItems} className="dd-menu--sidebar dd-menu--md" size="md" style={{width: "300px"}} theme={theme || "auto"}/>
+            <DDMenu items={allItems} className="dd-menu--sidebar dd-menu__item " size="md" style={{width: "300px"}} theme={"light"}/>
           <h3
             style={{
               fontSize: "18px",

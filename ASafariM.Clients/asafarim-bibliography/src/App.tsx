@@ -8,12 +8,13 @@ import BookForm from "./components/BookForm";
 import AppInfo from "./components/AppInfo";
 import "./components/AppInfo.css";
 import TestComponent from "./layout/DDMenuTest";
+import ThemeDebug from "./components/ThemeDebug";
 
 function App() {
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
-
   return (
     <div className="app-container">
+      <ThemeDebug />
       <Navbar />
       <main className="main-content">
         <Routes>

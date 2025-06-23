@@ -282,23 +282,6 @@ const TestComponent: React.FC = () => {
     },
   ];
 
-  // Sidebar menu items
-  const sidebarMenuItems: MenuItem[] = [
-    { id: "home", label: "Home", link: "/", icon: "🏠" },
-    {
-      id: "workspace",
-      label: "Workspace",
-      icon: "💼",
-      children: [
-        { id: "my-workspace", label: "My Workspace", link: "/workspace/mine" },
-        { id: "shared", label: "Shared with me", link: "/workspace/shared" },
-        { id: "recent", label: "Recent", link: "/workspace/recent" },
-      ],
-    },
-    { id: "favorites", label: "Favorites", link: "/favorites", icon: "⭐" },
-    { id: "trash", label: "Trash", link: "/trash", icon: "🗑️" },
-  ];
-
   return (
     <div style={{ padding: "20px", maxWidth: "1200px", margin: "0 auto" }}>      {/* Package Header */}
       <div style={{ 

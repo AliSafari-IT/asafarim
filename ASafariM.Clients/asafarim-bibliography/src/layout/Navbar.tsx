@@ -7,7 +7,6 @@ import {
   BookOpenIcon,
   PlusIcon,
 } from "@heroicons/react/24/outline";
-import TestComponent from "./DDMenuTest";
 import DDMenu, { MenuItem } from "@asafarim/dd-menu";
 
 const navigation = [

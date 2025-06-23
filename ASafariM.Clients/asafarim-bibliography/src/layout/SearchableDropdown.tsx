@@ -23,29 +23,13 @@ const SearchableDropdown: React.FC = () => {
   ];
 
   const [isOpen, setIsOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filteredItems, setFilteredItems] = useState<MenuItem[]>(allItems);
-  const [focusedIndex, setFocusedIndex] = useState(-1);
+  const [filteredItems, ] = useState<MenuItem[]>(allItems);
+  const [, setFocusedIndex] = useState(-1);
   
   // Reset focused index when filtered items change
   React.useEffect(() => {
     setFocusedIndex(-1);
   }, [filteredItems]);
-
-  // Handle search input change
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const term = e.target.value.toLowerCase();
-    setSearchTerm(term);
-    
-    if (term.trim() === '') {
-      setFilteredItems(allItems);
-    } else {
-      const filtered = allItems.filter(item => 
-        item.label.toLowerCase().includes(term)
-      );
-      setFilteredItems(filtered);
-    }
-  };
 
   // Handle keyboard events for accessibility
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -75,124 +59,6 @@ const SearchableDropdown: React.FC = () => {
       onKeyDown={handleKeyDown}
     >
       <span>🔍</span> Search Menu Items
-    </div>
-  );
-
-  // Custom dropdown content with search input
-  const customContent = (
-    <div className="pro-dropdown__content" style={{ padding: '12px', minWidth: '280px' }}>
-      <div style={{ marginBottom: '12px' }}>
-        <input
-          type="text"
-          placeholder="Search menu items..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-          style={{
-            width: '100%',
-            padding: '8px 12px',
-            borderRadius: '6px',
-            border: '1px solid #e2e8f0',
-            fontSize: '14px',
-            outline: 'none',
-            transition: 'border-color 0.2s ease',
-          }}
-          autoFocus
-          onFocus={(e) => e.target.select()}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') {
-              setIsOpen(false);
-              e.preventDefault();
-              e.stopPropagation();
-            } else if (e.key === 'ArrowDown') {
-              e.preventDefault();
-              setFocusedIndex(prev => (prev < filteredItems.length - 1 ? prev + 1 : 0));
-            } else if (e.key === 'ArrowUp') {
-              e.preventDefault();
-              setFocusedIndex(prev => (prev > 0 ? prev - 1 : filteredItems.length - 1));
-            } else if (e.key === 'Enter' && focusedIndex >= 0) {
-              e.preventDefault();
-              const item = filteredItems[focusedIndex];
-              if (item) {
-                if (item.onClick) item.onClick();
-                if (item.link) window.location.href = item.link;
-                setIsOpen(false);
-              }
-            }
-          }}
-        />
-      </div>
-      
-      {filteredItems.length > 0 ? (
-        <div className="pro-dropdown__items">
-          {filteredItems.map((item, index) => (
-            <div 
-              key={item.id} 
-              className={`pro-dropdown__item ${focusedIndex === index ? 'pro-dropdown__item--active' : ''}`}
-              onClick={() => {
-                if (item.onClick) item.onClick();
-                if (item.link) window.location.href = item.link;
-                setIsOpen(false);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  if (item.onClick) item.onClick();
-                  if (item.link) window.location.href = item.link;
-                  setIsOpen(false);
-                  e.preventDefault();
-                } else if (e.key === 'ArrowDown') {
-                  e.preventDefault();
-                  setFocusedIndex(prev => (prev < filteredItems.length - 1 ? prev + 1 : 0));
-                } else if (e.key === 'ArrowUp') {
-                  e.preventDefault();
-                  setFocusedIndex(prev => (prev > 0 ? prev - 1 : filteredItems.length - 1));
-                }
-              }}
-              role="menuitem"
-              tabIndex={focusedIndex === index ? 0 : -1}
-              ref={el => {
-                if (el && focusedIndex === index) {
-                  el.focus();
-                }
-              }}
-              style={{
-                transition: 'all 0.15s ease',
-                backgroundColor: focusedIndex === index ? 'rgba(59, 130, 246, 0.08)' : undefined,
-              }}
-            >
-              {item.icon && (
-                <span className="pro-dropdown__item-icon">{item.icon}</span>
-              )}
-              <span className="pro-dropdown__item-label">{item.label}</span>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div style={{ 
-          padding: '12px', 
-          textAlign: 'center', 
-          color: '#64748b',
-          fontSize: '14px' 
-        }}>
-          No items found
-        </div>
-      )}
-      
-      <div style={{ 
-        borderTop: '1px solid #e5e7eb', 
-        marginTop: '8px', 
-        paddingTop: '8px',
-        fontSize: '13px',
-        color: '#64748b',
-        textAlign: 'center'
-      }}>
-        Press <kbd style={{ 
-          background: '#f1f5f9', 
-          padding: '2px 5px', 
-          borderRadius: '3px',
-          border: '1px solid #e2e8f0',
-          fontSize: '11px'
-        }}>Esc</kbd> to close
-      </div>
     </div>
   );
 

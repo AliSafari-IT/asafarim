@@ -15,7 +15,7 @@ const TestComponent: React.FC = () => {
     {
       id: "dashboard",
       label: "Dashboard",
-      link: "https://asafarim.com/dashboard", 
+      link: "https://asafarim.com/dashboard",
       icon: "🏠",
     },
     { id: "projects", label: "Projects", link: "/projects", icon: "📁" },
@@ -283,47 +283,60 @@ const TestComponent: React.FC = () => {
   ];
 
   return (
-    <div style={{ padding: "20px", maxWidth: "1200px", margin: "0 auto" }}>      {/* Package Header */}
-      <div style={{ 
-        textAlign: "center", 
-        marginBottom: "40px",
-        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-        padding: "32px 24px",
-        borderRadius: "16px",
-        color: "white",
-        position: "relative",
-        overflow: "hidden"
-      }}>
-        <div style={{ 
-          position: "relative", 
-          zIndex: 1 
-        }}>
-          <h1 style={{
-            fontSize: "36px",
-            fontWeight: "700",
-            marginBottom: "12px",
-            textShadow: "0 2px 4px rgba(0,0,0,0.1)"
-          }}>
+    <div style={{ padding: "20px", maxWidth: "1200px", margin: "0 auto" }}>
+      {" "}
+      {/* Package Header */}
+      <div
+        style={{
+          textAlign: "center",
+          marginBottom: "40px",
+          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+          padding: "32px 24px",
+          borderRadius: "16px",
+          color: "white",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{
+            position: "relative",
+            zIndex: 1,
+          }}
+        >
+          <h1
+            style={{
+              fontSize: "36px",
+              fontWeight: "700",
+              marginBottom: "12px",
+              textShadow: "0 2px 4px rgba(0,0,0,0.1)",
+            }}
+          >
             @asafarim/dd-menu
           </h1>
-          <p style={{
-            fontSize: "18px",
-            marginBottom: "20px",
-            opacity: 0.95,
-            fontWeight: "400"
-          }}>
-            A minimal, elegant, and highly customizable dropdown menu React component
+          <p
+            style={{
+              fontSize: "18px",
+              marginBottom: "20px",
+              opacity: 0.95,
+              fontWeight: "400",
+            }}
+          >
+            A minimal, elegant, and highly customizable dropdown menu React
+            component
           </p>
-          <div style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "16px",
-            flexWrap: "wrap",
-            alignItems: "center"
-          }}>
-            <a 
-              href="https://www.npmjs.com/package/@asafarim/dd-menu" 
-              target="_blank" 
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              gap: "16px",
+              flexWrap: "wrap",
+              alignItems: "center",
+            }}
+          >
+            <a
+              href="https://www.npmjs.com/package/@asafarim/dd-menu"
+              target="_blank"
               rel="noopener noreferrer"
               style={{
                 display: "inline-flex",
@@ -338,7 +351,7 @@ const TestComponent: React.FC = () => {
                 fontSize: "14px",
                 backdropFilter: "blur(10px)",
                 border: "1px solid rgba(255, 255, 255, 0.2)",
-                transition: "all 0.2s ease"
+                transition: "all 0.2s ease",
               }}
               onMouseOver={(e) => {
                 e.currentTarget.style.background = "rgba(255, 255, 255, 0.3)";
@@ -351,25 +364,29 @@ const TestComponent: React.FC = () => {
             >
               📦 View on NPM
             </a>
-            <span style={{
-              padding: "10px 20px",
-              background: "rgba(255, 255, 255, 0.15)",
-              borderRadius: "8px",
-              fontSize: "14px",
-              fontWeight: "500",
-              border: "1px solid rgba(255, 255, 255, 0.2)"
-            }}>
+            <span
+              style={{
+                padding: "10px 20px",
+                background: "rgba(255, 255, 255, 0.15)",
+                borderRadius: "8px",
+                fontSize: "14px",
+                fontWeight: "500",
+                border: "1px solid rgba(255, 255, 255, 0.2)",
+              }}
+            >
               v1.2.3
             </span>
           </div>
-          <div style={{
-            marginTop: "24px",
-            display: "flex",
-            justifyContent: "center",
-            gap: "24px",
-            flexWrap: "wrap",
-            fontSize: "14px"
-          }}>
+          <div
+            style={{
+              marginTop: "24px",
+              display: "flex",
+              justifyContent: "center",
+              gap: "24px",
+              flexWrap: "wrap",
+              fontSize: "14px",
+            }}
+          >
             <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
               <span>⚡</span> TypeScript Ready
             </div>
@@ -384,30 +401,33 @@ const TestComponent: React.FC = () => {
             </div>
           </div>
         </div>
-        
-        {/* Background decoration */}
-        <div style={{
-          position: "absolute",
-          top: "-50%",
-          right: "-20%",
-          width: "200px",
-          height: "200px",
-          background: "rgba(255, 255, 255, 0.1)",
-          borderRadius: "50%",
-          zIndex: 0
-        }} />
-        <div style={{
-          position: "absolute",
-          bottom: "-30%",
-          left: "-10%",
-          width: "150px",
-          height: "150px",
-          background: "rgba(255, 255, 255, 0.08)",
-          borderRadius: "50%",
-          zIndex: 0
-        }} />
-      </div>
 
+        {/* Background decoration */}
+        <div
+          style={{
+            position: "absolute",
+            top: "-50%",
+            right: "-20%",
+            width: "200px",
+            height: "200px",
+            background: "rgba(255, 255, 255, 0.1)",
+            borderRadius: "50%",
+            zIndex: 0,
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            bottom: "-30%",
+            left: "-10%",
+            width: "150px",
+            height: "150px",
+            background: "rgba(255, 255, 255, 0.08)",
+            borderRadius: "50%",
+            zIndex: 0,
+          }}
+        />
+      </div>
       <h2
         style={{
           marginBottom: "30px",
@@ -419,7 +439,6 @@ const TestComponent: React.FC = () => {
       >
         Live Showcase & Examples
       </h2>
-
       {/* Elegant Dropdown Showcase */}
       <div
         style={{
@@ -567,7 +586,6 @@ const TestComponent: React.FC = () => {
           No borders, just hover effects
         </p>
       </div>
-
       {/*  */}
       {/* Custom Trigger Examples */}
       <div
@@ -666,7 +684,6 @@ const TestComponent: React.FC = () => {
           />
         </div>
       </div>
-
       <div
         style={{ padding: "40px", background: "white", borderRadius: "12px" }}
       >
@@ -692,7 +709,13 @@ const TestComponent: React.FC = () => {
           >
             Sidebar Variant
           </h2>
-            <DDMenu items={allItems} className="dd-menu--sidebar dd-menu__item " size="md" style={{width: "300px"}} theme={"light"}/>
+          <DDMenu
+            items={allItems}
+            className="dd-menu--sidebar dd-menu__item "
+            size="md"
+            style={{ width: "300px" }}
+            theme={"light"}
+          />
           <h3
             style={{
               fontSize: "18px",
@@ -778,6 +801,43 @@ const TestComponent: React.FC = () => {
             ))}
           </div>
         </div>
+      </div>
+      <div>
+        <h2
+          style={{
+            color: "#1f99f7",
+            marginTop: "40px",
+            textAlign: "center",
+            fontSize: "24px",
+            fontWeight: "600",
+          }}
+        >
+          More Examples Coming Soon!
+        </h2>
+        <p
+          style={{
+            textAlign: "center",
+            color: "#6bf280",
+            fontSize: "14px",
+            marginTop: "12px",
+          }}
+        >
+          Stay tuned for more variants and features!
+        </p>
+        <a href="https://www.buymeacoffee.com/asafarim"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            display: "inline-block",
+            marginTop: "20px",
+            textDecoration: "none",
+          }}
+          >
+          <img 
+            src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=asafarim&button_colour=5F7FFF&font_colour=ffffff&font_family=Poppins&outline_colour=000000&coffee_colour=FFDD00" 
+            alt="Buy me a coffee"
+          />
+        </a>
       </div>
     </div>
   );

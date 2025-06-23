@@ -57,8 +57,8 @@ importers:
   ASafariM.Clients/asafarim-bibliography:
     dependencies:
       '@asafarim/dd-menu':
-        specifier: ^1.2.3
-        version: 1.2.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^1.2.4
+        version: 1.2.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@headlessui/react':
         specifier: ^2.0.0
         version: 2.2.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1075,8 +1075,8 @@ packages:
       react: '>=17.0.0 || >=18.0.0'
       react-dom: '>=17.0.0 || >=18.0.0'
 
-  '@asafarim/dd-menu@1.2.3':
-    resolution: {integrity: sha512-kqcTfjjHxTS1Zcr7I6GfgX4Tlu9lZ6mPmcgJMWU2gJyDZ3z0R7G8oFNFy/IbPho4PYnjdJ2iO3p9eVDvXLL5eA==}
+  '@asafarim/dd-menu@1.2.4':
+    resolution: {integrity: sha512-QGo05QfHpToOB3Tzl3v+BY9NrQ86yiSoQOXWwY6HK6AbnJtVWtx6Yi0s+sb6+uVV8xtObbSVvnuS92Hnyaex5Q==}
     peerDependencies:
       react: '>=17.0.0 || >=18.0.0'
       react-dom: '>=17.0.0 || >=18.0.0'
@@ -14364,7 +14364,7 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@asafarim/dd-menu@1.2.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@asafarim/dd-menu@1.2.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)

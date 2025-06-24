@@ -37,6 +37,24 @@ export default function Navbar() {
       icon: "🎨",
     },
     {
+      id: "privacy-consent",
+      label: "Privacy Consent",
+      link: "/react-privacy-consent/demo",
+      icon: "🔒",
+    },
+    {
+      id: "info",
+      label: "Info",
+      link: "/info",
+      icon: "ℹ️",
+    },
+    {
+      id: "add-book",
+      label: "Add Book",
+      link: "/add",
+      icon: "➕",
+    },
+    {
       id: "projects",
       label: "Projects",
       icon: "📁",

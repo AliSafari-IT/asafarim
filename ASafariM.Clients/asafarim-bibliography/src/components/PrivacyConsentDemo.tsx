@@ -92,10 +92,11 @@ const demoConsentConfig: PrivacyConsentConfig = {
 };
 
 // Main demo content component
-function DemoContent() {
-  const { 
+function DemoContent() {  const { 
     hasConsent, 
     showPreferences, 
+    hidePreferences,
+    isPreferencesVisible,
     resetConsent, 
     updateConsent,
     acceptAll,
@@ -141,8 +142,7 @@ function DemoContent() {
 
       {/* Demo Navigation */}
       <nav className="demo-nav">
-        <div className="demo-controls">
-          <button onClick={() => showPreferences()} className="btn btn-secondary">
+        <div className="demo-controls">          <button onClick={() => showPreferences()} className="btn btn-secondary">
             🛠️ Manage Preferences
           </button>
           <button onClick={resetConsent} className="btn btn-danger">
@@ -496,13 +496,14 @@ function Analytics() {
             🔗 View on GitHub
           </a>
         </div>
-      </footer>
-
-      {/* Consent Components */}
+      </footer>      {/* Consent Components */}
       <ConsentBanner />
       <ConsentModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+        isOpen={isPreferencesVisible || isModalOpen} 
+        onClose={() => {
+          hidePreferences();
+          setIsModalOpen(false);
+        }} 
       />
 
       <style>{`

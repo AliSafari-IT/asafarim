@@ -241,6 +241,12 @@ const TestComponent: React.FC = () => {
       icon: "🎨",
     },
     {
+      id: "privacy-consent",
+      label: "Privacy Consent",
+      link: "/react-privacy-consent/demo",
+      icon: "🔒",
+    },
+    {
       id: "projects",
       label: "Projects",
       icon: "📁",

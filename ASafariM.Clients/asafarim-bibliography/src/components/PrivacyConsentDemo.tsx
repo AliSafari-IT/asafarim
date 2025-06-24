@@ -11,7 +11,8 @@ import {
 } from '@asafarim/react-privacy-consent';
 import '@asafarim/react-privacy-consent/styles.css';
 
-// Demo configuration with all categories
+// IMPORTANT: Define configuration outside the component to ensure it's stable across renders
+// This prevents recreation of the config object on each render which can cause consent to reset
 const demoConsentConfig: PrivacyConsentConfig = {
   settings: {
     categories: [
@@ -221,31 +222,86 @@ function DemoContent() {  const {
 
           <div className="action-card">
             <h3>Theme Controls</h3>
+            <p>Apply different themes to see how the consent components look:</p>
             <div className="action-buttons">
               <button 
-                onClick={() => applyConsentTheme({
-                  primaryColor: '#3b82f6',
-                  backgroundColor: '#ffffff',
-                  textColor: '#1f2937',
-                  borderRadius: '8px',
-                  secondaryColor: '#6b7280',
-                  borderColor: '#d1d5db',
-                  fontFamily: 'system-ui',
-                  fontSize: '14px',
-                  buttonStyle: 'solid',
-                  shadow: true
-                })}
+                onClick={() => {
+                  console.log('Applying light theme...');
+                  const lightTheme = {
+                    primaryColor: '#3b82f6',
+                    backgroundColor: '#ffffff',
+                    textColor: '#1f2937',
+                    borderRadius: '8px',
+                    secondaryColor: '#6b7280',
+                    borderColor: '#d1d5db',
+                    fontFamily: 'system-ui',
+                    fontSize: '14px',
+                    buttonStyle: 'solid' as 'solid' | 'outlined' | 'ghost', // Fix type issue
+                    shadow: true
+                  };
+                  console.log('Light theme config:', lightTheme);
+                  applyConsentTheme(lightTheme);
+                  
+                  // Verify CSS variables were set
+                  setTimeout(() => {
+                    const root = document.documentElement;
+                    console.log('CSS variables after light theme applied:', {
+                      primaryColor: root.style.getPropertyValue('--consent-primary-color'),
+                      backgroundColor: root.style.getPropertyValue('--consent-background-color'),
+                      textColor: root.style.getPropertyValue('--consent-text-color')
+                    });
+                  }, 100);
+                }}
                 className="btn btn-secondary"
               >
                 🌞 Light Theme
               </button>
               <button 
-                onClick={() => applyConsentTheme(getDarkTheme())}
+                onClick={() => {
+                  console.log('Applying dark theme...');
+                  const darkTheme = getDarkTheme();
+                  console.log('Dark theme config:', darkTheme);
+                  applyConsentTheme(darkTheme);
+                  
+                  // Verify CSS variables were set
+                  setTimeout(() => {
+                    const root = document.documentElement;
+                    console.log('CSS variables after dark theme applied:', {
+                      primaryColor: root.style.getPropertyValue('--consent-primary-color'),
+                      backgroundColor: root.style.getPropertyValue('--consent-background-color'),
+                      textColor: root.style.getPropertyValue('--consent-text-color')
+                    });
+                  }, 100);
+                }}
                 className="btn btn-secondary"
               >
                 🌙 Dark Theme
               </button>
             </div>
+            <div className="action-buttons" style={{ marginTop: '1rem' }}>
+              <button 
+                onClick={() => {
+                  // Reset consent to force show banner
+                  resetConsent();
+                  console.log('Consent reset - banner should appear');
+                }}
+                className="btn btn-primary"
+              >
+                🔄 Reset Consent (Show Banner)
+              </button>
+              <button 
+                onClick={() => {
+                  showPreferences();
+                  console.log('Preferences modal opened');
+                }}
+                className="btn btn-primary"
+              >
+                ⚙️ Show Preferences Modal
+              </button>
+            </div>
+            <p style={{ fontSize: '0.875rem', color: '#6b7280', marginTop: '0.5rem' }}>
+              💡 Reset consent or open preferences to see theme changes applied to the consent UI
+            </p>
           </div>
         </div>
       </section>
@@ -987,6 +1043,38 @@ function Analytics() {
 
 // Main component with provider
 export default function PrivacyConsentDemo() {
+  // Add debug logging to check localStorage on mount
+  useEffect(() => {
+    // Check if localStorage has the consent data
+    const storageKey = demoConsentConfig.settings.storageKey;
+    const savedConsent = localStorage.getItem(storageKey);
+    
+    console.log('[PrivacyConsentDemo] Component mounted');
+    console.log(`[PrivacyConsentDemo] Checking localStorage for key: ${storageKey}`);
+    console.log(`[PrivacyConsentDemo] Saved consent exists: ${Boolean(savedConsent)}`);
+    
+    if (savedConsent) {
+      try {
+        const parsedConsent = JSON.parse(savedConsent);
+        console.log('[PrivacyConsentDemo] Saved consent version:', parsedConsent.version);
+        console.log('[PrivacyConsentDemo] Current config version:', demoConsentConfig.settings.version);
+      } catch (error) {
+        console.error('[PrivacyConsentDemo] Error parsing saved consent:', error);
+      }
+    }
+    
+    // Add listener for storage changes
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === storageKey) {
+        console.log(`[PrivacyConsentDemo] Storage changed for key: ${storageKey}`);
+        console.log(`[PrivacyConsentDemo] New value: ${e.newValue ? 'exists' : 'null'}`);
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+  
   return (
     <ConsentProvider config={demoConsentConfig}>
       <DemoContent />

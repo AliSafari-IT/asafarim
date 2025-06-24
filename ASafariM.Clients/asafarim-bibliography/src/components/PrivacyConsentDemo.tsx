@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   ConsentProvider, 
   ConsentBanner, 
@@ -109,6 +109,18 @@ function DemoContent() {  const {
   const [showConsentDebug, setShowConsentDebug] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Close our custom modal when the preferences modal is closed
+  useEffect(() => {
+    if (!isPreferencesVisible && isModalOpen) {
+      setIsModalOpen(false);
+    }
+  }, [isPreferencesVisible, isModalOpen]);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+    showPreferences(); // This ensures the consent system knows the preferences modal is open
+  };
+
   const handleCategoryToggle = (categoryId: string) => {
     const currentStatus = getConsent(categoryId);
     const isCurrentlyAccepted = currentStatus === 'accepted';
@@ -154,7 +166,7 @@ function DemoContent() {  const {
           >
             🐛 {showConsentDebug ? 'Hide' : 'Show'} Debug Info
           </button>
-          <button onClick={() => setIsModalOpen(true)} className="btn btn-primary">
+          <button onClick={handleOpenModal} className="btn btn-primary">
             📋 Open Modal
           </button>
         </div>
@@ -494,9 +506,10 @@ function Analytics() {
             className="btn btn-secondary"
           >
             🔗 View on GitHub
-          </a>
-        </div>
-      </footer>      {/* Consent Components */}
+          </a>        </div>
+      </footer>
+
+      {/* Consent Components */}
       <ConsentBanner />
       <ConsentModal 
         isOpen={isPreferencesVisible || isModalOpen} 

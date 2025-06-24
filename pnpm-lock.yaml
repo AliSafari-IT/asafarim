@@ -60,11 +60,11 @@ importers:
         specifier: ^1.2.4
         version: 1.2.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@asafarim/react-privacy-consent':
-        specifier: ^1.0.0
-        version: 1.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^1.3.0
+        version: 1.3.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@asafarim/react-themes':
-        specifier: 1.1.0
-        version: 1.1.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 1.5.0
+        version: 1.5.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@headlessui/react':
         specifier: ^2.0.0
         version: 2.2.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1167,14 +1167,14 @@ packages:
       react: '>=17.0.0 || >=18.0.0'
       react-dom: '>=17.0.0 || >=18.0.0'
 
-  '@asafarim/react-privacy-consent@1.0.0':
-    resolution: {integrity: sha512-ti7hzypmgL9g4iQoqYMXfUEtleuvGKSJqz4XRYFzSbXc/jzpV8YT6OEkYPfVMdD1NIMhcRT8KuBBU+t9cNGVHQ==}
+  '@asafarim/react-privacy-consent@1.3.0':
+    resolution: {integrity: sha512-/IQNj6fycmrsyPceF2V8l09vPV/tvHqoqMVo0wxBUVPdm8RAVYJ12sFHAw8IEb9hPJi5YwjBRbjrCI4OOUyglA==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
 
-  '@asafarim/react-themes@1.1.0':
-    resolution: {integrity: sha512-0oITGjujUJaUX6vhX3AdNUdZFJ4Vh6EfJ6yQ9kYa6eqZTQZvZDkfKw9eXLYX3+/TTyeuB8UZi7WL8dKvb/7j6g==}
+  '@asafarim/react-themes@1.5.0':
+    resolution: {integrity: sha512-oPBK9umBWjpZ2a4FxOijxBqT1zwXs7Vpj75FNynWamR0mus/MgF1s+4y+o7VwLxeOL2JqdBw5v3cRh+IwCBKLQ==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
@@ -14802,12 +14802,12 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@asafarim/react-privacy-consent@1.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@asafarim/react-privacy-consent@1.3.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@asafarim/react-themes@1.1.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@asafarim/react-themes@1.5.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -22656,6 +22656,26 @@ snapshots:
     dependencies:
       bumpp: 8.2.1
       callsites: 4.2.0
+      inferred-types: 0.37.6(@vitest/ui@3.1.3)(happy-dom@8.9.0(encoding@0.1.13))(jsdom@26.1.0(supports-color@10.0.0))(less@4.2.2)(lightningcss@1.30.1)(sass@1.89.0)(supports-color@10.0.0)(terser@5.39.2)
+      vitest: 0.25.8(@vitest/ui@3.1.3)(happy-dom@8.9.0(encoding@0.1.13))(jsdom@26.1.0(supports-color@10.0.0))(less@4.2.2)(lightningcss@1.30.1)(sass@1.89.0)(supports-color@10.0.0)(terser@5.39.2)
+    transitivePeerDependencies:
+      - '@edge-runtime/vm'
+      - '@vitest/browser'
+      - '@vitest/ui'
+      - happy-dom
+      - jsdom
+      - less
+      - lightningcss
+      - sass
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+
+  brilliant-errors@0.7.3(@vitest/ui@3.1.3)(happy-dom@8.9.0(encoding@0.1.13))(jsdom@26.1.0)(less@4.2.2)(lightningcss@1.30.1)(sass@1.89.0)(terser@5.39.2):
+    dependencies:
+      bumpp: 8.2.1
+      callsites: 4.2.0
       inferred-types: 0.37.6(@vitest/ui@3.1.3)(happy-dom@8.9.0(encoding@0.1.13))(jsdom@26.1.0)(less@4.2.2)(lightningcss@1.30.1)(sass@1.89.0)(terser@5.39.2)
       vitest: 0.25.8(@vitest/ui@3.1.3)(happy-dom@8.9.0(encoding@0.1.13))(jsdom@26.1.0(supports-color@10.0.0))(less@4.2.2)(lightningcss@1.30.1)(sass@1.89.0)(supports-color@10.0.0)(terser@5.39.2)
     transitivePeerDependencies:
@@ -25871,7 +25891,7 @@ snapshots:
 
   inferred-types@0.37.6(@vitest/ui@3.1.3)(happy-dom@8.9.0(encoding@0.1.13))(jsdom@26.1.0)(less@4.2.2)(lightningcss@1.30.1)(sass@1.89.0)(terser@5.39.2):
     dependencies:
-      brilliant-errors: 0.7.3(@vitest/ui@3.1.3)(happy-dom@8.9.0(encoding@0.1.13))(jsdom@26.1.0(supports-color@10.0.0))(less@4.2.2)(lightningcss@1.30.1)(sass@1.89.0)(supports-color@10.0.0)(terser@5.39.2)
+      brilliant-errors: 0.7.3(@vitest/ui@3.1.3)(happy-dom@8.9.0(encoding@0.1.13))(jsdom@26.1.0)(less@4.2.2)(lightningcss@1.30.1)(sass@1.89.0)(terser@5.39.2)
     transitivePeerDependencies:
       - '@edge-runtime/vm'
       - '@vitest/browser'
@@ -28084,7 +28104,7 @@ snapshots:
 
   native-dash@1.25.0(@vitest/ui@3.1.3)(happy-dom@8.9.0(encoding@0.1.13))(jsdom@26.1.0)(less@4.2.2)(lightningcss@1.30.1)(sass@1.89.0)(terser@5.39.2):
     dependencies:
-      brilliant-errors: 0.7.3(@vitest/ui@3.1.3)(happy-dom@8.9.0(encoding@0.1.13))(jsdom@26.1.0(supports-color@10.0.0))(less@4.2.2)(lightningcss@1.30.1)(sass@1.89.0)(supports-color@10.0.0)(terser@5.39.2)
+      brilliant-errors: 0.7.3(@vitest/ui@3.1.3)(happy-dom@8.9.0(encoding@0.1.13))(jsdom@26.1.0)(less@4.2.2)(lightningcss@1.30.1)(sass@1.89.0)(terser@5.39.2)
       inferred-types: 0.37.6(@vitest/ui@3.1.3)(happy-dom@8.9.0(encoding@0.1.13))(jsdom@26.1.0)(less@4.2.2)(lightningcss@1.30.1)(sass@1.89.0)(terser@5.39.2)
     transitivePeerDependencies:
       - '@edge-runtime/vm'

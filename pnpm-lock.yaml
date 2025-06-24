@@ -59,6 +59,9 @@ importers:
       '@asafarim/dd-menu':
         specifier: ^1.2.4
         version: 1.2.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@asafarim/react-privacy-consent':
+        specifier: ^1.0.0
+        version: 1.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@asafarim/react-themes':
         specifier: 1.1.0
         version: 1.1.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1163,6 +1166,12 @@ packages:
     peerDependencies:
       react: '>=17.0.0 || >=18.0.0'
       react-dom: '>=17.0.0 || >=18.0.0'
+
+  '@asafarim/react-privacy-consent@1.0.0':
+    resolution: {integrity: sha512-ti7hzypmgL9g4iQoqYMXfUEtleuvGKSJqz4XRYFzSbXc/jzpV8YT6OEkYPfVMdD1NIMhcRT8KuBBU+t9cNGVHQ==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
 
   '@asafarim/react-themes@1.1.0':
     resolution: {integrity: sha512-0oITGjujUJaUX6vhX3AdNUdZFJ4Vh6EfJ6yQ9kYa6eqZTQZvZDkfKw9eXLYX3+/TTyeuB8UZi7WL8dKvb/7j6g==}
@@ -14789,6 +14798,11 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
 
   '@asafarim/dd-menu@1.2.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
+  '@asafarim/react-privacy-consent@1.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)

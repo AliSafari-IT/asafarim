@@ -10,6 +10,7 @@ import "./components/AppInfo.css";
 import TestComponent from "./layout/DDMenuTest";
 import ThemeDebug from "./components/ThemeDebug";
 import {ThemeDemo} from "./components/ThemeDemo";
+import PrivacyConsentDemo from "./components/PrivacyConsentDemo";
 
 function App() {
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
@@ -47,6 +48,9 @@ function App() {
           <Route path="/info" element={<AppInfo />} />
           <Route path="/dd" element={<TestComponent />} />
           <Route path="/react-themes/demo" element={<ThemeDemo />} />
+          <Route path="/react-privacy-consent/demo" element={<PrivacyConsentDemo />} />
+
+          {/* Catch-all route for any unmatched paths */}
           {/* Catch-all route for 404 Not Found */}
           <Route
             path="*"

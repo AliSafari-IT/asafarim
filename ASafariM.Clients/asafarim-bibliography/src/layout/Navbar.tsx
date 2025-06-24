@@ -68,8 +68,14 @@ export default function Navbar() {
       link: "/analytics",
       icon: "📊",
     },
-  ];  return (
-    <Disclosure as="nav" className="navbar-themed" key="navbar" aria-label="Main Navigation">
+  ];
+  return (
+    <Disclosure
+      as="nav"
+      className="navbar-themed"
+      key="navbar"
+      aria-label="Main Navigation"
+    >
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -88,7 +94,8 @@ export default function Navbar() {
               </div>
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="flex flex-shrink-0 items-center">
-                  <BookOpenIcon className="h-8 w-8 text-indigo-500" />                  <span className="ml-2 text-xl font-bold navbar-brand-text">
+                  <BookOpenIcon className="h-8 w-8 text-indigo-500" />{" "}
+                  <span className="ml-2 text-xl font-bold navbar-brand-text">
                     ASafariM Bibliography
                   </span>
                 </div>
@@ -97,7 +104,8 @@ export default function Navbar() {
                     {navigation.map((item) => (
                       <Link
                         key={item.name}
-                        to={item.href}                        className={classNames(
+                        to={item.href}
+                        className={classNames(
                           item.name === activeItem
                             ? "navbar-nav-link active"
                             : "navbar-nav-link",
@@ -139,7 +147,8 @@ export default function Navbar() {
                 </div>
               </div>{" "}
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 space-x-2">
-                <ThemeToggle />                <Link
+                <ThemeToggle />{" "}
+                <Link
                   to="/add"
                   className="navbar-add-button focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                   onClick={() => handleNavigation("Add Book")}
@@ -155,7 +164,8 @@ export default function Navbar() {
               {navigation.map((item) => (
                 <Link
                   key={item.name}
-                  to={item.href}                  className={classNames(
+                  to={item.href}
+                  className={classNames(
                     item.name === activeItem
                       ? "navbar-nav-link active"
                       : "navbar-nav-link",

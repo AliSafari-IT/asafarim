@@ -30,6 +30,11 @@ export default function Navbar() {
       label: "DD Menu",
       link: "/dd",
       icon: "🏠",
+    },{
+      id: "theme-demo",
+      label: "Theme Demo",
+      link: "/react-themes/demo",
+      icon: "🎨",
     },
     {
       id: "projects",

@@ -19,9 +19,98 @@ export const ThemeDemo: React.FC = () => {
         color: "var(--theme-color-text, #000)",
         minHeight: "100vh",
         transition: "all 0.3s ease",
-      }}
-    >
-      <h1>@asafarim/react-themes Demo</h1>
+      }}    >
+      {/* Header for @asafarim/react-themes package */}
+      <div style={{ 
+        textAlign: "center", 
+        marginBottom: "3rem", 
+        padding: "2rem",
+        backgroundColor: "var(--theme-color-background-secondary)",
+        border: "1px solid var(--theme-color-border)",
+        borderRadius: "var(--theme-radius-lg)",
+      }}>
+        <h1 style={{ 
+          fontSize: "2.5rem", 
+          fontWeight: "bold", 
+          marginBottom: "1rem",
+          color: "var(--theme-color-text)",
+          background: "linear-gradient(45deg, var(--theme-color-primary), var(--theme-color-primary-hover))",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text"
+        }}>
+          @asafarim/react-themes
+        </h1>        <p style={{ 
+          fontSize: "1.2rem", 
+          color: "var(--theme-color-text-secondary)",
+          marginBottom: "1rem" 
+        }}>
+          A comprehensive React theme management package with TypeScript support
+        </p>
+        <p style={{ 
+          fontSize: "1rem", 
+          color: "var(--theme-color-text-muted)",
+          marginBottom: "1.5rem" 
+        }}>
+          📦 View on{" "}
+          <a 
+            href="https://www.npmjs.com/package/@asafarim/react-themes" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{ 
+              color: "var(--theme-color-primary)", 
+              textDecoration: "none",
+              fontWeight: "500"
+            }}
+          >
+            npm
+          </a>
+        </p>
+        <div style={{ 
+          display: "flex", 
+          justifyContent: "center", 
+          gap: "1rem", 
+          flexWrap: "wrap" 
+        }}>
+          <span style={{ 
+            padding: "0.25rem 0.75rem", 
+            backgroundColor: "var(--theme-color-primary)", 
+            color: "white", 
+            borderRadius: "var(--theme-radius-full)", 
+            fontSize: "0.875rem" 
+          }}>
+            ⚛️ React 18+
+          </span>
+          <span style={{ 
+            padding: "0.25rem 0.75rem", 
+            backgroundColor: "var(--theme-color-primary)", 
+            color: "white", 
+            borderRadius: "var(--theme-radius-full)", 
+            fontSize: "0.875rem" 
+          }}>
+            📘 TypeScript
+          </span>
+          <span style={{ 
+            padding: "0.25rem 0.75rem", 
+            backgroundColor: "var(--theme-color-primary)", 
+            color: "white", 
+            borderRadius: "var(--theme-radius-full)", 
+            fontSize: "0.875rem" 
+          }}>
+            🎨 CSS Variables
+          </span>
+          <span style={{ 
+            padding: "0.25rem 0.75rem", 
+            backgroundColor: "var(--theme-color-primary)", 
+            color: "white", 
+            borderRadius: "var(--theme-radius-full)", 
+            fontSize: "0.875rem" 
+          }}>
+            🌙 Dark Mode
+          </span>
+        </div>
+      </div>
+      
       <div style={{ marginBottom: "2rem" }}>
         <h2>Current Theme Info</h2>
         <p>Mode: {mode}</p>

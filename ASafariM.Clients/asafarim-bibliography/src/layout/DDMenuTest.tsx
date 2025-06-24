@@ -18,6 +18,12 @@ const TestComponent: React.FC = () => {
       link: "https://asafarim.com/dashboard",
       icon: "🏠",
     },
+    {
+      id: "theme-demo",
+      label: "Theme Demo",
+      link: "/react-themes/demo",
+      icon: "🎨",
+    },
     { id: "projects", label: "Projects", link: "/projects", icon: "📁" },
     { id: "tasks", label: "Tasks", link: "/tasks", icon: "✅" },
     { id: "calendar", label: "Calendar", link: "/calendar", icon: "📅" },
@@ -227,6 +233,12 @@ const TestComponent: React.FC = () => {
       label: "Dashboard",
       link: "https://asafarim.com/dashboard",
       icon: "🏠",
+    },
+     {
+      id: "theme-demo",
+      label: "Theme Demo",
+      link: "/react-themes/demo",
+      icon: "🎨",
     },
     {
       id: "projects",

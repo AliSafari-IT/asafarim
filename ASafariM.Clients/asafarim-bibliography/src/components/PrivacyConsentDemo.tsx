@@ -4,10 +4,11 @@ import {
   ConsentBanner, 
   ConsentModal,
   useConsent,
-  type PrivacyConsentConfig,
-  type ConsentRecord,
+  PrivacyConsentConfig,
+  ConsentRecord,
   applyConsentTheme,
-  getDarkTheme
+  getDarkTheme,
+  type ConsentCategory
 } from '@asafarim/react-privacy-consent';
 import '@asafarim/react-privacy-consent/styles.css';
 
@@ -177,7 +178,7 @@ function DemoContent() {  const {
       <section className="demo-section">
         <h2>Current Consent Status</h2>
         <div className="consent-status-grid">
-          {config.settings.categories.map((category) => (
+          {config.settings.categories.map((category: ConsentCategory) => (
             <div key={category.id} className="consent-status-card">
               <div className="status-header">
                 <h3>{category.name}</h3>
@@ -451,7 +452,7 @@ if (hasConsent('preferences')) {
                   </tr>
                 </thead>
                 <tbody>
-                  {config.settings.categories.map((category) => (
+                  {config.settings.categories.map((category: ConsentCategory) => (
                     <tr key={category.id}>
                       <td>{category.name}</td>
                       <td>
@@ -1069,7 +1070,7 @@ export default function PrivacyConsentDemo() {
         console.log('[PrivacyConsentDemo] Current date:', new Date().toISOString());
         
         // Check if all categories are present
-        const allCategoriesPresent = demoConsentConfig.settings.categories.every(category =>
+        const allCategoriesPresent = demoConsentConfig.settings.categories.every((category: ConsentCategory) =>
           parsedConsent.decisions.some((d: { categoryId: string }) => d.categoryId === category.id)
         );
         console.log('[PrivacyConsentDemo] All categories present:', allCategoriesPresent);
@@ -1077,7 +1078,7 @@ export default function PrivacyConsentDemo() {
         if (!allCategoriesPresent) {
           console.log('[PrivacyConsentDemo] Missing categories - consent will be reset');
           const existingCategoryIds = parsedConsent.decisions.map((d: { categoryId: string }) => d.categoryId);
-          const configCategoryIds = demoConsentConfig.settings.categories.map(c => c.id);
+          const configCategoryIds = demoConsentConfig.settings.categories.map((c: { id: any; }) => c.id);
           console.log('[PrivacyConsentDemo] Existing categories:', existingCategoryIds);
           console.log('[PrivacyConsentDemo] Required categories:', configCategoryIds);
         }

@@ -1,11 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { 
   ConsentModal, 
   useConsent,
-  type ConsentCategory,
-  applyConsentTheme,
-  getDarkTheme
-} from '@asafarim/react-privacy-consent'
+  applyConsentTheme} from '@asafarim/react-privacy-consent'
 import { useTheme, ThemeToggle } from '@asafarim/react-themes'
 import { globalConsentConfig } from '../config/consentConfig'
 import '@asafarim/react-privacy-consent/styles.css'

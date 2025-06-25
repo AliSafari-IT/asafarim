@@ -64,8 +64,8 @@ export const globalConsentConfig: PrivacyConsentConfig = {
     savePreferencesText: 'Save Preferences',
     closeText: 'Close',
     learnMoreText: 'Learn More',
-    privacyPolicyUrl: '/privacy-policy',
-    cookiePolicyUrl: '/cookie-policy'
+    privacyPolicyUrl: 'https://asafarim.com/legal-docs/privacy-policy',
+    cookiePolicyUrl: 'https://asafarim.com/legal-docs/cookie-policy'
   },
   onConsentChange: (consent: ConsentRecord) => {
     console.log('[Global Consent] Consent changed:', consent);

@@ -19,8 +19,7 @@ function DemoContent() {
     resetConsent, 
     acceptAll, 
     rejectAll,
-    getConsent,
-    hasConsent 
+    getConsent
   } = useConsent();
   const { mode, currentTheme } = useTheme();
 

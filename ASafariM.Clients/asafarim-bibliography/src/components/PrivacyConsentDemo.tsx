@@ -11,7 +11,7 @@ import './PrivacyConsentDemo.css'
 // Use the global config for reference in the demo
 const demoConfig = globalConsentConfig;
 
-function DemoContent() {
+function PrivacyConsentDemo() {
   const { 
     consentRecord, 
     isVisible, 
@@ -206,13 +206,13 @@ function ConsentModalWrapper() {
   );
 }
 
-function PrivacyConsentDemo() {
+function PrivacyConsentDemoWrapper() {
   return (
     <div>
-      <DemoContent />
+      <PrivacyConsentDemo />
       <ConsentModalWrapper />
     </div>
   );
 }
 
-export default PrivacyConsentDemo
+export default PrivacyConsentDemoWrapper;

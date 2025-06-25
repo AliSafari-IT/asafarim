@@ -1058,16 +1058,50 @@ export default function PrivacyConsentDemo() {
         const parsedConsent = JSON.parse(savedConsent);
         console.log('[PrivacyConsentDemo] Saved consent version:', parsedConsent.version);
         console.log('[PrivacyConsentDemo] Current config version:', demoConsentConfig.settings.version);
+        console.log('[PrivacyConsentDemo] Saved consent data:', parsedConsent);
+        
+        // Check expiration
+        const expirationDate = new Date(parsedConsent.lastUpdated);
+        expirationDate.setDate(expirationDate.getDate() + demoConsentConfig.settings.expirationDays);
+        const isExpired = expirationDate <= new Date();
+        console.log('[PrivacyConsentDemo] Consent expired:', isExpired);
+        console.log('[PrivacyConsentDemo] Expiration date:', expirationDate.toISOString());
+        console.log('[PrivacyConsentDemo] Current date:', new Date().toISOString());
+        
+        // Check if all categories are present
+        const allCategoriesPresent = demoConsentConfig.settings.categories.every(category =>
+          parsedConsent.decisions.some((d: { categoryId: string }) => d.categoryId === category.id)
+        );
+        console.log('[PrivacyConsentDemo] All categories present:', allCategoriesPresent);
+        
+        if (!allCategoriesPresent) {
+          console.log('[PrivacyConsentDemo] Missing categories - consent will be reset');
+          const existingCategoryIds = parsedConsent.decisions.map((d: { categoryId: string }) => d.categoryId);
+          const configCategoryIds = demoConsentConfig.settings.categories.map(c => c.id);
+          console.log('[PrivacyConsentDemo] Existing categories:', existingCategoryIds);
+          console.log('[PrivacyConsentDemo] Required categories:', configCategoryIds);
+        }
       } catch (error) {
         console.error('[PrivacyConsentDemo] Error parsing saved consent:', error);
       }
+    } else {
+      console.log('[PrivacyConsentDemo] No saved consent found - banner will show');
     }
     
     // Add listener for storage changes
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === storageKey) {
         console.log(`[PrivacyConsentDemo] Storage changed for key: ${storageKey}`);
+        console.log(`[PrivacyConsentDemo] Old value: ${e.oldValue ? 'existed' : 'null'}`);
         console.log(`[PrivacyConsentDemo] New value: ${e.newValue ? 'exists' : 'null'}`);
+        if (e.newValue) {
+          try {
+            const newConsent = JSON.parse(e.newValue);
+            console.log(`[PrivacyConsentDemo] New consent data:`, newConsent);
+          } catch (error) {
+            console.error('[PrivacyConsentDemo] Error parsing new consent:', error);
+          }
+        }
       }
     };
     

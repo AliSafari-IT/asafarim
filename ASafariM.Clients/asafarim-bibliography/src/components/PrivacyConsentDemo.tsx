@@ -1,11 +1,10 @@
 import { useEffect } from 'react'
 import { 
-  ConsentModal, 
   useConsent,
-  applyConsentTheme} from '@asafarim/react-privacy-consent'
+  applyConsentTheme
+} from '@asafarim/react-privacy-consent'
 import { useTheme, ThemeToggle } from '@asafarim/react-themes'
 import { globalConsentConfig } from '../config/consentConfig'
-import '@asafarim/react-privacy-consent/styles.css'
 import './PrivacyConsentDemo.css'
 
 // Use the global config for reference in the demo
@@ -195,22 +194,12 @@ function YourComponent() {
   );
 }
 
-function ConsentModalWrapper() {
-  const { isPreferencesVisible, hidePreferences } = useConsent();
-  
-  return (
-    <ConsentModal 
-      isOpen={isPreferencesVisible} 
-      onClose={hidePreferences}
-    />
-  );
-}
+// No need for a separate ConsentModalWrapper as it's already in the main App
 
 function PrivacyConsentDemoWrapper() {
   return (
     <div>
       <PrivacyConsentDemo />
-      <ConsentModalWrapper />
     </div>
   );
 }

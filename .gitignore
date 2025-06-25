@@ -151,3 +151,4 @@ ASafariM.Clients/asafarim-ui/stats.html
 ASafariM.Clients/asafarim-cli/ .env
 \[Unit].ini
 ASafariM.Clients/packages/dd-menu/node-compile-cache/v24.1.0-x64-7b018323-0/51c96912
+pnpm-lock.yaml

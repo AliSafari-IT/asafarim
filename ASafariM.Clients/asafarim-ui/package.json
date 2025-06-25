@@ -25,6 +25,7 @@
     "test:run": "vitest run"
   },
   "dependencies": {
+    "@asafarim/react-privacy-consent": "^1.7.0",
     "@emailjs/browser": "^4.4.1",
     "@fluentui-contrib/azure-theme": "^0.0.3",
     "@fluentui-contrib/react-resize-handle": "^0.6.1",

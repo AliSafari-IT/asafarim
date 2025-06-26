@@ -12,7 +12,7 @@ import "@asafarim/dd-menu/dist/index.css";
 // Theme-aware styles component
 const ThemeAwareStyles = () => (
   <style>{`
-    /* DDMenuTest theme overrides */
+    /* DDMenuTest theme overrides - more specific and careful */
     [data-theme="dark"] .searchable-dropdown__item {
       background-color: var(--bg-secondary) !important;
       color: var(--text-primary) !important;
@@ -41,10 +41,45 @@ const ThemeAwareStyles = () => (
     [data-theme="dark"] [style*="background: #f8f9fa"] {
       background: var(--bg-secondary) !important;
     }
-    
-    [data-theme="dark"] [style*="color: #6b7280"],
+      [data-theme="dark"] [style*="color: #6b7280"],
     [data-theme="dark"] [style*="color: #374151"] {
       color: var(--text-secondary) !important;
+    }
+    
+    /* DD-Menu submenu fixes */
+    .dd-menu__submenu {
+      position: absolute !important;
+      z-index: 9999 !important;
+      left: 100% !important;
+      top: 0 !important;
+      margin-left: 8px !important;
+      min-width: 180px !important;
+    }
+    
+    .dd-menu__submenu--open {
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: translateX(0) !important;
+      pointer-events: auto !important;
+      display: block !important;
+    }
+    
+    [data-theme="dark"] .dd-menu__submenu {
+      background: var(--dropdown-bg) !important;
+      border: 1px solid var(--dropdown-border) !important;
+    }
+    
+    [data-theme="dark"] .dd-menu__submenu .dd-menu__item {
+      color: var(--text-primary) !important;
+    }
+    
+    [data-theme="dark"] .dd-menu__submenu .dd-menu__item:hover {
+      background-color: var(--dropdown-hover) !important;
+    }
+    
+    /* Ensure parent containers allow overflow */
+    .dd-menu__content {
+      overflow: visible !important;
     }
   `}</style>
 );
@@ -508,6 +543,8 @@ const TestComponent: React.FC = () => {
           display: "flex",
           gap: "30px",
           alignItems: "center",
+          overflow: "visible", // Allow submenus to extend beyond container
+          position: "relative", // Ensure proper positioning context
         }}
       >
         <DDMenu

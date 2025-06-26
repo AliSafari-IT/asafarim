@@ -62,19 +62,56 @@ const ThemeAwareStyles = () => (
       transform: translateX(0) !important;
       pointer-events: auto !important;
       display: block !important;
-    }
-    
-    [data-theme="dark"] .dd-menu__submenu {
+    }    [data-theme="dark"] .dd-menu__submenu {
       background: var(--dropdown-bg) !important;
       border: 1px solid var(--dropdown-border) !important;
+    }
+    
+    [data-theme="light"] .dd-menu__submenu {
+      background: white !important;
+      border: 1px solid #e5e7eb !important;
+    }
+    
+    /* Main dropdown content styling */
+    [data-theme="dark"] .dd-menu__content {
+      background: var(--dropdown-bg) !important;
+      border: 1px solid var(--dropdown-border) !important;
+    }
+    
+    [data-theme="light"] .dd-menu__content {
+      background: white !important;
+      border: 1px solid #e5e7eb !important;
+    }
+    
+    [data-theme="dark"] .dd-menu__item {
+      color: var(--text-primary) !important;
+    }
+    
+    [data-theme="light"] .dd-menu__item {
+      color: #374151 !important;
+    }
+    
+    [data-theme="dark"] .dd-menu__item:hover {
+      background-color: var(--dropdown-hover) !important;
+    }
+    
+    [data-theme="light"] .dd-menu__item:hover {
+      background-color: #f3f4f6 !important;
     }
     
     [data-theme="dark"] .dd-menu__submenu .dd-menu__item {
       color: var(--text-primary) !important;
     }
     
+    [data-theme="light"] .dd-menu__submenu .dd-menu__item {
+      color: #374151 !important;
+    }
+    
     [data-theme="dark"] .dd-menu__submenu .dd-menu__item:hover {
       background-color: var(--dropdown-hover) !important;
+    }
+      [data-theme="light"] .dd-menu__submenu .dd-menu__item:hover {
+      background-color: #f3f4f6 !important;
     }
     
     /* Ensure parent containers allow overflow */

@@ -3,7 +3,7 @@ import type { PrivacyConsentConfig, ConsentRecord } from '@asafarim/react-privac
 // Global consent configuration for the entire application
 export const globalConsentConfig: PrivacyConsentConfig = {
   settings: {
-    version: '1.6.0', // Increment version to reset any corrupted storage
+    version: '1.7.0', // Increment version to reset any corrupted storage
     storageKey: 'asafarim-bibliography-privacy-consent', // Use unique storage key for bibliography app
     expirationDays: 365,
     autoShowDelay: 1000,

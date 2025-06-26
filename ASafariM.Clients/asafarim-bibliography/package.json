@@ -28,9 +28,9 @@
       "last 3 firefox version",
       "last 5 safari version"
     ]
-  },
-  "dependencies": {
+  },  "dependencies": {
     "@asafarim/dd-menu": "^1.2.4",
+    "@asafarim/markdown-utils": "workspace:*",
     "@asafarim/react-privacy-consent": "^1.7.0",
     "@asafarim/react-themes": "1.5.0",
     "@headlessui/react": "^2.0.0",

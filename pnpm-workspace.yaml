@@ -6,3 +6,4 @@ packages:
   - ASafariM.Clients/asafarim-pbk
   - ASafariM.Clients/asafarim-cli
   - ASafariM.Clients/packages/*
+  - ASafariM.Clients/packages/*/demo

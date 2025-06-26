@@ -116,7 +116,7 @@ const DisplayMd: React.FC<DisplayMdProps> = ({ markdownContent, id }) => {
         rehypePlugins={[
           rehypeRaw,
           [rehypeSanitize, {
-            tagNames: ['img', 'figure', , 'style','p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'blockquote', 'strong', 'em', 'code', 'hr', 'br', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'div', 'span', 'iframe', 'figure', 'figcaption', 'details', 'summary', 'pre', 'code', 'kbd', 'samp', 'var', 'sub', 'sup', 'mark', 'del', 'ins', 'b', 'u', 'i', 'sup', 'sub', 'span', 'hr', 'br', 'a'],
+            tagNames: ['img', 'figure', 'figcaption', 'style','p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'blockquote', 'strong', 'em', 'code', 'br', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'div', 'span', 'iframe', 'details', 'summary', 'pre', 'code', 'kbd', 'samp', 'var', 'sub', 'sup', 'mark', 'del', 'ins', 'b', 'u', 'i', 'sup', 'sub', 'span', 'hr', 'br', 'a'],
             voidElements: ['br', 'img', 'iframe', 'details', 'summary'],
             attributes: {
               'img': ['src', 'alt', 'width', 'height'],
@@ -138,7 +138,9 @@ const DisplayMd: React.FC<DisplayMdProps> = ({ markdownContent, id }) => {
               '*': ['className', 'id', 'style'],
               'a': ['href', 'target', 'rel'],
               'code': ['className', 'language'],
-              'pre': ['className', 'language']
+              'pre': ['className', 'language'],
+              'kbd': ['className', 'id', 'style'],
+              'samp': ['className', 'id', 'style'],
             }
           }]
         ]}

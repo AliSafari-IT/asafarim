@@ -1,0 +1,18 @@
+{
+  "name": "@asafarim/markdown-utils-demo",
+  "version": "1.0.0",
+  "description": "Demo application showcasing the @asafarim/markdown-utils package",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },  "dependencies": {
+    "@asafarim/markdown-utils": "workspace:^"
+  },  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "vite": "^5.0.0"
+  }
+}

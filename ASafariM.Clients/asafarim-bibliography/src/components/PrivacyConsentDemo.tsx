@@ -39,29 +39,27 @@ function PrivacyConsentDemo() {
     
     // Handle all possible theme modes including 'auto'
     const isDark = mode === 'dark' || (mode === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    
-    if (isDark) {
+      if (isDark) {
       console.log('[Demo] Applying dark theme to consent components');
       applyConsentTheme({
-        primaryColor: 'var(--primary-600, #dc2626)',
-        secondaryColor: 'var(--primary-700, #b91c1c)',
-        backgroundColor: 'var(--gray-900, #111827)',
-        textColor: 'var(--gray-100, #f3f4f6)',
-        borderColor: 'var(--gray-700, #374151)',
+        primaryColor: 'var(--accent-primary)',
+        secondaryColor: 'var(--accent-hover)',
+        backgroundColor: 'var(--bg-primary)',
+        textColor: 'var(--text-primary)',
+        borderColor: 'var(--border-primary)',
         borderRadius: '8px',
         fontFamily: 'Inter, system-ui, sans-serif',
         fontSize: '14px',
         buttonStyle: 'solid',
         shadow: true
-      });
-    } else {
+      });    } else {
       console.log('[Demo] Applying light theme to consent components');
       applyConsentTheme({
-        primaryColor: 'var(--primary-600, #2563eb)',
-        secondaryColor: 'var(--primary-700, #1d4ed8)',
-        backgroundColor: 'var(--gray-50, #f9fafb)',
-        textColor: 'var(--gray-900, #111827)',
-        borderColor: 'var(--gray-200, #e5e7eb)',
+        primaryColor: 'var(--accent-primary)',
+        secondaryColor: 'var(--accent-hover)',
+        backgroundColor: 'var(--bg-primary)',
+        textColor: 'var(--text-primary)',
+        borderColor: 'var(--border-primary)',
         borderRadius: '8px',
         fontFamily: 'Inter, system-ui, sans-serif',
         fontSize: '14px',
@@ -82,10 +80,15 @@ function PrivacyConsentDemo() {
       
       {/* Theme Controls */}
       <div className="demo-section">
-        <h2>Theme Controls</h2>
-        <div className="demo-controls">
+        <h2>Theme Controls</h2>        <div className="demo-controls">
           <ThemeToggle />
-          <div style={{ marginLeft: '20px', padding: '10px', backgroundColor: '#f0f0f0', borderRadius: '4px' }}>
+          <div style={{ 
+            marginLeft: '20px', 
+            padding: '10px', 
+            backgroundColor: 'var(--bg-tertiary)', 
+            borderRadius: '4px',
+            color: 'var(--text-primary)'
+          }}>
             <strong>Current Theme Mode:</strong> {mode}
             <br />
             <strong>Is Dark:</strong> {mode === 'dark' || (mode === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'Yes' : 'No'}
@@ -152,14 +155,23 @@ function PrivacyConsentDemo() {
       {/* Integration Guide */}
       <div className="demo-section">
         <h2>Integration Guide</h2>
-        <div style={{ textAlign: 'left' }}>
-          <h3>1. Install the Package</h3>
-          <pre style={{ background: '#f5f5f5', padding: '1rem', borderRadius: '4px' }}>
+        <div style={{ textAlign: 'left' }}>          <h3>1. Install the Package</h3>
+          <pre style={{ 
+            background: 'var(--markdown-code-bg)', 
+            color: 'var(--markdown-code-text)',
+            padding: '1rem', 
+            borderRadius: '4px' 
+          }}>
             npm install @asafarim/react-privacy-consent
           </pre>
 
           <h3>2. Basic Usage</h3>
-          <pre style={{ background: '#f5f5f5', padding: '1rem', borderRadius: '4px' }}>
+          <pre style={{ 
+            background: 'var(--markdown-code-bg)', 
+            color: 'var(--markdown-code-text)',
+            padding: '1rem', 
+            borderRadius: '4px' 
+          }}>
 {`import { ConsentProvider, ConsentBanner, ConsentModal } from '@asafarim/react-privacy-consent';
 import '@asafarim/react-privacy-consent/styles.css';
 
@@ -172,10 +184,13 @@ function App() {
     </ConsentProvider>
   );
 }`}
-          </pre>
-
-          <h3>3. Use Consent Data</h3>
-          <pre style={{ background: '#f5f5f5', padding: '1rem', borderRadius: '4px' }}>
+          </pre>          <h3>3. Use Consent Data</h3>
+          <pre style={{ 
+            background: 'var(--markdown-code-bg)', 
+            color: 'var(--markdown-code-text)',
+            padding: '1rem', 
+            borderRadius: '4px' 
+          }}>
 {`import { useConsent } from '@asafarim/react-privacy-consent';
 
 function YourComponent() {

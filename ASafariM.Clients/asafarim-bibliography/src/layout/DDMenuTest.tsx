@@ -9,6 +9,46 @@ import React, { useState } from "react";
 import DDMenu, { MenuItem } from "@asafarim/dd-menu";
 import "@asafarim/dd-menu/dist/index.css";
 
+// Theme-aware styles component
+const ThemeAwareStyles = () => (
+  <style>{`
+    /* DDMenuTest theme overrides */
+    [data-theme="dark"] .searchable-dropdown__item {
+      background-color: var(--bg-secondary) !important;
+      color: var(--text-primary) !important;
+      border-color: var(--border-primary) !important;
+    }
+    
+    [data-theme="dark"] .searchable-dropdown__item:hover {
+      background-color: var(--dropdown-hover) !important;
+    }
+    
+    [data-theme="dark"] .demo-section {
+      background-color: var(--bg-secondary) !important;
+      color: var(--text-primary) !important;
+      border: 1px solid var(--border-primary) !important;
+    }
+    
+    [data-theme="dark"] .feature-item {
+      background-color: var(--bg-tertiary) !important;
+      color: var(--text-secondary) !important;
+      border: 1px solid var(--border-secondary) !important;
+    }
+    
+    /* Override any inline styles for dark mode */
+    [data-theme="dark"] [style*="background: white"],
+    [data-theme="dark"] [style*="background: #f9fafb"],
+    [data-theme="dark"] [style*="background: #f8f9fa"] {
+      background: var(--bg-secondary) !important;
+    }
+    
+    [data-theme="dark"] [style*="color: #6b7280"],
+    [data-theme="dark"] [style*="color: #374151"] {
+      color: var(--text-secondary) !important;
+    }
+  `}</style>
+);
+
 const TestComponent: React.FC = () => {
   const theme = localStorage.getItem("theme") as "auto" | "light" | "dark";
   const allItems: MenuItem[] = [
@@ -110,15 +150,14 @@ const TestComponent: React.FC = () => {
 
         {isOpen && (
           <div
-            className="searchable-dropdown__menu"
-            style={{
+            className="searchable-dropdown__menu"            style={{
               position: "absolute",
               zIndex: 100,
               marginTop: "4px",
-              background: "white",
+              background: "var(--bg-secondary)",
               borderRadius: "6px",
-              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
-              border: "1px solid #e5e7eb",
+              boxShadow: "var(--shadow-large)",
+              border: "1px solid var(--border-primary)",
               width: "280px",
               maxHeight: "400px",
               overflow: "hidden",
@@ -127,24 +166,24 @@ const TestComponent: React.FC = () => {
             }}
           >
             <div
-              className="searchable-dropdown__search"
-              style={{
+              className="searchable-dropdown__search"              style={{
                 padding: "12px",
-                borderBottom: "1px solid #e5e7eb",
+                borderBottom: "1px solid var(--border-primary)",
               }}
             >
               <input
                 type="text"
                 placeholder="Search items..."
                 value={searchTerm}
-                onChange={handleSearchChange}
-                style={{
+                onChange={handleSearchChange}                style={{
                   width: "100%",
                   padding: "8px 12px",
-                  border: "1px solid #d1d5db",
+                  border: "1px solid var(--border-primary)",
                   borderRadius: "4px",
                   fontSize: "14px",
                   outline: "none",
+                  backgroundColor: "var(--bg-primary)",
+                  color: "var(--text-primary)",
                 }}
                 autoFocus
                 onKeyDown={(e) => {
@@ -184,16 +223,15 @@ const TestComponent: React.FC = () => {
                     key={item.id}
                     className={`searchable-dropdown__item ${
                       focusedIndex === index ? "focused" : ""
-                    }`}
-                    style={{
+                    }`}                    style={{
                       padding: "8px 16px",
                       cursor: "pointer",
                       display: "flex",
                       alignItems: "center",
                       gap: "8px",
                       backgroundColor:
-                        focusedIndex === index ? "#f3f4f6" : "transparent",
-                      color: item.disabled ? "#9ca3af" : "#374151",
+                        focusedIndex === index ? "var(--dropdown-hover)" : "transparent",
+                      color: item.disabled ? "var(--text-secondary)" : "var(--text-primary)",
                     }}
                     onClick={() => {
                       if (!item.disabled) {
@@ -209,11 +247,10 @@ const TestComponent: React.FC = () => {
                   </div>
                 ))
               ) : (
-                <div
-                  style={{
+                <div                  style={{
                     padding: "16px",
                     textAlign: "center",
-                    color: "#6b7280",
+                    color: "var(--text-secondary)",
                     fontSize: "14px",
                   }}
                 >
@@ -298,10 +335,18 @@ const TestComponent: React.FC = () => {
       onClick: () => alert("Signing out..."),
       icon: "🚪",
     },
-  ];
-
-  return (
-    <div style={{ padding: "20px", maxWidth: "1200px", margin: "0 auto" }}>
+  ];  return (
+    <div 
+      style={{ 
+        padding: "20px", 
+        maxWidth: "1200px", 
+        margin: "0 auto",
+        backgroundColor: "var(--background-color)",
+        color: "var(--text-color)",
+        minHeight: "100vh"
+      }}
+    >
+      <ThemeAwareStyles />
       {" "}
       {/* Package Header */}
       <div
@@ -560,10 +605,9 @@ const TestComponent: React.FC = () => {
       {/* Minimal Style */}
       <div
         style={{
-          background: "#ffffff",
           padding: "24px",
           borderRadius: "12px",
-          border: "1px solid #e5e7eb",
+          border: "1px solid var(--border-primary)",
           boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)",
           textAlign: "center",
         }}
@@ -572,7 +616,6 @@ const TestComponent: React.FC = () => {
           style={{
             fontSize: "1.125rem",
             fontWeight: "600",
-            color: "#1f2937",
             marginBottom: "16px",
           }}
         >
@@ -584,7 +627,6 @@ const TestComponent: React.FC = () => {
           trigger={
             <span
               style={{
-                color: "#374151",
                 fontWeight: "500",
                 cursor: "pointer",
               }}
@@ -595,7 +637,7 @@ const TestComponent: React.FC = () => {
         />
         <p
           style={{
-            color: "#6b7280",
+            color: "var(--text-secondary)",
             fontSize: "13px",
             marginTop: "12px",
             fontStyle: "italic",
@@ -608,15 +650,14 @@ const TestComponent: React.FC = () => {
       {/* Custom Trigger Examples */}
       <div
         style={{
-          background: "#ffffff",
           padding: "24px",
           borderRadius: "8px",
-          border: "1px solid #e5e7eb",
+          border: "1px solid var(--border-primary)",
         }}
       >
         <h2
           style={{
-            color: "#1f2937",
+            color: "var(--text-primary)",
             marginBottom: "24px",
             textAlign: "center",
             fontSize: "20px",
@@ -641,8 +682,8 @@ const TestComponent: React.FC = () => {
             trigger={
               <button
                 style={{
-                  background: "#3b82f6",
-                  color: "white",
+                  background: "var(--accent-primary)",
+                  color: "var(--button-primary-text)",
                   border: "none",
                   padding: "8px 16px",
                   borderRadius: "6px",
@@ -666,13 +707,13 @@ const TestComponent: React.FC = () => {
                   width: "40px",
                   height: "40px",
                   borderRadius: "50%",
-                  background: "#f3f4f6",
+                  background: "var(--bg-secondary)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   cursor: "pointer",
                   fontSize: "20px",
-                  border: "1px solid #e5e7eb",
+                  border: "1px solid var(--border-primary)",
                 }}
               >
                 ⚙️
@@ -688,7 +729,7 @@ const TestComponent: React.FC = () => {
             trigger={
               <span
                 style={{
-                  color: "#3b82f6",
+                  color: "var(--accent-primary)",
                   fontWeight: "500",
                   cursor: "pointer",
                   fontSize: "14px",
@@ -701,9 +742,13 @@ const TestComponent: React.FC = () => {
             }
           />
         </div>
-      </div>
-      <div
-        style={{ padding: "40px", background: "white", borderRadius: "12px" }}
+      </div>      <div
+        style={{ 
+          padding: "40px", 
+          background: "var(--bg-secondary)", 
+          borderRadius: "12px",
+          border: "1px solid var(--border-primary)"
+        }}
       >
         {/* Sidebar Example */}
         <div
@@ -711,14 +756,13 @@ const TestComponent: React.FC = () => {
             maxWidth: "800px",
             margin: "0 auto",
             padding: "24px",
-            background: "#f9fafb",
+            background: "var(--bg-primary)",
             borderRadius: "8px",
-            border: "1px solid #e5e7eb",
+            border: "1px solid var(--border-primary)",
           }}
-        >
-          <h2
+        >          <h2
             style={{
-              color: "#1f2937",
+              color: "var(--text-primary)",
               marginBottom: "24px",
               textAlign: "center",
               fontSize: "20px",
@@ -738,7 +782,7 @@ const TestComponent: React.FC = () => {
             style={{
               fontSize: "18px",
               fontWeight: "600",
-              color: "#334155",
+              color: "var(--text-primary)",
               marginBottom: "20px",
             }}
           >
@@ -748,7 +792,7 @@ const TestComponent: React.FC = () => {
           <p
             style={{
               fontSize: "15px",
-              color: "#64748b",
+              color: "var(--text-secondary)",
               marginBottom: "20px",
               maxWidth: "600px",
             }}
@@ -771,17 +815,17 @@ const TestComponent: React.FC = () => {
           style={{
             marginTop: "40px",
             textAlign: "center",
-            background: "#ffffff",
+            background: "var(--bg-primary)",
             padding: "32px",
             borderRadius: "8px",
-            border: "1px solid #e5e7eb",
+            border: "1px solid var(--border-primary)",
           }}
         >
           <h3
             style={{
               fontSize: "18px",
               fontWeight: "600",
-              color: "#1f2937",
+              color: "var(--text-primary)",
               marginBottom: "24px",
             }}
           >
@@ -806,10 +850,10 @@ const TestComponent: React.FC = () => {
                 key={index}
                 style={{
                   padding: "12px",
-                  background: "#f9fafb",
+                  background: "var(--bg-secondary)",
                   borderRadius: "6px",
-                  border: "1px solid #e5e7eb",
-                  color: "#6b7280",
+                  border: "1px solid var(--border-primary)",
+                  color: "var(--text-secondary)",
                   fontSize: "13px",
                   fontWeight: "500",
                 }}
@@ -823,7 +867,7 @@ const TestComponent: React.FC = () => {
       <div>
         <h2
           style={{
-            color: "#1f99f7",
+            color: "var(--text-primary)",
             marginTop: "40px",
             textAlign: "center",
             fontSize: "24px",
@@ -835,7 +879,7 @@ const TestComponent: React.FC = () => {
         <p
           style={{
             textAlign: "center",
-            color: "#6bf280",
+            color: "var(--text-secondary)",
             fontSize: "14px",
             marginTop: "12px",
           }}

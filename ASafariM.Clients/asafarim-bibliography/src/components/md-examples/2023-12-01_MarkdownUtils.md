@@ -3,7 +3,7 @@
 Published: **December 1, 2023**  
 Updated: *December 15, 2023*
 
-This is a **comprehensive guide** to using *markdown utilities* in your projects. The `@asafarim/markdown-utils` package provides powerful tools for processing markdown content.
+This is a **comprehensive guide** to using *markdown utilities* in your projects. The `@asafarim/markdown-utils` package provides powerful tools for processing markdown content. Check the demo live at: [@asafarim/markdown-utils Demo](https://bibliography.asafarim.com/markdown-utils/demo).
 
 ## Features
 

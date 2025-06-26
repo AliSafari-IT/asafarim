@@ -1,12 +1,100 @@
+/* AppInfo Theme Variable Overrides - This makes all hardcoded colors use theme variables */
+.app-info-container * {
+  color: inherit;
+}
+
+/* Override all hardcoded backgrounds to use theme variables */
+.app-info-container {
+  background-color: var(--bg-secondary) !important;
+  border: 1px solid var(--border-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+.app-info-header {
+  background-color: var(--bg-tertiary) !important;
+  border-bottom: 1px solid var(--border-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+.app-info-header:hover {
+  background-color: var(--dropdown-hover) !important;
+}
+
+.app-info-content {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+.info-intro {
+  background: linear-gradient(180deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%) !important;
+  border-bottom: 1px solid var(--border-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+.tabs-header {
+  background-color: var(--bg-primary) !important;
+  border-bottom: 1px solid var(--border-secondary) !important;
+}
+
+.tab {
+  color: var(--text-secondary) !important;
+  background-color: transparent !important;
+}
+
+.tab:hover {
+  color: var(--text-primary) !important;
+  background-color: var(--dropdown-hover) !important;
+}
+
+.tab.active {
+  background-color: var(--bg-secondary) !important;
+  color: var(--accent-primary) !important;
+}
+
+.tab-content {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Override any hardcoded text colors */
+.app-info-container h1,
+.app-info-container h2, 
+.app-info-container h3,
+.app-info-container h4,
+.app-info-container h5,
+.app-info-container h6 {
+  color: var(--text-primary) !important;
+}
+
+.app-info-container p,
+.app-info-container div,
+.app-info-container span {
+  color: var(--text-primary) !important;
+}
+
+.app-info-container .text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+/* Keep accent colors for special elements */
+.expand-icon {
+  color: var(--accent-primary) !important;
+}
+
+.tab::after {
+  background-color: var(--accent-primary) !important;
+}
+
+/* Original styles follow below */
 .app-info-container {
   margin-top: 2rem;
-  background-color: #1e1e2e;
-  border-radius: 12px;
+  background-color: var(--bg-secondary);
+  border-radius: var(--border-radius-large);
   overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-large);
   width: 100%;
   transition: all 0.3s ease;
-  border: 1px solid #313244;
+  border: 1px solid var(--border-primary);
   position: relative;
 }
 
@@ -15,22 +103,22 @@
 }
 
 .app-info-container.collapsed {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-medium);
 }
 
 .app-info-header {
-  background-color: #313244;
+  background-color: var(--bg-tertiary);
   padding: 1rem 1.5rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
   transition: background-color 0.2s;
-  border-bottom: 1px solid #45475a;
+  border-bottom: 1px solid var(--border-secondary);
 }
 
 .app-info-header:hover {
-  background-color: #45475a;
+  background-color: var(--dropdown-hover);
 }
 
 .header-content {
@@ -46,13 +134,13 @@
 .app-info-header h3 {
   margin: 0;
   font-size: 1.2rem;
-  color: #cdd6f4;
+  color: var(--text-primary);
   font-weight: 600;
 }
 
 .expand-icon {
   font-size: 1.2rem;
-  color: #89b4fa;
+  color: var(--accent-primary);
   transition: transform 0.3s ease;
 }
 
@@ -62,7 +150,7 @@
 
 .app-info-content {
   padding: 0;
-  color: #cdd6f4;
+  color: var(--text-primary);
   font-size: 0.95rem;
   line-height: 1.5;
   opacity: 1;
@@ -102,20 +190,20 @@
 .info-intro {
   padding: 2rem;
   text-align: center;
-  background: linear-gradient(180deg, #313244 0%, #1e1e2e 100%);
-  border-bottom: 1px solid #45475a;
+  background: linear-gradient(180deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+  border-bottom: 1px solid var(--border-secondary);
 }
 
 .glow-text {
   font-size: 2.2rem;
   font-weight: 700;
   margin-bottom: 1rem;
-  background: linear-gradient(90deg, #f5c2e7, #cba6f7, #89b4fa, #a6e3a1);
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary), var(--teams-blue), var(--teams-green));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: glow 8s ease infinite;
-  text-shadow: 0 0 10px rgba(203, 166, 247, 0.3);
+  text-shadow: 0 0 10px rgba(139, 147, 255, 0.3);
 }
 
 @keyframes glow {
@@ -127,7 +215,7 @@
 .info-intro p {
   max-width: 70%;
   margin: 0 auto;
-  color: #bac2de;
+  color: var(--text-secondary);
   font-size: 1.1rem;
 }
 
@@ -137,8 +225,8 @@
 
 .tabs-header {
   display: flex;
-  border-bottom: 1px solid #45475a;
-  background-color: #181825;
+  border-bottom: 1px solid var(--border-secondary);
+  background-color: var(--bg-primary);
 }
 
 .tab {
@@ -162,7 +250,7 @@
   left: 50%;
   width: 0;
   height: 3px;
-  background-color: var(--tab-color, #89b4fa);
+  background-color: var(--tab-color, var(--accent-primary));
   transform: translateX(-50%);
   transition: width 0.3s ease;
 }
@@ -185,8 +273,8 @@
 }
 
 .tab.active {
-  background-color: #1e1e2e;
-  color: var(--tab-color, #89b4fa);
+  background-color: var(--bg-secondary);
+  color: var(--tab-color, var(--accent-primary));
 }
 
 .tab-content {
@@ -367,6 +455,59 @@
 .tech-icon:hover {
   transform: translateY(-3px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Light mode specific overrides for AppInfo */
+[data-theme="light"] .app-info-container {
+  background-color: var(--bg-primary) !important;
+  border: 1px solid var(--border-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .app-info-header {
+  background-color: var(--bg-secondary) !important;
+  border-bottom: 1px solid var(--border-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .app-info-header:hover {
+  background-color: var(--dropdown-hover) !important;
+}
+
+[data-theme="light"] .app-info-content {
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .info-intro {
+  background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%) !important;
+  border-bottom: 1px solid var(--border-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .tabs-header {
+  background-color: var(--bg-secondary) !important;
+  border-bottom: 1px solid var(--border-secondary) !important;
+}
+
+[data-theme="light"] .tab {
+  color: var(--text-secondary) !important;
+  background-color: transparent !important;
+}
+
+[data-theme="light"] .tab:hover {
+  color: var(--text-primary) !important;
+  background-color: var(--dropdown-hover) !important;
+}
+
+[data-theme="light"] .tab.active {
+  background-color: var(--bg-primary) !important;
+  color: var(--accent-primary) !important;
+}
+
+[data-theme="light"] .tab-content {
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
 }
 
 /* Responsive adjustments */

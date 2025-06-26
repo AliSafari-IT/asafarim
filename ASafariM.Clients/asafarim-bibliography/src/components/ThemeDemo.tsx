@@ -11,12 +11,11 @@ export const ThemeDemo: React.FC = () => {
   const { currentTheme, mode, themes } = useTheme();
   const { isDark, isLight, isAuto } = useThemeToggle();
 
-  return (
-    <div
+  return (    <div
       style={{
         padding: "2rem",
-        backgroundColor: "var(--theme-color-background, #fff)",
-        color: "var(--theme-color-text, #000)",
+        backgroundColor: "var(--background-color)",
+        color: "var(--text-color)",
         minHeight: "100vh",
         transition: "all 0.3s ease",
       }}    >
@@ -25,16 +24,16 @@ export const ThemeDemo: React.FC = () => {
         textAlign: "center", 
         marginBottom: "3rem", 
         padding: "2rem",
-        backgroundColor: "var(--theme-color-background-secondary)",
-        border: "1px solid var(--theme-color-border)",
-        borderRadius: "var(--theme-radius-lg)",
+        backgroundColor: "var(--bg-secondary)",
+        border: "1px solid var(--border-primary)",
+        borderRadius: "8px",
       }}>
         <h1 style={{ 
           fontSize: "2.5rem", 
           fontWeight: "bold", 
           marginBottom: "1rem",
-          color: "var(--theme-color-text)",
-          background: "linear-gradient(45deg, var(--theme-color-primary), var(--theme-color-primary-hover))",
+          color: "var(--text-primary)",
+          background: "linear-gradient(45deg, var(--accent-primary), var(--accent-hover))",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
           backgroundClip: "text"
@@ -42,14 +41,14 @@ export const ThemeDemo: React.FC = () => {
           @asafarim/react-themes
         </h1>        <p style={{ 
           fontSize: "1.2rem", 
-          color: "var(--theme-color-text-secondary)",
+          color: "var(--text-secondary)",
           marginBottom: "1rem" 
         }}>
           A comprehensive React theme management package with TypeScript support
         </p>
         <p style={{ 
           fontSize: "1rem", 
-          color: "var(--theme-color-text-muted)",
+          color: "var(--text-secondary)",
           marginBottom: "1.5rem" 
         }}>
           📦 View on{" "}
@@ -58,7 +57,7 @@ export const ThemeDemo: React.FC = () => {
             target="_blank" 
             rel="noopener noreferrer"
             style={{ 
-              color: "var(--theme-color-primary)", 
+              color: "var(--accent-primary)", 
               textDecoration: "none",
               fontWeight: "500"
             }}
@@ -71,39 +70,37 @@ export const ThemeDemo: React.FC = () => {
           justifyContent: "center", 
           gap: "1rem", 
           flexWrap: "wrap" 
-        }}>
-          <span style={{ 
+        }}>          <span style={{ 
             padding: "0.25rem 0.75rem", 
-            backgroundColor: "var(--theme-color-primary)", 
-            color: "white", 
-            borderRadius: "var(--theme-radius-full)", 
+            backgroundColor: "var(--accent-primary)", 
+            color: "var(--button-primary-text)", 
+            borderRadius: "9999px", 
             fontSize: "0.875rem" 
           }}>
             ⚛️ React 18+
           </span>
           <span style={{ 
             padding: "0.25rem 0.75rem", 
-            backgroundColor: "var(--theme-color-primary)", 
-            color: "white", 
-            borderRadius: "var(--theme-radius-full)", 
+            backgroundColor: "var(--accent-primary)", 
+            color: "var(--button-primary-text)", 
+            borderRadius: "9999px", 
             fontSize: "0.875rem" 
           }}>
             📘 TypeScript
           </span>
           <span style={{ 
             padding: "0.25rem 0.75rem", 
-            backgroundColor: "var(--theme-color-primary)", 
-            color: "white", 
-            borderRadius: "var(--theme-radius-full)", 
+            backgroundColor: "var(--accent-primary)", 
+            color: "var(--button-primary-text)", 
+            borderRadius: "9999px", 
             fontSize: "0.875rem" 
           }}>
             🎨 CSS Variables
-          </span>
-          <span style={{ 
+          </span>          <span style={{ 
             padding: "0.25rem 0.75rem", 
-            backgroundColor: "var(--theme-color-primary)", 
-            color: "white", 
-            borderRadius: "var(--theme-radius-full)", 
+            backgroundColor: "var(--accent-primary)", 
+            color: "var(--button-primary-text)", 
+            borderRadius: "9999px", 
             fontSize: "0.875rem" 
           }}>
             🌙 Dark Mode
@@ -131,15 +128,14 @@ export const ThemeDemo: React.FC = () => {
         >
           <ThemeToggle />
           <ThemeToggle showLabels={true} />
-          <ThemeSelector />
-          <button
+          <ThemeSelector />          <button
             onClick={() => console.log("Current theme:", currentTheme)}
             style={{
-              backgroundColor: "var(--theme-color-primary, #007bff)",
-              color: "white",
+              backgroundColor: "var(--button-primary)",
+              color: "var(--button-primary-text)",
               border: "none",
               padding: "0.5rem 1rem",
-              borderRadius: "var(--theme-radius-sm, 4px)",
+              borderRadius: "4px",
               cursor: "pointer",
             }}
           >
@@ -166,13 +162,12 @@ export const ThemeDemo: React.FC = () => {
             gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
             gap: "1rem",
           }}
-        >
-          <div
+        >          <div
             style={{
               padding: "1rem",
-              backgroundColor: "var(--theme-color-background-secondary)",
-              border: "1px solid var(--theme-color-border)",
-              borderRadius: "var(--theme-radius-md)",
+              backgroundColor: "var(--bg-secondary)",
+              border: "1px solid var(--border-primary)",
+              borderRadius: "8px",
             }}
           >
             <h4>🎨 Multiple Themes</h4>
@@ -181,9 +176,9 @@ export const ThemeDemo: React.FC = () => {
           <div
             style={{
               padding: "1rem",
-              backgroundColor: "var(--theme-color-background-secondary)",
-              border: "1px solid var(--theme-color-border)",
-              borderRadius: "var(--theme-radius-md)",
+              backgroundColor: "var(--bg-secondary)",
+              border: "1px solid var(--border-primary)",
+              borderRadius: "8px",
             }}
           >
             <h4>🔄 Auto Detection</h4>
@@ -192,9 +187,9 @@ export const ThemeDemo: React.FC = () => {
           <div
             style={{
               padding: "1rem",
-              backgroundColor: "var(--theme-color-background-secondary)",
-              border: "1px solid var(--theme-color-border)",
-              borderRadius: "var(--theme-radius-md)",
+              backgroundColor: "var(--bg-secondary)",
+              border: "1px solid var(--border-primary)",
+              borderRadius: "8px",
             }}
           >
             <h4>💾 Persistence</h4>
@@ -203,22 +198,21 @@ export const ThemeDemo: React.FC = () => {
           <div
             style={{
               padding: "1rem",
-              backgroundColor: "var(--theme-color-background-secondary)",
-              border: "1px solid var(--theme-color-border)",
-              borderRadius: "var(--theme-radius-md)",
+              backgroundColor: "var(--bg-secondary)",
+              border: "1px solid var(--border-primary)",
+              borderRadius: "8px",
             }}
           >
             <h4>⚛️ React Hooks</h4>
             <p>Easy theme management</p>
           </div>
         </div>
-      </div>
-      <div
+      </div>      <div
         style={{
           padding: "1rem",
-          backgroundColor: "var(--theme-color-background-secondary, #f8f9fa)",
-          border: "1px solid var(--theme-color-border, #dee2e6)",
-          borderRadius: "var(--theme-radius-md, 8px)",
+          backgroundColor: "var(--bg-secondary)",
+          border: "1px solid var(--border-primary)",
+          borderRadius: "8px",
           marginBottom: "2rem",
         }}
       >
@@ -227,11 +221,11 @@ export const ThemeDemo: React.FC = () => {
         <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
           <button
             style={{
-              backgroundColor: "var(--theme-color-primary, #007bff)",
-              color: "white",
+              backgroundColor: "var(--button-primary)",
+              color: "var(--button-primary-text)",
               border: "none",
               padding: "0.5rem 1rem",
-              borderRadius: "var(--theme-radius-sm, 4px)",
+              borderRadius: "4px",
               cursor: "pointer",
             }}
           >
@@ -239,11 +233,11 @@ export const ThemeDemo: React.FC = () => {
           </button>
           <button
             style={{
-              backgroundColor: "var(--theme-color-success, #28a745)",
-              color: "white",
+              backgroundColor: "var(--teams-green)",
+              color: "var(--text-success)",
               border: "none",
               padding: "0.5rem 1rem",
-              borderRadius: "var(--theme-radius-sm, 4px)",
+              borderRadius: "4px",
               cursor: "pointer",
             }}
           >
@@ -251,11 +245,11 @@ export const ThemeDemo: React.FC = () => {
           </button>
           <button
             style={{
-              backgroundColor: "var(--theme-color-warning, #ffc107)",
-              color: "var(--theme-color-text, #000)",
+              backgroundColor: "var(--warning)",
+              color: "var(--text-warning)",
               border: "none",
               padding: "0.5rem 1rem",
-              borderRadius: "var(--theme-radius-sm, 4px)",
+              borderRadius: "4px",
               cursor: "pointer",
             }}
           >
@@ -263,11 +257,11 @@ export const ThemeDemo: React.FC = () => {
           </button>
           <button
             style={{
-              backgroundColor: "var(--theme-color-error, #dc3545)",
-              color: "white",
+              backgroundColor: "var(--teams-red)",
+              color: "var(--text-error)",
               border: "none",
               padding: "0.5rem 1rem",
-              borderRadius: "var(--theme-radius-sm, 4px)",
+              borderRadius: "4px",
               cursor: "pointer",
             }}
           >

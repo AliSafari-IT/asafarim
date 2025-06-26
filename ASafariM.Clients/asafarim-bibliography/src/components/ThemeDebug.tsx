@@ -7,17 +7,17 @@ export default function ThemeDebug() {
       position: 'fixed',
       top: '10px',
       left: '10px',
-      background: 'var(--theme-color-background-secondary)',
-      color: 'var(--theme-color-text)',
+      background: 'var(--bg-secondary)',
+      color: 'var(--text-primary)',
       padding: '8px',
       borderRadius: '4px',
       fontSize: '12px',
       zIndex: 9999,
-      border: '1px solid var(--theme-color-border)',
+      border: '1px solid var(--border-primary)',
     }}>
       <div>Mode: {mode}</div>
       <div>Theme: {currentTheme.name}</div>
-      <div>BG: {getComputedStyle(document.documentElement).getPropertyValue('--theme-color-background')}</div>
+      <div>BG: {getComputedStyle(document.documentElement).getPropertyValue('--background-color')}</div>
     </div>
   );
 }

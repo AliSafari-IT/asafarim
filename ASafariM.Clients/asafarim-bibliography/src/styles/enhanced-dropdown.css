@@ -9,10 +9,10 @@
   position: absolute;
   z-index: 1000;
   min-width: 220px;
-  background-color: #ffffff;
+  background-color: var(--dropdown-bg);
   border-radius: 8px;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-large);
+  border: 1px solid var(--dropdown-border);
   overflow: hidden;
   margin-top: 8px;
   animation: dropdown-appear 0.2s ease-out;
@@ -36,17 +36,17 @@
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease;
   position: relative;
-  color: #374151;
+  color: var(--text-primary);
 }
 
 .dd-menu__item:hover {
-  background-color: #f3f4f6;
-  color: #111827;
+  background-color: var(--dropdown-hover);
+  color: var(--text-primary);
 }
 
 .dd-menu__item--active {
-  background-color: rgba(59, 130, 246, 0.08);
-  color: #3b82f6;
+  background-color: var(--bg-tertiary);
+  color: var(--accent-primary);
   font-weight: 500;
 }
 
@@ -82,10 +82,10 @@
   top: 0;
   margin-left: 0;
   min-width: 180px;
-  background-color: #ffffff;
+  background-color: var(--dropdown-bg);
   border-radius: 8px;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-large);
+  border: 1px solid var(--dropdown-border);
   display: none;
   z-index: 1001;
   animation: submenu-appear 0.2s ease-out;
@@ -120,7 +120,7 @@
 /* Custom styling for navbar variant */
 .dd-menu--navbar .dd-menu__content {
   border-radius: 8px;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-large);
 }
 
 .dd-menu--navbar .dd-menu__item {

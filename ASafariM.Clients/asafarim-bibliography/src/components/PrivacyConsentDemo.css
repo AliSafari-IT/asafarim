@@ -4,8 +4,8 @@
     font-weight: 400;
   
     color-scheme: light dark;
-    color: rgba(255, 255, 255, 0.87);
-    background-color: #242424;
+    color: var(--text-color);
+    background-color: var(--background-color);
   
     font-synthesis: none;
     text-rendering: optimizeLegibility;
@@ -16,11 +16,11 @@
   
   a {
     font-weight: 500;
-    color: #646cff;
+    color: var(--accent-primary);
     text-decoration: inherit;
   }
   a:hover {
-    color: #535bf2;
+    color: var(--accent-hover);
   }
   
   body {
@@ -30,10 +30,10 @@
     min-width: 320px;
     min-height: 100vh;
   }
-  
-  h1 {
+    h1 {
     font-size: 3.2em;
     line-height: 1.1;
+    color: var(--text-primary);
   }
   
   button {
@@ -43,32 +43,20 @@
     font-size: 1em;
     font-weight: 500;
     font-family: inherit;
-    background-color: #1a1a1a;
-    color: white;
+    background-color: var(--button-primary);
+    color: var(--button-primary-text);
     cursor: pointer;
     transition: border-color 0.25s;
   }
   button:hover {
-    border-color: #646cff;
+    background-color: var(--button-primary-hover);
+    border-color: var(--accent-primary);
   }
   button:focus,
   button:focus-visible {
-    outline: 4px auto -webkit-focus-ring-color;
-  }
-  
-  @media (prefers-color-scheme: light) {
-    :root {
-      color: #213547;
-      background-color: #ffffff;
-    }
-    a:hover {
-      color: #747bff;
-    }
-    button {
-      background-color: #f9f9f9;
-      color: #213547;
-    }
-  }
+    outline: 4px auto var(--border-focus);
+  }  
+  /* Removed hardcoded media queries - now using CSS variables that automatically adapt to themes */
   
   #root {
     max-width: 1280px;
@@ -82,18 +70,17 @@
     margin: 0 auto;
     padding: 2rem;
   }
-  
-  .demo-section {
+    .demo-section {
     margin: 2rem 0;
     padding: 1.5rem;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-primary);
     border-radius: 8px;
-    background: #f9f9f9;
+    background: var(--bg-secondary);
   }
   
   .demo-section h2 {
     margin-top: 0;
-    color: #333;
+    color: var(--text-primary);
   }
   
   .demo-controls {
@@ -109,25 +96,24 @@
     gap: 1rem;
     margin: 1rem 0;
   }
-  
-  .consent-category {
+    .consent-category {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-secondary);
     border-radius: 4px;
-    background: white;
+    background: var(--bg-primary);
   }
   
   .consent-category h3 {
     margin: 0;
-    color: #333;
+    color: var(--text-primary);
   }
   
   .consent-category p {
     margin: 0.5rem 0;
-    color: #666;
+    color: var(--text-secondary);
     font-size: 0.9em;
   }
   
@@ -137,50 +123,19 @@
     font-size: 0.8em;
     font-weight: bold;
   }
-  
-  .status-accepted {
-    background: #d4edda;
-    color: #155724;
+    .status-accepted {
+    background: var(--bg-success);
+    color: var(--text-success);
   }
   
   .status-rejected {
-    background: #f8d7da;
-    color: #721c24;
+    background: var(--bg-error);
+    color: var(--text-error);
   }
   
   .status-pending {
-    background: #fff3cd;
-    color: #856404;
-  }
-  
-  @media (prefers-color-scheme: light) {
-    .demo-section {
-      background: #f9f9f9;
-      border-color: #ddd;
-    }
-  }
-  
-  @media (prefers-color-scheme: dark) {
-    .demo-section {
-      background: #2a2a2a;
-      border-color: #444;
-    }
-    
-    .demo-section h2 {
-      color: #fff;
-    }
-    
-    .consent-category {
-      background: #333;
-      border-color: #555;
-    }
-    
-    .consent-category h3 {
-      color: #fff;
-    }
-    
-    .consent-category p {
-      color: #ccc;
-    }
-  }
+    background: var(--bg-warning);
+    color: var(--text-warning);
+  }  
+  /* Theme variables automatically handle light/dark mode - no need for manual media queries */
   

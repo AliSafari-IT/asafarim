@@ -29,7 +29,8 @@ export {
   extractCodeBlocks,
   stripMarkdown,
   getWordCount,
-  getReadingTime
+  getReadingTime,
+  markdownToHtml
 } from './contentUtils';
 
 // Path and file utilities

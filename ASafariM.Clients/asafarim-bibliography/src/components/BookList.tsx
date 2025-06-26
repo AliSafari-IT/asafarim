@@ -80,7 +80,7 @@ const BookList: React.FC<BookListProps> = ({ onSelectBook }) => {
           {books.map(book => (
             <li 
               key={book.id} 
-              className="py-4 px-2 hover:bg-gray-700 cursor-pointer rounded transition-colors"
+              className="py-4 px-2 hover:bg-[var(--bg-info)] cursor-pointer rounded transition-colors"
             >
               <div className="flex justify-between items-start">
                 <div onClick={() => handleSelectBook(book.id)}>

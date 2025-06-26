@@ -43,6 +43,12 @@ export default function Navbar() {
       icon: "🔒",
     },
     {
+      id: "markdown-utils",
+      label: "Markdown Utils",
+      link: "/markdown-utils/demo",
+      icon: "📄",
+    },
+    {
       id: "info",
       label: "Info",
       link: "/info",
@@ -119,7 +125,7 @@ export default function Navbar() {
                 <div className="flex flex-shrink-0 items-center">
                   <BookOpenIcon className="h-8 w-8 text-indigo-500" />{" "}
                   <span className="ml-2 text-xl font-bold navbar-brand-text">
-                    ASafariM Bibliography
+                    ASafariM Bibliography <span className="text-gray-400">(Redux Usage & demos)</span>
                   </span>
                 </div>
                 <div className="hidden sm:ml-6 sm:block">

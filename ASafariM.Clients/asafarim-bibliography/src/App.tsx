@@ -14,6 +14,7 @@ import TestComponent from "./layout/DDMenuTest";
 import ThemeDebug from "./components/ThemeDebug";
 import {ThemeDemo} from "./components/ThemeDemo";
 import PrivacyConsentDemo from "./components/PrivacyConsentDemo";
+import MarkdownUtils from "./components/MarkdownUtils";
 
 // Wrapper component to connect ConsentModal to consent context
 function ConsentModalWrapper() {
@@ -65,6 +66,10 @@ function App() {
             <Route path="/dd" element={<TestComponent />} />
             <Route path="/react-themes/demo" element={<ThemeDemo />} />
             <Route path="/react-privacy-consent/demo" element={<PrivacyConsentDemo />} />
+            <Route
+              path="/markdown-utils/demo"
+              element={<MarkdownUtils />}
+            />
 
             {/* Catch-all route for any unmatched paths */}
             {/* Catch-all route for 404 Not Found */}

@@ -47,56 +47,7 @@ export default function Navbar() {
       label: "Markdown Utils",
       link: "/markdown-utils/demo",
       icon: "📄",
-    },
-    {
-      id: "info",
-      label: "Info",
-      link: "/info",
-      icon: "ℹ️",
-    },
-    {
-      id: "add-book",
-      label: "Add Book",
-      link: "/add",
-      icon: "➕",
-    },
-    {
-      id: "projects",
-      label: "Projects",
-      icon: "📁",
-      children: [
-        {
-          id: "active-projects",
-          label: "Active Projects",
-          link: "/projects/active",
-          icon: "⚡",
-        },
-        {
-          id: "completed",
-          label: "Completed",
-          link: "/projects/completed",
-          icon: "✅",
-        },
-        {
-          id: "archive",
-          label: "Archive",
-          link: "/projects/archive",
-          icon: "📦",
-        },
-      ],
-    },
-    {
-      id: "team",
-      label: "Team",
-      link: "/team",
-      icon: "👥",
-    },
-    {
-      id: "analytics",
-      label: "Analytics",
-      link: "/analytics",
-      icon: "📊",
-    },
+    }
   ];
   return (
     <Disclosure
@@ -168,7 +119,7 @@ export default function Navbar() {
                             cursor: "pointer",
                           }}
                         >
-                          Click me ↓
+                          Goto Packages ↓
                         </span>
                       }
                     />

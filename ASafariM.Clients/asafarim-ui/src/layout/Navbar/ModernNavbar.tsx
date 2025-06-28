@@ -24,7 +24,7 @@ import { Transition } from "@headlessui/react";
 
 const ModernNavbar: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
-  const { authenticatedUser, authenticated, token } = useAuth();
+  const { authenticatedUser, authenticated  } = useAuth();
   const location = useLocation();
   const navItems = useNavItems();
   const mdFiles = mdFilesUtils.getAllMdFiles();

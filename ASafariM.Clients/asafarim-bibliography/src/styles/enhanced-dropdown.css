@@ -86,7 +86,7 @@
   border-radius: 8px;
   box-shadow: var(--shadow-large);
   border: 1px solid var(--dropdown-border);
-  /* Removed display: none - let dd-menu handle visibility */
+  display: none;
   z-index: 1001;
   animation: submenu-appear 0.2s ease-out;
 }
@@ -102,7 +102,9 @@
   }
 }
 
-/* Removed conflicting submenu display override - using original dd-menu visibility system */
+.dd-menu__submenu--open {
+  display: block;
+}
 
 /* Improved hover zone to prevent accidental closing */
 .dd-menu__item--has-children::after {

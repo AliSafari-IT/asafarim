@@ -14,28 +14,6 @@ interface StableDropdownProps {
   onItemClick?: (item: MenuItem) => void;
 }
 
-// Inline styles for theme consistency
-const dropdownStyles = `
-  .stable-dropdown-wrapper .dd-menu__content {
-    background-color: var(--dropdown-bg) !important;
-    border-color: var(--dropdown-border) !important;
-    box-shadow: var(--shadow-large) !important;
-  }
-  
-  .stable-dropdown-wrapper .dd-menu__item {
-    color: var(--text-primary) !important;
-  }
-  
-  .stable-dropdown-wrapper .dd-menu__item:hover {
-    background-color: var(--dropdown-hover) !important;
-    color: var(--text-primary) !important;
-  }
-  
-  .stable-dropdown-wrapper .dd-menu__trigger {
-    color: var(--text-primary) !important;
-  }
-`;
-
 const StableDropdown: React.FC<StableDropdownProps> = ({ 
   items, 
   className, 
@@ -66,27 +44,15 @@ const StableDropdown: React.FC<StableDropdownProps> = ({
   }, []);
   
   return (
-    <>
-      <style>{dropdownStyles}</style>
-      <div 
-        className="stable-dropdown-wrapper"
-        style={{
-          // Ensure proper theme context
-          color: 'var(--text-primary)',
-          backgroundColor: 'transparent',
-        }}
-      >
-        <DDMenu 
-          items={items} 
-          className={`${className || ''} dd-menu--${currentTheme}`}
-          theme={currentTheme}
-          trigger={trigger}
-          placement={placement}
-          onItemClick={onItemClick}
-          closeOnClick={true}
-        />
-      </div>
-    </>
+    <DDMenu 
+      items={items} 
+      className={className}
+      theme={currentTheme}
+      trigger={trigger}
+      placement={placement}
+      onItemClick={onItemClick}
+      closeOnClick={true}
+    />
   );
 };
 

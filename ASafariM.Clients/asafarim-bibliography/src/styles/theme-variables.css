@@ -52,27 +52,30 @@
   --tertiary: #9e9e9e;
   --tertiary-dark: #7a7a7a;
   --tertiary-light: #c2c2c2;
+
   --bg-primary: #ffffff;
-  --bg-secondary: #f9fafb;
-  --bg-tertiary: #f3f4f6;
-  --bg-success: #ecfdf5;
-  --bg-warning: #fffbeb;
-  --bg-danger: #fef2f2;
-  --bg-error: #fef2f2;
-  --bg-info: #eff6ff;
-  --bg-inverted: #111827;
+  --bg-secondary: #f3f4f6;
+  --bg-tertiary: #ebe8e8;
+  --bg-success: #92c353;
+  --bg-warning: #f8d22a;
+  --bg-danger: #dd4b4b;
+  --bg-error: #e23838;
+  --bg-info: #4f6bed;
+  --bg-inverted: #201f1f;
   --bg-transparent: rgba(255, 255, 255, 0);
-  --text-primary: #1f2937;
-  --text-secondary: #6b7280;
+
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
   --text-inverted: #ffffff;
-  --text-success: #065f46;
-  --text-warning: #92400e;
-  --text-error: #991b1b;
-  --text-danger: #991b1b;
-  --text-info: #1e40af;
-  --accent-primary: #6366f1;
-  --accent-secondary: #4f46e5;
-  --accent-hover: #8b5cf6;
+  --text-success: #0f5132;
+  --text-warning: #664d03;
+  --text-error: #842029;
+  --text-danger: #842029;
+  --text-info: #055160;
+
+  --accent-primary: #6264a7;
+  --accent-secondary: #464775;
+  --accent-hover: #7b83eb;
 
   --border-primary: #e5e7eb;
   --border-secondary: #d1d5db;
@@ -101,17 +104,19 @@
   --navbar-bg: var(--bg-navbar);
   --navbar-border: var(--border-primary);
   --navbar-text: var(--text-info);
-  /* Dropdown - Better contrast for light mode */
-  --dropdown-bg: #ffffff;
-  --dropdown-hover: #f3f4f6;
-  --dropdown-border: #d1d5db;
-  /* Teams-specific colors - Better for light mode */
-  --teams-purple: #6366f1;
-  --teams-purple-dark: #4f46e5;
-  --teams-purple-light: #8b5cf6;
-  --teams-red: #dc2626;
-  --teams-green: #16a34a;
-  --teams-blue: #2563eb;
+
+  /* Dropdown */
+  --dropdown-bg: var(--bg-secondary);
+  --dropdown-hover: var(--bg-tertiary);
+  --dropdown-border: var(--border-primary);
+
+  /* Teams-specific colors */
+  --teams-purple: #6264a7;
+  --teams-purple-dark: #464775;
+  --teams-purple-light: #7b83eb;
+  --teams-red: #c4314b;
+  --teams-green: #92c353;
+  --teams-blue: #4f6bed;
 
   /* Layout backgrounds */
   --bg-sidebar: #f8f9fa;
@@ -125,17 +130,17 @@
   --ring-success: 0 0 0 3px rgba(65, 92, 30, 0.5);
   --ring-warning: 0 0 0 3px rgba(65, 92, 30, 0.5);
   --ring-danger: 0 0 0 3px rgba(65, 92, 30, 0.5);
-  --ring-info: 0 0 0 3px rgba(65, 92, 30, 0.5);  /* Layout Markdown viewer - Improved light mode */
-  --markdown-bg: #ffffff;
-  --markdown-text: #374151;
-  --markdown-border: #e5e7eb;
-  --markdown-code-bg: #f8fafc;
-  /* Very light background for code in light mode */
-  --markdown-code-text: #1e293b;
-  /* Darker text for better contrast */
-  --markdown-code-border: #e2e8f0;
+  --ring-info: 0 0 0 3px rgba(65, 92, 30, 0.5);
+  /* Layout Markdown viewer */
+  --markdown-bg: #f8f9fa;
+  --markdown-text: #111827;
+  --markdown-border: #d1d5db;
+  --markdown-code-bg: #f1f3f4;
+  /* Light background for code in light mode */
+  --markdown-code-text: #1f2937;
+  /* Dark text for code in light mode */
+  --markdown-code-border: #e5e7eb;
   /* Subtle border color */
-  --markdown-header-text: #1f2937;
   --markdown-link-bg: #f8f9fa;
   --markdown-link-text: #111827;
   --markdown-link-border: #d1d5db;

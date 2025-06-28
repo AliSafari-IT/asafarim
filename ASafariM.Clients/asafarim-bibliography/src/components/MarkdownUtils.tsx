@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   getFirstHeading,
   getAllHeadings,
@@ -22,8 +22,8 @@ import {
   type MarkdownHeading,
   type MarkdownLink,
   type MarkdownImage,
-  type MarkdownCodeBlock,
-} from "@asafarim/markdown-utils";
+  type MarkdownCodeBlock
+} from '@asafarim/markdown-utils';
 
 // Sample markdown content from the example file
 const SAMPLE_MARKDOWN = `# Welcome to Our Blog
@@ -149,37 +149,31 @@ interface ValidationResults {
 
 const MarkdownUtils: React.FC = () => {
   const [fileInfo, setFileInfo] = useState<FileInfo | null>(null);
-  const [contentAnalysis, setContentAnalysis] =
-    useState<ContentAnalysis | null>(null);
-  const [validationResults, setValidationResults] =
-    useState<ValidationResults | null>(null);
-  const [markdownContent, setMarkdownContent] =
-    useState<string>(SAMPLE_MARKDOWN);
-  const [activeTab, setActiveTab] = useState<
-    "analysis" | "validation" | "file-ops"
-  >("analysis");
+  const [contentAnalysis, setContentAnalysis] = useState<ContentAnalysis | null>(null);
+  const [validationResults, setValidationResults] = useState<ValidationResults | null>(null);
+  const [markdownContent, setMarkdownContent] = useState<string>(SAMPLE_MARKDOWN);
+  const [activeTab, setActiveTab] = useState<'analysis' | 'validation' | 'file-ops'>('analysis');
 
   useEffect(() => {
     // Analyze the sample file path
-    const samplePath =
-      "/src/components/md-examples/2023-12-01_MarkdownUtils.md";
+    const samplePath = '/src/components/md-examples/2023-12-01_MarkdownUtils.md';
     analyzeFilePath(samplePath);
     analyzeContent(markdownContent);
     validateContent(markdownContent);
   }, [markdownContent]);
 
   const analyzeFilePath = (path: string) => {
-    const filename = path.split("/").pop() || "";
-
+    const filename = path.split('/').pop() || '';
+    
     const info: FileInfo = {
       path,
       filename,
       slug: filenameToSlug(filename),
       title: filenameToTitle(filename),
       date: extractDateFromPath(path),
-      isMarkdown: isMarkdownFile(path),
+      isMarkdown: isMarkdownFile(path)
     };
-
+    
     setFileInfo(info);
   };
 
@@ -193,9 +187,9 @@ const MarkdownUtils: React.FC = () => {
       codeBlocks: extractCodeBlocks(content),
       firstHeading: getFirstHeading(content),
       firstParagraph: getFirstParagraph(content),
-      plainText: stripMarkdown(content),
+      plainText: stripMarkdown(content)
     };
-
+    
     setContentAnalysis(analysis);
   };
 
@@ -203,116 +197,77 @@ const MarkdownUtils: React.FC = () => {
     const validation: ValidationResults = {
       overall: validateMarkdown(content),
       links: validateMarkdownLinks(content),
-      images: validateMarkdownImages(content),
+      images: validateMarkdownImages(content)
     };
-
+    
     setValidationResults(validation);
   };
 
   const formatDateDisplay = (date: Date | null) => {
-    if (!date) return "No date found";
+    if (!date) return 'No date found';
     return `${formatDate(date)} (${getTimeAgo(date)})`;
   };
 
   const renderAnalysisTab = () => (
-    <div className="space-y-6">
-      {" "}
-      {/* Content Overview */}
+    <div className="space-y-6">      {/* Content Overview */}
       <div className="theme-card-info rounded-lg p-4">
-        <h3 className="text-lg font-semibold theme-text-info mb-3">
-          📊 Content Overview
-        </h3>
+        <h3 className="text-lg font-semibold theme-text-info mb-3">📊 Content Overview</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="text-center">
-            <div className="text-2xl font-bold theme-text-info">
-              {contentAnalysis?.wordCount}
-            </div>
+            <div className="text-2xl font-bold theme-text-info">{contentAnalysis?.wordCount}</div>
             <div className="text-sm theme-text-secondary">Words</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold theme-text-info">
-              {contentAnalysis?.readingTime}
-            </div>
+            <div className="text-2xl font-bold theme-text-info">{contentAnalysis?.readingTime}</div>
             <div className="text-sm theme-text-secondary">Min Read</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold theme-text-info">
-              {contentAnalysis?.headings.length}
-            </div>
+            <div className="text-2xl font-bold theme-text-info">{contentAnalysis?.headings.length}</div>
             <div className="text-sm theme-text-secondary">Headings</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold theme-text-info">
-              {contentAnalysis?.links.length}
-            </div>
+            <div className="text-2xl font-bold theme-text-info">{contentAnalysis?.links.length}</div>
             <div className="text-sm theme-text-secondary">Links</div>
           </div>
         </div>
-      </div>
-      {/* First Heading and Paragraph */}
+      </div>{/* First Heading and Paragraph */}
       <div className="grid md:grid-cols-2 gap-4">
         <div className="theme-card border rounded-lg p-4">
-          <h4 className="font-semibold theme-card-header mb-2">
-            🏷️ First Heading
-          </h4>
-          <p className="theme-text-primary font-medium">
-            {contentAnalysis?.firstHeading || "No heading found"}
-          </p>
+          <h4 className="font-semibold theme-card-header mb-2">🏷️ First Heading</h4>
+          <p className="theme-text-primary font-medium">{contentAnalysis?.firstHeading || 'No heading found'}</p>
         </div>
         <div className="theme-card border rounded-lg p-4">
-          <h4 className="font-semibold theme-card-header mb-2">
-            📝 First Paragraph
-          </h4>
-          <p className="theme-card-text text-sm">
-            {contentAnalysis?.firstParagraph || "No paragraph found"}
-          </p>
+          <h4 className="font-semibold theme-card-header mb-2">📝 First Paragraph</h4>
+          <p className="theme-card-text text-sm">{contentAnalysis?.firstParagraph || 'No paragraph found'}</p>
         </div>
-      </div>{" "}
-      {/* All Headings */}
+      </div>      {/* All Headings */}
       {contentAnalysis?.headings && contentAnalysis.headings.length > 0 && (
         <div className="theme-card-success rounded-lg p-4">
-          <h4 className="font-semibold theme-text-success mb-3">
-            📑 Document Structure
-          </h4>
+          <h4 className="font-semibold theme-text-success mb-3">📑 Document Structure</h4>
           <div className="space-y-2">
             {contentAnalysis.headings.map((heading, index) => (
-              <div
-                key={index}
-                className={`pl-${(heading.level - 1) * 4} flex items-center`}
-              >
+              <div key={index} className={`pl-${(heading.level - 1) * 4} flex items-center`}>
                 <span className="theme-text-success font-mono text-sm mr-2">
                   H{heading.level}
                 </span>
                 <span className="theme-text-primary">{heading.text}</span>
-                <span className="theme-text-secondary text-xs ml-2">
-                  #{heading.anchor}
-                </span>
+                <span className="theme-text-secondary text-xs ml-2">#{heading.anchor}</span>
               </div>
             ))}
           </div>
         </div>
-      )}{" "}
-      {/* Links and Images */}
+      )}      {/* Links and Images */}
       <div className="grid md:grid-cols-2 gap-4">
         {contentAnalysis?.links && contentAnalysis.links.length > 0 && (
           <div className="theme-card-purple rounded-lg p-4">
-            <h4 className="font-semibold theme-text-purple mb-3">
-              🔗 Links Found
-            </h4>
+            <h4 className="font-semibold theme-text-purple mb-3">🔗 Links Found</h4>
             <div className="space-y-2">
               {contentAnalysis.links.map((link, index) => (
                 <div key={index} className="flex flex-col">
-                  <a
-                    href={link.url}
-                    className="theme-text-purple hover:underline font-medium"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                  <a href={link.url} className="theme-text-purple hover:underline font-medium" target="_blank" rel="noopener noreferrer">
                     {link.text}
                   </a>
-                  <span className="theme-text-secondary text-xs">
-                    {link.url}
-                  </span>
+                  <span className="theme-text-secondary text-xs">{link.url}</span>
                 </div>
               ))}
             </div>
@@ -321,60 +276,34 @@ const MarkdownUtils: React.FC = () => {
 
         {contentAnalysis?.images && contentAnalysis.images.length > 0 && (
           <div className="theme-card-orange rounded-lg p-4">
-            <h4 className="font-semibold theme-text-warning mb-3">
-              🖼️ Images Found
-            </h4>
+            <h4 className="font-semibold theme-text-warning mb-3">🖼️ Images Found</h4>
             <div className="space-y-2">
               {contentAnalysis.images.map((image, index) => (
                 <div key={index} className="flex flex-col">
-                  <span className="font-medium theme-text-primary">
-                    {image.alt}
-                  </span>
-                  <span className="theme-text-secondary text-xs">
-                    {image.src}
-                  </span>
-                  {image.title && (
-                    <span className="theme-text-secondary text-xs italic">
-                      {image.title}
-                    </span>
-                  )}
+                  <span className="font-medium theme-text-primary">{image.alt}</span>
+                  <span className="theme-text-secondary text-xs">{image.src}</span>
+                  {image.title && <span className="theme-text-secondary text-xs italic">{image.title}</span>}
                 </div>
               ))}
             </div>
           </div>
         )}
-      </div>
-      {/* Code Blocks */}
+      </div>{/* Code Blocks */}
       {contentAnalysis?.codeBlocks && contentAnalysis.codeBlocks.length > 0 && (
         <div className="theme-card rounded-lg p-4">
-          <h4 className="font-semibold theme-card-header mb-3">
-            💻 Code Blocks
-          </h4>
+          <h4 className="font-semibold theme-card-header mb-3">💻 Code Blocks</h4>
           <div className="space-y-3">
             {contentAnalysis.codeBlocks.map((block, index) => (
-              <div
-                key={index}
-                className="border rounded p-3"
-                style={{
-                  background: "var(--bg-primary)",
-                  borderColor: "var(--border-primary)",
-                }}
-              >
+              <div key={index} className="border rounded p-3" style={{ background: 'var(--bg-primary)', borderColor: 'var(--border-primary)' }}>
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-mono px-2 py-1 rounded theme-bg-code theme-text-primary">
-                    {block.language || "text"}
+                    {block.language || 'text'}
                   </span>
                   <span className="text-xs theme-text-secondary">
-                    {block.content.split("\n").length} lines
+                    {block.content.split('\n').length} lines
                   </span>
                 </div>
-                <pre
-                  className="text-sm p-2 rounded overflow-x-auto"
-                  style={{
-                    background: "var(--markdown-code-bg)",
-                    color: "var(--markdown-code-text)",
-                  }}
-                >
+                <pre className="text-sm p-2 rounded overflow-x-auto" style={{ background: 'var(--markdown-code-bg)', color: 'var(--markdown-code-text)' }}>
                   <code>{block.content}</code>
                 </pre>
               </div>
@@ -384,156 +313,69 @@ const MarkdownUtils: React.FC = () => {
       )}
     </div>
   );
+
   const renderValidationTab = () => (
     <div className="space-y-6">
       {/* Overall Validation */}
       {validationResults?.overall && (
-        <div
-          className="border rounded-lg p-4"
-          style={{
-            backgroundColor: validationResults.overall.isValid 
-              ? "var(--bg-secondary)" 
-              : "var(--bg-secondary)",
-            borderColor: validationResults.overall.isValid 
-              ? "var(--teams-green)" 
-              : "var(--teams-red)",
-          }}
-        >
-          <h3
-            className="text-lg font-semibold mb-3"
-            style={{
-              color: validationResults.overall.isValid 
-                ? "var(--teams-green)" 
-                : "var(--teams-red)",
-            }}
-          >
+        <div className={`border rounded-lg p-4 ${
+          validationResults.overall.isValid ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'
+        }`}>
+          <h3 className={`text-lg font-semibold mb-3 ${
+            validationResults.overall.isValid ? 'text-green-800' : 'text-red-800'
+          }`}>
             📋 Overall Validation
           </h3>
           <div className="flex items-center mb-2">
-            <span
-              className="font-medium"
-              style={{
-                color: validationResults.overall.isValid 
-                  ? "var(--teams-green)" 
-                  : "var(--teams-red)",
-              }}
-            >
-              Status:{" "}
-              {validationResults.overall.isValid ? "Valid ✅" : "Invalid ❌"}
+            <span className={`font-medium ${
+              validationResults.overall.isValid ? 'text-green-700' : 'text-red-700'
+            }`}>
+              Status: {validationResults.overall.isValid ? 'Valid ✅' : 'Invalid ❌'}
             </span>
           </div>
-
-          {validationResults.overall.errors &&
-            validationResults.overall.errors.length > 0 && (
-              <div className="mt-3">
-                <h4 
-                  className="font-medium mb-2"
-                  style={{ color: "var(--teams-red)" }}
-                >
-                  Errors:
-                </h4>
-                <ul className="list-disc list-inside space-y-1">
-                  {validationResults.overall.errors.map(
-                    (error: string, index: number) => (
-                      <li 
-                        key={index} 
-                        className="text-sm"
-                        style={{ color: "var(--teams-red)" }}
-                      >
-                        {error}
-                      </li>
-                    )
-                  )}
-                </ul>
-              </div>
-            )}
-
-          {validationResults.overall.warnings &&
-            validationResults.overall.warnings.length > 0 && (
-              <div className="mt-3">
-                <h4 
-                  className="font-medium mb-2"
-                  style={{ color: "var(--warning)" }}
-                >
-                  Warnings:
-                </h4>
-                <ul className="list-disc list-inside space-y-1">
-                  {validationResults.overall.warnings.map(
-                    (warning: string, index: number) => (
-                      <li 
-                        key={index} 
-                        className="text-sm"
-                        style={{ color: "var(--warning)" }}
-                      >
-                        {warning}
-                      </li>
-                    )
-                  )}
-                </ul>
-              </div>
-            )}
+          
+          {validationResults.overall.errors && validationResults.overall.errors.length > 0 && (
+            <div className="mt-3">
+              <h4 className="font-medium text-red-700 mb-2">Errors:</h4>
+              <ul className="list-disc list-inside space-y-1">
+                {validationResults.overall.errors.map((error: string, index: number) => (
+                  <li key={index} className="text-red-600 text-sm">{error}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          
+          {validationResults.overall.warnings && validationResults.overall.warnings.length > 0 && (
+            <div className="mt-3">
+              <h4 className="font-medium text-yellow-700 mb-2">Warnings:</h4>
+              <ul className="list-disc list-inside space-y-1">
+                {validationResults.overall.warnings.map((warning: string, index: number) => (
+                  <li key={index} className="text-yellow-600 text-sm">{warning}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       )}
 
       {/* Link Validation */}
       {validationResults?.links && validationResults.links.length > 0 && (
-        <div 
-          className="border rounded-lg p-4"
-          style={{
-            backgroundColor: "var(--bg-secondary)",
-            borderColor: "var(--teams-blue)",
-          }}
-        >
-          <h4 
-            className="font-semibold mb-3"
-            style={{ color: "var(--teams-blue)" }}
-          >
-            🔗 Link Validation
-          </h4>
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <h4 className="font-semibold text-blue-800 mb-3">🔗 Link Validation</h4>
           <div className="space-y-2">
             {validationResults.links.map((linkResult: any, index: number) => (
-              <div
-                key={index}
-                className="p-2 rounded border"
-                style={{
-                  backgroundColor: linkResult.isValid 
-                    ? "var(--bg-tertiary)" 
-                    : "var(--bg-tertiary)",
-                  borderColor: linkResult.isValid 
-                    ? "var(--teams-green)" 
-                    : "var(--teams-red)",
-                }}
-              >
+              <div key={index} className={`p-2 rounded border ${
+                linkResult.isValid ? 'bg-green-100 border-green-300' : 'bg-red-100 border-red-300'
+              }`}>
                 <div className="flex items-center justify-between">
-                  <span 
-                    className="font-medium"
-                    style={{ color: "var(--text-primary)" }}
-                  >
-                    {linkResult.text}
-                  </span>
-                  <span
-                    style={{
-                      color: linkResult.isValid 
-                        ? "var(--teams-green)" 
-                        : "var(--teams-red)",
-                    }}
-                  >
-                    {linkResult.isValid ? "✅" : "❌"}
+                  <span className="font-medium">{linkResult.text}</span>
+                  <span className={linkResult.isValid ? 'text-green-600' : 'text-red-600'}>
+                    {linkResult.isValid ? '✅' : '❌'}
                   </span>
                 </div>
-                <div 
-                  className="text-sm"
-                  style={{ color: "var(--text-secondary)" }}
-                >
-                  {linkResult.url}
-                </div>
+                <div className="text-sm text-gray-600">{linkResult.url}</div>
                 {linkResult.error && (
-                  <div 
-                    className="text-sm mt-1"
-                    style={{ color: "var(--teams-red)" }}
-                  >
-                    {linkResult.error}
-                  </div>
+                  <div className="text-sm text-red-600 mt-1">{linkResult.error}</div>
                 )}
               </div>
             ))}
@@ -543,63 +385,22 @@ const MarkdownUtils: React.FC = () => {
 
       {/* Image Validation */}
       {validationResults?.images && validationResults.images.length > 0 && (
-        <div 
-          className="border rounded-lg p-4"
-          style={{
-            backgroundColor: "var(--bg-secondary)",
-            borderColor: "var(--warning)",
-          }}
-        >
-          <h4 
-            className="font-semibold mb-3"
-            style={{ color: "var(--warning)" }}
-          >
-            🖼️ Image Validation
-          </h4>
+        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+          <h4 className="font-semibold text-orange-800 mb-3">🖼️ Image Validation</h4>
           <div className="space-y-2">
             {validationResults.images.map((imageResult: any, index: number) => (
-              <div
-                key={index}
-                className="p-2 rounded border"
-                style={{
-                  backgroundColor: imageResult.isValid 
-                    ? "var(--bg-tertiary)" 
-                    : "var(--bg-tertiary)",
-                  borderColor: imageResult.isValid 
-                    ? "var(--teams-green)" 
-                    : "var(--teams-red)",
-                }}
-              >
+              <div key={index} className={`p-2 rounded border ${
+                imageResult.isValid ? 'bg-green-100 border-green-300' : 'bg-red-100 border-red-300'
+              }`}>
                 <div className="flex items-center justify-between">
-                  <span 
-                    className="font-medium"
-                    style={{ color: "var(--text-primary)" }}
-                  >
-                    {imageResult.alt}
-                  </span>
-                  <span
-                    style={{
-                      color: imageResult.isValid 
-                        ? "var(--teams-green)" 
-                        : "var(--teams-red)",
-                    }}
-                  >
-                    {imageResult.isValid ? "✅" : "❌"}
+                  <span className="font-medium">{imageResult.alt}</span>
+                  <span className={imageResult.isValid ? 'text-green-600' : 'text-red-600'}>
+                    {imageResult.isValid ? '✅' : '❌'}
                   </span>
                 </div>
-                <div 
-                  className="text-sm"
-                  style={{ color: "var(--text-secondary)" }}
-                >
-                  {imageResult.src}
-                </div>
+                <div className="text-sm text-gray-600">{imageResult.src}</div>
                 {imageResult.error && (
-                  <div 
-                    className="text-sm mt-1"
-                    style={{ color: "var(--teams-red)" }}
-                  >
-                    {imageResult.error}
-                  </div>
+                  <div className="text-sm text-red-600 mt-1">{imageResult.error}</div>
                 )}
               </div>
             ))}
@@ -608,80 +409,32 @@ const MarkdownUtils: React.FC = () => {
       )}
     </div>
   );
+
   const renderFileOpsTab = () => (
     <div className="space-y-6">
       {/* File Information */}
       {fileInfo && (
-        <div 
-          className="border rounded-lg p-4"
-          style={{
-            backgroundColor: "var(--bg-secondary)",
-            borderColor: "var(--teams-purple)",
-          }}
-        >
-          <h3 
-            className="text-lg font-semibold mb-3"
-            style={{ color: "var(--teams-purple)" }}
-          >
-            📁 File Operations
-          </h3>
+        <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4">
+          <h3 className="text-lg font-semibold text-indigo-800 mb-3">📁 File Operations</h3>
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <h4 
-                className="font-medium mb-2"
-                style={{ color: "var(--text-primary)" }}
-              >
-                Basic Info
-              </h4>
+              <h4 className="font-medium text-gray-700 mb-2">Basic Info</h4>
               <div className="space-y-2 text-sm">
-                <div style={{ color: "var(--text-primary)" }}>
-                  <span className="font-medium">Path:</span> {fileInfo.path}
-                </div>
-                <div style={{ color: "var(--text-primary)" }}>
-                  <span className="font-medium">Filename:</span>{" "}
-                  {fileInfo.filename}
-                </div>
-                <div style={{ color: "var(--text-primary)" }}>
-                  <span className="font-medium">Is Markdown:</span>
-                  <span
-                    style={{
-                      color: fileInfo.isMarkdown 
-                        ? "var(--teams-green)" 
-                        : "var(--teams-red)",
-                    }}
-                  >
-                    {fileInfo.isMarkdown ? " ✅ Yes" : " ❌ No"}
+                <div><span className="font-medium">Path:</span> {fileInfo.path}</div>
+                <div><span className="font-medium">Filename:</span> {fileInfo.filename}</div>
+                <div><span className="font-medium">Is Markdown:</span> 
+                  <span className={fileInfo.isMarkdown ? 'text-green-600' : 'text-red-600'}>
+                    {fileInfo.isMarkdown ? ' ✅ Yes' : ' ❌ No'}
                   </span>
                 </div>
               </div>
             </div>
             <div>
-              <h4 
-                className="font-medium mb-2"
-                style={{ color: "var(--text-primary)" }}
-              >
-                Generated Data
-              </h4>
+              <h4 className="font-medium text-gray-700 mb-2">Generated Data</h4>
               <div className="space-y-2 text-sm">
-                <div style={{ color: "var(--text-primary)" }}>
-                  <span className="font-medium">Slug:</span>{" "}
-                  <code 
-                    className="px-1 rounded"
-                    style={{
-                      backgroundColor: "var(--bg-tertiary)",
-                      color: "var(--text-primary)",
-                    }}
-                  >
-                    {fileInfo.slug}
-                  </code>
-                </div>
-                <div style={{ color: "var(--text-primary)" }}>
-                  <span className="font-medium">Title:</span> {fileInfo.title}
-                </div>
-                <div style={{ color: "var(--text-primary)" }}>
-                  <span className="font-medium">Date:</span>{" "}
-                  {formatDateDisplay(fileInfo.date)}
-                </div>
+                <div><span className="font-medium">Slug:</span> <code className="bg-gray-200 px-1 rounded">{fileInfo.slug}</code></div>
+                <div><span className="font-medium">Title:</span> {fileInfo.title}</div>
+                <div><span className="font-medium">Date:</span> {formatDateDisplay(fileInfo.date)}</div>
               </div>
             </div>
           </div>
@@ -690,46 +443,16 @@ const MarkdownUtils: React.FC = () => {
 
       {/* Plain Text Preview */}
       {contentAnalysis?.plainText && (
-        <div 
-          className="border rounded-lg p-4"
-          style={{
-            backgroundColor: "var(--bg-secondary)",
-            borderColor: "var(--border-primary)",
-          }}
-        >
-          <h4 
-            className="font-semibold mb-3"
-            style={{ color: "var(--text-primary)" }}
-          >
-            📄 Plain Text (Markdown Stripped)
-          </h4>
-          <div 
-            className="border rounded p-3 max-h-40 overflow-y-auto"
-            style={{
-              backgroundColor: "var(--bg-primary)",
-              borderColor: "var(--border-primary)",
-            }}
-          >
-            <p 
-              className="text-sm whitespace-pre-wrap"
-              style={{ color: "var(--text-primary)" }}
-            >
-              {contentAnalysis.plainText}
-            </p>
-          </div>{" "}
-        </div>
+        <div className="bg-gray-50 border rounded-lg p-4">
+          <h4 className="font-semibold text-gray-800 mb-3">📄 Plain Text (Markdown Stripped)</h4>
+          <div className="bg-white border rounded p-3 max-h-40 overflow-y-auto">
+            <p className="text-sm text-gray-700 whitespace-pre-wrap">{contentAnalysis.plainText}</p>
+          </div>        </div>
       )}
     </div>
-  );  return (
-    <div
-      className="max-w-6xl mx-auto p-6"
-      style={{
-        backgroundColor: "var(--background-color)",
-        color: "var(--text-color)",
-        minHeight: "100vh",
-      }}
-    >
-      {" "}      <style>{`
+  );
+  return (
+    <div className="max-w-6xl mx-auto p-6" style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}>      <style>{`
         .markdown-content h1 { font-size: 1.8em; font-weight: bold; margin: 1em 0 0.5em 0; color: var(--markdown-header-text); }
         .markdown-content h2 { font-size: 1.5em; font-weight: bold; margin: 1em 0 0.5em 0; color: var(--markdown-header-text); }
         .markdown-content h3 { font-size: 1.2em; font-weight: bold; margin: 1em 0 0.5em 0; color: var(--markdown-header-text); }
@@ -773,44 +496,16 @@ const MarkdownUtils: React.FC = () => {
         .theme-bg-code { background: var(--bg-tertiary); }
       `}</style>
       <div className="mb-8">
-        <h1
-          className="text-3xl font-bold mb-2"
-          style={{ color: "var(--text-primary)" }}
-        >
+        <h1 className="text-3xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
           📚 Markdown Utils Demo
         </h1>
-        <p style={{ color: "var(--text-secondary)" }}>
-          Real-world example of{" "}
-          <code
-            className="px-2 py-1 rounded"
-            style={{
-              background: "var(--bg-tertiary)",
-              color: "var(--text-primary)",
-            }}
-          >
-            @asafarim/markdown-utils
-          </code>{" "}
-          in action
+        <p style={{ color: 'var(--text-secondary)' }}>
+          Real-world example of <code className="px-2 py-1 rounded" style={{ background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}>@asafarim/markdown-utils</code> in action
         </p>
-        <p style={{ color: "var(--text-secondary)" }}>
-          {" "}
-          Check the demo live at:{" "}
-          <a
-            href="https://bibliography.asafarim.com/markdown-utils/demo"
-            style={{ color: "var(--accent-primary)" }}
-          >
-            here
-          </a>
-          .
-        </p>
-      </div>{" "}
-      {/* Markdown Input */}
+        <p style={{ color: 'var(--text-secondary)' }}> Check the demo live at: <a href="https://bibliography.asafarim.com/markdown-utils/demo" style={{ color: 'var(--accent-primary)' }}>here</a>.</p>
+      </div>      {/* Markdown Input */}
       <div className="mb-6">
-        <label
-          htmlFor="markdown-input"
-          className="block text-sm font-medium mb-2"
-          style={{ color: "var(--text-primary)" }}
-        >
+        <label htmlFor="markdown-input" className="block text-sm font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
           📝 Markdown Content
         </label>
         <textarea
@@ -818,102 +513,51 @@ const MarkdownUtils: React.FC = () => {
           value={markdownContent}
           onChange={(e) => setMarkdownContent(e.target.value)}
           className="w-full h-64 p-3 rounded-lg font-mono text-sm focus:ring-2 focus:border-transparent"
-          style={{
-            background: "var(--bg-primary)",
-            border: "1px solid var(--border-primary)",
-            color: "var(--text-primary)",
-            borderColor: "var(--border-primary)",
+          style={{ 
+            background: 'var(--bg-primary)', 
+            border: '1px solid var(--border-primary)', 
+            color: 'var(--text-primary)',
+            borderColor: 'var(--border-primary)'
           }}
           placeholder="Enter your markdown content here..."
         />
-      </div>{" "}
-      {/* Preview Section */}
+      </div>      {/* Preview Section */}
       <div className="mb-6">
-        <h2
-          className="text-lg font-semibold mb-2"
-          style={{ color: "var(--text-primary)" }}
-        >
-          🔍 Preview
-        </h2>{" "}
-        <div
-          className="p-4 rounded-lg"
-          style={{ background: "var(--bg-secondary)" }}
-        >
-          <h3
-            className="font-medium mb-2"
-            style={{ color: "var(--text-primary)" }}
-          >
-            Markdown Preview (parsed in{" "}
-            <code
-              className="px-1 rounded"
-              style={{
-                background: "var(--bg-tertiary)",
-                color: "var(--text-primary)",
-              }}
-            >
-              @asafarim/markdown-utils
-            </code>{" "}
-            to HTML)
-          </h3>
-          <div
-            className="prose max-w-none p-4 rounded border text-left"
-            style={{
-              background: "var(--bg-primary)",
-              borderColor: "var(--border-primary)",
-            }}
-          >
-            <div
-              dangerouslySetInnerHTML={{
-                __html: markdownToHtml(markdownContent),
+        <h2 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>🔍 Preview</h2>        <div className="p-4 rounded-lg" style={{ background: 'var(--bg-secondary)' }}>
+          <h3 className="font-medium mb-2" style={{ color: 'var(--text-primary)' }}>Markdown Preview (parsed in <code className="px-1 rounded" style={{ background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}>@asafarim/markdown-utils</code> to HTML)</h3>
+          <div className="prose max-w-none p-4 rounded border" style={{ background: 'var(--bg-primary)', borderColor: 'var(--border-primary)' }}>            <div 
+              dangerouslySetInnerHTML={{ 
+                __html: markdownToHtml(markdownContent) 
               }}
               className="markdown-content"
               style={{
-                lineHeight: "1.6",
-                fontSize: "14px",
+                lineHeight: '1.6',
+                fontSize: '14px'
               }}
             />
           </div>
         </div>
-      </div>{" "}
-      {/* Tab Navigation */}
-      <div
-        className="mb-6"
-        style={{ borderBottom: "1px solid var(--border-primary)" }}
-      >
+      </div>      {/* Tab Navigation */}
+      <div className="mb-6" style={{ borderBottom: '1px solid var(--border-primary)' }}>
         <nav className="-mb-px flex space-x-8">
           {[
-            {
-              id: "analysis",
-              label: "📊 Content Analysis",
-              count: contentAnalysis?.headings.length,
-            },
-            {
-              id: "validation",
-              label: "✅ Validation",
-              count: validationResults?.overall?.isValid ? 1 : 0,
-            },
-            {
-              id: "file-ops",
-              label: "📁 File Operations",
-              count: fileInfo ? 1 : 0,
-            },
+            { id: 'analysis', label: '📊 Content Analysis', count: contentAnalysis?.headings.length },
+            { id: 'validation', label: '✅ Validation', count: validationResults?.overall?.isValid ? 1 : 0 },
+            { id: 'file-ops', label: '📁 File Operations', count: fileInfo ? 1 : 0 }
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                activeTab === tab.id ? "theme-tab-active" : "theme-tab-inactive"
+                activeTab === tab.id ? 'theme-tab-active' : 'theme-tab-inactive'
               }`}
             >
               {tab.label}
               {tab.count !== undefined && (
-                <span
-                  className="ml-2 py-0.5 px-2 rounded-full text-xs"
-                  style={{
-                    background: "var(--bg-tertiary)",
-                    color: "var(--text-secondary)",
-                  }}
-                >
+                <span className="ml-2 py-0.5 px-2 rounded-full text-xs" style={{ 
+                  background: 'var(--bg-tertiary)', 
+                  color: 'var(--text-secondary)' 
+                }}>
                   {tab.count}
                 </span>
               )}
@@ -921,34 +565,17 @@ const MarkdownUtils: React.FC = () => {
           ))}
         </nav>
       </div>
+
       {/* Tab Content */}
       <div>
-        {activeTab === "analysis" && renderAnalysisTab()}
-        {activeTab === "validation" && renderValidationTab()}
-        {activeTab === "file-ops" && renderFileOpsTab()}
-      </div>{" "}
-      {/* Usage Example */}
-      <div
-        className="mt-8 border rounded-lg p-4"
-        style={{
-          background: "var(--bg-secondary)",
-          borderColor: "var(--border-primary)",
-        }}
-      >
-        <h3
-          className="text-lg font-semibold mb-3"
-          style={{ color: "var(--text-primary)" }}
-        >
-          💻 Usage Example
-        </h3>
-        <pre
-          className="p-4 rounded text-sm overflow-x-auto"
-          style={{
-            background: "var(--markdown-code-bg)",
-            color: "var(--markdown-code-text)",
-          }}
-        >
-          {`import { 
+        {activeTab === 'analysis' && renderAnalysisTab()}
+        {activeTab === 'validation' && renderValidationTab()}
+        {activeTab === 'file-ops' && renderFileOpsTab()}
+      </div>      {/* Usage Example */}
+      <div className="mt-8 border rounded-lg p-4" style={{ background: 'var(--bg-secondary)', borderColor: 'var(--border-primary)' }}>
+        <h3 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>💻 Usage Example</h3>
+        <pre className="p-4 rounded text-sm overflow-x-auto" style={{ background: 'var(--markdown-code-bg)', color: 'var(--markdown-code-text)' }}>
+{`import { 
   getWordCount, 
   getReadingTime, 
   getAllHeadings,

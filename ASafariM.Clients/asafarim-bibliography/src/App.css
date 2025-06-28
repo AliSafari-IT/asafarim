@@ -2,98 +2,77 @@
 @import url('../src/styles/enhanced-dropdown.css');
 @import url('../src/styles/dropdown-fix.css');
 
-/* Global theme overrides to fix any remaining hardcoded colors */
-
-[data-theme="dark"] .demo-container,
-[data-theme="dark"] .demo-section,
-[data-theme="dark"] .component-demo,
-[data-theme="dark"] .card,
-[data-theme="dark"] .panel,
-[data-theme="dark"] .section,
-[data-theme="dark"] .container {
-  background-color: var(--bg-secondary) !important;
-  color: var(--text-primary) !important;
-  border: 1px solid var(--border-primary) !important;
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--background-color);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Ensure text elements use proper theme colors */
-[data-theme="dark"] h1,
-[data-theme="dark"] h2,
-[data-theme="dark"] h3,
-[data-theme="dark"] h4,
-[data-theme="dark"] h5,
-[data-theme="dark"] h6 {
-  color: var(--text-primary) !important;
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  background-color: var(--background-color);
+  color: var(--text-primary);
 }
 
-[data-theme="dark"] p,
-[data-theme="dark"] div:not([style*="color"]),
-[data-theme="dark"] span:not([style*="color"]) {
-  color: var(--text-primary) !important;
+.app-info-wrapper {
+  grid-column: 1 / -1;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 
-/* Fix any white backgrounds that appear in dark mode */
-[data-theme="dark"] [style*="background-color: white"],
-[data-theme="dark"] [style*="background-color: #fff"],
-[data-theme="dark"] [style*="background-color: #ffffff"],
-[data-theme="dark"] [style*="background: white"],
-[data-theme="dark"] [style*="background: #fff"],
-[data-theme="dark"] [style*="background: #ffffff"] {
-  background-color: var(--bg-secondary) !important;
+.bibliography-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-/* Fix any black text that appears in dark mode */
-[data-theme="dark"] [style*="color: black"],
-[data-theme="dark"] [style*="color: #000"],
-[data-theme="dark"] [style*="color: #000000"] {
-  color: var(--text-primary) !important;
+@media (max-width: 768px) {
+  .bibliography-container {
+    grid-template-columns: 1fr;
+  }
 }
 
-/* Light mode specific overrides */
-[data-theme="light"] .demo-container,
-[data-theme="light"] .demo-section,
-[data-theme="light"] .component-demo,
-[data-theme="light"] .card,
-[data-theme="light"] .panel,
-[data-theme="light"] .section,
-[data-theme="light"] .container {
-  background-color: var(--bg-primary) !important;
-  color: var(--text-primary) !important;
-  border: 1px solid var(--border-primary) !important;
+.book-list-container {
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-large);
 }
 
-/* Ensure proper light mode text colors */
-[data-theme="light"] h1,
-[data-theme="light"] h2,
-[data-theme="light"] h3,
-[data-theme="light"] h4,
-[data-theme="light"] h5,
-[data-theme="light"] h6 {
-  color: var(--text-primary) !important;
+.book-details-container {
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-[data-theme="light"] p,
-[data-theme="light"] div:not([style*="color"]),
-[data-theme="light"] span:not([style*="color"]) {
-  color: var(--text-primary) !important;
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #888;
+  padding: 2rem;
 }
 
-/* Ensure code blocks have proper light mode styling */
-[data-theme="light"] pre,
-[data-theme="light"] code {
-  background-color: var(--markdown-code-bg) !important;
-  color: var(--markdown-code-text) !important;
-  border: 1px solid var(--markdown-code-border) !important;
-}
-
-/* Fix cards and panels to be properly light */
-[data-theme="light"] .theme-card,
-[data-theme="light"] .theme-card-info,
-[data-theme="light"] .theme-card-success,
-[data-theme="light"] .theme-card-warning,
-[data-theme="light"] .theme-card-purple,
-[data-theme="light"] .theme-card-orange {
-  background-color: var(--bg-primary) !important;
-  color: var(--text-primary) !important;
-  border: 1px solid var(--border-primary) !important;
+.app-footer {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: #1a1a1a;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #888;
 }

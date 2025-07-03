@@ -21,10 +21,8 @@ import Footer from "./layout/Footer/Footer";
 import UserProfile from "./pages/User/UserProfile";
 import { Suspense, useEffect } from "react";
 import Layout from "./layout/Layout";
-//import UserAccountSettings from "./pages/User/UserAccountSettings";
 import Contact from "./pages/Contact";
 import MarkdownPage from "./components/MarkdownPage/MarkdownPage";
-import { ThemeProvider } from "./contexts/ThemeContext";
 import AccountSettings from "./pages/Accountpage/AccountSettings";
 import { getAllMdFiles } from "./utils/mdFilesUtils";
 import { useAuth } from "./contexts/AuthContext";
@@ -66,6 +64,7 @@ import {
 } from "@asafarim/react-privacy-consent";
 import { globalConsentConfig } from "./config/consentConfig";
 import "@asafarim/react-privacy-consent/styles.css";
+import "@asafarim/react-themes/styles.css"; // Optional base styles
 
 // const userUrl = API_URL + '/users';
 
@@ -133,7 +132,6 @@ function App() {
   ];
   // const pathSegments = ['categories', 'topics', 'sections', 'chapters', 'slug'];
   return (
-    <ThemeProvider>
       <ConsentProvider config={globalConsentConfig}>
         <div className="min-h-screen bg-default text-default">
           <Routes>
@@ -512,7 +510,6 @@ function App() {
         <ConsentBanner />
         <ConsentModalWrapper />
       </ConsentProvider>
-    </ThemeProvider>
   );
 }
 

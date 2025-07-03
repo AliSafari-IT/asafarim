@@ -2,9 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import AppWithRouter from './AppWithRouter';
-import { AzureDarkTheme } from '@fluentui-contrib/azure-theme';
-import { FluentProvider } from '@fluentui/react-components';
 import { initializeGA } from './services/analyticsService';
+import ThemeProvider from '@asafarim/react-themes';
 
 // Initialize Google Analytics
 initializeGA();
@@ -20,11 +19,10 @@ try {
   console.warn('Failed to load FluentUI icons module:', error);
 }
 
-const theme = AzureDarkTheme;
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <FluentProvider theme={theme}>
+    <ThemeProvider defaultMode="light" persistMode={true}>
       <AppWithRouter />
-    </FluentProvider>
+    </ThemeProvider>
   </React.StrictMode>
 );

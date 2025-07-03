@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useTheme } from "@/contexts/ThemeContext";
+//import { useTheme } from "@/contexts/ThemeContext";
+import { ThemeToggle, useTheme } from "@asafarim/react-themes";
 import { useAuth } from "@/contexts/AuthContext";
 import useNavItems from "@/hooks/useNavItems";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import {
   Bars3Icon,
   XMarkIcon,
-  MoonIcon,
-  SunIcon,
+  // MoonIcon,
+  // SunIcon,
   HomeIcon,
 } from "@heroicons/react/24/outline";
 import ChangeLogsDropdown from "./ChangeLogsDropdown";
@@ -19,12 +20,11 @@ import ASMButton from "./components/ASMButton";
 import ResponsiveDropdownMenu from "./components/ResponsiveDropdownMenu";
 import { IMenuItem } from "@/interfaces/IMenuItem";
 import mdFilesUtils from "@/utils/mdFilesUtils";
-import { logger } from '@/utils/logger';
+import { logger } from "@/utils/logger";
 import { Transition } from "@headlessui/react";
 
 const ModernNavbar: React.FC = () => {
-  const { theme, toggleTheme } = useTheme();
-  const { authenticatedUser, authenticated  } = useAuth();
+  const { authenticatedUser, authenticated } = useAuth();
   const location = useLocation();
   const navItems = useNavItems();
   const mdFiles = mdFilesUtils.getAllMdFiles();
@@ -48,6 +48,8 @@ const ModernNavbar: React.FC = () => {
     );
   };
 
+  const { currentTheme } = useTheme();
+
   // Handle scroll events to change navbar appearance
   useEffect(() => {
     const handleScroll = () => {
@@ -55,10 +57,10 @@ const ModernNavbar: React.FC = () => {
       setScrolled(offset > 10);
     };
 
-    logger.log('Adding scroll event listener');
+    logger.log("Adding scroll event listener");
     window.addEventListener("scroll", handleScroll);
     return () => {
-      logger.log('Removing scroll event listener');
+      logger.log("Removing scroll event listener");
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
@@ -95,20 +97,29 @@ const ModernNavbar: React.FC = () => {
   // Handle dropdown toggle
   const toggleDropdown = (id: string) => {
     setActiveDropdowns((prev) =>
-      prev.includes(id)
-        ? prev.filter((item) => item !== id)
-        : [...prev, id]
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
 
   // Render nested menu items for mobile view
-  const renderNestedMenu = (items: IMenuItem[], parentPath: string = "", depth: number = 0) => {
+  const renderNestedMenu = (
+    items: IMenuItem[],
+    parentPath: string = "",
+    depth: number = 0
+  ) => {
     return items.map((item, idx) => {
       const itemId = item.id || `${parentPath}-${idx}`;
       const isOpen = activeDropdowns.includes(itemId);
 
       return (
-        <div key={itemId} className="w-full">
+        <div
+          key={itemId}
+          className="w-full"
+          style={{
+            backgroundColor: currentTheme.colors.background,
+            color: currentTheme.colors.text,
+          }}
+        >
           {item.subMenu && item.subMenu.length > 0 ? (
             <div className="w-full">
               <div
@@ -134,21 +145,30 @@ const ModernNavbar: React.FC = () => {
                     const subItemId = subItem.id || `${itemId}-${subIdx}`;
 
                     return (
-                      <div key={subItemId} className="w-full">
-                        {subItem.to && !subItem.to.startsWith('#') ? (
+                      <div key={subItemId} className="w-full" style={{ 
+                        backgroundColor: currentTheme.colors.background,
+                        color: currentTheme.colors.text 
+                      }}>
+                        {subItem.to && !subItem.to.startsWith("#") ? (
                           <Link
                             to={subItem.to}
                             className={`block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md ${
-                              isActive(subItem.to) ? "bg-gray-100 dark:bg-gray-800 font-semibold" : ""
+                              isActive(subItem.to)
+                                ? "bg-gray-100 dark:bg-gray-800 font-semibold"
+                                : ""
                             }`}
-                            style={{ paddingLeft: `${(depth + 1) * 0.5 + 1}rem` }}
+                            style={{
+                              paddingLeft: `${(depth + 1) * 0.5 + 1}rem`,
+                            }}
                             onClick={() => {
                               setIsMenuOpen(false);
                               setActiveDropdowns([]);
                             }}
                           >
                             <span className="flex items-center">
-                              {subItem.icon && <span className="mr-2">{subItem.icon}</span>}
+                              {subItem.icon && (
+                                <span className="mr-2">{subItem.icon}</span>
+                              )}
                               {subItem.title}
                             </span>
                           </Link>
@@ -157,12 +177,16 @@ const ModernNavbar: React.FC = () => {
                             {renderNestedMenu([subItem], subItemId, depth + 1)}
                           </div>
                         ) : (
-                          <div 
+                          <div
                             className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300"
-                            style={{ paddingLeft: `${(depth + 1) * 0.5 + 1}rem` }}
+                            style={{
+                              paddingLeft: `${(depth + 1) * 0.5 + 1}rem`,
+                            }}
                           >
                             <span className="flex items-center">
-                              {subItem.icon && <span className="mr-2">{subItem.icon}</span>}
+                              {subItem.icon && (
+                                <span className="mr-2">{subItem.icon}</span>
+                              )}
                               {subItem.title}
                             </span>
                           </div>
@@ -177,7 +201,9 @@ const ModernNavbar: React.FC = () => {
             <Link
               to={item.to || "#"}
               className={`block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md ${
-                isActive(item.to) ? "bg-gray-100 dark:bg-gray-800 font-semibold" : ""
+                isActive(item.to)
+                  ? "bg-gray-100 dark:bg-gray-800 font-semibold"
+                  : ""
               }`}
               style={{ paddingLeft: `${depth * 0.5 + 1}rem` }}
               onClick={() => setIsMenuOpen(false)}
@@ -194,7 +220,13 @@ const ModernNavbar: React.FC = () => {
   };
 
   return (
-    <div className="relative">
+    <div
+      className="relative"
+      style={{
+        backgroundColor: currentTheme.colors.background,
+        color: currentTheme.colors.text,
+      }}
+    >
       <nav
         className={`fixed w-full z-50 transition-all duration-300 ${
           scrolled
@@ -265,25 +297,17 @@ const ModernNavbar: React.FC = () => {
               )}
 
               {/* ASM Button for Desktop */}
-              <ASMButton 
-                onlyIcon={viewWidth < 768} 
-                onClick={() => window.open("https://pbk.asafarim.com/resume", "_blank")} 
-                width="24" 
-                height="24" 
+              <ASMButton
+                onlyIcon={viewWidth < 768}
+                onClick={() =>
+                  window.open("https://pbk.asafarim.com/resume", "_blank")
+                }
+                width="24"
+                height="24"
               />
 
               {/* Theme Toggle */}
-              <button
-                onClick={toggleTheme}
-                className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white p-2 rounded-full focus:outline-none"
-                aria-label="Toggle theme"
-              >
-                {theme === "dark" ? (
-                  <SunIcon className="h-6 w-6" aria-hidden="true" />
-                ) : (
-                  <MoonIcon className="h-6 w-6" aria-hidden="true" />
-                )}
-              </button>
+              <ThemeToggle size="sm" showLabels={false} />
 
               {/* Blog Link */}
               <a
@@ -293,23 +317,30 @@ const ModernNavbar: React.FC = () => {
                 className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 px-3 py-2 rounded-md text-sm font-medium flex items-center group"
                 title="Visit Blog"
               >
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  strokeWidth="1.5" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   className="h-5 w-5 mr-1 group-hover:animate-pulse"
                 >
                   <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5z" />
                   <path d="M8 7h8" />
                   <path d="M8 11h8" />
                   <path d="M8 15h5" />
-                  <circle cx="16" cy="16" r="2" className="fill-current group-hover:fill-[var(--primary)]" />
+                  <circle
+                    cx="16"
+                    cy="16"
+                    r="2"
+                    className="fill-current group-hover:fill-[var(--primary)]"
+                  />
                 </svg>
-                <span className="group-hover:text-[var(--primary)] transition-colors duration-200">Blog</span>
+                <span className="group-hover:text-[var(--primary)] transition-colors duration-200">
+                  Blog
+                </span>
               </a>
 
               {/* Changelogs */}
@@ -341,26 +372,18 @@ const ModernNavbar: React.FC = () => {
             <div className="lg:hidden flex items-center">
               {/* ASM Button for Mobile Header */}
               <div className="mr-2">
-              <ASMButton 
-                onlyIcon={viewWidth < 480} 
-                onClick={() => window.open("https://pbk.asafarim.com/resume", "_blank")} 
-                width="24" 
-                height="24" 
-              />
+                <ASMButton
+                  onlyIcon={viewWidth < 480}
+                  onClick={() =>
+                    window.open("https://pbk.asafarim.com/resume", "_blank")
+                  }
+                  width="24"
+                  height="24"
+                />
               </div>
 
               {/* Theme Toggle for Mobile */}
-              <button
-                onClick={toggleTheme}
-                className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white p-2 rounded-full focus:outline-none mr-2"
-                aria-label="Toggle theme"
-              >
-                {theme === "dark" ? (
-                  <SunIcon className="h-6 w-6" aria-hidden="true" />
-                ) : (
-                  <MoonIcon className="h-6 w-6" aria-hidden="true" />
-                )}
-              </button>
+              <ThemeToggle size="sm" showLabels={false} />
 
               {/* Blog Link for Mobile */}
               <a
@@ -370,21 +393,26 @@ const ModernNavbar: React.FC = () => {
                 className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white p-2 rounded-full focus:outline-none mr-2 group"
                 title="Visit Blog"
               >
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  strokeWidth="1.5" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   className="h-6 w-6 group-hover:animate-pulse"
                 >
                   <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5z" />
                   <path d="M8 7h8" />
                   <path d="M8 11h8" />
                   <path d="M8 15h5" />
-                  <circle cx="16" cy="16" r="2" className="fill-current group-hover:fill-[var(--primary)]" />
+                  <circle
+                    cx="16"
+                    cy="16"
+                    r="2"
+                    className="fill-current group-hover:fill-[var(--primary)]"
+                  />
                 </svg>
               </a>
 
@@ -475,27 +503,32 @@ const ModernNavbar: React.FC = () => {
                   className="block text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 px-3 py-2 rounded-md text-sm font-medium flex items-center group"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    viewBox="0 0 24 24" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    strokeWidth="1.5" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     className="h-5 w-5 mr-2 group-hover:animate-pulse"
                   >
                     <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5z" />
                     <path d="M8 7h8" />
                     <path d="M8 11h8" />
                     <path d="M8 15h5" />
-                    <circle cx="16" cy="16" r="2" className="fill-current group-hover:fill-[var(--primary)]" />
+                    <circle
+                      cx="16"
+                      cy="16"
+                      r="2"
+                      className="fill-current group-hover:fill-[var(--primary)]"
+                    />
                   </svg>
-                  <span className="group-hover:text-[var(--primary)] transition-colors duration-200">Blog</span>
+                  <span className="group-hover:text-[var(--primary)] transition-colors duration-200">
+                    Blog
+                  </span>
                 </a>
               </div>
-
-
 
               {/* Changelogs for Mobile */}
               <ChangeLogsDropdown mobileView={true} />

@@ -1,6 +1,6 @@
 {
   "name": "asafarim-ui",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "private": true,
   "type": "module",
   "repository": "https://github.com/AliSafari-IT/asafarim.git",
@@ -25,7 +25,8 @@
     "test:run": "vitest run"
   },
   "dependencies": {
-    "@asafarim/react-privacy-consent": "^1.7.0",
+    "@asafarim/react-privacy-consent": "workspace:*",
+    "@asafarim/react-themes": "workspace:*",
     "@emailjs/browser": "^4.4.1",
     "@fluentui-contrib/azure-theme": "^0.0.3",
     "@fluentui-contrib/react-resize-handle": "^0.6.1",

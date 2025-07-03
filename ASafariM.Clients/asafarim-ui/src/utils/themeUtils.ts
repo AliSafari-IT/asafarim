@@ -1,7 +1,7 @@
 import { webDarkTheme, webLightTheme } from "@fluentui/react-components";
 
 // Set a cookie that works across the main domain and subdomains
-export function setThemeCookie(theme: any) {
+export function setThemeCookie(theme: unknown) {
   const domain = '.asafarim.com'; // Use your main domain
   const days = 7; // Set expiration for 7 days (adjust as needed)
   let expires = '';
@@ -19,7 +19,7 @@ export function getTheme() {
   const decodedCookie = decodeURIComponent(document.cookie);
   const cookies = decodedCookie.split(';');
   for (let i = 0; i < cookies.length; i++) {
-    let c = cookies[i].trim();
+    const c = cookies[i].trim();
     if (c.indexOf(name) === 0) {
       return c.substring(name.length, c.length);
     }

@@ -129,7 +129,7 @@ const HealthCheck: React.FC = () => {
               </button>
             </div>
           </div>
-
+          
           {healthData && (
             <>
               {/* System Status Banner */}

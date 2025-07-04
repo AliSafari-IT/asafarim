@@ -32,6 +32,7 @@ public class AuthController : ControllerBase
     private readonly ASafariM.Application.Interfaces.IAuthorizationService _authorizationService;
     private readonly CurrentUserService _currentUserService;
     private readonly IEmailService _emailService;
+    private readonly GoogleAuthService _googleAuthService;
 
     /// <summary>
     /// Request object for authorization
@@ -58,13 +59,15 @@ public class AuthController : ControllerBase
     /// <param name="authorizationService">Authorization service</param>
     /// <param name="currentUserService">Current user service</param>
     /// <param name="emailService">Email service</param>
+    /// <param name="googleAuthService">Google authentication service</param>
     public AuthController(
         IUserRepository userRepository,
         JwtTokenService jwtTokenService,
         IUserService userService,
         ASafariM.Application.Interfaces.IAuthorizationService authorizationService,
         CurrentUserService currentUserService,
-        IEmailService emailService
+        IEmailService emailService,
+        GoogleAuthService googleAuthService
     )
     {
         _userRepository = userRepository;
@@ -73,6 +76,7 @@ public class AuthController : ControllerBase
         _authorizationService = authorizationService;
         _currentUserService = currentUserService;
         _emailService = emailService;
+        _googleAuthService = googleAuthService;
     }
 
     /// <summary>
@@ -700,5 +704,135 @@ public class AuthController : ControllerBase
                 new { message = "An error occurred while processing your request" }
             );
         }
+    }
+
+    /// <summary>
+    /// Authenticates a user using Google OAuth
+    /// </summary>
+    /// <param name="googleAuthDto">Google authorization code</param>
+    /// <returns>Authentication result with JWT token</returns>
+    [HttpPost("google")]
+    public async Task<IActionResult> GoogleAuthentication([FromBody] GoogleAuthDto googleAuthDto)
+    {
+        if (string.IsNullOrEmpty(googleAuthDto.Code))
+        {
+            Log.Warning("Google authentication failed - no authorization code provided");
+            return BadRequest(new { message = "Authorization code is required" });
+        }
+
+        try
+        {
+            Log.Information("Processing Google authentication with code");
+            
+            // Exchange code for token
+            var tokenResponse = await _googleAuthService.ExchangeCodeForTokenAsync(googleAuthDto.Code);
+            
+            // Get user info using the access token
+            var googleUser = await _googleAuthService.GetUserInfoAsync(tokenResponse.AccessToken);
+            
+            if (string.IsNullOrEmpty(googleUser.Email))
+            {
+                Log.Warning("Google authentication failed - email not provided or not verified");
+                return BadRequest(new { message = "Email not provided or not verified by Google" });
+            }
+            
+            // Check if user exists in our database
+            var user = await _userRepository?.GetUserByEmailAsync(googleUser.Email);
+            
+            // If user doesn't exist, create a new one
+            if (user == null)
+            {
+                Log.Information("Creating new user from Google authentication: {Email}", googleUser.Email);
+                
+                // Create a random password for the user (they will never use it directly)
+                var randomPassword = GenerateSecureRandomPassword();
+                
+                // Create user command
+                var createUserCommand = new CreateUserCommand
+                {
+                    UserName = googleUser.Name,
+                    Email = googleUser.Email,
+                    Password = randomPassword,
+                    FirstName = googleUser.GivenName ?? googleUser.Name.Split(' ').FirstOrDefault() ?? "Google",
+                    LastName = googleUser.FamilyName ?? googleUser.Name.Split(' ').Skip(1).FirstOrDefault() ?? "User",
+                    ProfilePicture = googleUser.Picture
+                };
+                
+                // Create the user
+                user = await _userService.CreateUserAsync(createUserCommand);
+                
+                // Add ExternalLogin information if needed
+                // This would be implemented in a more complete solution
+            }
+            else
+            {
+                // Update user's profile picture if it's from Google
+                if (!string.IsNullOrEmpty(googleUser.Picture) && 
+                    (string.IsNullOrEmpty(user.ProfilePicture) || user.ProfilePicture != googleUser.Picture))
+                {
+                    user.ProfilePicture = googleUser.Picture;
+                    await _userRepository.UpdateUserAsync(user);
+                }
+            }
+            
+            // Reset failed login attempts and update last login time
+            user.FailedLoginAttempts = 0;
+            user.LockoutEnd = null;
+            user.LastLogin = DateTime.UtcNow;
+            
+            try
+            {
+                await _userRepository.UpdateUserAsync(user);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, 
+                    "Failed to update login information for user ID: {UserId}, Email: {Email}", 
+                    user.Id, user.Email);
+            }
+            
+            // Generate JWT token
+            var token = _jwtTokenService.GenerateJwtToken(user);
+            
+            Log.Information(
+                "Successful Google login for user ID: {UserId}, Email: {Email}", 
+                user.Id, user.Email);
+            
+            return Ok(new
+            {
+                token,
+                user = new
+                {
+                    user.Id,
+                    user.UserName,
+                    user.Email,
+                    user.ProfilePicture,
+                    user.IsAdmin,
+                    userId = user.Id.ToString(),
+                    name = user.UserName,
+                    email = user.Email,
+                    imageUrl = user.ProfilePicture
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Google authentication failed");
+            return StatusCode(500, new { message = "Failed to authenticate with Google", error = ex.Message });
+        }
+    }
+    
+    private string GenerateSecureRandomPassword(int length = 16)
+    {
+        const string validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()-_=+[]{}|;:,.<>?";
+        var random = new Random();
+        var chars = new char[length];
+        
+        for (var i = 0; i < length; i++)
+        {
+            chars[i] = validChars[random.Next(validChars.Length)];
+        }
+        
+        return new string(chars);
     }
 }

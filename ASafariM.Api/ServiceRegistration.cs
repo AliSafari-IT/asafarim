@@ -48,6 +48,7 @@ namespace ASafariM.Api
             services.AddScoped<IProjectService, ProjectService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<JwtTokenService>();
+            services.AddScoped<GoogleAuthService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
             services.AddScoped<IBibliographyService, BibliographyService>();

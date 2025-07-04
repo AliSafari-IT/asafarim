@@ -129,6 +129,13 @@ function App() {
       baseUrl: "/projects",
       description: "Project Documentation",
     },
+    {
+      name: "current-projects",
+      label: "Current Projects",
+      data: mds.currentProjects,
+      baseUrl: "/current-projects",
+      description: "Current Projects Documentation",
+    },
   ];
   // const pathSegments = ['categories', 'topics', 'sections', 'chapters', 'slug'];
   return (

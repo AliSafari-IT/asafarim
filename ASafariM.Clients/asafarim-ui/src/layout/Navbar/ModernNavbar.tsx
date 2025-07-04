@@ -33,6 +33,8 @@ const ModernNavbar: React.FC = () => {
   const dashboardItem = navItems.find((item) => item.id === "dashboard");
   const aboutItem = navItems.find((item) => item.id === "about");
   const contactItem = navItems.find((item) => item.id === "contact");
+  // Get current projects directly from mdFiles instead of navItems
+  const currentProjects = mdFiles.currentProjects;
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -145,10 +147,14 @@ const ModernNavbar: React.FC = () => {
                     const subItemId = subItem.id || `${itemId}-${subIdx}`;
 
                     return (
-                      <div key={subItemId} className="w-full" style={{ 
-                        backgroundColor: currentTheme.colors.background,
-                        color: currentTheme.colors.text 
-                      }}>
+                      <div
+                        key={subItemId}
+                        className="w-full"
+                        style={{
+                          backgroundColor: currentTheme.colors.background,
+                          color: currentTheme.colors.text,
+                        }}
+                      >
                         {subItem.to && !subItem.to.startsWith("#") ? (
                           <Link
                             to={subItem.to}
@@ -247,12 +253,18 @@ const ModernNavbar: React.FC = () => {
 
             {/* Desktop menu */}
             <div className="hidden lg:flex items-center space-x-4">
+              {/* Current Projects Dropdown - Using data directly from mdFiles */}
+              <ResponsiveDropdownMenu
+                topbarNavData={[currentProjects]}
+                className="block"
+              />
+
               {/* Main Navigation Items - filter out items we're handling separately */}
               {navItems
                 .filter(
                   (item) =>
                     item?.isForNavbar &&
-                    !["dashboard", "about", "contact"].includes(item.id || "")
+                    !["dashboard", "about", "contact", "current-projects"].includes(item.id || "")
                 )
                 .map((item, index) => (
                   <ResponsiveDropdownMenu
@@ -610,3 +622,4 @@ const ModernNavbar: React.FC = () => {
 };
 
 export default ModernNavbar;
+

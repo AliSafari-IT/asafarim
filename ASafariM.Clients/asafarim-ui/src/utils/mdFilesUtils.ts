@@ -65,6 +65,29 @@ const projectsBranchInfo = {
   content: '',
 };
 
+const currentProjectsBranchInfo = {
+  folderName: 'CurrentProjects',
+  id: 'current-projects',
+  title: 'Current Projects',
+  label: 'Current Projects',
+  name: 'current-projects',
+  to: '/current-projects',
+  icon: ChangeLogSvgIcon,
+  subMenu: [],
+  content: '',
+};
+
+const currentProjects: IMenuItem = getTree(
+  {
+    ...import.meta.glob('@mdfiles/CurrentProjects/**/*.md', {
+      query: '?raw',
+      import: 'default',
+      eager: true, // Changed to true for consistent loading with other menu items
+    }),
+  },
+  currentProjectsBranchInfo
+);
+
 const projectsTree: IMenuItem = getTree(
   {
     ...import.meta.glob('@mdfiles/Projects/**/*.md', {
@@ -124,7 +147,7 @@ const essentialInsightsTree: IMenuItem = getTree(
  */
 // Utility function to get tree structure for Markdown files
 function getTree(
-  mdFiles: Record<string, string>,
+  mdFiles: Record<string, string | (() => Promise<string>) | (() => Promise<{ default: string }>) | { default: string }>,
   branchInfo: IMenuItem
 ): IMenuItem {
   const tree: IMenuItem = {
@@ -137,7 +160,10 @@ function getTree(
   const to = `${branchInfo.to}`;
   const folders: Record<string, IMenuItem> = {};
 
-  for (const [filePath, content] of Object.entries(mdFiles)) {
+  for (const [filePath, contentOrPromise] of Object.entries(mdFiles)) {
+    // If content is a function (lazy-loaded), use empty string for now
+    const content = typeof contentOrPromise === 'string' ? contentOrPromise : '';
+
     // Extract relative path from filePath
     const relativePath = filePath
       .replace(new RegExp(`^.*?${branchInfo.folderName}/`), '') // Match folder name dynamically
@@ -228,6 +254,7 @@ function getTree(
 }
 
 export const getAllMdFiles = (): {
+  currentProjects: IMenuItem;
   essentialInsights: IMenuItem;
   legalDocs: IMenuItem;
   changelogs: IMenuItem;
@@ -239,7 +266,8 @@ export const getAllMdFiles = (): {
     changelogs: changeLogs,
     techDocs: techdocsTree,
     essentialInsights: essentialInsightsTree,
-    projects: projectsTree
+    projects: projectsTree,
+    currentProjects: currentProjects
   };
 };
 

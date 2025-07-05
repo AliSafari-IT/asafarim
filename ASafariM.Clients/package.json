@@ -1,0 +1,22 @@
+{
+  "name": "@asafarim/clients-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "asafarim-bibliography",
+    "asafarim-blog",
+    "asafarim-cli",
+    "asafarim-pbk",
+    "asafarim-ui"
+  ],
+  "scripts": {
+    "build:packages": "cd packages && ./build-all.sh",
+    "build:bibliography": "cd asafarim-bibliography && pnpm build",
+    "build:blog": "cd asafarim-blog && pnpm build",
+    "build:ui": "cd asafarim-ui && pnpm build",
+    "build:pbk": "cd asafarim-pbk && pnpm build",
+    "build:cli": "cd asafarim-cli && pnpm build",
+    "build:all": "pnpm build:packages && pnpm build:bibliography && pnpm build:blog && pnpm build:ui && pnpm build:pbk && pnpm build:cli"
+  }
+}

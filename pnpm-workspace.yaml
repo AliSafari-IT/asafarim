@@ -1,10 +1,5 @@
 packages:
   - ASafariM.Api
-  - ASafariM.Clients/asafarim-ui
-  - ASafariM.Clients/asafarim-blog
-  - ASafariM.Clients/asafarim-bibliography
-  - ASafariM.Clients/asafarim-pbk
-  - ASafariM.Clients/asafarim-cli
-  
+  - ASafariM.Clients/asafarim-*
   - ASafariM.Clients/packages/*
   - ASafariM.Clients/packages/*/demo

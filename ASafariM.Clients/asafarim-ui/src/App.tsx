@@ -1,61 +1,63 @@
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
-import PrivateRoute from "./components/PrivateRoute";
-import About from "./pages/AboutMe/About";
-import Dashboard from "./pages/Dashboard/DashboardPage";
-import SitemapPage from "./pages/Sitemap/SitemapPage";
-import NotFound from "./components/NotFound";
-import Home from "./pages/Home/HomePage";
-import AkkodisTargetedResume from "./pages/AboutMe/TailoredCV/Akkodis";
-import DelCard from "./components/Containers/Card/DelCard";
-import ProjectHome from "./pages/Project/Index";
-import PostDetail from "./pages/Blog/PostDetail";
-import LogoutPage from "./pages/Accountpage/LogoutPage";
-import Register from "./pages/Accountpage/Register";
-import LoginPage from "./pages/Accountpage/LoginPage";
-import ForgotPasswordPage from "./pages/Accountpage/ForgotPasswordPage";
-import ResetPasswordPage from "./pages/Accountpage/ResetPasswordPage";
-import UsersList from "./pages/User/UsersList";
-import CreateUser from "./pages/User/CreateUser";
-import EditUser from "./pages/User/EditUser";
-import Footer from "./layout/Footer/Footer";
-import UserProfile from "./pages/User/UserProfile";
-import { Suspense, useEffect } from "react";
-import Layout from "./layout/Layout";
-import Contact from "./pages/Contact";
-import MarkdownPage from "./components/MarkdownPage/MarkdownPage";
-import AccountSettings from "./pages/Accountpage/AccountSettings";
-import { getAllMdFiles } from "./utils/mdFilesUtils";
-import { useAuth } from "./contexts/AuthContext";
-import { TimeoutNotification } from "./components/TimeoutNotification";
-import { ConnectionStatus } from "./components/ConnectionStatus";
+import { Suspense, useEffect, lazy, useState } from "react";
 import React from "react";
-import AddProject from "./pages/Project/AddProject";
-import ViewProject from "./pages/Project/ViewProject";
-import AccessDenied from "./pages/AccessDenied";
-import CreateMarkdownFile from "./components/MarkdownPage/CreateMarkdownFile";
-import AddCategoryForm from "./components/crud/AddCategoryForm";
-import AddTopicForm from "./components/crud/AddTopicForm";
-import AddPostForm from "./pages/Blog/AddPostForm";
-import EditCategoryForm from "./components/crud/EditCategoryForm";
-import EditTopicForm from "./components/crud/EditTopicForm";
-import EditPostForm from "./pages/Blog/EditPostForm";
-import EditSitemapItemForm from "./components/crud/EditSitemapItemForm";
-import AddSitemapItemForm from "./components/crud/AddSitemapItemForm";
-import DeleteForm from "./components/crud/DeleteForm";
-import AddTagForm from "./components/crud/AddTagForm";
-import EditTagForm from "./components/crud/EditTagForm";
-import PostsList from "./pages/Blog/PostsList";
-import CreatePost from "./pages/Blog/CreatePost";
-import HealthCheck from "./pages/HealthCheck/HealthCheck";
-import ViewUser from "./pages/User/ViewUser";
-import NetworkSettings from "./pages/Settings/NetworkSettings";
-import EditProject from "./pages/Project/EditProject";
-import UnderConstruction from "./pages/UnderConstruction";
+import { useAuth } from "./contexts/AuthContext";
+import { getAllMdFiles } from "./utils/mdFilesUtils";
 import { trackPageView } from "./services/analyticsService";
-import AnalyticsPage from "./pages/Analytics/AnalyticsPage";
-import ActivityPage from "./pages/Activity/ActivityPage";
-import NavbarDemo from "./pages/Demo/NavbarDemo";
 import { logger } from "@/utils/logger";
+
+// Lazy load components for better performance
+const PrivateRoute = lazy(() => import("./components/PrivateRoute"));
+const About = lazy(() => import("./pages/AboutMe/About"));
+const Dashboard = lazy(() => import("./pages/Dashboard/DashboardPage"));
+const SitemapPage = lazy(() => import("./pages/Sitemap/SitemapPage"));
+const NotFound = lazy(() => import("./components/NotFound"));
+const Home = lazy(() => import("./pages/Home/HomePage"));
+const AkkodisTargetedResume = lazy(() => import("./pages/AboutMe/TailoredCV/Akkodis"));
+const DelCard = lazy(() => import("./components/Containers/Card/DelCard"));
+const ProjectHome = lazy(() => import("./pages/Project/Index"));
+const PostDetail = lazy(() => import("./pages/Blog/PostDetail"));
+const LogoutPage = lazy(() => import("./pages/Accountpage/LogoutPage"));
+const Register = lazy(() => import("./pages/Accountpage/Register"));
+const LoginPage = lazy(() => import("./pages/Accountpage/LoginPage"));
+const ForgotPasswordPage = lazy(() => import("./pages/Accountpage/ForgotPasswordPage"));
+const ResetPasswordPage = lazy(() => import("./pages/Accountpage/ResetPasswordPage"));
+const UsersList = lazy(() => import("./pages/User/UsersList"));
+const CreateUser = lazy(() => import("./pages/User/CreateUser"));
+const EditUser = lazy(() => import("./pages/User/EditUser"));
+const Footer = lazy(() => import("./layout/Footer/Footer"));
+const UserProfile = lazy(() => import("./pages/User/UserProfile"));
+const Layout = lazy(() => import("./layout/Layout"));
+const Contact = lazy(() => import("./pages/Contact"));
+const MarkdownPage = lazy(() => import("./components/MarkdownPage/MarkdownPage"));
+const AccountSettings = lazy(() => import("./pages/Accountpage/AccountSettings"));
+const TimeoutNotification = lazy(() => import("./components/TimeoutNotification").then(module => ({ default: module.TimeoutNotification })));
+const ConnectionStatus = lazy(() => import("./components/ConnectionStatus").then(module => ({ default: module.ConnectionStatus })));
+const AddProject = lazy(() => import("./pages/Project/AddProject"));
+const ViewProject = lazy(() => import("./pages/Project/ViewProject"));
+const AccessDenied = lazy(() => import("./pages/AccessDenied"));
+const CreateMarkdownFile = lazy(() => import("./components/MarkdownPage/CreateMarkdownFile"));
+const AddCategoryForm = lazy(() => import("./components/crud/AddCategoryForm"));
+const AddTopicForm = lazy(() => import("./components/crud/AddTopicForm"));
+const AddPostForm = lazy(() => import("./pages/Blog/AddPostForm"));
+const EditCategoryForm = lazy(() => import("./components/crud/EditCategoryForm"));
+const EditTopicForm = lazy(() => import("./components/crud/EditTopicForm"));
+const EditPostForm = lazy(() => import("./pages/Blog/EditPostForm"));
+const EditSitemapItemForm = lazy(() => import("./components/crud/EditSitemapItemForm"));
+const AddSitemapItemForm = lazy(() => import("./components/crud/AddSitemapItemForm"));
+const DeleteForm = lazy(() => import("./components/crud/DeleteForm"));
+const AddTagForm = lazy(() => import("./components/crud/AddTagForm"));
+const EditTagForm = lazy(() => import("./components/crud/EditTagForm"));
+const PostsList = lazy(() => import("./pages/Blog/PostsList"));
+const CreatePost = lazy(() => import("./pages/Blog/CreatePost"));
+const HealthCheck = lazy(() => import("./pages/HealthCheck/HealthCheck"));
+const ViewUser = lazy(() => import("./pages/User/ViewUser"));
+const NetworkSettings = lazy(() => import("./pages/Settings/NetworkSettings"));
+const EditProject = lazy(() => import("./pages/Project/EditProject"));
+const UnderConstruction = lazy(() => import("./pages/UnderConstruction"));
+const AnalyticsPage = lazy(() => import("./pages/Analytics/AnalyticsPage"));
+const ActivityPage = lazy(() => import("./pages/Activity/ActivityPage"));
+const NavbarDemo = lazy(() => import("./pages/Demo/NavbarDemo"));
 import {
   ConsentProvider,
   ConsentBanner,
@@ -65,6 +67,7 @@ import {
 import { globalConsentConfig } from "./config/consentConfig";
 import "@asafarim/react-privacy-consent/styles.css";
 import "@asafarim/react-themes/styles.css"; // Optional base styles
+import { IMenuItem } from "./interfaces/IMenuItem";
 
 // const userUrl = API_URL + '/users';
 
@@ -79,8 +82,31 @@ function ConsentModalWrapper() {
 
 function App() {
   const { authenticatedUser, authenticated, token } = useAuth();
-  const mds = getAllMdFiles();
   const location = useLocation();
+  const [mds, setMds] = useState<{
+    currentProjects: IMenuItem;
+    essentialInsights: IMenuItem;
+    legalDocs: IMenuItem;
+    changelogs: IMenuItem;
+    techDocs: IMenuItem;
+    projects: IMenuItem;
+  } | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Move heavy operations out of render cycle
+  useEffect(() => {
+    const loadMdFiles = async () => {
+      try {
+        const mdFiles = await getAllMdFiles();
+        setMds(mdFiles);
+      } catch (error) {
+        logger.error('Failed to load markdown files:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadMdFiles();
+  }, []);
 
   // Track page views when route changes
   useEffect(() => {
@@ -93,7 +119,7 @@ function App() {
     }
   }, [authenticated, authenticatedUser]);
 
-  const dropdownItems = [
+  const dropdownItems = mds ? [
     {
       name: "legal-docs",
       label: "Legal Docs",
@@ -136,17 +162,33 @@ function App() {
       baseUrl: "/current-projects",
       description: "Current Projects Documentation",
     },
-  ];
+  ] : [];
+
+  // Show loading state while markdown files are being loaded
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-default text-default flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-lg">Loading...</p>
+        </div>
+      </div>
+    );
+  }
   // const pathSegments = ['categories', 'topics', 'sections', 'chapters', 'slug'];
   return (
       <ConsentProvider config={globalConsentConfig}>
         <div className="min-h-screen bg-default text-default">
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                <Home />
+              </Suspense>
+            } />
             <Route
               path="/create-markdown"
               element={
-                <Suspense fallback={<div>Loading...</div>}>
+                <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
                   <PrivateRoute>
                     <Layout header={<></>} footer={<Footer />}>
                       <CreateMarkdownFile />
@@ -157,13 +199,17 @@ function App() {
             />
             <Route path="/projects">
               {/* Default route for the project home page */}
-              <Route index element={<ProjectHome key={Math.random()} />} />
+              <Route index element={
+                <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                  <ProjectHome key={Math.random()} />
+                </Suspense>
+              } />
 
               {/* Route for adding a new project */}
               <Route
                 path="add"
                 element={
-                  <Suspense fallback={<div>Loading...</div>}>
+                  <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
                     <AddProject />
                   </Suspense>
                 }
@@ -173,7 +219,7 @@ function App() {
               <Route
                 path=":id"
                 element={
-                  <Suspense fallback={<div>Loading...</div>}>
+                  <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
                     <ViewProject />
                   </Suspense>
                 }
@@ -183,7 +229,7 @@ function App() {
               <Route
                 path="edit/:id"
                 element={
-                  <Suspense fallback={<div>Loading...</div>}>
+                  <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
                     <EditProject />
                   </Suspense>
                 }
@@ -193,7 +239,7 @@ function App() {
               <Route
                 path="del/:id"
                 element={
-                  <Suspense fallback={<div>Loading...</div>}>
+                  <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
                     <DelCard />
                   </Suspense>
                 }
@@ -206,7 +252,7 @@ function App() {
                 <Route
                   path={`${item.baseUrl}/:categories`}
                   element={
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
                       <MarkdownPage
                         data={item.data}
                         title={item.label}
@@ -221,7 +267,7 @@ function App() {
                 <Route
                   path={`${item.baseUrl}/:categories/:topics`}
                   element={
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
                       <MarkdownPage
                         data={item.data}
                         title={item.label}
@@ -236,7 +282,7 @@ function App() {
                 <Route
                   path={`${item.baseUrl}/:categories/:topics/:sections`}
                   element={
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
                       <MarkdownPage
                         data={item.data}
                         title={item.label}
@@ -251,7 +297,7 @@ function App() {
                 <Route
                   path={`${item.baseUrl}/:categories/:topics/:sections/:chapters`}
                   element={
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
                       <MarkdownPage
                         data={item.data}
                         title={item.label}
@@ -266,7 +312,7 @@ function App() {
                 <Route
                   path={`${item.baseUrl}/:categories/:topics/:sections/:chapters/:slug`}
                   element={
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
                       <MarkdownPage
                         data={item.data}
                         title={item.label}
@@ -279,7 +325,7 @@ function App() {
                 <Route
                   path={`${item.baseUrl}/:categories/:topics/:sections/:slug`}
                   element={
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
                       <MarkdownPage
                         data={item.data}
                         title={item.label}
@@ -292,7 +338,7 @@ function App() {
                 <Route
                   path={`${item.baseUrl}/:categories/:topics/:slug`}
                   element={
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
                       <MarkdownPage
                         data={item.data}
                         title={item.label}
@@ -305,7 +351,7 @@ function App() {
                 <Route
                   path={`${item.baseUrl}/:categories/:slug`}
                   element={
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
                       <MarkdownPage
                         data={item.data}
                         title={item.label}
@@ -318,7 +364,7 @@ function App() {
                 <Route
                   path={`${item.baseUrl}/:slug`}
                   element={
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
                       <MarkdownPage
                         data={item.data}
                         title={item.label}
@@ -331,7 +377,7 @@ function App() {
                 <Route
                   path={`${item.baseUrl}`}
                   element={
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
                       <MarkdownPage
                         data={item.data}
                         title={item.label}
@@ -343,79 +389,135 @@ function App() {
                 />
               </React.Fragment>
             ))}
-            <Route path="/posts/:slug" element={<PostDetail />} />
+            <Route path="/posts/:slug" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                <PostDetail />
+              </Suspense>
+            } />
             <Route
               path="/dashboard"
               element={
-                <PrivateRoute requireAdmin={true}>
-                  <Dashboard />
-                </PrivateRoute>
+                <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                  <PrivateRoute requireAdmin={true}>
+                    <Dashboard />
+                  </PrivateRoute>
+                </Suspense>
               }
             />
 
             <Route
               path="/analytics"
               element={
-                <PrivateRoute requireAdmin={true}>
-                  <AnalyticsPage />
-                </PrivateRoute>
+                <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                  <PrivateRoute requireAdmin={true}>
+                    <AnalyticsPage />
+                  </PrivateRoute>
+                </Suspense>
               }
             />
 
-            <Route path="/[...notfound]" element={<NotFound />} />
-            <Route path="/logout" element={<LogoutPage />} />
+            <Route path="/[...notfound]" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                <NotFound />
+              </Suspense>
+            } />
+            <Route path="/logout" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                <LogoutPage />
+              </Suspense>
+            } />
             {token && (
               <>
                 <Route
                   path="/about/akkodis-targeted-resume"
-                  element={<AkkodisTargetedResume />}
+                  element={
+                    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                      <AkkodisTargetedResume />
+                    </Suspense>
+                  }
                 />
               </>
             )}
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                <Contact />
+              </Suspense>
+            } />
+            <Route path="/about" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                <About />
+              </Suspense>
+            } />
             <Route
               path="/user-account-settings"
               element={
-                <PrivateRoute>
-                  <AccountSettings />
-                </PrivateRoute>
+                <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                  <PrivateRoute>
+                    <AccountSettings />
+                  </PrivateRoute>
+                </Suspense>
               }
             />
             <Route
               path="/user-profile"
               element={
-                <PrivateRoute>
-                  <UserProfile />
-                </PrivateRoute>
+                <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                  <PrivateRoute>
+                    <UserProfile />
+                  </PrivateRoute>
+                </Suspense>
               }
             />
             <Route
               path="/manage-sitemap-content"
               element={
-                <PrivateRoute requireAdmin>
-                  <SitemapPage />
-                </PrivateRoute>
+                <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                  <PrivateRoute requireAdmin>
+                    <SitemapPage />
+                  </PrivateRoute>
+                </Suspense>
               }
             />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route path="/login" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                <LoginPage />
+              </Suspense>
+            } />
+            <Route path="/register" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                <Register />
+              </Suspense>
+            } />
+            <Route path="/forgot-password" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                <ForgotPasswordPage />
+              </Suspense>
+            } />
+            <Route path="/reset-password" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                <ResetPasswordPage />
+              </Suspense>
+            } />
 
             <Route
               path="/users"
               element={
-                <PrivateRoute>
-                  <UsersList />
-                </PrivateRoute>
+                <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                  <PrivateRoute>
+                    <UsersList />
+                  </PrivateRoute>
+                </Suspense>
               }
             />
-            <Route path="/users/create" element={<CreateUser />} />
+            <Route path="/users/create" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                <CreateUser />
+              </Suspense>
+            } />
             <Route
               path="/users/edit/:id"
               element={
-                <Suspense fallback={<div>Loading...</div>}>
+                <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
                   <PrivateRoute requireAdmin>
                     <EditUser />
                   </PrivateRoute>
@@ -425,7 +527,7 @@ function App() {
             <Route
               path="/users/view/:id"
               element={
-                <Suspense fallback={<div>Loading...</div>}>
+                <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
                   <PrivateRoute requireAdmin>
                     <ViewUser />
                   </PrivateRoute>
@@ -433,40 +535,108 @@ function App() {
               }
             />
             {/** Add route for crud operations for dynamic models to cover all use cases regarding: Tags, Categories, Topics, Projects, Posts, SitemapItems */}
-            <Route path="/tags/add" element={<AddTagForm />} />
-            <Route path="/tags/edit/:id" element={<EditTagForm />} />
+            <Route path="/tags/add" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                <AddTagForm />
+              </Suspense>
+            } />
+            <Route path="/tags/edit/:id" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                <EditTagForm />
+              </Suspense>
+            } />
             <Route
               path="/tags/delete/:id"
-              element={<DeleteForm entity="tags" />}
+              element={
+                <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                  <DeleteForm entity="tags" />
+                </Suspense>
+              }
             />
-            <Route path="/categories/add" element={<AddCategoryForm />} />
-            <Route path="/categories/edit/:id" element={<EditCategoryForm />} />
+            <Route path="/categories/add" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                <AddCategoryForm />
+              </Suspense>
+            } />
+            <Route path="/categories/edit/:id" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                <EditCategoryForm />
+              </Suspense>
+            } />
             <Route
               path="/categories/delete/:id"
-              element={<DeleteForm entity="categories" />}
+              element={
+                <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                  <DeleteForm entity="categories" />
+                </Suspense>
+              }
             />
-            <Route path="/topics/add" element={<AddTopicForm />} />
-            <Route path="/topics/edit/:id" element={<EditTopicForm />} />
+            <Route path="/topics/add" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                <AddTopicForm />
+              </Suspense>
+            } />
+            <Route path="/topics/edit/:id" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                <EditTopicForm />
+              </Suspense>
+            } />
             <Route
               path="/topics/delete/:id"
-              element={<DeleteForm entity="topics" />}
+              element={
+                <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                  <DeleteForm entity="topics" />
+                </Suspense>
+              }
             />
-            <Route path="/posts" element={<PostsList />} />
-            <Route path="/posts/create" element={<CreatePost />} />
-            <Route path="/posts/add" element={<AddPostForm />} />
-            <Route path="/posts/edit/:id" element={<EditPostForm />} />
+            <Route path="/posts" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                <PostsList />
+              </Suspense>
+            } />
+            <Route path="/posts/create" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                <CreatePost />
+              </Suspense>
+            } />
+            <Route path="/posts/add" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                <AddPostForm />
+              </Suspense>
+            } />
+            <Route path="/posts/edit/:id" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                <EditPostForm />
+              </Suspense>
+            } />
             <Route
               path="/posts/delete/:id"
-              element={<DeleteForm entity="posts" />}
+              element={
+                <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                  <DeleteForm entity="posts" />
+                </Suspense>
+              }
             />
-            <Route path="/sitemap-items/add" element={<AddSitemapItemForm />} />
+            <Route path="/sitemap-items/add" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                <AddSitemapItemForm />
+              </Suspense>
+            } />
             <Route
               path="/sitemap-items/edit/:id"
-              element={<EditSitemapItemForm />}
+              element={
+                <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                  <EditSitemapItemForm />
+                </Suspense>
+              }
             />
             <Route
               path="/sitemap-items/delete/:id"
-              element={<DeleteForm entity="sitemapitems" />}
+              element={
+                <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                  <DeleteForm entity="sitemapitems" />
+                </Suspense>
+              }
             />
             {/* redirect  /blog to blog.asafarim.com */}
             <Route
@@ -499,23 +669,55 @@ function App() {
                 />
               }
             />
-            <Route path="/system-health" element={<HealthCheck />} />
-            <Route path="/network-settings" element={<NetworkSettings />} />
-            <Route path="/activity" element={<ActivityPage />} />
-            <Route path="/navbar-demo" element={<NavbarDemo />} />
-            <Route path="/access-denied" element={<AccessDenied />} />
-            <Route path="*" element={<NotFound />} />
+            <Route path="/system-health" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                <HealthCheck />
+              </Suspense>
+            } />
+            <Route path="/network-settings" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                <NetworkSettings />
+              </Suspense>
+            } />
+            <Route path="/activity" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                <ActivityPage />
+              </Suspense>
+            } />
+            <Route path="/navbar-demo" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                <NavbarDemo />
+              </Suspense>
+            } />
+            <Route path="/access-denied" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                <AccessDenied />
+              </Suspense>
+            } />
+            <Route path="*" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div></div>}>
+                <NotFound />
+              </Suspense>
+            } />
           </Routes>
 
           {/* Timeout and Connection Management Components */}
-          <TimeoutNotification />
-          <ConnectionStatus
-            showDetails={false}
-            className="fixed bottom-4 right-4 z-50"
-          />
+          <Suspense fallback={null}>
+            <TimeoutNotification />
+          </Suspense>
+          <Suspense fallback={null}>
+            <ConnectionStatus
+              showDetails={false}
+              className="fixed bottom-4 right-4 z-50"
+            />
+          </Suspense>
         </div>
-        <ConsentBanner />
-        <ConsentModalWrapper />
+        <Suspense fallback={null}>
+          <ConsentBanner />
+        </Suspense>
+        <Suspense fallback={null}>
+          <ConsentModalWrapper />
+        </Suspense>
       </ConsentProvider>
   );
 }
